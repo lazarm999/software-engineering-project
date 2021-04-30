@@ -5,8 +5,11 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.parovi.zadruga.models.Ad;
 import com.parovi.zadruga.models.Location;
+
+import org.xml.sax.helpers.LocatorImpl;
 
 import java.util.List;
 
@@ -14,7 +17,7 @@ import java.util.List;
 public interface LocationDao {
 
     @Insert
-    void insertLocation(Location location);
+    ListenableFuture<Long> insertLocation(Location location);
 
     @Query("SELECT * FROM Location")
     LiveData<List<Location>> getAllLocations();

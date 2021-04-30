@@ -9,11 +9,11 @@ import com.parovi.zadruga.models.Location;
 
 import java.util.List;
 
-public class AdOnLocation {
+public class AdsOnLocation {
     @Embedded
     public Location location;
     @Relation(entity = Ad.class,
-    parentColumn = "id",
+    parentColumn = "locId",
     entityColumn = "locationId")
     public List<Ad> ads;
 }

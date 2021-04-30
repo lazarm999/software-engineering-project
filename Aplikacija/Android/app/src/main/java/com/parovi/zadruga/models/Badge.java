@@ -6,6 +6,10 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Badge {
     @PrimaryKey
-    public int id;
+    public int badgeId;
     public String desc; //description
+
+    public Badge(String desc) {
+        this.desc = desc;
+    }
 }

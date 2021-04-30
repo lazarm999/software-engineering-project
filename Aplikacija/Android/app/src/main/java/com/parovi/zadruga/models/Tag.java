@@ -5,7 +5,11 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class Tag {
-    @PrimaryKey
-    public int id;
-    public int name;
+    @PrimaryKey(autoGenerate = true)
+    public int tagId;
+    public String name;
+
+    public Tag(String name) {
+        this.name = name;
+    }
 }

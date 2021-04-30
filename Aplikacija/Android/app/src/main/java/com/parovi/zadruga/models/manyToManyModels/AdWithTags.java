@@ -15,13 +15,13 @@ public class AdWithTags {
     @Embedded
     public Ad ad;
     @Relation(
-            parentColumn = "id",
+            parentColumn = "adId",
             entity = Tag.class,
-            entityColumn = "id",
+            entityColumn = "tagId",
             associateBy = @Junction(
                     value = AdTagCrossRef.class,
-                    parentColumn = "adId",
-                    entityColumn = "tagId")
+                    parentColumn = "fkAdId",
+                    entityColumn = "fkTagId")
     )
     public List<Tag> tags;
 }

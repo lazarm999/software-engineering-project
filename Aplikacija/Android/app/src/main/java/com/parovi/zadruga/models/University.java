@@ -6,6 +6,23 @@ import androidx.room.PrimaryKey;
 @Entity
 public class University {
     @PrimaryKey
-    public int id;
-    public String name;
+    private int universityId;
+    private String name;
+
+    public int getUniversityId() {
+        return universityId;
+    }
+
+    public void setUniversityId(int universityId) {
+        this.universityId = universityId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }
