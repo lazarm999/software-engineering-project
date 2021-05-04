@@ -20,6 +20,7 @@ import com.parovi.zadruga.models.Employer;
 import com.parovi.zadruga.models.Faculty;
 import com.parovi.zadruga.models.Location;
 import com.parovi.zadruga.models.Tag;
+import com.parovi.zadruga.models.TmpPost;
 import com.parovi.zadruga.models.University;
 import com.parovi.zadruga.models.User;
 import com.parovi.zadruga.models.crossRefModels.AdTagCrossRef;
@@ -28,9 +29,9 @@ import com.parovi.zadruga.models.manyToManyModels.Applied;
 import com.parovi.zadruga.models.manyToManyModels.Rate;
 import com.parovi.zadruga.models.manyToManyModels.Selected;
 
-@Database(entities = {Ad.class, Location.class, User.class, UserBadgeCrossRef.class, Faculty.class, University.class,
+@Database(entities = {Ad.class, Location.class, User.class, UserBadgeCrossRef.class, Faculty.class, University.class, TmpPost.class,
                         Tag.class, Badge.class, AdTagCrossRef.class, Rate.class, Applied.class, Selected.class, Employee.class, Employer.class},
-        version = 8)
+        version = 9)
 abstract public class ZadrugaDatabase extends RoomDatabase {
     private static ZadrugaDatabase db;
     public abstract AdDao adDao();

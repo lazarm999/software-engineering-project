@@ -20,6 +20,9 @@ public interface AdDao {
     @Insert
     ListenableFuture<Long> insertAd(Ad ad);
 
+    @Query("SELECT * FROM Ad WHERE Ad.adId == :id")
+    LiveData<List<Ad>> getAdById(int id);
+
     @Query("SELECT * FROM Ad")
     LiveData<List<Ad>> getAllAds();
 

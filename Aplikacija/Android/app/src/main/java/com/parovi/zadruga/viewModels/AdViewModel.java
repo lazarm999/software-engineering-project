@@ -19,9 +19,10 @@ public class AdViewModel extends AndroidViewModel {
     private LiveData<List<Location>> locations;
     private ZadrugaRepository rep;
 
-    public AdViewModel(@NonNull Application application) {
-        super(application);
-        rep = new ZadrugaRepository(application);
+    public AdViewModel(@NonNull Application app) {
+        super(app);
+        rep = ZadrugaRepository.getInstance(app);
+
     }
 
     public LiveData<List<Ad>> getAds() {
