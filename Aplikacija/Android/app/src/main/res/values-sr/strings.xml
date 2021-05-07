@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Zadruga</string>
+
+    <string name="login">Prijavi se</string>
+    <string name="question">Nemate nalog?</string>
+    <string name="signup">Registruj se</string>
+    <string name="language">Promeni jezik</string>
+    <string name="logName">Korisničko ime</string>
+    <string name="logPass">Šifra</string>
+    <string name="restorePass">Promenite šifru</string>
+    <string name="signName">* Ime:</string>
+    <string name="signupName">Ime</string>
+    <string name="signSurname">* Prezime:</string>
+    <string name="signupSurname">Prezime</string>
+    <string name="gender">Pol</string>
+    <string name="genderM">M</string>
+    <string name="genderF">Ž</string>
+    <string name="email">* Email</string>
+    <string name="emailBox">Email</string>
+    <string name="username">* Korisničko ime</string>
+    <string name="usernameBox">Korisničko ime</string>
+    <string name="mobile">Telefon</string>
+    <string name="mobileBox">+381</string>
+    <string name="signPass">* Šifra</string>
+    <string name="signPassBox">Šifra</string>
+    <string name="goLog">Imate nalog? Prijavite se</string>
+    <string name="newPass">Nova šifra</string>
+    <string name="newPassConf">Potvrdite novu šifru</string>
+    <string name="reset">Promeni šifru</string>
+
+</resources>

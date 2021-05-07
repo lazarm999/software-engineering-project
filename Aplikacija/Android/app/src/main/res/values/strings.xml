@@ -1,3 +1,32 @@
 <resources>
+
     <string name="app_name">Zadruga</string>
+
+    <string name="login">LOGIN</string>
+    <string name="question">Do not have an account?</string>
+    <string name="signup">SIGN UP</string>
+    <string name="language">Change language</string>
+    <string name="logName">Name</string>
+    <string name="logPass">Password</string>
+    <string name="restorePass">Change your password</string>
+    <string name="signName">* Name:</string>
+    <string name="signupName">Name</string>
+    <string name="signSurname">* Surname:</string>
+    <string name="signupSurname">Surname</string>
+    <string name="gender">Gender</string>
+    <string name="genderM">M</string>
+    <string name="genderF">F</string>
+    <string name="email">* Email</string>
+    <string name="emailBox">Email</string>
+    <string name="username">* Username</string>
+    <string name="usernameBox">Username</string>
+    <string name="mobile">Mobile</string>
+    <string name="mobileBox">+381</string>
+    <string name="signPass">* Password</string>
+    <string name="signPassBox">Password</string>
+    <string name="goLog">Already have an account? Login</string>
+    <string name="newPass">New password</string>
+    <string name="newPassConf">Confirm new password</string>
+    <string name="reset">Reset password</string>
+
 </resources>
