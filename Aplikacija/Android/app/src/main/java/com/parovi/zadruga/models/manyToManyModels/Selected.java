@@ -1,15 +1,16 @@
 package com.parovi.zadruga.models.manyToManyModels;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
 import com.parovi.zadruga.models.Ad;
-import com.parovi.zadruga.models.Employee;
+import com.parovi.zadruga.models.User;
 
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(primaryKeys = {"fkUserId", "fkAdId"},
-        foreignKeys = {@ForeignKey(entity = Employee.class,
+        foreignKeys = {@ForeignKey(entity = User.class,
                         parentColumns = "userId",
                         childColumns = "fkUserId",
                         onDelete = CASCADE),
@@ -19,7 +20,9 @@ import static androidx.room.ForeignKey.CASCADE;
                         onDelete = CASCADE)})
 public class Selected {
     private int fkUserId;
+    @ColumnInfo(index = true)
     private int fkAdId;
+    private boolean isSynced;
 
     public int getFkUserId() {
         return fkUserId;
@@ -35,5 +38,13 @@ public class Selected {
 
     public void setFkAdId(int fkAdId) {
         this.fkAdId = fkAdId;
+    }
+
+    public boolean isSynced() {
+        return isSynced;
+    }
+
+    public void setSynced(boolean synced) {
+        isSynced = synced;
     }
 }

@@ -20,5 +20,8 @@ public interface LocationDao {
     ListenableFuture<Long> insertLocation(Location location);
 
     @Query("SELECT * FROM Location")
-    LiveData<List<Location>> getAllLocations();
+    ListenableFuture<List<Location>> getAllLocations();
+
+    @Query("SELECT * FROM Location WHERE Location.locId = :locId")
+    ListenableFuture<Location> getLocationById(int locId);
 }

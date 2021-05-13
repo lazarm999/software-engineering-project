@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey;
 public class Badge {
     @PrimaryKey
     public int badgeId;
-    public String desc; //description
+    public String description; //description
 
-    public Badge(String desc) {
-        this.desc = desc;
+    public Badge(String description) {
+        this.description = description;
     }
 }

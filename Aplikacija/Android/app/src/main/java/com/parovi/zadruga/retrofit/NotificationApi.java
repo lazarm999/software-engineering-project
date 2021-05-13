@@ -15,10 +15,5 @@ public interface NotificationApi {
     @Headers({"Authorization: key="+Constants.FB_SERVER_KEY
             , "Content-Type:" + Constants.CONTENT_TYPE})
     @POST("fcm/send")
-    Call<ResponseBody> sendNotification(@Body RemoteMessage message);
-
-    @Headers({"Authorization: key="+Constants.FB_SERVER_KEY
-            , "Content-Type:" + Constants.CONTENT_TYPE})
-    @POST("fcm/send")
     Call<ResponseBody> sendPushNotification(@Body PushNotification notification);
 }

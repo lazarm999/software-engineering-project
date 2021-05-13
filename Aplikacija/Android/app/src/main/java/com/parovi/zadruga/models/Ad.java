@@ -1,9 +1,13 @@
 package com.parovi.zadruga.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import javax.annotation.Nullable;
+
+import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;
 
 /*(primaryKeys = {"firstName", "lastName"})
@@ -15,12 +19,13 @@ import static androidx.room.ForeignKey.SET_NULL;
 
 @Entity(foreignKeys = {@ForeignKey(entity = Location.class,
                         parentColumns = "locId",
-                        childColumns = "locationId",
+                        childColumns = "fkLocationId",
                         onDelete = SET_NULL),
-                        @ForeignKey(entity = Employer.class,
+                        @ForeignKey(entity = User.class,
                         parentColumns = "userId",
                         childColumns = "fkEmployerId",
-                        onDelete = SET_NULL)})
+                        onDelete = SET_NULL,
+                        onUpdate = CASCADE)})
 public class Ad {
     @PrimaryKey(autoGenerate = true)
     private int adId;
@@ -29,13 +34,18 @@ public class Ad {
     private int feeFrom;
     private int freeTo;
     private int peopleNeeded;
-    private int locationId;
+    //private boolean isClosed;
+    @ColumnInfo(index = true)
+    private int fkLocationId;
+    @ColumnInfo(index = true)
     private int fkEmployerId;
+    private int isSynced;
 
-    public Ad(String title, String desc, int locationId){
+    public Ad(String title, String desc, int fkLocationId){
         this.title = title;
         this.desc = desc;
-        this.locationId = locationId;
+        this.fkLocationId = fkLocationId;
+        this.fkEmployerId = 1;
     }
 
     public int getAdId() {
@@ -86,12 +96,12 @@ public class Ad {
         this.peopleNeeded = peopleNeeded;
     }
 
-    public int getLocationId() {
-        return locationId;
+    public int getFkLocationId() {
+        return fkLocationId;
     }
 
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
+    public void setFkLocationId(int fkLocationId) {
+        this.fkLocationId = fkLocationId;
     }
 
     public int getFkEmployerId() {
@@ -100,5 +110,13 @@ public class Ad {
 
     public void setFkEmployerId(int fkEmployerId) {
         this.fkEmployerId = fkEmployerId;
+    }
+
+    public int getIsSynced() {
+        return isSynced;
+    }
+
+    public void setIsSynced(int isSynced) {
+        this.isSynced = isSynced;
     }
 }

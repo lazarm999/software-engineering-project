@@ -3,6 +3,8 @@ package com.parovi.zadruga.models;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+/*TODO: da li ce korisnik moci da doda proizvoljnu lokaciju ili ne?*/
+
 @Entity
 public class Location {
     @PrimaryKey(autoGenerate = true)

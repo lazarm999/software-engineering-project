@@ -1,9 +1,18 @@
 package com.parovi.zadruga.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "user_table")
+import static androidx.room.ForeignKey.SET_NULL;
+
+@Entity(tableName = "user_table",
+        foreignKeys = @ForeignKey(entity = Faculty.class,
+                            parentColumns = "facultyId",
+                            childColumns = "fkFacultyId",
+                            onDelete = SET_NULL))
 public class User {
     @PrimaryKey(autoGenerate = true)
     private int userId;
@@ -13,9 +22,13 @@ public class User {
     private String bio;
     private String imageUrl;
     private String phoneNumber;
-    //kako li se pamti sifra i da l se uopste pamti
     private double avgRate;
-
+    private String fcmToken;
+    private String companyName;
+    @ColumnInfo(index = true)
+    private int fkFacultyId;
+    private String type; //u Constants su zapamceni tipovi naloga
+    private boolean isSynced;
 
     public int getUserId() {
         return userId;
@@ -25,9 +38,14 @@ public class User {
         this.userId = userId;
     }
 
-    public User(){
+    public User(int userId, String name){
+        this.userId = userId;
+        this.name = name;
     }
 
+    public User(){
+    }
+    @Ignore
     public User(String name){
         this.name = name;
     }
@@ -86,5 +104,45 @@ public class User {
 
     public void setAvgRate(double avgRate) {
         this.avgRate = avgRate;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public int getFkFacultyId() {
+        return fkFacultyId;
+    }
+
+    public void setFkFacultyId(int fkFacultyId) {
+        this.fkFacultyId = fkFacultyId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
+    public boolean isSynced() {
+        return isSynced;
+    }
+
+    public void setSynced(boolean synced) {
+        isSynced = synced;
     }
 }

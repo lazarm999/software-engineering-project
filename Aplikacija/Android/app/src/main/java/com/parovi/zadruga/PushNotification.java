@@ -1,5 +1,7 @@
 package com.parovi.zadruga;
 
+import com.parovi.zadruga.models.Notification;
+
 public class PushNotification {
     private Notification notification;
     private String to;

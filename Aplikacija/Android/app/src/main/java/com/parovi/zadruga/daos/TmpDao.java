@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.google.android.material.circularreveal.CircularRevealHelper;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.parovi.zadruga.models.Badge;
 import com.parovi.zadruga.models.Tag;
@@ -25,10 +27,7 @@ public interface TmpDao {
     @Query("SELECT * FROM tmppost")
     ListenableFuture<List<TmpPost>> getAllPosts();
 
-    @Query("SELECT * FROM tmppost WHERE id = :id")
-    ListenableFuture<TmpPost> getPostById(int id);
-
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     ListenableFuture<List<Long>> insertPosts(List<TmpPost> posts);
 
     @Query("DELETE FROM TmpPost")

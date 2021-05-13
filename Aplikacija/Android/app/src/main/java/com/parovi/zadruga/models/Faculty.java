@@ -1,5 +1,6 @@
 package com.parovi.zadruga.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
@@ -15,6 +16,7 @@ public class Faculty {
     @PrimaryKey(autoGenerate = true)
     private int facultyId;
     private String name;
+    @ColumnInfo(index = true)
     private int fkUniversityId;
 
     public Faculty(String name, int fkUniversityId) {

@@ -1,5 +1,6 @@
 package com.parovi.zadruga.models.manyToManyModels;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
@@ -20,9 +21,12 @@ import static androidx.room.ForeignKey.SET_NULL;
                         childColumns = "fkAdId",
                         onDelete = CASCADE)})
 public class Comment {
+    @ColumnInfo(index = true)
     private int fkUserId;
+    @ColumnInfo(index = true)
     private int fkAdId;
     private String commentText;
+    private boolean isSynced;
 
     public Comment(int fkUserId, int fkAdId, String commentText) {
         this.fkUserId = fkUserId;
@@ -52,5 +56,13 @@ public class Comment {
 
     public void setCommentText(String commentText) {
         this.commentText = commentText;
+    }
+
+    public boolean isSynced() {
+        return isSynced;
+    }
+
+    public void setSynced(boolean synced) {
+        isSynced = synced;
     }
 }
