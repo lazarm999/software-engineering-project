@@ -16,7 +16,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_reset);
 
-        reset = findViewById(R.id.reset);
+        reset = findViewById(R.id.btnResetPassword);
 
         reset.setOnClickListener(new View.OnClickListener() {
             @Override

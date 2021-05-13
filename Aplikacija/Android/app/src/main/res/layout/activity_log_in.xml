@@ -8,7 +8,7 @@
     tools:context=".LogInActivity">
 
     <ImageView
-        android:id="@+id/login1"
+        android:id="@+id/imgLogIn1"
         android:layout_width="200dp"
         android:layout_height="120dp"
         android:layout_alignParentStart="true"
@@ -22,7 +22,7 @@
         tools:layout_editor_absoluteY="158dp" />
 
     <ImageView
-        android:id="@+id/login2"
+        android:id="@+id/imgLogIn2"
         android:layout_width="200dp"
         android:layout_height="120dp"
         android:layout_alignParentEnd="true"
@@ -34,7 +34,7 @@
         app:srcCompat="@drawable/login2" />
 
     <ImageView
-        android:id="@+id/login3"
+        android:id="@+id/imgLogIn3"
         android:layout_width="200dp"
         android:layout_height="120dp"
         android:layout_alignParentStart="true"
@@ -46,7 +46,7 @@
         app:srcCompat="@drawable/login3" />
 
     <EditText
-        android:id="@+id/logName"
+        android:id="@+id/txtName"
         android:layout_width="283dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -60,7 +60,7 @@
         android:textSize="16dp" />
 
     <EditText
-        android:id="@+id/logPassword"
+        android:id="@+id/txtPassword"
         android:layout_width="283dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -74,7 +74,7 @@
         android:textSize="16dp" />
 
     <Button
-        android:id="@+id/log"
+        android:id="@+id/btnLogIn"
         android:layout_width="258dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -87,7 +87,7 @@
         app:cornerRadius="20dp" />
 
     <TextView
-        android:id="@+id/restorePass"
+        android:id="@+id/txtChangePassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"

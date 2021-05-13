@@ -9,19 +9,19 @@
     android:background="#FFFFEE"
     tools:context=".MainActivity">
 
-        <ImageView
-            android:id="@+id/welcomeImage"
-            android:layout_width="374dp"
-            android:layout_height="383dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="155dp"
-            android:layout_marginRight="25dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/welcome" />
+    <ImageView
+        android:id="@+id/imgFirstPage"
+        android:layout_width="374dp"
+        android:layout_height="383dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="155dp"
+        android:layout_marginRight="25dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/welcome" />
 
     <TextView
-        android:id="@+id/head"
+        android:id="@+id/txtAppName"
         android:layout_width="229dp"
         android:layout_height="52dp"
         android:layout_centerHorizontal="true"
@@ -38,7 +38,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/login"
+        android:id="@+id/btnLogIn"
         android:layout_width="315dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -53,7 +53,7 @@
         app:cornerRadius="20dp" />
 
     <TextView
-        android:id="@id/question"
+        android:id="@+id/txtHaveAccount"
         android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -65,7 +65,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/signup"
+        android:id="@+id/btnSignUp"
         android:layout_width="315dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -80,7 +80,7 @@
         app:cornerRadius="20dp" />
 
     <ImageButton
-        android:id="@+id/changelanguage"
+        android:id="@+id/imgBtnChangeLanguage"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_alignParentTop="true"

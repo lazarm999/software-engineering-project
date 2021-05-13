@@ -16,7 +16,7 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        change = findViewById(R.id.restorePass);
+        change = findViewById(R.id.txtChangePassword);
 
         change.setOnClickListener(new View.OnClickListener() {
             @Override

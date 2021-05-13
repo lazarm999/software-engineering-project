@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -22,7 +23,7 @@ import java.util.Locale;
 public class MainActivity<AlterDialog> extends AppCompatActivity {
 
 
-    Animation topAnim, bottomAnim;      //variables for animation
+    Animation topAnim, bottomAnim, scaleUp, scaleDown;      //variables for animation
     TextView h1;
     Button logIn, signUp;
 
@@ -34,8 +35,24 @@ public class MainActivity<AlterDialog> extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        logIn = findViewById(R.id.login);
-        signUp = findViewById(R.id.signup);
+        logIn = findViewById(R.id.btnLogIn);
+        signUp = findViewById(R.id.btnSignUp);
+
+        scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+        scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
+
+       /* logIn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction()==MotionEvent.ACTION_DOWN)
+                    logIn.startAnimation(scaleUp);
+                else if(event.getAction()==MotionEvent.ACTION_UP)
+                    logIn.startAnimation(scaleDown);
+
+                return true;
+
+            }
+        });*/
 
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +74,7 @@ public class MainActivity<AlterDialog> extends AppCompatActivity {
         h1 = findViewById(R.id.head);
         h1.setAnimation(topAnim);
 
-        ImageButton changeLang = findViewById(R.id.changelanguage);
+        ImageButton changeLang = findViewById(R.id.imgBtnChangeLanguage);
         changeLang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
