@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/studentFeed"
+        android:icon="@drawable/ic_ads"
+        android:title="@string/feedStudent" />
+    <item
+        android:id="@+id/studentNotifications"
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/notificationsStudent" />
+    <item
+        android:id="@+id/jobHistory"
+        android:icon="@drawable/ic_student_jobs"
+        android:title="@string/jobListStudent" />
+    <item
+        android:id="@+id/studentRecommendations"
+        android:icon="@drawable/ic_recommended"
+        android:title="@string/recommendationsStudent" />
+    <item
+        android:id="@+id/studentProfile"
+        android:icon="@drawable/ic_student_profile"
+        android:title="@string/profileStudent" />
+</menu>
