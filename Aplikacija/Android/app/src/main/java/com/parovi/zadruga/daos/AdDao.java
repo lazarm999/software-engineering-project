@@ -12,7 +12,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.parovi.zadruga.models.Ad;
 import com.parovi.zadruga.models.AdWithLocation;
 import com.parovi.zadruga.models.manyToManyModels.AdTag;
-import com.parovi.zadruga.models.manyToManyModels.AdWithTags;
 
 import java.util.List;
 /*TODO:

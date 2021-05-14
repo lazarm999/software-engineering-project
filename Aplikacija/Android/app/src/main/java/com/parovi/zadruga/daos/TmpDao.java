@@ -12,7 +12,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.parovi.zadruga.models.Badge;
 import com.parovi.zadruga.models.Tag;
 import com.parovi.zadruga.models.TmpPost;
-import com.parovi.zadruga.models.manyToManyModels.AdWithTags;
 
 import java.util.List;
 
