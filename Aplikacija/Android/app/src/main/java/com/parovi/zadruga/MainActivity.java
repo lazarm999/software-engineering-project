@@ -71,7 +71,7 @@ public class MainActivity<AlterDialog> extends AppCompatActivity {
         });
         topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);
         bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);
-        h1 = findViewById(R.id.head);
+        h1 = findViewById(R.id.txtAppName);
         h1.setAnimation(topAnim);
 
         ImageButton changeLang = findViewById(R.id.imgBtnChangeLanguage);

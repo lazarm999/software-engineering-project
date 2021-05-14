@@ -6,7 +6,7 @@
     android:id="@+id/firstPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFEE"
+    android:background="@color/background"
     tools:context=".MainActivity">
 
     <ImageView
@@ -33,7 +33,7 @@
         android:text="@string/app_name"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="37sp"
         android:textStyle="bold" />
 
@@ -47,9 +47,9 @@
         android:fontFamily="@font/roboto_condensed_regular"
         android:radius="20dp"
         android:text="@string/login"
-        android:textColor="#FFFFEE"
+        android:textColor="@color/background"
         android:textSize="18sp"
-        app:backgroundTint="#7D8CE3"
+        app:backgroundTint="@color/lila"
         app:cornerRadius="20dp" />
 
     <TextView
@@ -60,7 +60,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="155dp"
         android:text="@string/question"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -74,9 +74,9 @@
         android:fontFamily="@font/roboto_condensed_regular"
         android:radius="20dp"
         android:text="@string/signup"
-        android:textColor="#FFFFEE"
+        android:textColor="@color/background"
         android:textSize="18sp"
-        app:backgroundTint="#7D8CE3"
+        app:backgroundTint="@color/lila"
         app:cornerRadius="20dp" />
 
     <ImageButton

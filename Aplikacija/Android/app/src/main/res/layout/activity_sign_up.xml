@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFEE"
+    android:background="@color/background"
     tools:context=".SignUpActivity">
 
     <RelativeLayout
@@ -32,7 +32,7 @@
         android:layout_marginLeft="104dp"
         android:layout_marginTop="195dp"
         android:text="@string/signName"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="9dp" />
 
     <EditText
@@ -43,9 +43,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="225dp"
         android:background="@color/cardview_light_background"
-        android:hint="@string/signupName"
+        android:hint="@string/signNamePlaceholder"
         android:inputType="textPersonName"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="12dp" />
 
     <TextView
@@ -60,7 +60,7 @@
         android:layout_marginLeft="104dp"
         android:layout_marginTop="255dp"
         android:text="@string/signSurname"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="9dp" />
 
     <EditText
@@ -71,9 +71,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="285dp"
         android:background="@color/cardview_light_background"
-        android:hint="@string/signupSurname"
+        android:hint="@string/signSurnamePlaceholder"
         android:inputType="textPersonName"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="12dp" />
 
         <TextView
@@ -88,7 +88,7 @@
             android:layout_marginLeft="102dp"
             android:layout_marginTop="328dp"
             android:text="@string/gender"
-            android:textColor="#7D8CE3"
+            android:textColor="@color/lila"
             android:textSize="9dp" />
 
         <CheckBox
@@ -106,7 +106,7 @@
             android:text="@string/genderM"
             android:textSize="9sp"
             android:textStyle="bold"
-            app:buttonTint="#7D8CE3" />
+            app:buttonTint="@color/lila" />
 
         <CheckBox
             android:id="@+id/checkBoxF"
@@ -123,7 +123,7 @@
             android:text="@string/genderF"
             android:textSize="9sp"
             android:textStyle="bold"
-            app:buttonTint="#7D8CE3" />
+            app:buttonTint="@color/lila" />
 
         <TextView
             android:id="@+id/lblUsername"
@@ -137,7 +137,7 @@
             android:layout_marginLeft="104dp"
             android:layout_marginTop="385dp"
             android:text="@string/username"
-            android:textColor="#7D8CE3"
+            android:textColor="@color/lila"
             android:textSize="9dp" />
 
         <EditText
@@ -148,9 +148,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="415dp"
         android:background="@color/cardview_light_background"
-        android:hint="@string/usernameBox"
+        android:hint="@string/usernamePlaceholder"
         android:inputType="textPersonName"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="12dp" />
 
     <TextView
@@ -165,7 +165,7 @@
         android:layout_marginLeft="105dp"
         android:layout_marginTop="445dp"
         android:text="@string/email"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="9dp" />
 
     <EditText
@@ -176,9 +176,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="475dp"
         android:background="@color/cardview_light_background"
-        android:hint="@string/emailBox"
+        android:hint="@string/emailPlaceholder"
         android:inputType="textPersonName"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="12dp" />
 
     <TextView
@@ -193,7 +193,7 @@
         android:layout_marginLeft="105dp"
         android:layout_marginTop="505dp"
         android:text="@string/mobile"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="9dp" />
 
     <EditText
@@ -204,9 +204,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="535dp"
         android:background="@color/cardview_light_background"
-        android:hint="@string/mobileBox"
+        android:hint="@string/mobilePlaceholder"
         android:inputType="textPersonName"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="12dp" />
 
         <TextView
@@ -220,8 +220,8 @@
             android:layout_marginStart="105dp"
             android:layout_marginLeft="105dp"
             android:layout_marginTop="565dp"
-            android:text="@string/signPass"
-            android:textColor="#7D8CE3"
+            android:text="@string/signPassword"
+            android:textColor="@color/lila"
             android:textSize="9dp" />
 
         <EditText
@@ -235,9 +235,9 @@
             android:layout_marginLeft="105dp"
             android:layout_marginTop="595dp"
             android:background="@color/cardview_light_background"
-            android:hint="@string/signPassBox"
+            android:hint="@string/signPasswordPlaceholder"
             android:inputType="textPersonName"
-            android:textColor="#7D8CE3"
+            android:textColor="@color/lila"
             android:textSize="12dp" />
 
         <TextView
@@ -252,7 +252,7 @@
         android:layout_marginLeft="116dp"
         android:layout_marginTop="660dp"
         android:text="@string/goLog"
-        android:textColor="#7D8CE3"
+        android:textColor="@color/lila"
         android:textSize="12dp"
         android:textStyle="bold" />
 
@@ -265,9 +265,9 @@
         android:layout_marginTop="250dp"
         android:layout_marginBottom="66dp"
         android:text="@string/signup"
-        android:textColor="#FFFFEE"
+        android:textColor="@color/background"
         android:textSize="14sp"
-        app:backgroundTint="#7D8CE3"
+        app:backgroundTint="@color/lila"
         app:cornerRadius="20dp" />
     </RelativeLayout>
 </ScrollView>
