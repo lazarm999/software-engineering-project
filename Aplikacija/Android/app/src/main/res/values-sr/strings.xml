@@ -28,10 +28,19 @@
     <string name="newPassword">Nova šifra</string>
     <string name="newPasswordConfirmation">Potvrdite novu šifru</string>
     <string name="resetPassword">Promeni šifru</string>
-    <string name="feedStudent">Oglasi</string>
-    <string name="jobListStudent">Moj poslovi</string>
+    <string name="feed">Oglasi</string>
+    <string name="jobListStudent">Moj Poslovi</string>
     <string name="recommendationsStudent">Preporučeno</string>
-    <string name="profileStudent">Profil</string>
-    <string name="notificationsStudent">Obaveštenja</string>
+    <string name="profile">Profil</string>
+    <string name="notifications">Obaveštenja</string>
+    <string name="forYouStudent">Za Vas</string>
+    <string name="newAd">Novi Oglas</string>
+    <string name="myAds">Moji Oglasi</string>
+    <string name="editProfile">Izmeni Profil</string>
+    <string name="infoStudent">Opis: </string>
+    <string name="facultyStudent">Fakultet: </string>
+    <string name="achievements">Dostignuća</string>
+    <string name="badges">Bedževi: </string>
+    <string name="saveChanges">Sačuvaj izmene</string>
 
 </resources>

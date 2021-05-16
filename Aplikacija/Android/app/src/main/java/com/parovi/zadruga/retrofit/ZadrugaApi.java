@@ -2,8 +2,6 @@ package com.parovi.zadruga.retrofit;
 
 import androidx.lifecycle.LiveData;
 
-import com.parovi.zadruga.Constants;
-import com.parovi.zadruga.PushNotification;
 import com.parovi.zadruga.models.Ad;
 import com.parovi.zadruga.models.TmpPost;
 import com.parovi.zadruga.models.User;
