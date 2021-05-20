@@ -1,6 +1,6 @@
 package com.parovi.zadruga;
 
-import com.parovi.zadruga.models.Notification;
+import com.parovi.zadruga.models.entityModels.Notification;
 
 public class PushNotification {
     private Notification notification;

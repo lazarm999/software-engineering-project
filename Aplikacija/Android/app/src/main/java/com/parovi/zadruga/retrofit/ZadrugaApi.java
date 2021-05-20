@@ -2,21 +2,16 @@ package com.parovi.zadruga.retrofit;
 
 import androidx.lifecycle.LiveData;
 
-import com.parovi.zadruga.Constants;
-import com.parovi.zadruga.PushNotification;
-import com.parovi.zadruga.models.Ad;
-import com.parovi.zadruga.models.TmpPost;
-import com.parovi.zadruga.models.User;
+import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.TmpPost;
+import com.parovi.zadruga.models.entityModels.User;
 
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;

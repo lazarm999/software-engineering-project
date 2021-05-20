@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.parovi.zadruga.models.manyToManyModels.Comment;
+import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
 
 import java.util.List;
 

@@ -1,17 +1,14 @@
 package com.parovi.zadruga.daos;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.parovi.zadruga.models.Ad;
-import com.parovi.zadruga.models.AdWithLocation;
-import com.parovi.zadruga.models.manyToManyModels.AdTag;
+import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.manyToManyModels.AdTag;
 
 import java.util.List;
 /*TODO:

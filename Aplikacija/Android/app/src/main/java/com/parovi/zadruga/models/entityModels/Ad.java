@@ -1,11 +1,9 @@
-package com.parovi.zadruga.models;
+package com.parovi.zadruga.models.entityModels;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
-
-import javax.annotation.Nullable;
 
 import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;
@@ -32,7 +30,7 @@ public class Ad {
     private String title;
     private String desc;
     private int feeFrom;
-    private int freeTo;
+    private int feeTo;
     private int peopleNeeded;
     //private boolean isClosed;
     @ColumnInfo(index = true)
@@ -80,12 +78,12 @@ public class Ad {
         this.feeFrom = feeFrom;
     }
 
-    public int getFreeTo() {
-        return freeTo;
+    public int getFeeTo() {
+        return feeTo;
     }
 
-    public void setFreeTo(int freeTo) {
-        this.freeTo = freeTo;
+    public void setFeeTo(int feeTo) {
+        this.feeTo = feeTo;
     }
 
     public int getPeopleNeeded() {

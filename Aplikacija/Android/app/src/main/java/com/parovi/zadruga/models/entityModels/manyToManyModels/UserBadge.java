@@ -1,28 +1,35 @@
-package com.parovi.zadruga.models.manyToManyModels;
+package com.parovi.zadruga.models.entityModels.manyToManyModels;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
-import com.parovi.zadruga.models.Ad;
-import com.parovi.zadruga.models.User;
+import com.parovi.zadruga.models.entityModels.Badge;
+import com.parovi.zadruga.models.entityModels.User;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(primaryKeys = {"fkUserId", "fkAdId"},
+@Entity(primaryKeys = {"fkUserId", "fkBadgeId"},
         foreignKeys = {@ForeignKey(entity = User.class,
                         parentColumns = "userId",
                         childColumns = "fkUserId",
                         onDelete = CASCADE),
-                        @ForeignKey(entity = Ad.class,
-                        parentColumns = "adId",
-                        childColumns = "fkAdId",
+                        @ForeignKey(entity = Badge.class,
+                        parentColumns = "badgeId",
+                        childColumns = "fkBadgeId",
                         onDelete = CASCADE)})
-public class Selected {
+public class UserBadge {
+    @ColumnInfo(index = true)
     private int fkUserId;
     @ColumnInfo(index = true)
-    private int fkAdId;
+    private int fkBadgeId;
     private boolean isSynced;
+
+    public UserBadge(int fkUserId, int fkBadgeId, boolean isSynced) {
+        this.fkUserId = fkUserId;
+        this.fkBadgeId = fkBadgeId;
+        this.isSynced = isSynced;
+    }
 
     public int getFkUserId() {
         return fkUserId;
@@ -32,12 +39,12 @@ public class Selected {
         this.fkUserId = fkUserId;
     }
 
-    public int getFkAdId() {
-        return fkAdId;
+    public int getFkBadgeId() {
+        return fkBadgeId;
     }
 
-    public void setFkAdId(int fkAdId) {
-        this.fkAdId = fkAdId;
+    public void setFkBadgeId(int fkBadgeId) {
+        this.fkBadgeId = fkBadgeId;
     }
 
     public boolean isSynced() {

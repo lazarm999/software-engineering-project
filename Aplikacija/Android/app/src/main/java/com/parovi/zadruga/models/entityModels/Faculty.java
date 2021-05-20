@@ -1,4 +1,4 @@
-package com.parovi.zadruga.models;
+package com.parovi.zadruga.models.entityModels;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -6,7 +6,6 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
-import static androidx.room.ForeignKey.SET_NULL;
 
 @Entity(foreignKeys = @ForeignKey(entity = University.class,
         parentColumns = "universityId",

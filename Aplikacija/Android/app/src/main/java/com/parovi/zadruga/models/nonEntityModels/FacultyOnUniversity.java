@@ -1,10 +1,10 @@
-package com.parovi.zadruga.models.oneToManyModels;
+package com.parovi.zadruga.models.nonEntityModels;
 
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
-import com.parovi.zadruga.models.Faculty;
-import com.parovi.zadruga.models.University;
+import com.parovi.zadruga.models.entityModels.Faculty;
+import com.parovi.zadruga.models.entityModels.University;
 
 import java.util.List;
 

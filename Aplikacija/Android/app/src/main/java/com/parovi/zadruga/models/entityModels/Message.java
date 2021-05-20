@@ -1,4 +1,4 @@
-package com.parovi.zadruga.models;
+package com.parovi.zadruga.models.entityModels;
 
 import androidx.room.Entity;
 

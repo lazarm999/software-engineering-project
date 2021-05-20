@@ -1,4 +1,4 @@
-package com.parovi.zadruga.models;
+package com.parovi.zadruga.models.entityModels;
 
 import com.google.firebase.firestore.Exclude;
 
@@ -9,7 +9,8 @@ public class Chat {
     private String chatId;
     private boolean isArchived;
     private List<Integer> memberIds;
-    //private List<Message> messages;
+    private List<Message> messages;
+    private int adId;
 
     public Chat(String chatId, boolean isArchived, List<Integer> memberIds) {
         this.chatId = chatId;

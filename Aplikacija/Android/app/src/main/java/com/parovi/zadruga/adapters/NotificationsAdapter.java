@@ -1,39 +1,47 @@
 package com.parovi.zadruga.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.R;
-import com.parovi.zadruga.models.Notification;
+import com.parovi.zadruga.models.entityModels.Notification;
 
 import java.util.ArrayList;
 
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder> {
+public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationViewHolder> {
 
-    private ArrayList<Notification> notificationList;
+    private ArrayList<Notification> notificationsList;
+    private OnNotificationItemClickListener onClickListener;
 
-    public NotificationAdapter(ArrayList<Notification> notificationList){
-        this.notificationList = notificationList;
+    public NotificationsAdapter(ArrayList<Notification> notificationsList, OnNotificationItemClickListener onClickListener){
+        this.notificationsList = notificationsList;
+        this.onClickListener = onClickListener;
+    }
+
+    public Notification getNotification(int i){
+        return notificationsList.get(i);
     }
 
     @NonNull
     @Override
     public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_item, parent, false);
-        NotificationViewHolder nvh = new NotificationViewHolder(v);
+        NotificationViewHolder nvh = new NotificationViewHolder(v, onClickListener);
         return nvh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotificationAdapter.NotificationViewHolder holder, int position) {
-        Notification currNotification = notificationList.get(position);
+    public void onBindViewHolder(@NonNull NotificationsAdapter.NotificationViewHolder holder, int position) {
+        Notification currNotification = notificationsList.get(position);
         if(currNotification.getType().equals(Constants.ACCEPTED)){
             holder.ivNotificationIcon.setImageResource(R.drawable.accepted);
             holder.tvTitle.setText("Odabrani ste za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
@@ -51,12 +59,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.tvTitle.setText("Korisnik taj i taj vas je ocenio" + Integer.toString(currNotification.getFkSenderId()));
             holder.tvDesc.setText("dao ti keca");
         }
-
     }
 
     @Override
     public int getItemCount() {
-        return notificationList.size();
+        return notificationsList.size();
     }
 
     public static class NotificationViewHolder extends RecyclerView.ViewHolder{
@@ -64,11 +71,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         private TextView tvTitle;
         private TextView tvDesc;
 
-        public NotificationViewHolder(@NonNull  View itemView) {
+        public NotificationViewHolder(@NonNull  View itemView, OnNotificationItemClickListener onClickListener) {
             super(itemView);
             ivNotificationIcon = itemView.findViewById(R.id.ivNotificationIcon);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDesc = itemView.findViewById(R.id.tvDesc);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickListener.onClick(getAdapterPosition());
+                }
+            });
         }
 
         public ImageView getIvNotificationIcon() {
@@ -82,5 +95,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public TextView getTvDesc() {
             return tvDesc;
         }
+    }
+
+    public interface OnNotificationItemClickListener{
+        public void onClick(int position);
     }
 }

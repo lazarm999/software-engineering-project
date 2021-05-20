@@ -1,17 +1,14 @@
 package com.parovi.zadruga.daos;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.google.android.material.circularreveal.CircularRevealHelper;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.parovi.zadruga.models.Badge;
-import com.parovi.zadruga.models.Tag;
-import com.parovi.zadruga.models.TmpPost;
+import com.parovi.zadruga.models.entityModels.Badge;
+import com.parovi.zadruga.models.entityModels.Tag;
+import com.parovi.zadruga.models.entityModels.TmpPost;
 
 import java.util.List;
 

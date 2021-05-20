@@ -1,11 +1,11 @@
-package com.parovi.zadruga.models.manyToManyModels;
+package com.parovi.zadruga.models.entityModels.manyToManyModels;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
-import com.parovi.zadruga.models.Ad;
-import com.parovi.zadruga.models.User;
+import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.User;
 
 import static androidx.room.ForeignKey.CASCADE;
 

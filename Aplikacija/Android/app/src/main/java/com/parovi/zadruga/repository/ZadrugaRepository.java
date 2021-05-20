@@ -2,6 +2,7 @@ package com.parovi.zadruga.repository;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -28,18 +29,34 @@ import com.parovi.zadruga.daos.LocationDao;
 import com.parovi.zadruga.daos.TmpDao;
 import com.parovi.zadruga.daos.UserDao;
 import com.parovi.zadruga.databases.ZadrugaDatabase;
-import com.parovi.zadruga.models.Ad;
-import com.parovi.zadruga.models.Chat;
-import com.parovi.zadruga.models.Location;
-import com.parovi.zadruga.models.Message;
-import com.parovi.zadruga.models.TmpPost;
-import com.parovi.zadruga.models.User;
-import com.parovi.zadruga.models.oneToManyModels.AdsOnLocation;
+import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.Chat;
+import com.parovi.zadruga.models.entityModels.Location;
+import com.parovi.zadruga.models.entityModels.Message;
+import com.parovi.zadruga.models.entityModels.TmpPost;
+import com.parovi.zadruga.models.entityModels.User;
+import com.parovi.zadruga.models.nonEntityModels.AdsOnLocation;
 import com.parovi.zadruga.retrofit.NotificationApi;
 import com.parovi.zadruga.retrofit.ZadrugaApi;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.QBIncomingMessagesManager;
+import com.quickblox.chat.QBRestChatService;
+import com.quickblox.chat.exception.QBChatException;
+import com.quickblox.chat.listeners.QBChatDialogMessageListener;
+import com.quickblox.chat.model.QBChatDialog;
+import com.quickblox.chat.model.QBChatMessage;
+import com.quickblox.chat.model.QBDialogType;
+import com.quickblox.chat.request.QBMessageGetBuilder;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBRequestGetBuilder;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +79,8 @@ public class ZadrugaRepository  {
     private final UserDao userDao;
     private final ZadrugaApi zadrugaApi;
     private final NotificationApi notificationApi;
+    private QBChatService chatService;
+    private QBIncomingMessagesManager incomingMessagesManager;
 
     private LiveData<List<AdsOnLocation>> adsWithLocation;
 
@@ -94,6 +113,8 @@ public class ZadrugaRepository  {
                 .build();
         zadrugaApi = backend.create(ZadrugaApi.class);
         notificationApi = notifications.create(NotificationApi.class);
+        chatService = QBChatService.getInstance();
+        incomingMessagesManager = chatService.getIncomingMessagesManager();
     }
 
     //Notification
@@ -106,7 +127,7 @@ public class ZadrugaRepository  {
         adDao.insertAd(ad);
     }
 
-    public LiveData<List<Ad>> getAllAds() {
+    public MutableLiveData<List<Ad>> getAllAds() {
         MutableLiveData<List<Ad>> ads = new MutableLiveData<>();
         Futures.addCallback(adDao.getAllAds(),
                 new FutureCallback<List<Ad>>() {
@@ -126,8 +147,7 @@ public class ZadrugaRepository  {
         tmpDao.deleteAllPosts();
     }
 
-    public LiveData<List<TmpPost>> getAllPosts() {
-        MutableLiveData<List<TmpPost>> posts = new MutableLiveData<>();
+    public void getAllPosts(MutableLiveData<List<TmpPost>> posts) {
         Futures.addCallback(tmpDao.getAllPosts(),
                 new FutureCallback<List<TmpPost>>() {
                     public void onSuccess(List<TmpPost> result) {
@@ -169,7 +189,6 @@ public class ZadrugaRepository  {
                         }
                     }
                 }, executor);
-        return posts;
     }
 
     //Location
@@ -209,21 +228,6 @@ public class ZadrugaRepository  {
     }
 
     //User
-    public LiveData<Long> insertUser(User user) {
-        MutableLiveData<Long> status = new MutableLiveData<>();
-        Futures.addCallback(userDao.insertUser(user), new FutureCallback<Long>() {
-                @Override
-                public void onSuccess(Long result) {
-                    status.postValue(result);
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    status.postValue(-1L);
-                }
-            }, executor);
-        return status;
-    }
 
     public LiveData<Integer> updateUserFcmToken(User user){
         MutableLiveData<Integer> response = new MutableLiveData<>();
@@ -283,6 +287,7 @@ public class ZadrugaRepository  {
         return response;
     }
 
+
     public LiveData<Integer> updateUser(User user){
         MutableLiveData<Integer> status = new MutableLiveData<>();
         Futures.addCallback(userDao.updateUser(user), new FutureCallback<Integer>() {
@@ -299,13 +304,242 @@ public class ZadrugaRepository  {
         return status;
     }
 
-    //Chat
-    public LiveData<Chat> getAllChats(Integer userId){
-        MutableLiveData<Chat> chats = new MutableLiveData<>();
+    public LiveData<Long> insertUser(User user) {
+        MutableLiveData<Long> status = new MutableLiveData<>();
+        Futures.addCallback(userDao.insertUser(user), new FutureCallback<Long>() {
+            @Override
+            public void onSuccess(Long result) {
+                status.postValue(result);
+            }
 
-        return chats;
+            @Override
+            public void onFailure(Throwable t) {
+                status.postValue(-1L);
+            }
+        }, executor);
+        return status;
     }
 
+    public void insertQBUser(MutableLiveData<Boolean> isSignedUp, User u, String pass){
+        QBUser qbUser = new QBUser();
+        qbUser.setLogin(u.getUsername());
+        qbUser.setPassword(pass);
+        qbUser.setExternalId(Integer.toString(15));//TODO: kad dobijes id od vuka ovde mozes da ga sacuvas
+        //TODO: za qbUser sifra mora bude duza od 8 karaktera
+        QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser user, Bundle args) {
+                Log.i("signIn", "braoooo");
+                isSignedUp.postValue(true);
+            }
+
+            @Override
+            public void onError(QBResponseException error) {
+                Log.i("signIn", "NE braoooo");
+                isSignedUp.postValue(false);
+            }
+        });
+    }
+
+    public void logInQBUser(MutableLiveData<Boolean> isLoggedIn, User u, String pass){
+        QBUser qbUser = new QBUser();
+        qbUser.setLogin(u.getUsername());
+        qbUser.setPassword(pass);
+
+        QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser user, Bundle args) {
+                Log.i("logIn", "braoooo");
+                isLoggedIn.postValue(true);
+            }
+
+            @Override
+            public void onError(QBResponseException error) {
+                Log.i("logIn", "ne braoooo");
+                isLoggedIn.postValue(false);
+
+            }
+        });
+    }
+
+    public MutableLiveData<Boolean> logOutQBUser(User u){
+        MutableLiveData<Boolean> isLoggedOut = new MutableLiveData<>();
+        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                QBAuth.deleteSession().performAsync(new QBEntityCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid, Bundle bundle) {
+                        Log.i("logOut", "braoooo");
+                        isLoggedOut.postValue(true);
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+                        Log.i("logOut", "ne braoooo");
+                        isLoggedOut.postValue(false);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.i("logOut", "ne braoooo");
+                isLoggedOut.postValue(false);
+
+            }
+        });
+        return isLoggedOut;
+    }
+
+    //Chat
+    //TODO: ovde mora sifra da se ukuca, da probam da odradim ovaj connect na pocetku kad se uloguje pa da vidimo kako ce da radi da ne bih sifru cuvao
+    public void connectToChatServer(MutableLiveData<Boolean> isConnected, User u){
+        QBUser qbUser = new QBUser();
+        qbUser.setLogin(u.getUsername());
+        qbUser.setPassword("sifra123");
+        qbUser.setId(u.getQbId());
+        QBChatService.getInstance().login(qbUser, new QBEntityCallback() {
+            @Override
+            public void onSuccess(Object o, Bundle bundle) {
+                Log.i("connectToChatServer", "braoooo");
+                QBChatService.getInstance().setReconnectionAllowed(true);
+                isConnected.postValue(true);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.i("connectToChatServer", "NE braoooo");
+                isConnected.postValue(false);
+            }
+        });
+    }
+
+    public MutableLiveData<QBChatDialog> insertChat(ArrayList<Integer> ids, boolean isPrivate){
+        MutableLiveData<QBChatDialog> chat = new MutableLiveData<>();
+        QBChatDialog dialog = new QBChatDialog();
+        if(isPrivate)
+            dialog.setType(QBDialogType.PRIVATE);
+        else
+            dialog.setType(QBDialogType.GROUP);
+        dialog.setOccupantsIds(ids);
+
+        QBRestChatService.createChatDialog(dialog).performAsync(new QBEntityCallback<QBChatDialog>() {
+            @Override
+            public void onSuccess(QBChatDialog result, Bundle params) {
+                Log.i("insertChat", "braoooo");
+                chat.postValue(result);
+            }
+
+            @Override
+            public void onError(QBResponseException responseException) {
+                Log.i("insertChat", "NE braoooo");
+                chat.postValue(null);
+            }
+        });
+        return chat;
+    }
+
+    public MutableLiveData<Boolean> joinGroupChat(){
+        MutableLiveData<Boolean> bool = new MutableLiveData<>();
+        return bool;
+    }
+
+    public void getAllChats(MutableLiveData<List<QBChatDialog>> chats){
+        QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
+        requestBuilder.setLimit(50);
+        requestBuilder.sortAsc("last_message_date_sent");
+
+        QBRestChatService.getChatDialogs(null, requestBuilder).performAsync(new QBEntityCallback<ArrayList<QBChatDialog>>() {
+            @Override
+            public void onSuccess(ArrayList<QBChatDialog> result, Bundle params) {
+                chats.postValue(result);
+            }
+
+            @Override
+            public void onError(QBResponseException responseException) {
+                chats.postValue(new ArrayList<>());
+            }
+        });
+    }
+    //TODO: je l cemo da brisemo chatove kad bude gotov posa?
+    public void deleteChat(){
+
+    }
+
+    public MutableLiveData<QBChatDialog> getChatById(String chatId){
+        MutableLiveData<QBChatDialog> chat = new MutableLiveData<>();
+        QBRestChatService.getChatDialogById(chatId).performAsync(new QBEntityCallback<QBChatDialog>() {
+            @Override
+            public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
+                chat.setValue(qbChatDialog);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                chat.setValue(null);
+            }
+        });
+        return chat;
+    }
+
+    public void getMessages(MutableLiveData<List<QBChatMessage>> messages, QBChatDialog chat){
+        QBMessageGetBuilder messageGetBuilder = new QBMessageGetBuilder();
+        messageGetBuilder.setLimit(100);
+        QBRestChatService.getDialogMessages(chat, messageGetBuilder).performAsync(new QBEntityCallback<ArrayList<QBChatMessage>>() {
+            @Override
+            public void onSuccess(ArrayList<QBChatMessage> qbChatMessages, Bundle bundle) {
+                messages.postValue(qbChatMessages);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                messages.postValue(new ArrayList<>());
+            }
+        });
+    }
+
+    public void onGlobalMessageReceived(QBChatDialogMessageListener newMessageListener){
+        incomingMessagesManager.addDialogMessageListener(newMessageListener);
+    }
+
+    public void removeGlobalMessageReceivedListener(QBChatDialogMessageListener newMessageListener){
+        incomingMessagesManager.removeDialogMessageListrener(newMessageListener);
+    }
+
+    //TODO: ovo ce vimo da l ce koristis
+    public MutableLiveData<QBChatMessage> onChatMessageReceived(QBChatDialog chat){
+        MutableLiveData<QBChatMessage> newMessage = new MutableLiveData<>();
+        chat.addMessageListener(new QBChatDialogMessageListener() {
+            @Override
+            public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
+                newMessage.postValue(qbChatMessage);
+            }
+
+            @Override
+            public void processError(String dialogId, QBChatException e, QBChatMessage qbChatMessage, Integer senderId) {
+                newMessage.postValue(null);
+            }
+        });
+        return newMessage;
+    }
+
+    public void sendMessage(MutableLiveData<Boolean> isSent, QBChatDialog chat, QBChatMessage message){
+        chat.sendMessage(message, new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                isSent.postValue(true);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                isSent.postValue(false);
+            }
+        });
+    }
+
+    //FIREBASE
     public LiveData<List<Message>> getMessages(String chatId) {
         MutableLiveData<List<Message>> messages = new MutableLiveData<>();
         firebaseDb.collection("chats").document(chatId).addSnapshotListener(new EventListener<DocumentSnapshot>() {

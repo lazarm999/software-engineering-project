@@ -4,7 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Query;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.parovi.zadruga.models.User;
+import com.parovi.zadruga.models.entityModels.User;
 
 import java.util.List;
 

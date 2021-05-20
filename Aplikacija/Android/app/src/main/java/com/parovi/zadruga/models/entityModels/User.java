@@ -1,4 +1,4 @@
-package com.parovi.zadruga.models;
+package com.parovi.zadruga.models.entityModels;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -16,6 +16,7 @@ import static androidx.room.ForeignKey.SET_NULL;
 public class User {
     @PrimaryKey(autoGenerate = true)
     private int userId;
+    private String username;
     private String name;
     private String surname;
     private String email;
@@ -28,7 +29,26 @@ public class User {
     @ColumnInfo(index = true)
     private int fkFacultyId;
     private String type; //u Constants su zapamceni tipovi naloga
+    private int qbId;
     private boolean isSynced;
+
+    public User(int userId, String name){
+        this.userId = userId;
+        this.name = name;
+    }
+
+    public User(){
+    }
+
+    @Ignore
+    public User(String username){
+        this.username = username;
+    }
+
+    public User(String username, int qbId){
+        this.username = username;
+        this.qbId = qbId;
+    }
 
     public int getUserId() {
         return userId;
@@ -38,16 +58,12 @@ public class User {
         this.userId = userId;
     }
 
-    public User(int userId, String name){
-        this.userId = userId;
-        this.name = name;
+    public String getUsername() {
+        return username;
     }
 
-    public User(){
-    }
-    @Ignore
-    public User(String name){
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getName() {
@@ -136,6 +152,14 @@ public class User {
 
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
+    }
+
+    public int getQbId() {
+        return qbId;
+    }
+
+    public void setQbId(int qbId) {
+        this.qbId = qbId;
     }
 
     public boolean isSynced() {
