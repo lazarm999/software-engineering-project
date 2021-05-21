@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from api.models import *
 from api.serializers import *
 from api.permissions import *
-
+from api.responses import *
 
 # Create your views here.
 class Register(generics.GenericAPIView, mixins.CreateModelMixin):
@@ -34,18 +34,19 @@ class Register(generics.GenericAPIView, mixins.CreateModelMixin):
 
 class Login(APIView):
     def post(self, request):
-        email = request.data['email']
-        password = request.data['password']
+        email = request.data.get('email')
+        password = request.data.get('password')
 
+        user = get_object_or_404(User, email=email)
         try:
-            user = User.objects.get(email=email)
             if check_password(password, user.password) and user.banAdmin is None:
-                return Response({'token' : jwt.encode({'id' : user.userId}, os.environ.get('SECRET_KEY'), algorithm="HS256")})
+                return Response({'id': user.userId, 
+                    'token': jwt.encode({'id' : user.userId}, 
+                    os.environ.get('SECRET_KEY'), algorithm="HS256")})
             else:
-                return Response('Unauthorized', status=status.HTTP_401_UNAUTHORIZED)
+                return r401('Unauthorized')
         except Exception as e:
-            print(e)
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return r500(e)
 
 
 class UserDetail(generics.GenericAPIView, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.RetrieveModelMixin):
@@ -57,18 +58,15 @@ class UserDetail(generics.GenericAPIView, mixins.UpdateModelMixin, mixins.Destro
         return self.retrieve(request, args, kwargs)
 
     def patch(self, request, pk, *args, **kwargs):
-        '''
-            Only expose PATCH method, because of separate password update.
-        '''
         user = get_object_or_404(User, pk=pk)
-        if request.data['facultyId']:
-            user.faculty = get_object_or_404(Faculty, pk=request.data['facultyId'])
+        if request.data.get('facultyId'):
+            user.faculty = get_object_or_404(Faculty, pk=request.data.get('facultyId'))
             try:
                 user.save()
             except:
                 pass
         self.partial_update(request, *args, **kwargs)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return r204()
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
@@ -78,16 +76,19 @@ class PasswordChange(APIView):
     permission_classes = [IsLoggedIn, IsOwner]
 
     def put(self, request, pk):
-        oldPwd = request.data['oldPassword']
-        newPwd = request.data['newPassword']
+        oldPwd = request.data.get('oldPassword')
+        newPwd = request.data.get('newPassword')
+
+        if pk != request._auth:
+            return r401('Unauthorized')
 
         user = get_object_or_404(User, pk=pk)
         if check_password(oldPwd, user.password):
             user.password = make_password(newPwd)
             user.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return r204()
         else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return r401()
     
 
 class ProfilePicture(APIView):
@@ -96,19 +97,16 @@ class ProfilePicture(APIView):
     permission_classes = [IsLoggedIn, IsOwner]
 
     def get(self, request, pk):
-        try:
-            imgName = get_object_or_404(User, pk=pk).imageName
-            if imgName:
-                imgPath = os.path.join(ProfilePicture.imgsDir, imgName)
+        imgName = get_object_or_404(User, pk=pk).imageName
+        if imgName:
+            imgPath = os.path.join(ProfilePicture.imgsDir, imgName)
+        else:
+            raise Http404
+        with open(imgPath, 'rb') as f:
+            if f:
+                return HttpResponse(f.read(), content_type='image/png')
             else:
                 raise Http404
-            with open(imgPath, 'rb') as f:
-                if f:
-                    return HttpResponse(f.read(), content_type='image/png')
-                else:
-                    raise Http404
-        except User.DoesNotExist:
-            raise Http404
 
     def post(self, request, pk):
         '''
@@ -423,6 +421,7 @@ class Choose(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
         
 
+# TODO: prijavljivanje neprikladnog sadrzaja
 # TODO: refactor, make sure you are consistent + Response functions
 # TODO: log exceptions + startserver skripta
 # TODO: return object on create

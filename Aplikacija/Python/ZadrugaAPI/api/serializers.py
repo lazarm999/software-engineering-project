@@ -47,9 +47,9 @@ class EarnedSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    faculty = FacultySerializer()
-    banAdmin = PrimaryKeyRelatedField(queryset=User.objects.filter(isAdmin=True))
-    badges = EarnedSerializer(many=True)
+    faculty = FacultySerializer(required=False)
+    banAdmin = PrimaryKeyRelatedField(required=False, queryset=User.objects.filter(isAdmin=True))
+    badges = EarnedSerializer(required=False, many=True)
 
     class Meta:
         model = User
