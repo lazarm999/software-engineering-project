@@ -1,3 +1,4 @@
+from django.http.response import Http404
 from rest_framework.response import Response
 from rest_framework.status import * 
 
@@ -15,3 +16,6 @@ def r201(obj=None):
 
 def r400(obj=None):
     return Response(obj, status=HTTP_400_BAD_REQUEST)
+
+def r404(obj=None):
+    return Response(obj, status=HTTP_404_NOT_FOUND)

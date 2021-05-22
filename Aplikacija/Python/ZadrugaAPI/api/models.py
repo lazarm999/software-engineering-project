@@ -3,28 +3,28 @@ from django.db import models
 
 # Create your models here.
 class University(models.Model):
-    universityId = models.BigAutoField(primary_key=True)
+    universityId = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=50)
 
 
 class Faculty(models.Model):
-    facultyId = models.BigAutoField(primary_key=True)
+    facultyId = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=50)
     university = models.ForeignKey('University', related_name='faculties', on_delete=models.CASCADE)
 
 
 class Tag(models.Model):
-    tagId = models.BigAutoField(primary_key=True)
+    tagId = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=50)
 
 
 class Location(models.Model):
-    locId = models.BigAutoField(primary_key=True)
+    locId = models.BigIntegerField(primary_key=True)
     cityName = models.CharField(max_length=50)
 
 
 class Badge(models.Model):
-    badgeId = models.BigAutoField(primary_key=True)
+    badgeId = models.BigIntegerField(primary_key=True)
     description = models.CharField(max_length=100)
 
 
@@ -58,7 +58,7 @@ class Rating(models.Model):
     ratee = models.ForeignKey('User', related_name='received_ratings', on_delete=models.CASCADE)
     rating = models.IntegerField()
     comment = models.TextField(null=True)
-    postTime = models.DateTimeField(auto_now_add=True)
+    postTime = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['rater', 'ratee'], name='rating_pk')]
@@ -90,9 +90,6 @@ class Comment(models.Model):
     ad = models.ForeignKey('Ad', related_name='comments', on_delete=models.CASCADE)
     comment = models.TextField()
     postTime = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        constraints = [models.UniqueConstraint(fields=['ad', 'user'], name='comment_pk')]
     
 
 class Applied(models.Model):

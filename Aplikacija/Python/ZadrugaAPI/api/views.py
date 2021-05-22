@@ -4,11 +4,12 @@ import uuid
 import jwt
 from PIL import Image
 
-from django.http import Http404, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password, check_password
+from django.db import transaction
 
-from rest_framework import generics, status, mixins
+from rest_framework import generics, mixins
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
@@ -59,13 +60,29 @@ class UserDetail(generics.GenericAPIView, mixins.UpdateModelMixin, mixins.Destro
 
     def patch(self, request, pk, *args, **kwargs):
         user = get_object_or_404(User, pk=pk)
-        if request.data.get('facultyId'):
-            user.faculty = get_object_or_404(Faculty, pk=request.data.get('facultyId'))
-            try:
-                user.save()
-            except:
-                pass
-        self.partial_update(request, *args, **kwargs)
+        firstName = request.data.get('firstName')
+        lastName = request.data.get('lastName')
+        bio = request.data.get('bio')
+        phoneNumber = request.data.get('phoneNumber')
+        companyName = request.data.get('companyName')
+        facultyId = request.data.get('facultyId')
+
+        if facultyId:
+            if user.isEmployer:
+                return r400('Cannot set faculty for employer')
+            user.faculty = get_object_or_404(Faculty, pk=facultyId)
+        if companyName:
+            if not user.isEmployer:
+                return r400('Cannot set company for employee')
+            user.companyName = companyName
+        user.firstName = firstName or user.firstName
+        user.lastName = lastName or user.lastName
+        user.bio = bio or user.bio
+        user.phoneNumber = phoneNumber or user.phoneNumber
+        try:
+            user.save()
+        except:
+            return r500('Failed saving user')
         return r204()
 
     def delete(self, request, *args, **kwargs):
@@ -86,9 +103,9 @@ class PasswordChange(APIView):
         if check_password(oldPwd, user.password):
             user.password = make_password(newPwd)
             user.save()
-            return r204()
         else:
-            return r401()
+            return r401('Wrong password')
+        return r204()
     
 
 class ProfilePicture(APIView):
@@ -101,12 +118,12 @@ class ProfilePicture(APIView):
         if imgName:
             imgPath = os.path.join(ProfilePicture.imgsDir, imgName)
         else:
-            raise Http404
+            return r404()
         with open(imgPath, 'rb') as f:
             if f:
                 return HttpResponse(f.read(), content_type='image/png')
             else:
-                raise Http404
+                return r404()
 
     def post(self, request, pk):
         '''
@@ -116,30 +133,30 @@ class ProfilePicture(APIView):
         '''
         user = get_object_or_404(User, pk=pk)
         user.imageName = str(uuid.uuid4())+'.png'
-        image = Image.open(request.data['file'])
+        image = Image.open(request.data.get('file'))
         # TODO: png + format
         try:
             image.save(os.path.join(ProfilePicture.imgsDir, user.imageName))
             user.save()
-        except Exception as e:
-            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(status=status.HTTP_201_CREATED)
+        except:
+            return r500('Failed saving profile picture')
+        return r201()
 
 
 class BanUser(APIView):
     permission_classes = [IsLoggedIn, IsAdmin]
 
     def post(self, request, pk):
-        print(User.objects.get(pk=request._auth).isAdmin)
         user = get_object_or_404(User, pk=pk)
         user.banAdmin = User.objects.get(pk=request._auth)
-        if request.data['banExplanation']:
-            user.banExplanation = request.data['banExplanation']
+        banExplanation = request.data.get('banExplanation')
+        if banExplanation:
+            user.banExplanation = banExplanation
         try:
             user.save()
-        except Exception as e:
-            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        except:
+            return r500('Failed banning user')
+        return r204()
 
 
 class UnbanUser(APIView):
@@ -151,45 +168,61 @@ class UnbanUser(APIView):
         user.banExplanation = None
         try:
             user.save()
-        except Exception as e:
-            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        except:
+            return r500('Failed unbanning user')
+        return r204()
 
 
 class RateUser(APIView):
     permission_classes = [IsLoggedIn]
     
-    def post(self, request, *args, **kwargs):
-        rater_id = request.data['rater']
-        ratee_id = request.data['ratee']
-        rating = request.data['rating']
-        comment = request.data['comment']
-        if rater_id and ratee_id:
-            rater = get_object_or_404(User, pk=rater_id)
-            ratee = get_object_or_404(User, pk=ratee_id)
-            if rater.isEmployer != ratee.isEmployer and isinstance(rating, int) \
-                and rating > 0 and rating < 6 and rater.userId == request._auth:
-                r = Rating()
-                r.rater = rater
-                r.ratee = ratee
-                r.rating = rating
-                r.comment = comment
-                try:
-                    r.save()
-                except:
-                    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            else:
-                return Response('Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response('Please provide rater and ratee', status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_201_CREATED)
+    def post(self, request, pk, *args, **kwargs):
+        raterId = request._auth
+        rateeId = pk
+        rating = request.data.get('rating')
+        comment = request.data.get('comment')
+
+        rater = get_object_or_404(User, pk=raterId)
+        ratee = get_object_or_404(User, pk=rateeId)
+        if not (rater.isEmployer != ratee.isEmployer and isinstance(rating, int) \
+            and rating > 0 and rating < 6):
+            return r400('Invalid parameters')
+        r = Rating()
+        r.rater = rater
+        r.ratee = ratee
+        r.rating = rating
+        r.comment = comment
+        try:
+            r.save()
+        except:
+            return r500('Failed saving rating')
+        serialized = RatingSerializer(r)
+        return r201(serialized.data)
+
+    def put(self, request, pk, *args, **kwargs):
+        raterId = request._auth
+        rateeId = pk
+        rating = request.data.get('rating')
+        comment = request.data.get('comment')
+
+        ratingObj = get_object_or_404(Rating, rater_id=raterId, ratee_id=rateeId)
+        if not (isinstance(rating, int) and rating > 0 and rating < 6):
+            return r400('Invalid parameters')
+        ratingObj.rating = rating
+        ratingObj.comment = comment
+        try:
+            ratingObj.save()
+        except:
+            return r500('Failed saving rating')
+        return r204()
 
 
 class UserRatings(APIView):
     permission_classes = [IsLoggedIn]
 
     def get(self, request, pk, *args, **kwargs):
-        ratingList = Rating.objects.filter(ratee_id=pk)
+        ratingList = Rating.objects.filter(ratee_id=pk) \
+            .order_by('-postTime')
         serialized = RatingSerializer(ratingList, many=True)
         return Response(serialized.data)
 
@@ -200,23 +233,37 @@ class AdList(generics.ListCreateAPIView):
     permission_classes = [IsLoggedIn]
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
+        title = request.data.get('title')
+        description = request.data.get('description')
+        numberOfEmployees = request.data.get('numberOfEmployees')
+        compensationMin = request.data.get('compensationMin')
+        compensationMax = request.data.get('compensationMax')
+        locationId = request.data.get('locationId')
+        employerId = request._auth
+
+        if not (title and numberOfEmployees and compensationMin and \
+            compensationMax and locationId):
+            return r400('Please provide needed fields: title, numberOfEmployees \
+                compensationMin, compensationMax and locationId')
+
+        if not (compensationMin > 0 and compensationMax > 0 and numberOfEmployees > 0):
+            return r400('Compensations and number of employees must be natural numbers')
+
+        if compensationMin > compensationMax:
+            return r400('compensationMin must be less or equal to compensationMax')
+        
         ad = Ad()
-        ad.title = request.data.get('title')
-        ad.description = request.data.get('description')
-        ad.numberOfEmployees = request.data.get('numberOfEmployees')
-        ad.compensationMin = request.data.get('compensationMin')
-        ad.compensationMax = request.data.get('compensationMax')
-
-        if ad.compensationMin > ad.compensationMax:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        ad.employer = get_object_or_404(User, pk=request.data.get('employerId'))
-        ad.location = get_object_or_404(Location, pk=request.data.get('locationId'))
+        ad.title = title
+        ad.description = description
+        ad.numberOfEmployees = numberOfEmployees
+        ad.compensationMin = compensationMin
+        ad.compensationMax = compensationMax
+        ad.employer = get_object_or_404(User, pk=employerId)
+        ad.location = get_object_or_404(Location, pk=locationId)
         try:
             ad.save()
         except:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return r500('Failed saving ad')
 
         tags = request.data.get('tags')
         if tags:
@@ -232,10 +279,11 @@ class AdList(generics.ListCreateAPIView):
                     rt.save()
                 except:
                     continue
-        return Response(status=status.HTTP_201_CREATED)
+        serializer = AdSerializer(ad)
+        return r201(serializer.data)
 
     def get(self, request, *args, **kwargs):
-        ads = Ad.objects.all()
+        ads = Ad.objects.all().order_by('-postTime')
         serialized = AdSerializer(ads, many=True)
         return Response(serialized.data)
 
@@ -245,35 +293,37 @@ class AdTags(APIView):
 
     def post(self, request, pk, *args, **kwargs):
         tagId = request.data.get('tagId')
-        if tagId:
-            tag = get_object_or_404(Tag, pk=tagId)
-            ad = get_object_or_404(Ad, pk=pk)
-            if ad.employer.userId != request._auth:
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
-            r = RelatedTo()
-            r.tag = tag
-            r.ad = ad
-            try:
-                r.save()
-            except:
-                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_201_CREATED)
+        if not tagId:
+            return r400('Please provide tagId')
+
+        tag = get_object_or_404(Tag, pk=tagId)
+        ad = get_object_or_404(Ad, pk=pk)
+        if ad.employer.userId != request._auth:
+            return r401('Unauthorized')
+
+        r = RelatedTo()
+        r.tag = tag
+        r.ad = ad
+
+        try:
+            r.save()
+        except:
+            return r500('Failed saving tag')
+        return r204()
 
     def delete(self, request, pk, *args, **kwargs):
         tagId = request.data.get('tagId')
-        if tagId:
-            r = get_object_or_404(RelatedTo, tag_id=tagId, ad_id=pk)
-            if r.ad.employer.userId != request._auth:
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
-            try:
-                r.delete()
-            except:
-                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        if not tagId:
+            return r400('Please provide tagId')
+        r = get_object_or_404(RelatedTo, tag_id=tagId, ad_id=pk)
+        if r.ad.employer.userId != request._auth:
+            return r401('Unauthorized')
+        try:
+            r.delete()
+        except:
+            return r500('Failed deleting tag')
+        return r204()
 
 
 class AdDetail(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
@@ -286,61 +336,69 @@ class AdDetail(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Update
 
     def delete(self, request, pk, *args, **kwargs):
         ad = get_object_or_404(Ad, pk=pk)
-        if ad.employer.userId == request._auth:
-            try:
-                ad.delete()
-            except:
-                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if ad.employer.userId != request._auth:
+            return r401('Unauthorized')
+        try:
+            ad.delete()
+        except:
+            return r500('Failed deleting ad')
+        return r204()
 
     def patch(self, request, pk, *args, **kwargs):
         ad = get_object_or_404(Ad, pk=pk)
-        if ad.employer.userId == request._auth:
-            compMin = request.data.get('compensationMin', ad.compensationMin)
-            compMax = request.data.get('compensationMax', ad.compensationMax)
-            if compMin > compMax:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            locationId = request.data.get('locationId')
-            if locationId:
-                location = Location.objects.filter(pk=locationId).first()
-                if location:
-                    ad.location = location
-                    try:
-                        ad.save()
-                    except:
-                        pass           
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        self.partial_update(request, args, kwargs)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if ad.employer.userId != request._auth:
+            return r401('Unauthorized')
+        title = request.data.get('title', ad.title)
+        desc = request.data.get('description', ad.description)
+        numberOfEmployees = request.data.get('numberOfEmployees', ad.numberOfEmployees)
+        compMin = request.data.get('compensationMin', ad.compensationMin)
+        compMax = request.data.get('compensationMax', ad.compensationMax)
+
+        if not (compMin > 0 and compMax > 0 and numberOfEmployees > 0):
+            return r400('Compensations and number of employees must be natural numbers')
+
+        if compMin > compMax:
+            return r400('compensationMin must be less or equal to compensationMax')
+
+        locationId = request.data.get('locationId')
+        if locationId:
+            location = Location.objects.filter(pk=locationId).first()
+            if location:
+                ad.location = location
+
+        ad.title = title
+        ad.description = desc
+        ad.numberOfEmployees = numberOfEmployees
+        ad.compensationMin = compMin
+        ad.compensationMax = compMax
+        try:
+            ad.save()
+        except:
+            return r500('Failed saving ad')          
+        return r204()
 
 
 class CommentList(APIView):
     permission_classes = [IsLoggedIn]
 
-    def post(self, request, *args, **kwargs):
-        adId = request.data.get('adId')
+    def post(self, request, pk, *args, **kwargs):
+        adId = pk
         comment = request.data.get('comment')
-        if adId and comment:
-            c = Comment()
-            c.user = get_object_or_404(User, pk=request._auth)
-            c.ad = get_object_or_404(Ad, pk=adId)
-            c.comment = comment
-            try:
-                c.save()
-            except:
-                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_201_CREATED)
+        if not (adId and comment and comment != ''):
+            return r400('Please provide comment')
+        c = Comment()
+        c.user = get_object_or_404(User, pk=request._auth)
+        c.ad = get_object_or_404(Ad, pk=adId)
+        c.comment = comment
+        try:
+            c.save()
+        except:
+            return r500('Failed to save comment')
+        serialized = CommentSerializer(c)
+        return r201(serialized.data)
 
-    def get(self, request, *args, **kwargs):
-        adId = request.data.get('adId')
-        if not adId:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        comments = Comment.objects.filter(ad_id=adId)
+    def get(self, request, pk, *args, **kwargs):
+        comments = Comment.objects.filter(ad_id=pk).order_by('postTime')
         serialized = CommentSerializer(comments, many=True)
         return Response(serialized.data)
 
@@ -350,14 +408,13 @@ class CommentDetail(APIView):
 
     def delete(self, request, pk, *args, **kwargs):
         comment = get_object_or_404(Comment, pk=pk)
-        if comment.user.userId == request._auth:
-            try:
-                comment.delete()
-            except:
-                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if comment.user.userId != request._auth:
+            return r401('Unauthorized')
+        try:
+            comment.delete()
+        except:
+            return r500('Failed to delete comment')
+        return r204()
 
 
 class Apply(APIView):
@@ -368,11 +425,11 @@ class Apply(APIView):
         ad = get_object_or_404(Ad, pk=pk)
 
         if not user or not ad:
-            return Response('Please specify valid ad', status=status.HTTP_400_BAD_REQUEST)
+            return r400('Please specify valid ad')
         if user.isEmployer:
-            return Response('Only employees can apply for jobs', status=status.HTTP_400_BAD_REQUEST)
+            return r400('Only employees can apply for jobs')
         if ad.isClosed:
-            return Response('This job is closed', status=status.HTTP_400_BAD_REQUEST)
+            return r400('This job is closed')
         
         a = Applied()
         a.user = user
@@ -380,19 +437,19 @@ class Apply(APIView):
         try:
             a.save()
         except:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(status=status.HTTP_201_CREATED)
+            return r500('Failed to apply for job')
+        serialized = AppliedSerializer(a)
+        return r201(serialized.data)
 
     def delete(self, request, pk, *args, **kwargs):
         a = get_object_or_404(Applied, user_id=request._auth, ad_id=pk)
         if a.ad.isClosed:
-            return Response('This job is closed', status=status.HTTP_400_BAD_REQUEST)
-
+            return r400('This job is closed')
         try:
             a.delete()
         except:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            return r500('Failed to unapply for job')
+        return r204()
 
 
 class Choose(APIView):
@@ -402,30 +459,30 @@ class Choose(APIView):
         ad = get_object_or_404(Ad, pk=pk)
 
         if ad.employer.userId != request._auth:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return r401('Unauthorized')
         if ad.isClosed:
-            return Response('This job is closed', status=status.HTTP_400_BAD_REQUEST)
+            return r400('This job is closed')
 
         userIds = request.data.get('userIds')
         users = Applied.objects.filter(ad_id=pk, user__userId__in=userIds)
         if len(users) != len(userIds):
-            return Response('Invalid user id', status=status.HTTP_400_BAD_REQUEST)
+            return r400('Invalid user id')
 
         try:
-            users.update(chosen=True)
-            ad.isClosed=True
-            ad.save()
-        except Exception as e:
-            print(e)
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            with transaction.atomic():
+                users.update(chosen=True)
+                ad.isClosed=True
+                ad.save()
+        except:
+            return r500('Failed to choose applicants')
+        return r204()
         
 
+# TODO: filtriranje i sortiranje
 # TODO: prijavljivanje neprikladnog sadrzaja
-# TODO: refactor, make sure you are consistent + Response functions
-# TODO: log exceptions + startserver skripta
-# TODO: return object on create
 # TODO: paginacija svuda
 # TODO: ne svi podaci za svaki upit
-# TODO: .get za dictove
 # TODO: forgot password, badzevi, notifikacije, recommender system
+# TODO: sql skripta za pocetno punjenje
+# TODO: Docker
+# TODO: Readme za instalaciju
