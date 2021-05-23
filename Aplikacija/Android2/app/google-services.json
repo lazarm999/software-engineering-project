@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "365025594285",
+    "project_id": "zadruga-c9478",
+    "storage_bucket": "zadruga-c9478.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365025594285:android:94ae2285cb185469e3ef24",
+        "android_client_info": {
+          "package_name": "com.parovi.zadruga"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "365025594285-qmtjo6vdq81r3u7mgj64lp11jf4b2rje.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBy3drtOyCLN7L5PatX-fjuXCsCs0FR22U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "365025594285-qmtjo6vdq81r3u7mgj64lp11jf4b2rje.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

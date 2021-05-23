@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Zadruga</string>
+
+    <string name="login">Prijavi se</string>
+    <string name="question">Nemate nalog?</string>
+    <string name="signup">Registruj se</string>
+    <string name="language">Promeni jezik</string>
+    <string name="logName">Korisničko ime</string>
+    <string name="logPassword">Šifra</string>
+    <string name="restorePassword">Promenite šifru</string>
+    <string name="signName">* Ime:</string>
+    <string name="signNamePlaceholder">Ime</string>
+    <string name="signSurname">* Prezime:</string>
+    <string name="signSurnamePlaceholder">Prezime</string>
+    <string name="gender">Pol</string>
+    <string name="genderM">M</string>
+    <string name="genderF">Ž</string>
+    <string name="email">* Email</string>
+    <string name="emailPlaceholder">Email</string>
+    <string name="username">* Korisničko ime</string>
+    <string name="usernamePlaceholder">Korisničko ime</string>
+    <string name="mobile">Telefon</string>
+    <string name="mobilePlaceholder">+381</string>
+    <string name="signPassword">* Šifra</string>
+    <string name="signPasswordPlaceholder">Šifra</string>
+    <string name="goLog">Imate nalog? Prijavite se</string>
+    <string name="newPassword">Nova šifra</string>
+    <string name="newPasswordConfirmation">Potvrdite novu šifru</string>
+    <string name="resetPassword">Promeni šifru</string>
+    <string name="feedStudent">Oglasi</string>
+    <string name="jobListStudent">Moj poslovi</string>
+    <string name="recommendationsStudent">Preporučeno</string>
+    <string name="profileStudent">Profil</string>
+    <string name="notificationsStudent">Obaveštenja</string>
+    <string name="daysAgo">pre %1$d dana</string>
+    <string name="dayAgo">pre %1$d dan</string>
+    <string name="hoursAgo">pre %1$d sati</string>
+    <string name="lessThen6hourAgo">pre %1$d sata</string>
+</resources>
