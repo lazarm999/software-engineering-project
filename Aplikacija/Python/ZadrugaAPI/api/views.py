@@ -478,6 +478,7 @@ class Choose(APIView):
         return r204()
         
 
+# TODO: ocenjivanje samo kad su saradjivali + zavrsen posao
 # TODO: filtriranje i sortiranje
 # TODO: prijavljivanje neprikladnog sadrzaja
 # TODO: paginacija svuda
