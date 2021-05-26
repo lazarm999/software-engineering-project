@@ -55,7 +55,7 @@ class UserDetail(generics.GenericAPIView, mixins.UpdateModelMixin, mixins.Destro
     serializer_class = UserSerializer
     permission_classes = [IsLoggedIn, IsOwner]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, pk, *args, **kwargs):
         return self.retrieve(request, args, kwargs)
 
     def patch(self, request, pk, *args, **kwargs):
@@ -198,6 +198,18 @@ class RateUser(APIView):
             return r500('Failed saving rating')
         serialized = RatingSerializer(r)
         return r201(serialized.data)
+
+    def delete(self, request, pk, *args, **kwargs):
+        raterId = request._auth
+        rateeId = pk
+
+        rating = get_object_or_404(Rating, rater_id=raterId, ratee_id=rateeId)
+        try:
+            rating.delete()
+        except:
+            return r500('Failed deleting rating')
+        return r204()
+
 
     def put(self, request, pk, *args, **kwargs):
         raterId = request._auth

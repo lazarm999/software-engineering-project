@@ -44,10 +44,11 @@ class User(models.Model):
     faculty = models.ForeignKey('Faculty', related_name='students', on_delete=models.CASCADE, null=True)
     banAdmin = models.ForeignKey('User', on_delete=models.DO_NOTHING, null=True)
     banExplanation = models.TextField(null=True)
+    badges = models.ManyToManyField(Badge, through='Earned')
 
 class Earned(models.Model):
-    user = models.ForeignKey('User', related_name='badges', on_delete=models.CASCADE)
-    badge = models.ForeignKey('Badge', related_name='users', on_delete=models.CASCADE)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    badge = models.ForeignKey('Badge', on_delete=models.CASCADE)
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['user', 'badge'], name='earned_pk')]
