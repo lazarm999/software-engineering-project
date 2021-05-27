@@ -79,7 +79,7 @@ class RelatedToSerializer(serializers.ModelSerializer):
 class AdSerializer(serializers.ModelSerializer):
     employer = UserSerializer()
     location = LocationSerializer()
-    tags = RelatedToSerializer(many=True)
+    tags = TagSerializer(many=True)
 
     class Meta:
         model = Ad

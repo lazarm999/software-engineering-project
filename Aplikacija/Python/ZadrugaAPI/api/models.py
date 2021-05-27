@@ -76,11 +76,12 @@ class Ad(models.Model):
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     isClosed = models.BooleanField(default=False)
     postTime = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField(Tag, through='RelatedTo')
 
 
 class RelatedTo(models.Model):
-    ad = models.ForeignKey('Ad', related_name='tags', on_delete=models.CASCADE)
-    tag = models.ForeignKey('Tag', related_name='ads', on_delete=models.CASCADE)
+    ad = models.ForeignKey('Ad', on_delete=models.CASCADE)
+    tag = models.ForeignKey('Tag', on_delete=models.CASCADE)
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['ad', 'tag'], name='relatedTo_pk')]
