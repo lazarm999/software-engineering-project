@@ -18,4 +18,9 @@ urlpatterns = [
     path('comment/<int:pk>/', views.CommentDetail.as_view()),
     path('apply/<int:pk>/', views.Apply.as_view()),
     path('choose/<int:pk>/', views.Choose.as_view()),
+    path('universityList/', views.UniversityList.as_view()),
+    path('facultyList/', views.FacultyList.as_view()),
+    path('tagList/', views.TagList.as_view()),
+    path('locationList/', views.LocationList.as_view()),
+    path('badgeList/', views.BadgeList.as_view()),
 ]

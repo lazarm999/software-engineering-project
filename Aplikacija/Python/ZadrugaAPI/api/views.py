@@ -490,6 +490,36 @@ class Choose(APIView):
         return r204()
         
 
+class UniversityList(generics.ListAPIView):
+    permission_classes = [IsLoggedIn]
+    queryset = University.objects.all()
+    serializer_class = UniversitySerializer
+
+
+class FacultyList(generics.ListAPIView):
+    permission_classes = [IsLoggedIn]
+    queryset = Faculty.objects.all()
+    serializer_class = FacultySerializer
+    
+
+class TagList(generics.ListAPIView):
+    permission_classes = [IsLoggedIn]
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    
+
+class LocationList(generics.ListAPIView):
+    permission_classes = [IsLoggedIn]
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+    
+
+class BadgeList(generics.ListAPIView):
+    permission_classes = [IsLoggedIn]
+    queryset = Badge.objects.all()
+    serializer_class = BadgeSerializer
+    
+
 # TODO: ocenjivanje samo kad su saradjivali + zavrsen posao
 # TODO: filtriranje i sortiranje
 # TODO: prijavljivanje neprikladnog sadrzaja
