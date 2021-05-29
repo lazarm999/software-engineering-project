@@ -13,7 +13,6 @@ urlpatterns = [
     path('ratings/<int:pk>/', views.UserRatings.as_view()),
     path('ad/', views.AdList.as_view()),
     path('ad/<int:pk>/', views.AdDetail.as_view()),
-    path('tags/<int:pk>/', views.AdTags.as_view()),
     path('comments/<int:pk>/', views.CommentList.as_view()),
     path('comment/<int:pk>/', views.CommentDetail.as_view()),
     path('apply/<int:pk>/', views.Apply.as_view()),

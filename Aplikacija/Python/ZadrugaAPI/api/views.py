@@ -300,44 +300,6 @@ class AdList(generics.ListCreateAPIView):
         return Response(serialized.data)
 
 
-class AdTags(APIView):
-    permission_classes = [IsLoggedIn]
-
-    def post(self, request, pk, *args, **kwargs):
-        tagId = request.data.get('tagId')
-        if not tagId:
-            return r400('Please provide tagId')
-
-        tag = get_object_or_404(Tag, pk=tagId)
-        ad = get_object_or_404(Ad, pk=pk)
-        if ad.employer.userId != request._auth:
-            return r401('Unauthorized')
-
-        r = RelatedTo()
-        r.tag = tag
-        r.ad = ad
-
-        try:
-            r.save()
-        except:
-            return r500('Failed saving tag')
-        return r204()
-
-    def delete(self, request, pk, *args, **kwargs):
-        tagId = request.data.get('tagId')
-
-        if not tagId:
-            return r400('Please provide tagId')
-        r = get_object_or_404(RelatedTo, tag_id=tagId, ad_id=pk)
-        if r.ad.employer.userId != request._auth:
-            return r401('Unauthorized')
-        try:
-            r.delete()
-        except:
-            return r500('Failed deleting tag')
-        return r204()
-
-
 class AdDetail(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
     permission_classes = [IsLoggedIn]
     queryset = Ad.objects.all()
@@ -365,6 +327,21 @@ class AdDetail(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Update
         numberOfEmployees = request.data.get('numberOfEmployees', ad.numberOfEmployees)
         compMin = request.data.get('compensationMin', ad.compensationMin)
         compMax = request.data.get('compensationMax', ad.compensationMax)
+        addTagIds = request.data.get('addTags')
+        removeTagIds = request.data.get('removeTags')
+
+        removeTags = None
+        if removeTagIds:
+            for t in removeTagIds:
+                removeTags = RelatedTo.objects.filter(ad_id=pk, tag_id__in=removeTagIds)
+
+        addTags = []
+        if addTagIds:
+            for t in addTagIds:
+                rt = RelatedTo()
+                rt.ad_id = pk
+                rt.tag_id = t
+                addTags.append(rt)
 
         if not (compMin > 0 and compMax > 0 and numberOfEmployees > 0):
             return r400('Compensations and number of employees must be natural numbers')
@@ -384,7 +361,13 @@ class AdDetail(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Update
         ad.compensationMin = compMin
         ad.compensationMax = compMax
         try:
-            ad.save()
+            with transaction.atomic():
+                ad.save()
+                if removeTags:
+                    removeTags.delete()
+                if addTags:
+                    for rt in addTags:
+                        rt.save()
         except:
             return r500('Failed saving ad')          
         return r204()
@@ -432,6 +415,11 @@ class CommentDetail(APIView):
 class Apply(APIView):
     permission_classes = [IsLoggedIn]
 
+    def get(self, request, pk, *args, **kwargs):
+        data = Applied.objects.filter(ad__adId=pk)
+        serialized = UserSerializer([d.user for d in data], many=True)
+        return Response(serialized.data)
+
     def post(self, request, pk, *args, **kwargs):
         user = get_object_or_404(User, pk=request._auth)
         ad = get_object_or_404(Ad, pk=pk)
@@ -476,6 +464,9 @@ class Choose(APIView):
             return r400('This job is closed')
 
         userIds = request.data.get('userIds')
+        if len(userIds) == 0:
+            return r400('Please specify a user to be chosen')
+
         users = Applied.objects.filter(ad_id=pk, user__userId__in=userIds)
         if len(users) != len(userIds):
             return r400('Invalid user id')
