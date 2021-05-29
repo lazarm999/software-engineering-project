@@ -6,7 +6,7 @@ urlpatterns = [
     path('user/<int:pk>/', views.UserDetail.as_view()),
     path('profilePicture/<int:pk>/', views.ProfilePicture.as_view()),
     path('login/', views.Login.as_view()),
-    path('passwordChange/<int:pk>/', views.PasswordChange.as_view()),
+    path('passwordChange/', views.PasswordChange.as_view()),
     path('ban/<int:pk>/', views.BanUser.as_view()),
     path('unban/<int:pk>/', views.UnbanUser.as_view()),
     path('rate/<int:pk>/', views.RateUser.as_view()),

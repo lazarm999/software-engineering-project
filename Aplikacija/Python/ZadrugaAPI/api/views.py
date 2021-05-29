@@ -90,16 +90,13 @@ class UserDetail(generics.GenericAPIView, mixins.UpdateModelMixin, mixins.Destro
 
 
 class PasswordChange(APIView):
-    permission_classes = [IsLoggedIn, IsOwner]
+    permission_classes = [IsLoggedIn]
 
-    def put(self, request, pk):
+    def put(self, request):
         oldPwd = request.data.get('oldPassword')
         newPwd = request.data.get('newPassword')
 
-        if pk != request._auth:
-            return r401('Unauthorized')
-
-        user = get_object_or_404(User, pk=pk)
+        user = get_object_or_404(User, pk=request._auth)
         if check_password(oldPwd, user.password):
             user.password = make_password(newPwd)
             user.save()
