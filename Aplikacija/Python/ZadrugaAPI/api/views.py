@@ -25,6 +25,10 @@ class Register(generics.GenericAPIView, mixins.CreateModelMixin):
     serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
+        password = request.data.get('password')
+        print(password)
+        if not (password and len(password) >= 8):
+            return r400('Password must be at least 8 characters long')
         return self.create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
@@ -97,7 +101,9 @@ class PasswordChange(APIView):
         newPwd = request.data.get('newPassword')
 
         user = get_object_or_404(User, pk=request._auth)
-        if check_password(oldPwd, user.password):
+        if not (newPwd and len(newPwd) >= 8):
+            return r401('Password must be at least 8 characters long')
+        if oldPwd and check_password(oldPwd, user.password):
             user.password = make_password(newPwd)
             user.save()
         else:
