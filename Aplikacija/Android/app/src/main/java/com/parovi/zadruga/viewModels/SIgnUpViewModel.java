@@ -26,8 +26,4 @@ public class SIgnUpViewModel extends AndroidViewModel {
     public LiveData<Boolean> observeIsSignedUp() {
         return isSignedUp;
     }
-
-    public void insertQBUser(User u, String pass) {
-        rep.insertQBUser(isSignedUp, u, pass);
-    }
 }

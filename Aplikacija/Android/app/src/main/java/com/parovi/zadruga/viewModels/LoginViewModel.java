@@ -23,8 +23,4 @@ public class LoginViewModel extends AndroidViewModel {
     public LiveData<Boolean> observeIsLoggedIn() {
         return isLoggedIn;
     }
-
-    public void logInQBUser(User u, String pass) {
-        rep.logInQBUser(isLoggedIn, u, pass);
-    }
 }

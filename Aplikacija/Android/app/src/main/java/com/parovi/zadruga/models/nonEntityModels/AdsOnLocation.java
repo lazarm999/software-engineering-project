@@ -12,7 +12,7 @@ public class AdsOnLocation {
     @Embedded
     public Location location;
     @Relation(entity = Ad.class,
-    parentColumn = "locId",
-    entityColumn = "locationId")
+                parentColumn = "locId",
+                entityColumn = "locationId")
     public List<Ad> ads;
 }

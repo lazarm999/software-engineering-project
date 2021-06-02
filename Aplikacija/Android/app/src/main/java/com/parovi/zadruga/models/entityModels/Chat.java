@@ -1,21 +1,75 @@
 package com.parovi.zadruga.models.entityModels;
 
-import com.google.firebase.firestore.Exclude;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
+import com.google.firebase.firestore.Exclude;
+import com.parovi.zadruga.Utility;
+import com.quickblox.chat.model.QBChatDialog;
+
+import java.util.Date;
 import java.util.List;
 
-public class Chat {
+import javax.annotation.Nullable;
 
+import static androidx.room.ForeignKey.CASCADE;
+
+@Entity(foreignKeys = {@ForeignKey(entity = Ad.class,
+                        parentColumns = "adId",
+                        childColumns = "fkAdId",
+                        onDelete = CASCADE),
+                        /*@ForeignKey(entity = User.class,
+                        parentColumns = "userQbId",
+                        childColumns = "fkCreatorId",
+                        onDelete = CASCADE),*/
+                        @ForeignKey(entity = User.class,
+                        parentColumns = "userQbId",
+                        childColumns = "fkLastSenderId",
+                        onDelete = CASCADE)})
+public class Chat {
+    @PrimaryKey
+    @NonNull
     private String chatId;
+    @ColumnInfo(index = true)
+    @Nullable
+    private Integer fkAdId;
+    /*@ColumnInfo(index = true)
+    private int fkCreatorId;*/
+    private Utility.ChatType type;
+    private String lastSenderName;
+    private int numOfMembers;
+    private String lastMessage;
+    @ColumnInfo(index = true)
+    private int fkLastSenderId;
+    private Date lastMessageDateSent;
+    private Date createdAt;
     private boolean isArchived;
-    private List<Integer> memberIds;
-    private List<Message> messages;
-    private int adId;
+
+    @Ignore
+    private QBChatDialog qbChat;
+
+    public Chat() {
+    }
+
+    public Chat(@NonNull String chatId, Utility.ChatType type, String lastSenderName, int numOfMembers, Date createdAt) {
+        this.chatId = chatId;
+        //this.fkCreatorId = fkCreatorId;
+        this.type = type;
+        this.lastSenderName = lastSenderName;
+        this.numOfMembers = numOfMembers;
+        this.lastMessage = lastMessage;
+        this.fkLastSenderId = fkLastSenderId;
+        this.lastMessageDateSent = lastMessageDateSent;
+        this.createdAt = createdAt;
+    }
 
     public Chat(String chatId, boolean isArchived, List<Integer> memberIds) {
         this.chatId = chatId;
         this.isArchived = isArchived;
-        this.memberIds = memberIds;
     }
 
     @Exclude
@@ -26,6 +80,7 @@ public class Chat {
     public void setChatId(String chatId) {
         this.chatId = chatId;
     }
+
     public boolean isArchived() {
         return isArchived;
     }
@@ -34,12 +89,83 @@ public class Chat {
         isArchived = archived;
     }
 
-    public List<Integer> getMemberIds() {
-        return memberIds;
+    public Integer getFkAdId() {
+        return fkAdId;
     }
 
-    public void setMemberIds(List<Integer> memberIds) {
-        this.memberIds = memberIds;
+    public void setFkAdId(@Nullable Integer fkAdId) {
+        this.fkAdId = fkAdId;
     }
 
+    public Utility.ChatType getType() {
+        return type;
+    }
+
+    public void setType(Utility.ChatType type) {
+        this.type = type;
+    }
+
+    public String getLastSenderName() {
+        return lastSenderName;
+    }
+
+    public void setLastSenderName(String lastSenderName) {
+        this.lastSenderName = lastSenderName;
+    }
+
+    public int getNumOfMembers() {
+        return numOfMembers;
+    }
+
+    public void setNumOfMembers(int numOfMembers) {
+        this.numOfMembers = numOfMembers;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public int getFkLastSenderId() {
+        return fkLastSenderId;
+    }
+
+    public void setFkLastSenderId(int fkLastSenderId) {
+        this.fkLastSenderId = fkLastSenderId;
+    }
+
+    public Date getLastMessageDateSent() {
+        return lastMessageDateSent;
+    }
+
+    public void setLastMessageDateSent(Date lastMessageDateSent) {
+        this.lastMessageDateSent = lastMessageDateSent;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public QBChatDialog getQbChat() {
+        return qbChat;
+    }
+
+    public void setQbChat(QBChatDialog qbChat) {
+        this.qbChat = qbChat;
+    }
+
+    /*public int getFkCreatorId() {
+        return fkCreatorId;
+    }
+
+    public void setFkCreatorId(int fkCreatorId) {
+        this.fkCreatorId = fkCreatorId;
+    }*/
 }

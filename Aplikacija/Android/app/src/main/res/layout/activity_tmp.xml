@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/tmpImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:srcCompat="@tools:sample/avatars" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tvTmp"
         android:layout_width="wrap_content"
@@ -16,24 +28,42 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:id="@+id/tmpBtn1"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:text="login 1"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#673AB7"
+            app:rippleColor="#FFFFFF" />
+        <Button
             android:id="@+id/tmpBtn2"
             android:layout_width="150dp"
             android:layout_height="48dp"
-            android:text="tmpBtn2"
+            android:text="login 2"
             android:textColor="#FFFFFF"
             app:backgroundTint="#673AB7"
             app:iconTint="#0C0909" />
 
-        <TextView
-            android:id="@+id/tmpPost"
-            android:layout_width="53dp"
-            android:layout_height="19dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/tmpBtn"
+            android:id="@+id/tmpBtn3"
             android:layout_width="150dp"
             android:layout_height="48dp"
-            android:text="tmpBtn"
+            android:text="create chat "
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#673AB7"
+            app:iconTint="#0C0909" />
+
+        <Button
+            android:id="@+id/tmpBtn4"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:text="tmpBtn4"
             android:textColor="#FFFFFF"
             app:backgroundTint="#673AB7"
             app:rippleColor="#FFFFFF" />

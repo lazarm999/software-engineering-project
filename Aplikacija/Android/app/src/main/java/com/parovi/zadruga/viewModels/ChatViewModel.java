@@ -1,39 +1,35 @@
 package com.parovi.zadruga.viewModels;
 
 import android.app.Application;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
-import com.parovi.zadruga.models.entityModels.Message;
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBChatDialogMessageListener;
+import com.quickblox.chat.listeners.QBMessageListenerImpl;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
-import com.quickblox.core.QBEntityCallback;
-import com.quickblox.core.exception.QBResponseException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class ChatViewModel extends AndroidViewModel {
     private LiveData<QBChatDialog> chat;
     private MutableLiveData<List<QBChatDialog>> chats;
     private MutableLiveData<QBChatMessage> newMessage;
     private MutableLiveData<Boolean> isSent;
-    private MutableLiveData<Boolean> isConnected;
+    private MutableLiveData<CustomResponse<?>> isConnected;
     private MutableLiveData<List<QBChatMessage>> messages;
     private QBChatDialogMessageListener newMessageListener = new QBChatDialogMessageListener() {
         @Override
         public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
             newMessage.postValue(qbChatMessage);
+            //TODO: update chatDialog
         }
 
         @Override
@@ -54,7 +50,7 @@ public class ChatViewModel extends AndroidViewModel {
         messages = new MutableLiveData<>();
     }
 
-    public LiveData<Boolean> observeIsConnected() {
+    public MutableLiveData<CustomResponse<?>> observeIsConnected() {
         return isConnected;
     }
 
@@ -66,21 +62,21 @@ public class ChatViewModel extends AndroidViewModel {
         return chats;
     }
 
-    public void getAllChats(){
+    /*public void getAllChats(){
         rep.getAllChats(chats);
-    }
+    }*/
     public MutableLiveData<QBChatMessage> observeNewMessages(){
         return newMessage;
     }
     public void onGlobalMessageReceived(){
-        rep.onGlobalMessageReceived(newMessageListener);
+        rep.addOnMessageReceivedGlobal(newMessageListener);
     }
 
-    public void sendMessage(QBChatMessage message){
+    /*public void sendMessage(QBChatMessage message){
         QBChatDialog chat;
         if((chat = getChatById(message.getDialogId())) != null)
             rep.sendMessage(isSent, chat, message);
-    }
+    }*/
 
     public void removeGlobalMessageListener(){
         rep.removeGlobalMessageReceivedListener(newMessageListener);
@@ -90,11 +86,11 @@ public class ChatViewModel extends AndroidViewModel {
         return messages;
     }
 
-    public void getMessages(String chatId) {
+    /*public void getMessages(String chatId) {
         QBChatDialog chat;
         if((chat = getChatById(chatId)) != null)
             rep.getMessages(messages, chat);
-    }
+    }*/
 
     private QBChatDialog getChatById(String chatId){
         if(chats.getValue() != null){

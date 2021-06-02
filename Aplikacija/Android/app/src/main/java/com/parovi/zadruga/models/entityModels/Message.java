@@ -1,43 +1,89 @@
 package com.parovi.zadruga.models.entityModels;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
-import com.google.type.DateTime;
 
+import java.util.Date;
+
+import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.SET_NULL;
+
+@Entity(foreignKeys = {@ForeignKey(
+                        entity = User.class,
+                        parentColumns = "userQbId",
+                        childColumns = "fkSenderId",
+                        onDelete = CASCADE),
+                        @ForeignKey(
+                        entity = Chat.class,
+                        parentColumns = "chatId",
+                        childColumns = "qbChatId",
+                        onDelete = CASCADE)})
 public class Message {
-    private int msgId;
-    private Timestamp sentTime;
-    private String text;
+    @PrimaryKey
+    @NonNull
+    private String msgId;
+    private int fkSenderId;
+    private Date dateSent;
+    private String message;
+    private String qbChatId;
 
-    public Message(Timestamp sentTime, String text) {
-        this.sentTime = sentTime;
-        this.text = text;
+    public Message() {
     }
 
-    @Exclude
-    public int getMsgId() {
+    public Message(@NonNull String msgId, int fkSenderId, Date dateSent, String message, String qbChatId) {
+        this.msgId = msgId;
+        this.fkSenderId = fkSenderId;
+        this.dateSent = dateSent;
+        this.message = message;
+        this.qbChatId = qbChatId;
+    }
+
+    public Message(Timestamp sentTime, String message) {
+        this.message = message;
+    }
+
+    public String getMsgId() {
         return msgId;
     }
 
-    public void setMsgId(int msgId) {
+    public void setMsgId(String msgId) {
         this.msgId = msgId;
     }
 
-    public Timestamp getSentTime() {
-        return sentTime;
+    public String getMessage() {
+        return message;
     }
 
-    public void setSentTime(Timestamp sentTime) {
-        this.sentTime = sentTime;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getText() {
-        return text;
+    public int getFkSenderId() {
+        return fkSenderId;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setFkSenderId(int fkSenderId) {
+        this.fkSenderId = fkSenderId;
+    }
+
+    public Date getDateSent() {
+        return dateSent;
+    }
+
+    public void setDateSent(Date dateSent) {
+        this.dateSent = dateSent;
+    }
+
+    public String getQbChatId() {
+        return qbChatId;
+    }
+
+    public void setQbChatId(String qbChatId) {
+        this.qbChatId = qbChatId;
     }
 }

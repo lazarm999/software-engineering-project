@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;
 
@@ -23,25 +25,54 @@ import static androidx.room.ForeignKey.SET_NULL;
                         parentColumns = "userId",
                         childColumns = "fkEmployerId",
                         onDelete = SET_NULL,
+                        onUpdate = CASCADE),
+                        @ForeignKey(entity = Chat.class,
+                        parentColumns = "chatId",
+                        childColumns = "fkQbChatId",
+                        onDelete = SET_NULL,
                         onUpdate = CASCADE)})
 public class Ad {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int adId;
     private String title;
-    private String desc;
-    private int feeFrom;
-    private int feeTo;
-    private int peopleNeeded;
-    //private boolean isClosed;
+    private String description;
+    private int compensationMin;
+    private int compensationMax;
+    private int numberOfEmployees;
+    private Date postTime;
     @ColumnInfo(index = true)
     private int fkLocationId;
     @ColumnInfo(index = true)
     private int fkEmployerId;
-    private int isSynced;
+    @ColumnInfo(index = true)
+    private String fkQbChatId;
 
-    public Ad(String title, String desc, int fkLocationId){
+    public Ad(){
+
+    }
+
+    public Ad(int adId, String title, String description, int compensationMin, int compensationMax, int numberOfEmployees) {
+        this.adId = adId;
         this.title = title;
-        this.desc = desc;
+        this.description = description;
+        this.compensationMin = compensationMin;
+        this.compensationMax = compensationMax;
+        this.numberOfEmployees = numberOfEmployees;
+    }
+
+    public Ad(int adId, String title, String description, int compensationMin, int compensationMax, int numberOfEmployees, Date postTime) {
+        this.adId = adId;
+        this.title = title;
+        this.description = description;
+        this.compensationMin = compensationMin;
+        this.compensationMax = compensationMax;
+        this.numberOfEmployees = numberOfEmployees;
+        this.postTime = postTime;
+    }
+
+    public Ad(String title, String description, int fkLocationId){
+        this.title = title;
+        this.description = description;
         this.fkLocationId = fkLocationId;
         this.fkEmployerId = 1;
     }
@@ -62,36 +93,36 @@ public class Ad {
         this.title = title;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public int getFeeFrom() {
-        return feeFrom;
+    public int getCompensationMin() {
+        return compensationMin;
     }
 
-    public void setFeeFrom(int feeFrom) {
-        this.feeFrom = feeFrom;
+    public void setCompensationMin(int compensationMin) {
+        this.compensationMin = compensationMin;
     }
 
-    public int getFeeTo() {
-        return feeTo;
+    public int getCompensationMax() {
+        return compensationMax;
     }
 
-    public void setFeeTo(int feeTo) {
-        this.feeTo = feeTo;
+    public void setCompensationMax(int compensationMax) {
+        this.compensationMax = compensationMax;
     }
 
-    public int getPeopleNeeded() {
-        return peopleNeeded;
+    public int getNumberOfEmployees() {
+        return numberOfEmployees;
     }
 
-    public void setPeopleNeeded(int peopleNeeded) {
-        this.peopleNeeded = peopleNeeded;
+    public void setNumberOfEmployees(int numberOfEmployees) {
+        this.numberOfEmployees = numberOfEmployees;
     }
 
     public int getFkLocationId() {
@@ -110,11 +141,45 @@ public class Ad {
         this.fkEmployerId = fkEmployerId;
     }
 
-    public int getIsSynced() {
-        return isSynced;
+    public Date getPostTime() {
+        return postTime;
     }
 
-    public void setIsSynced(int isSynced) {
-        this.isSynced = isSynced;
+    public void setPostTime(Date postTime) {
+        this.postTime = postTime;
     }
+
+    public String getFkQbChatId() {
+        return fkQbChatId;
+    }
+
+    public void setFkQbChatId(String fkQbChatId) {
+        this.fkQbChatId = fkQbChatId;
+    }
+
+   /* public User getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(User employer) {
+        this.employer = employer;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }*/
 }

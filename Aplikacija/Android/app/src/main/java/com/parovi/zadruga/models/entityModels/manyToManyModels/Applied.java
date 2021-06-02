@@ -22,7 +22,22 @@ public class Applied {
     private int fkUserId;
     @ColumnInfo(index = true)
     private int fkAdId;
+    private boolean chosen;
     private boolean isSynced;
+
+    public Applied() {
+    }
+
+    public Applied(int fkUserId, int fkAdId) {
+        this.fkUserId = fkUserId;
+        this.fkAdId = fkAdId;
+    }
+
+    public Applied(int fkUserId, int fkAdId, boolean chosen) {
+        this.fkUserId = fkUserId;
+        this.fkAdId = fkAdId;
+        this.chosen = chosen;
+    }
 
     public int getFkUserId() {
         return fkUserId;
@@ -46,6 +61,14 @@ public class Applied {
 
     public void setSynced(boolean synced) {
         isSynced = synced;
+    }
+
+    public boolean isChosen() {
+        return chosen;
+    }
+
+    public void setChosen(boolean chosen) {
+        this.chosen = chosen;
     }
 }
 

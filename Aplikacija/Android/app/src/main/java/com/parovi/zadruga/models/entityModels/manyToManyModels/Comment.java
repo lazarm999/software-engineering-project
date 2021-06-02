@@ -3,11 +3,13 @@ package com.parovi.zadruga.models.entityModels.manyToManyModels;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.google.type.DateTime;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.User;
+
+import java.util.Date;
 
 import static androidx.room.ForeignKey.CASCADE;
 
@@ -26,21 +28,31 @@ public class Comment {
     private int fkUserId;
     @ColumnInfo(index = true)
     private int fkAdId;
-    private String commentText;
-    private long postedTime;
+    private String comment;
+    private Date postTime;
     private boolean isSynced;
 
-    public Comment(int fkUserId, int fkAdId, String commentText, long postedTime) {
-        this.fkUserId = fkUserId;
-        this.fkAdId = fkAdId;
-        this.commentText = commentText;
-        this.postedTime = postedTime;
+    public Comment() {
     }
 
-    public Comment(int fkUserId, int fkAdId, String commentText) {
+    public Comment(String comment) {
+        this.comment = comment;
+    }
+
+    @Ignore
+    public Comment(int commentId, int fkUserId, int fkAdId, String comment, Date postTime) {
+        this.commentId = commentId;
         this.fkUserId = fkUserId;
         this.fkAdId = fkAdId;
-        this.commentText = commentText;
+        this.comment = comment;
+        this.postTime = postTime;
+    }
+
+    @Ignore
+    public Comment(int fkUserId, int fkAdId, String comment) {
+        this.fkUserId = fkUserId;
+        this.fkAdId = fkAdId;
+        this.comment = comment;
     }
 
     public int getCommentId() {
@@ -67,20 +79,20 @@ public class Comment {
         this.fkAdId = fkAdId;
     }
 
-    public String getCommentText() {
-        return commentText;
+    public String getComment() {
+        return comment;
     }
 
-    public void setCommentText(String commentText) {
-        this.commentText = commentText;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public long getPostedTime() {
-        return postedTime;
+    public Date getPostTime() {
+        return postTime;
     }
 
-    public void setPostedTime(long postedTime) {
-        this.postedTime = postedTime;
+    public void setPostTime(Date postTime) {
+        this.postTime = postTime;
     }
 
     public boolean isSynced() {

@@ -25,6 +25,14 @@ public class AdTag {
     private int fkTagId;
     private boolean isSynced;
 
+    public AdTag() {
+    }
+
+    public AdTag(int fkAdId, int fkTagId) {
+        this.fkAdId = fkAdId;
+        this.fkTagId = fkTagId;
+    }
+
     public AdTag(int fkAdId, int fkTagId, boolean isSynced) {
         this.fkAdId = fkAdId;
         this.fkTagId = fkTagId;

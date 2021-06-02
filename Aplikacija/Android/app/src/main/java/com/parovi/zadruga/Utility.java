@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 public class Utility {
+    public enum ChatType{ PRIVATE, GROUP }
     public static String dateTimeToTimeAgo(DateTime dt){
         /*DateTime now = new DateTime();
         long minutes= TimeUnit.MILLISECONDS.toMinutes(LocalDate.now() - past.getTime());

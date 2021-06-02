@@ -9,6 +9,11 @@ public class University {
     private int universityId;
     private String name;
 
+    public University(int universityId, String name) {
+        this.universityId = universityId;
+        this.name = name;
+    }
+
     public int getUniversityId() {
         return universityId;
     }

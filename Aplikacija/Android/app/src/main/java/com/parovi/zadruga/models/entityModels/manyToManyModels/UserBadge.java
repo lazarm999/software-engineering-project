@@ -25,6 +25,14 @@ public class UserBadge {
     private int fkBadgeId;
     private boolean isSynced;
 
+    public UserBadge() {
+    }
+
+    public UserBadge(int fkUserId, int fkBadgeId) {
+        this.fkUserId = fkUserId;
+        this.fkBadgeId = fkBadgeId;
+    }
+
     public UserBadge(int fkUserId, int fkBadgeId, boolean isSynced) {
         this.fkUserId = fkUserId;
         this.fkBadgeId = fkBadgeId;

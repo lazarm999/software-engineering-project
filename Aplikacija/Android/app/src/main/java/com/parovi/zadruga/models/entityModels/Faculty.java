@@ -3,6 +3,7 @@ package com.parovi.zadruga.models.entityModels;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -12,13 +13,16 @@ import static androidx.room.ForeignKey.CASCADE;
         childColumns = "fkUniversityId",
         onDelete = CASCADE))
 public class Faculty {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int facultyId;
     private String name;
     @ColumnInfo(index = true)
     private int fkUniversityId;
+    @Ignore
+    private University university;
 
-    public Faculty(String name, int fkUniversityId) {
+    public Faculty(int facultyId, String name, int fkUniversityId) {
+        this.facultyId = facultyId;
         this.name = name;
         this.fkUniversityId = fkUniversityId;
     }
@@ -47,4 +51,11 @@ public class Faculty {
         this.fkUniversityId = fkUniversityId;
     }
 
+    public University getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(University university) {
+        this.university = university;
+    }
 }
