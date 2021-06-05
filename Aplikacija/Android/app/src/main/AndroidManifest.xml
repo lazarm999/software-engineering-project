@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Zadruga">
+        <activity android:name=".ui.RateUserActivity"/>
         <activity android:name=".TmpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,6 +26,14 @@
         </activity>
         <activity android:name=".MainActivity">
         </activity>
+        <activity android:name=".ui.JobAdActivity">
+
+        </activity>
+        <activity android:name=".ui.ChatActivity" />
+        <activity android:name=".ui.EditProfileActivity"></activity>
+        <activity android:name=".PasswordResetActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".LogInActivity" />
 
         <service android:name=".services.NotificationService">
             <intent-filter>

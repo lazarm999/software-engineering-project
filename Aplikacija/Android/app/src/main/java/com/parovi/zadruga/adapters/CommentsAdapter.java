@@ -1,6 +1,5 @@
 package com.parovi.zadruga.adapters;
 
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     @NonNull
     @Override
     public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment, parent, false);
         CommentViewHolder nvh = new CommentViewHolder(v);
         return nvh;
     }

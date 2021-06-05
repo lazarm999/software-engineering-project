@@ -9,16 +9,16 @@ import android.widget.TextView;
 
 public class LogInActivity extends AppCompatActivity {
 
-    TextView change;
+    TextView tvResetPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        change = findViewById(R.id.txtChangePassword);
+        tvResetPass = findViewById(R.id.tvResetPass);
 
-        change.setOnClickListener(new View.OnClickListener() {
+        tvResetPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LogInActivity.this, PasswordResetActivity.class);

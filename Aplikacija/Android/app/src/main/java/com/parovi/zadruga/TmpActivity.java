@@ -87,9 +87,6 @@ public class TmpActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager rvlmNotifications;
 
     private ArrayList<CommentUser> commentsList;
-    private RecyclerView rvComments;
-    private RecyclerView.Adapter rvaComments;
-    private RecyclerView.LayoutManager rvlmNComments;
 
     private SwipeRefreshLayout srlNotifications;
     private int tmp;
@@ -113,7 +110,7 @@ public class TmpActivity extends AppCompatActivity {
         TextView tvTmp= (TextView)  findViewById(R.id.tvTmp);
         ImageView tmpImageView = (ImageView) findViewById(R.id.tmpImageView);
 
-        MutableLiveData<CustomResponse<?>> loginData = new MutableLiveData<>();
+        /*MutableLiveData<CustomResponse<?>> loginData = new MutableLiveData<>();
         loginData.observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> response) {
@@ -128,35 +125,12 @@ public class TmpActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
-        final QBChatDialog tmpChat;
-        MutableLiveData<CustomResponse<?>> chats = new MutableLiveData<>();
-        chats.observe(this, new Observer<CustomResponse<?>>() {
-            @Override
-            public void onChanged(CustomResponse<?> res) {
-                if(res.getStatus() == CustomResponse.Status.OK){
-                }
-            }
-        });
+        });*/
 
-        rep.getAllBadges(getAccessToken(), new MutableLiveData<>());
+        /*rep.getAllBadges(getAccessToken(), new MutableLiveData<>());
         rep.getAllLocations(getAccessToken(), new MutableLiveData<>());
         rep.getAllTags(getAccessToken(), new MutableLiveData<>());
-        rep.getFacultiesAndUniversities(getAccessToken());
-
-        rep.getAllChats(chats, 1);
-        MutableLiveData<CustomResponse<?>> msg = new MutableLiveData<>();
-        QBChatDialogMessageListener newMessageListener = new QBChatDialogMessageListener() {
-            @Override
-            public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
-                //msg.postValue(new CustomResponse<>(CustomResponse.Status.OK, ));
-            }
-
-            @Override
-            public void processError(String dialogId, QBChatException e, QBChatMessage qbChatMessage, Integer senderId) {
-                msg.postValue(null);
-            }
-        };
+        rep.getFacultiesAndUniversities(getAccessToken());*/
 
         MutableLiveData<CustomResponse<?>> comments = new MutableLiveData<>();
         comments.observe(this, new Observer<CustomResponse<?>>() {
@@ -229,7 +203,7 @@ public class TmpActivity extends AppCompatActivity {
                 //rep.editRating(getAccessToken(), new MutableLiveData<>(), new Rating(getUserId(), 3, 1, "jako slabo uradjeno"));
                 //rep.getRatingByUserId(getAccessToken(), new MutableLiveData<>(), 11);
                 //rep.postProfilePicture(getAccessToken(), new MutableLiveData<>(), 1);
-                rep.getAds(getAccessToken(), new MutableLiveData<>());
+                //rep.getAds(getAccessToken(), new MutableLiveData<>());
                 //rep.unApplyForAd(getAccessToken(), new MutableLiveData<>(), 20, 28);
                 //rep.postComment(getAccessToken(), new MutableLiveData<>(), 18, 1, "gaaaaaaaaaaaas");
                 //rep.deleteComment(getAccessToken(), new MutableLiveData<>(), 5);
@@ -255,7 +229,6 @@ public class TmpActivity extends AppCompatActivity {
         tmpBtn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rep.getAllChats(chats, 19);
             }
         });
 
@@ -452,14 +425,6 @@ public class TmpActivity extends AppCompatActivity {
                 Log.i("tokenic", s);
             }
         });
-        /*rep.getAllAds().observe(this, new Observer<List<Ad>>() {
-            @Override
-            public void onChanged(List<Ad> ads) {
-                if(ads != null){
-                    Log.i("sviOglasi", "promena");
-                }
-            }
-        });*/
 
         //LOGIKA OKO NOTIFIKACIJA
         /*notificationList = new ArrayList<>();
@@ -501,122 +466,5 @@ public class TmpActivity extends AppCompatActivity {
             }
         });*/
 
-        //LOGIKA OKO KOMENTARA
-        /*commentsList = new ArrayList<>();
-        commentsList.add(new CommentUser("komentaric neki mnogo ludi", "@lazarm999"));
-        commentsList.add(new CommentUser("komentaric neki mnogo ludi2", "@lazarm999"));
-        commentsList.add(new CommentUser("komentaric neki mnogo lud3", "@lazarm999"));
-        commentsList.add(new CommentUser("komentaric neki mnogo lud4", "@lazarm999"));
-
-        rvComments = findViewById(R.id.rvComments);
-        rvComments.setHasFixedSize(true);
-        rvlmNComments = new LinearLayoutManager(this);
-        rvaComments = new CommentsAdapter(commentsList);
-
-        rvComments.setLayoutManager(rvlmNComments);
-        rvComments.setAdapter(rvaComments);
-        btnPostComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String commentText = etComment.getText().toString();
-                if(!commentText.equals("")){ //ovde treba idu podaci vezani za trenutno ulogovanog korisnika i trenutno prikazan oglas
-                    //ovaj comment se upisuje u bazu
-                    Comment newComm = new Comment(1,1, commentText, System.currentTimeMillis());
-                    //ovaj comment se prikazuje korisniku
-                    commentsList.add(0, new CommentUser(commentText, "lazarm999"));
-                    rvaComments.notifyDataSetChanged();
-                }
-            }
-        });*/
-        /*tmpViewModel.getAds().observe(this, new Observer<List<Ad>>() {
-            @Override
-            public void onChanged(List<Ad> ads) {
-
-            }
-        });*/
     }
-
-    private void sendNotification() {
-        rep.sendPushNotification(new PushNotification(new Notification(Constants.RATING), "/topics/svi")).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Log.i("ispravno", response.body().toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("firibaseZadruga", t.getMessage());
-            }
-        });
-    }
-
-    private void sendNotification2(){
-        rep.sendPushNotification(new PushNotification(new Notification(Constants.COMMENT), "/topics/nekaDrugaTopic")).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Log.i("ispravno", response.body().toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("firibaseZadruga", t.getMessage());
-            }
-        });
-    }
-
-    private int getUserId(){
-        SharedPreferences sp = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
-        return sp.getInt(Constants.LOGGED_USER_ID, -1);
-    }
-
-    private String getAccessToken(){
-        SharedPreferences sp = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
-        return sp.getString(Constants.ACCESS_TOKEN, "");
-    }
-
-    private void saveLoggedUserInfo(int id, int qbId, String token){
-        SharedPreferences sp = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.LOGGED_USER_ID, id);
-        editor.putInt(Constants.LOGGED_USER_QB_ID, qbId);
-        editor.putString(Constants.ACCESS_TOKEN, token);
-        editor.apply();
-    }
-
-    private void removeLoggedUserInfo(){
-        SharedPreferences sp = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.remove(Constants.LOGGED_USER_ID);
-        editor.remove(Constants.LOGGED_USER_QB_ID);
-        editor.remove(Constants.ACCESS_TOKEN);
-        editor.apply();
-    }
-
-    private void checkIfFcmTokenTagIsChanged(){
-        SharedPreferences sp = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        String token = "";
-        if((token = sp.getString(Constants.FCM_TOKEN_TAG, null)) != null){
-            //TODO: Ovu funkciju treba da poziva neki viewModel
-            User u = new User();
-            u.setUserId(1);
-            u.setFcmToken(token);
-            rep.updateUserFcmToken(u).observe(this, new Observer<Integer>() { //TODO: ovde treba da stoji ulogovani user, a ne ovaj
-                @Override
-                public void onChanged(Integer rowsChanged) {
-                    if(rowsChanged != -1){
-                        Log.w("fcmTokenWarning", "Token nije promenjen");
-                    }
-                }
-            });
-            editor.putString(Constants.FCM_TOKEN_TAG, null);
-        }
-        editor.apply();
-    }
-
-
 }

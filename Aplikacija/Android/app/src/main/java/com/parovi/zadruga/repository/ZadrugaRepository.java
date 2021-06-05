@@ -94,6 +94,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+//token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
 public class ZadrugaRepository  {
     private static ZadrugaRepository instance;
     private final ZadrugaDatabase localDb;
@@ -163,7 +165,6 @@ public class ZadrugaRepository  {
 
     //Ad
     public void postAd(String token, MutableLiveData<CustomResponse<?>> res, PostAdRequest ad){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
         adApi.postAd(token, ad).enqueue(new Callback<AdResponse>() {
             @Override
             public void onResponse(@NotNull Call<AdResponse> call, @NotNull Response<AdResponse> response) {
@@ -211,7 +212,6 @@ public class ZadrugaRepository  {
     public void getAd(String token, MutableLiveData<CustomResponse<?>> ad, int id){
         final Boolean[] isSynced = {false};
         getAdLocal(ad, id, isSynced);
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjB9.5Fe_gCqCjXWmrDhWXgvWGIOrEL3h4sG4upLJq-NkOV8";
         adApi.getAd(token, id).enqueue(new Callback<AdResponse>() {
             @Override
             public void onResponse(@NotNull Call<AdResponse> call, @NotNull Response<AdResponse> response) {
@@ -276,7 +276,6 @@ public class ZadrugaRepository  {
     //TODO: kad da dodajem ove podatke iz lookup tebela u lokalnu bazu?
     public void getAds(String token, MutableLiveData<CustomResponse<?>> ads) {
         final Boolean[] isSynced = {false};
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
         getAdsLocal(ads, isSynced);
         adApi.getAds(token).enqueue(new Callback<List<AdResponse>>() {
             @Override
@@ -342,7 +341,6 @@ public class ZadrugaRepository  {
     }
 
     public void applyForAd(String token, MutableLiveData<CustomResponse<?>> isApplied, int userId, int adId){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjB9.5Fe_gCqCjXWmrDhWXgvWGIOrEL3h4sG4upLJq-NkOV8";
         adApi.applyForAd(token, adId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -362,7 +360,6 @@ public class ZadrugaRepository  {
     }
 
     public void chooseApplicants(String token, MutableLiveData<CustomResponse<?>> isSucc, int adId, List<Integer> userIds){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
         adApi.chooseApplicants(token, adId, new ChooseApplicantsRequest(userIds)).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -384,7 +381,6 @@ public class ZadrugaRepository  {
     }
 
     public void unApplyForAd(String token, MutableLiveData<CustomResponse<?>> isUnApplied, int userId, int adId){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjB9.5Fe_gCqCjXWmrDhWXgvWGIOrEL3h4sG4upLJq-NkOV8";
         adApi.unApplyForAd(token, adId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -404,7 +400,6 @@ public class ZadrugaRepository  {
     }
 
     public void editAd(String token, MutableLiveData<CustomResponse<?>> isSucc, int adId, EditAdRequest ad){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
         adApi.editAd(token, adId, ad).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -436,7 +431,6 @@ public class ZadrugaRepository  {
     }
 
     public void deleteAd(String token, MutableLiveData<CustomResponse<?>> isSucc, int adId){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
         adApi.deleteAd(token, adId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -468,7 +462,7 @@ public class ZadrugaRepository  {
                     tmpComment.setUser(response.body().getUser());
                     Comment tmpLocalComment = new Comment(response.body().getId(), userId, adId, comment, response.body().getPostTime());
                     tmpComment.setComment(tmpLocalComment);
-                    res.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpComment));
+                    res.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
                     commentDao.insertComment(tmpLocalComment);
                 }
             }
@@ -483,7 +477,6 @@ public class ZadrugaRepository  {
     public void getComments(String token, MutableLiveData<CustomResponse<?>> comments, int adId){
         Boolean[] isSynced = {false};
         getCommentsLocal(comments, adId, isSynced);
-        String finalToken = token;
         commentApi.getComments(token, adId).enqueue(new Callback<List<CommentResponse>>() {
             @Override
             public void onResponse(@NotNull Call<List<CommentResponse>> call, @NotNull Response<List<CommentResponse>> response) {
@@ -497,7 +490,7 @@ public class ZadrugaRepository  {
                             int commentId = c.getId();
                             userDao.insertUser(c.getUser());
                             commentDao.insertComment(new Comment(c.getId(), c.getUser().getUserId(), adId, c.getComment(), c.getPostTime()));
-                            userApi.getProfileImage(finalToken, c.getId()).enqueue(new Callback<ResponseBody>() {
+                            userApi.getProfileImage(token, c.getId()).enqueue(new Callback<ResponseBody>() {
                                 @Override
                                 public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> imgRes) {
                                     //TODO: kako da proverim da l nesto moze da se kastuje
@@ -561,7 +554,7 @@ public class ZadrugaRepository  {
         });
     }
 
-    public void getCommentsLocal(MutableLiveData<CustomResponse<?>> comments, int adId, Boolean[] isSynced){
+    private void getCommentsLocal(MutableLiveData<CustomResponse<?>> comments, int adId, Boolean[] isSynced){
         Futures.addCallback(commentDao.getCommentsByAdId(adId), new FutureCallback<List<CommentWithUser>>() {
             @Override
             public void onSuccess(@Nullable List<CommentWithUser> result) {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    tools:context=".ui.SelectWorkersFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/tvApplicants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Applicants"
+        android:textSize="24sp" />
+
+    <View
+        android:id="@+id/hline1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/horizontal_line_thickness"
+        android:background="@color/light_grey"
+        app:layout_constraintTop_toBottomOf="@+id/tvApplicants"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvWorkers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/hline1"
+        tools:layout_editor_absoluteX="10dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
