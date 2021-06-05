@@ -9,16 +9,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Zadruga">
-        <activity android:name=".PasswordResetActivity"></activity>
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".LogInActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.RateUserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.JobAdActivity">
+
+        </activity>
+        <activity android:name=".ui.ChatActivity" />
+        <activity android:name=".ui.EditProfileActivity"></activity>
+        <activity android:name=".PasswordResetActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".LogInActivity" />
+        <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

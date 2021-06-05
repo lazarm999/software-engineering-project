@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/job_ad_nav_graph"
+    app:startDestination="@id/jobAdFragment">
+
+    <fragment
+        android:id="@+id/jobAdFragment"
+        android:name="com.parovi.zadruga.ui.JobAdInfoFragment"
+        android:label="fragment_job_advertisement"
+        tools:layout="@layout/fragment_job_advertisement" >
+        <action
+            android:id="@+id/action_jobAdFragment_to_selectWorkersFragment"
+            app:destination="@id/selectWorkersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectWorkersFragment"
+        android:name="com.parovi.zadruga.ui.SelectWorkersFragment"
+        android:label="fragment_select_workers"
+        tools:layout="@layout/fragment_select_workers" />
+</navigation>

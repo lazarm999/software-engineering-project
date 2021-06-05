@@ -87,7 +87,7 @@
         app:cornerRadius="20dp" />
 
     <TextView
-        android:id="@+id/restorePass"
+        android:id="@+id/tvResetPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -97,7 +97,7 @@
         android:layout_marginStart="131dp"
         android:layout_marginLeft="131dp"
         android:layout_marginBottom="203dp"
-        android:text="@string/restorePass"
+        android:text="@string/changePass"
         android:textColor="#7D8CE3"
         android:textSize="14sp"
         android:textStyle="bold" />
