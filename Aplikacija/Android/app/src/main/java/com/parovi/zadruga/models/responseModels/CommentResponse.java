@@ -1,5 +1,7 @@
 package com.parovi.zadruga.models.responseModels;
 
+import android.graphics.Bitmap;
+
 import com.parovi.zadruga.models.entityModels.User;
 
 import java.util.Date;
@@ -10,6 +12,7 @@ public class CommentResponse {
     private String comment;
     private Date postTime;
     private User user;
+    private Bitmap userImage;
 
     public CommentResponse(int id, int ad, String comment, Date postTime, User user) {
         this.id = id;
@@ -57,5 +60,13 @@ public class CommentResponse {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Bitmap getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(Bitmap userImage) {
+        this.userImage = userImage;
     }
 }

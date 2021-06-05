@@ -158,6 +158,19 @@ public class TmpActivity extends AppCompatActivity {
             }
         };
 
+        MutableLiveData<CustomResponse<?>> comments = new MutableLiveData<>();
+        comments.observe(this, new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> response) {
+                if(response != null){
+                    if(response.getStatus() == CustomResponse.Status.OK){
+
+                    } else if (response.getStatus() == CustomResponse.Status.BAD_REQUEST) {
+                    }
+                }
+            }
+        });
+
         tmpBtn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//etComment.getText().toString())
@@ -193,7 +206,9 @@ public class TmpActivity extends AppCompatActivity {
                 /*List<Chat> tmpChats = (List<Chat>) chats.getValue().getBody();
                 Chat tmpChat = tmpChats.get(0);
                 rep.getMessages(new MutableLiveData<>(), tmpChat.getQbChat(), 0);*/
-                rep.loginUser(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar"));
+                //rep.loginUser(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar"));
+                String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+                rep.getComments(token, comments, 4);
             }
         });
         tmpBtn2.setOnClickListener(new View.OnClickListener() {
@@ -214,7 +229,7 @@ public class TmpActivity extends AppCompatActivity {
                 //rep.editRating(getAccessToken(), new MutableLiveData<>(), new Rating(getUserId(), 3, 1, "jako slabo uradjeno"));
                 //rep.getRatingByUserId(getAccessToken(), new MutableLiveData<>(), 11);
                 //rep.postProfilePicture(getAccessToken(), new MutableLiveData<>(), 1);
-                //rep.getAds(getAccessToken(), new MutableLiveData<>());
+                rep.getAds(getAccessToken(), new MutableLiveData<>());
                 //rep.unApplyForAd(getAccessToken(), new MutableLiveData<>(), 20, 28);
                 //rep.postComment(getAccessToken(), new MutableLiveData<>(), 18, 1, "gaaaaaaaaaaaas");
                 //rep.deleteComment(getAccessToken(), new MutableLiveData<>(), 5);
@@ -224,8 +239,8 @@ public class TmpActivity extends AppCompatActivity {
                 //rep.loginUser(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar"));
                 //rep.connectToChatServer(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "novaaasifraaaa", 128330407));
                 //rep.connectToChatServer(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar", 128304620));
-                List<Chat> tmpChats = (List<Chat>) chats.getValue().getBody();
-                rep.sendMessage(new MutableLiveData<>(), tmpChats.get(0).getQbChat(), new User(), "porukaa novaaaaa");
+                /*List<Chat> tmpChats = (List<Chat>) chats.getValue().getBody();
+                rep.sendMessage(new MutableLiveData<>(), tmpChats.get(0).getQbChat(), new User(), "porukaa novaaaaa");*/
             }
         });
         tmpBtn3.setOnClickListener(new View.OnClickListener() {

@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
+import javax.annotation.Nullable;
+
 import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;
 
@@ -43,7 +45,8 @@ public class Ad {
     @ColumnInfo(index = true)
     private int fkLocationId;
     @ColumnInfo(index = true)
-    private int fkEmployerId;
+    @Nullable
+    private Integer fkEmployerId;
     @ColumnInfo(index = true)
     private String fkQbChatId;
 
@@ -133,11 +136,11 @@ public class Ad {
         this.fkLocationId = fkLocationId;
     }
 
-    public int getFkEmployerId() {
+    public Integer getFkEmployerId() {
         return fkEmployerId;
     }
 
-    public void setFkEmployerId(int fkEmployerId) {
+    public void setFkEmployerId(Integer fkEmployerId) {
         this.fkEmployerId = fkEmployerId;
     }
 
@@ -156,30 +159,4 @@ public class Ad {
     public void setFkQbChatId(String fkQbChatId) {
         this.fkQbChatId = fkQbChatId;
     }
-
-   /* public User getEmployer() {
-        return employer;
-    }
-
-    public void setEmployer(User employer) {
-        this.employer = employer;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }*/
 }

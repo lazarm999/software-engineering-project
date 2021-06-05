@@ -459,7 +459,6 @@ public class ZadrugaRepository  {
 
     //Comments
     public void postComment(String token, MutableLiveData<CustomResponse<?>> res, int adId, int userId, String comment){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
         CommentRequest c = new CommentRequest(comment);
         commentApi.postComment(token, adId, c).enqueue(new Callback<CommentResponse>() {
             @Override
@@ -482,7 +481,6 @@ public class ZadrugaRepository  {
     }
 
     public void getComments(String token, MutableLiveData<CustomResponse<?>> comments, int adId){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
         Boolean[] isSynced = {false};
         getCommentsLocal(comments, adId, isSynced);
         String finalToken = token;
@@ -496,12 +494,26 @@ public class ZadrugaRepository  {
                             isSynced[0] = true;
                         }
                         for (CommentResponse c: response.body()) {
+                            int commentId = c.getId();
                             userDao.insertUser(c.getUser());
                             commentDao.insertComment(new Comment(c.getId(), c.getUser().getUserId(), adId, c.getComment(), c.getPostTime()));
                             userApi.getProfileImage(finalToken, c.getId()).enqueue(new Callback<ResponseBody>() {
                                 @Override
-                                public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-
+                                public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> imgRes) {
+                                    //TODO: kako da proverim da l nesto moze da se kastuje
+                                    List<CommentResponse> commentList = (List<CommentResponse>) comments.getValue().getBody();
+                                    if(commentList != null){
+                                        for (int i = 0; i < commentList.size(); i++) {
+                                            if(commentList.get(i).getId() == commentId){
+                                                if(imgRes.body() != null) {
+                                                    Bitmap bmp = BitmapFactory.decodeStream(imgRes.body().byteStream());
+                                                    commentList.get(i).setUserImage(bmp);
+                                                }
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentList));
                                 }
 
                                 @Override
@@ -576,7 +588,6 @@ public class ZadrugaRepository  {
     }
 
     public void deleteComment(String token, MutableLiveData<CustomResponse<?>> res, int commentId){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
         commentApi.deleteComment(token, commentId).enqueue(new Callback<AdResponse>() {
             @Override
             public void onResponse(@NotNull Call<AdResponse> call, @NotNull Response<AdResponse> response) {
@@ -778,7 +789,7 @@ public class ZadrugaRepository  {
     }
 
     public void changePassword(String token, MutableLiveData<CustomResponse<?>> isChanged, int qbId, String oldPass, String newPass){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
         userApi.changePassword(token, new ChangePasswordRequest(oldPass, newPass)).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -818,7 +829,7 @@ public class ZadrugaRepository  {
 
     public void getUserById(String token, MutableLiveData<CustomResponse<?>> user, int id){
         final Boolean[] isSynced = {false};
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
         getUserByIdLocal(user, id, isSynced);
         userApi.getUserById(token, id).enqueue(new Callback<User>() {
             @Override
@@ -951,7 +962,7 @@ public class ZadrugaRepository  {
     }
 
     public void postProfilePicture(String token, MutableLiveData<CustomResponse<?>> isPosted, int id){
-        /*token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+        /*;
         zadrugaApi.postProfilePicture(token, id, tmpSlicka).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -1021,7 +1032,7 @@ public class ZadrugaRepository  {
 
     public void getAppliedUsers(String token, MutableLiveData<CustomResponse<?>> applied, int adId){
         Boolean[] isSynced = {false};
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
         getAppliedUsersLocal(applied, adId, isSynced);
         userApi.getAppliedUsers(token, adId).enqueue(new Callback<List<User>>() {
             @Override
@@ -1070,7 +1081,7 @@ public class ZadrugaRepository  {
     //Rating
     public void postRating(String token, MutableLiveData<CustomResponse<?>> res, Rating rating){
         //TODO: ne znam sta ce tacno da nam bude response
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
         ratingApi.postRating(token, rating.getFkRateeId(), rating).enqueue(new Callback<RatingResponse>() {
             @Override
             public void onResponse(@NotNull Call<RatingResponse> call, @NotNull Response<RatingResponse> response) {
@@ -1105,7 +1116,7 @@ public class ZadrugaRepository  {
 
     public void getRatingByUserId(String token, MutableLiveData<CustomResponse<?>> ratings, int rateeId){
         final Boolean[] isSynced = {false};
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
         getRatingByUserIdLocal(ratings, rateeId, isSynced);
         ratingApi.getRatingByRateeId(token, rateeId).enqueue(new Callback<List<RatingResponse>>() {
             @Override
@@ -1154,7 +1165,7 @@ public class ZadrugaRepository  {
     }
 
     public void deleteRating(String token, MutableLiveData<CustomResponse<?>> isDeleted, int raterId, int rateeId){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
         ratingApi.deleteRating(token, rateeId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -1177,7 +1188,7 @@ public class ZadrugaRepository  {
 
     //Lookup
     public void getAllLocations(String token, MutableLiveData<CustomResponse<?>> locations){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
         lookupApi.getAllLocations(token).enqueue(new Callback<List<Location>>() {
             @Override
             public void onResponse(@NotNull Call<List<Location>> call, @NotNull Response<List<Location>> response) {
@@ -1197,7 +1208,7 @@ public class ZadrugaRepository  {
     }
 
     public void getAllBadges(String token, MutableLiveData<CustomResponse<?>> badges){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
         lookupApi.getAllBadges(token).enqueue(new Callback<List<Badge>>() {
             @Override
             public void onResponse(@NotNull Call<List<Badge>> call, @NotNull Response<List<Badge>> response) {
@@ -1217,7 +1228,7 @@ public class ZadrugaRepository  {
     }
 
     public void getAllTags(String token, MutableLiveData<CustomResponse<?>> tags){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
         lookupApi.getAllTags(token).enqueue(new Callback<List<Tag>>() {
             @Override
             public void onResponse(@NotNull Call<List<Tag>> call, @NotNull Response<List<Tag>> response) {
@@ -1237,14 +1248,12 @@ public class ZadrugaRepository  {
     }
 
     public void getFacultiesAndUniversities(String token){
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
-        String finalToken = token;
         lookupApi.getAllUniversities(token).enqueue(new Callback<List<University>>() {
             @Override
             public void onResponse(@NotNull Call<List<University>> call, @NotNull Response<List<University>> response) {
                 if(response.isSuccessful() && response.body() != null){
                     lookupDao.insertUniversities(response.body());
-                    lookupApi.getAllFaculties(finalToken).enqueue(new Callback<List<Faculty>>() {
+                    lookupApi.getAllFaculties(token).enqueue(new Callback<List<Faculty>>() {
                         @Override
                         public void onResponse(@NotNull Call<List<Faculty>> call, @NotNull Response<List<Faculty>> response) {
                             if(response.isSuccessful() && response.body() != null){
