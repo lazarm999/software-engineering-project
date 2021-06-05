@@ -35,5 +35,9 @@
     <string name="notificationsStudent">Notifications</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="daysAgo">%1d days ago</string>
+    <string name="dayAgo">%1d day ago</string>
+    <string name="hoursAgo">%1d hours ago</string>
+    <string name="lessThen6hourAgo">%1d hour ago</string>
 
 </resources>

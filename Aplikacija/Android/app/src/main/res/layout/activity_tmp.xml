@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/tmpImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:srcCompat="@tools:sample/avatars" />
+    </LinearLayout>
+
     <TextView
-        android:id="@+id/tmpView"
+        android:id="@+id/tvTmp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Zadruga!"/>
@@ -14,35 +28,97 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:id="@+id/tmpBtn1"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:text="login 1"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#673AB7"
+            app:rippleColor="#FFFFFF" />
+        <Button
             android:id="@+id/tmpBtn2"
             android:layout_width="150dp"
             android:layout_height="48dp"
-            android:text="tmpBtn2"/>
-
-        <TextView
-            android:id="@+id/tmpPost"
-            android:layout_width="53dp"
-            android:layout_height="19dp" />
-
-        <Button
-            android:id="@+id/tmpBtn"
-            android:layout_width="150dp"
-            android:layout_height="48dp"
-            android:text="tmpBtn" />
+            android:text="login 2"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#673AB7"
+            app:iconTint="#0C0909" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/tmpBtn3"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:text="create chat "
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#673AB7"
+            app:iconTint="#0C0909" />
+
+        <Button
+            android:id="@+id/tmpBtn4"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:text="tmpBtn4"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#673AB7"
+            app:rippleColor="#FFFFFF" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:ems="10"
+            android:hint="Leave a comment..."
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/btnPostComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="60dp"
+            android:text="send"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            app:backgroundTint="#673AB7" />
+    </LinearLayout>
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvNotifications"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/srlNotifications"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent" >
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/rvComments"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:scrollbars="vertical"/>-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

@@ -19,10 +19,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.MainActivity;
 import com.parovi.zadruga.R;
-import com.parovi.zadruga.models.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
 
-import java.nio.channels.Channel;
 import java.util.Random;
 
 public class NotificationService extends FirebaseMessagingService {
