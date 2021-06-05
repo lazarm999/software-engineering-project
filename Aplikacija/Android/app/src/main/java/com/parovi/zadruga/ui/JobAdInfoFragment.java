@@ -3,20 +3,25 @@ package com.parovi.zadruga.ui;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.parovi.zadruga.R;
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.adapters.CommentsAdapter;
-import com.parovi.zadruga.data.JobAd;
+import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
+import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
+import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.viewModels.JobAdViewModel;
+
+import java.util.List;
 
 
 public class JobAdInfoFragment extends Fragment {
@@ -38,17 +43,41 @@ public class JobAdInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentJobAdvertisementBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(JobAdViewModel.class);
-        bind(model.getJobAd().getValue());
+
+        CommentsAdapter adapter = new CommentsAdapter();
+        binding.rvComments.setAdapter(adapter);
+        binding.rvComments.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        model.getAd().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() != CustomResponse.Status.OK) {
+                    Toast.makeText(requireContext() , "Greska", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                bindAdInfo(new JobAdInfo((AdWithTags) customResponse.getBody()));
+            }
+        });
+        model.getComments().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                adapter.setCommentsList((List<CommentResponse>)customResponse.getBody());
+            }
+        });
+
         return binding.getRoot();
     }
 
-    private void bind(JobAd jobAd) {
+    private void bindAdInfo(JobAdInfo jobAd) {
         binding.tvJobTitle.setText(jobAd.getTitle());
         binding.tvJobDesc.setText(jobAd.getDescription());
         binding.tvLocation.setText(jobAd.getLocation());
-        String feeRange = Float.valueOf(jobAd.getCompensationFrom()).toString() + " - " + Float.valueOf(jobAd.getCompensationTo()).toString();
+        binding.dtPosted.setText(jobAd.getTime());
+        binding.tvPeopleNeeded.setText(Integer.toString(jobAd.getNoApplicantsRequired()));
+        String feeRange = Float.valueOf(jobAd.getCompensationFrom()).toString() + " - " + Float.valueOf(jobAd.getCompensationTo()).toString() + " RSD";
         binding.tvFeeRange.setText(feeRange);
-        if (model.getJobAd().getValue().isMine()) {
+
+        if (model.isAdMine()) {
             binding.btnApply.setText("Select workers");
             binding.btnApply.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -60,11 +89,9 @@ public class JobAdInfoFragment extends Fragment {
         else {
             // apliciraj za posao
         }
-        binding.rvComments.setHasFixedSize(true);
-        /*rvlmNComments = new LinearLayoutManager(this);
-        rvaComments = new CommentsAdapter(commentsList);
 
-        rvComments.setLayoutManager(rvlmNComments);
-        rvComments.setAdapter(rvaComments);*/
+    }
+    private void bindComments() {
+
     }
 }

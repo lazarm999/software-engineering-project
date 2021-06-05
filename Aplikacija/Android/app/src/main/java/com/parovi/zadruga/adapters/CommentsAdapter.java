@@ -10,32 +10,32 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.databinding.ChatResumeLayoutBinding;
+import com.parovi.zadruga.databinding.ItemCommentBinding;
 import com.parovi.zadruga.models.nonEntityModels.CommentUser;
+import com.parovi.zadruga.models.responseModels.CommentResponse;
 
 import java.util.ArrayList;
+import java.util.List;
+
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentViewHolder> {
+    private List<CommentResponse> commentsList;
 
-    private ArrayList<CommentUser> commentsList;
-
-    public CommentsAdapter(ArrayList<CommentUser> commentsList){
+    public void setCommentsList(List<CommentResponse> commentsList) {
         this.commentsList = commentsList;
+        notifyDataSetChanged();
     }
-
     @NonNull
     @Override
     public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment, parent, false);
-        CommentViewHolder nvh = new CommentViewHolder(v);
-        return nvh;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        ItemCommentBinding binding = ItemCommentBinding.inflate(inflater, parent, false);
+        return new CommentViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CommentsAdapter.CommentViewHolder holder, int position) {
-        CommentUser currComment = commentsList.get(position);
-        holder.civProfileImage.setImageResource(R.drawable.accepted); //TODO: ovde treba da ide profilna
-        holder.tvUsername.setText(currComment.getUsername());
-        holder.tvTimeAgo.setText("50 hours ago");
-        holder.tvComment.setText(currComment.getCommentText());
+        holder.bind(commentsList.get(position));
     }
 
     @Override
@@ -44,33 +44,17 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     }
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder{
-        private ImageView civProfileImage;
-        private TextView tvUsername;
-        private TextView tvTimeAgo;
-        private TextView tvComment;
+        private ItemCommentBinding binding;
 
-        public CommentViewHolder(@NonNull  View itemView) {
-            super(itemView);
-            civProfileImage = itemView.findViewById(R.id.civProfileImage);
-            tvUsername = itemView.findViewById(R.id.tvUsername);
-            tvTimeAgo = itemView.findViewById(R.id.tvTimeAgo);
-            tvComment = itemView.findViewById(R.id.tvComment);
+        public CommentViewHolder(@NonNull  ItemCommentBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
-
-        public ImageView getCivProfileImage() {
-            return civProfileImage;
-        }
-
-        public TextView getTvUsername() {
-            return tvUsername;
-        }
-
-        public TextView getTvTimeAgo() {
-            return tvTimeAgo;
-        }
-
-        public TextView getTvComment() {
-            return tvComment;
+        public void bind(CommentResponse currComment) {
+            //binding.civProfileImage.setImageResource(R.drawable.accepted); //TODO: ovde treba da ide profilna
+            binding.tvUsername.setText(currComment.getUser().getUsername());
+            binding.tvTimeAgo.setText("50 hours ago");
+            binding.tvComment.setText(currComment.getComment());
         }
     }
 }

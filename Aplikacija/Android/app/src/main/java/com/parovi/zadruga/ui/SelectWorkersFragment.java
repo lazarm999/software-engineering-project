@@ -11,11 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.parovi.zadruga.R;
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.adapters.ApplicantResumeAdapter;
-import com.parovi.zadruga.data.JobAd;
+import com.parovi.zadruga.data.ApplicantResume;
+import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.databinding.FragmentSelectWorkersBinding;
+import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
 import com.parovi.zadruga.viewModels.JobAdViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SelectWorkersFragment extends Fragment {
@@ -37,13 +42,13 @@ public class SelectWorkersFragment extends Fragment {
         model = new ViewModelProvider(requireActivity()).get(JobAdViewModel.class);
 
         ApplicantResumeAdapter adapter = new ApplicantResumeAdapter();
-        model.getJobAd().observe(requireActivity(), new Observer<JobAd>() {
+        model.getAd().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
-            public void onChanged(JobAd jobAd) {
-                adapter.setUsers(model.getJobAd().getValue().getApplicants());
+            public void onChanged(CustomResponse<?> customResponse) {
+                adapter.setUsers(new ArrayList<ApplicantResume>());
             }
         });
-        binding.rvWorkers.setAdapter(adapter);
+                binding.rvWorkers.setAdapter(adapter);
         binding.rvWorkers.setLayoutManager(new LinearLayoutManager(container.getContext()));
 
         return binding.getRoot();

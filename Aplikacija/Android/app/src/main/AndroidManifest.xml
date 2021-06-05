@@ -18,16 +18,16 @@
         android:theme="@style/Theme.Zadruga">
         <activity android:name=".ui.RateUserActivity"/>
         <activity android:name=".TmpActivity">
+
+        </activity>
+        <activity android:name=".MainActivity">
+        </activity>
+        <activity android:name=".ui.JobAdActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity">
-        </activity>
-        <activity android:name=".ui.JobAdActivity">
-
         </activity>
         <activity android:name=".ui.ChatActivity" />
         <activity android:name=".ui.EditProfileActivity"></activity>

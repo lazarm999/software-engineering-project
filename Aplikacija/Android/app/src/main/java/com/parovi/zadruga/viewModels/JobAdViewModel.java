@@ -1,39 +1,77 @@
 package com.parovi.zadruga.viewModels;
 
-import android.os.Build;
+import android.app.Application;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.data.ApplicantResume;
-import com.parovi.zadruga.data.JobAd;
+import com.parovi.zadruga.data.JobAdInfo;
+import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
+import com.parovi.zadruga.repository.ZadrugaRepository;
 
-import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.List;
+public class JobAdViewModel extends AndroidViewModel {
+    private final int adId = 4;
+    private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+    private final int userId = 1;
 
-public class JobAdViewModel extends ViewModel {
-    private final static long id = 4;
-    int userId = 1;
-    MutableLiveData<JobAd> jobAd;
+    MutableLiveData<JobAdInfo> jobAd;
 
-    MutableLiveData<CustomResponse<?>> user;//AdWithTags
     MutableLiveData<CustomResponse<?>> ad;//AdWithTags
     MutableLiveData<CustomResponse<?>> comments;//List<CommentResponse>
     MutableLiveData<CustomResponse<?>> isPosted;//Boolean
     MutableLiveData<CustomResponse<?>> isDeleted;//Boolean
+    ZadrugaRepository zadrugaRepository;
 
-    public MutableLiveData<JobAd> getJobAd() {
+    public JobAdViewModel(@NonNull Application app) {
+        super(app);
+        zadrugaRepository = ZadrugaRepository.getInstance(app);
+        ad = new MutableLiveData<>();
+        comments = new MutableLiveData<>();
+        isPosted = new MutableLiveData<>();
+        isDeleted = new MutableLiveData<>();
+        loadAd();
+        loadComments();
+    }
+
+    /*public MutableLiveData<JobAd> getJobAd() {
         if (jobAd == null) {
             jobAd = new MutableLiveData<JobAd>();
             loadJobAd();
         }
         return jobAd;
+    }*/
+
+    public boolean isAdMine() {
+        return ((AdWithTags)ad.getValue().getBody()).adEmployerLocation.getEmployer().getUserId() == userId;
     }
 
-    private void loadJobAd() {
+    public int getAdId() {
+        return adId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getAd() {
+        return ad;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getComments() {
+        return comments;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getIsPosted() {
+        return isPosted;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getIsDeleted() {
+        return isDeleted;
+    }
+
+    /*private void loadJobAd() {
         JobAd jobAd = new JobAd(id);
         jobAd.setTitle("Istovar robe");
         jobAd.setDescription("Description.....");
@@ -49,6 +87,22 @@ public class JobAdViewModel extends ViewModel {
         jobAd.setApplicants(applicants);
         jobAd.setMine(false);
         this.jobAd.setValue(jobAd);
-    }
+    }*/
 
+    public boolean commentResponseOK() {
+        return comments.getValue().getStatus() == CustomResponse.Status.OK;
+    }
+    public boolean adResponseOK() {
+        return ad.getValue().getStatus() == CustomResponse.Status.OK;
+    }
+    private void loadAd() {
+        zadrugaRepository.getAd(token, ad, adId);
+    }
+    private void loadComments() {
+        zadrugaRepository.getComments(token, comments, adId);
+    }
+    private boolean postAComment(String comment) {
+        zadrugaRepository.postComment(token, comments, adId, userId, comment);
+        return comments.getValue().getStatus() == CustomResponse.Status.OK;
+    }
 }
