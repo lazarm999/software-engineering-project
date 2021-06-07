@@ -6,9 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.parovi.zadruga.models.AdWithLocation;
-import com.parovi.zadruga.models.Badge;
-import com.parovi.zadruga.models.User;
+
+import com.parovi.zadruga.models.entityModels.AdWithLocation;
+import com.parovi.zadruga.models.entityModels.Badge;
+import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 
 import java.util.List;

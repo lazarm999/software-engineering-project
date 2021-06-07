@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="textView">
+        <item name="android:layout_marginTop">@dimen/top_inputText_margin</item>
+        <item name="android:layout_marginLeft">@dimen/left_inputText_margin</item>
+        <item name="android:layout_marginRight">@dimen/left_inputText_margin</item>
+        <item name="android:textColor">?colorPrimary</item>
+    </style>
+    <style name="inputText" parent="textView">
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@color/background_textview_color_light</item>
+    </style>
+    <style name="inputFirstName" parent="inputText">
+        <item name="android:hint">@string/signName</item>
+    </style>
+    <style name="inputLastName" parent="inputText">
+        <item name="android:hint">@string/signSurname</item>
+    </style>
+    <style name="inputPhoneNumber" parent="inputText">
+        <item name="android:hint">@string/mobile</item>
+    </style>
+    <style name="inputDateOfBirth" parent="inputText">
+        <item name="android:hint">@string/dateHint</item>
+    </style>
+    <style name="button">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/top_inputText_margin</item>
+        <item name="android:layout_marginLeft">@dimen/left_inputText_margin</item>
+        <item name="android:layout_marginRight">@dimen/left_inputText_margin</item>
+    </style>
+    <style name="finalButton" parent="button">
+        <item name="android:layout_gravity">end</item>
+    </style>
+    <style name="text_view_link" parent="textView">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:layout_marginTop">@dimen/top_textView_margin</item>
+    </style>
+    <style name="inputBio" parent="inputText">
+        <item name="android:hint">@string/bio_hint</item>
+    </style>
+</resources>

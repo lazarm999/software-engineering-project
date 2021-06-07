@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:id="@+id/lay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_color_light"
+        android:orientation="vertical"
+        tools:context=".ui.EditBasicProfileInfoFragment">
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="30dp">
+
+            <ImageView
+                android:id="@+id/ivProfilePhoto"
+                android:layout_width="@dimen/medium_image_size"
+                android:layout_height="@dimen/medium_image_size"
+                android:layout_marginTop="0dp"
+                app:srcCompat="@drawable/login2"
+                tools:srcCompat="@tools:sample/avatars" />
+        </androidx.cardview.widget.CardView>
+
+        <EditText
+            android:id="@+id/etFirstName"
+            style="@style/inputFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"/>
+
+        <EditText
+            android:id="@+id/etLastName"
+            style="@style/inputLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/textView"
+            style="@style/inputBio"
+            android:layout_width="match_parent"
+            android:layout_height="84dp"
+            android:inputType="textMultiLine" />
+
+        <EditText
+            android:id="@+id/etPhoneNo"
+            style="@style/inputPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="phone" />
+
+        <EditText
+            android:id="@+id/etDateOfBirth"
+            style="@style/inputDateOfBirth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="date" />
+
+        <TextView
+            android:id="@+id/tvEditPrefs"
+            style="@style/text_view_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/editPreferences" />
+
+        <TextView
+            android:id="@+id/tvChangePass"
+            style="@style/text_view_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/changePass" />
+
+        <Button
+            android:id="@+id/btnSubmitChanges"
+            style="@style/finalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/submitChanges" />
+
+    </LinearLayout>
+</layout>

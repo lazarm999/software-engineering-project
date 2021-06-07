@@ -84,6 +84,12 @@ public class NewAdFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_new_ad, container, false);
 
+        /*
+        *
+        *
+        *
+        *
+        * newAdViewModel.postAd(Utility.getAccessToken(), )*/
         Spinner spinnerLocations = (Spinner) layout.findViewById(R.id.spinnerLocation);
         ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.locations));
         adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

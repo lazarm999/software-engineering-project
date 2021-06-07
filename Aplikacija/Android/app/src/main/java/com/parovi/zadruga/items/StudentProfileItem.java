@@ -1,6 +1,6 @@
 package com.parovi.zadruga.items;
 
-import com.parovi.zadruga.models.Badge;
+import com.parovi.zadruga.models.entityModels.Badge;
 
 import java.util.List;
 

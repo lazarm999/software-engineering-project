@@ -56,7 +56,7 @@ public class MainActivity<AlterDialog> extends AppCompatActivity {
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent = new Intent(MainActivity.this, MainStudentActivity.class);
+               Intent intent = new Intent(MainActivity.this, MainEmployerActivity.class);
                startActivity(intent);
             }
         });

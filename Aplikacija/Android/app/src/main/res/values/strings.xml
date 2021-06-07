@@ -118,5 +118,30 @@
     <string name="headerJobs">Previous jobs</string>
     <string name="headerMyAds">Ads you have published</string>
     <string name="recommend">Recommended for You</string>
+    <string name="profileStudent">Profile</string>
+    <string name="notificationsStudent">Notifications</string>
+    <string name="daysAgo">%1d days ago</string>
+    <string name="dayAgo">%1d day ago</string>
+    <string name="hoursAgo">%1d hours ago</string>
+    <string name="lessThen6hourAgo">%1d hour ago</string>
+    <string name="newPass">New password</string>
+    <string name="newPassConf">Confirm new password</string>
+    <string name="reset">Reset password</string>
+    <string name="submitChanges">Submit Changes</string>
+    <string name="editPreferences">Edit preferences</string>
+    <string name="dateHint">Date of Birth</string>
+    <string name="done">Done</string>
+    <string name="jobAdvertisement">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum bibendum enim gravida porttitor sodales. Phasellus lobortis efficitur fringilla. Suspendisse a efficitur lectus, id dapibus purus.
+    </string>
+    <string name="changePass">Change password</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="writeMessageHint">Write a message</string>
+    <string name="bio_hint">Enter bio...</string>
+    <string name="rating_intro_format1">We\'ve seen you\'ve collaborated with %1$s.</string>
+    <string name="rating_intro_format2">How would you rate your experience with %1$s?</string>
+    <string name="submitRating">Submit</string>
+
 
 </resources>

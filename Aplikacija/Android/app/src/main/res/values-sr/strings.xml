@@ -25,6 +25,21 @@
     <string name="signPassword">* Šifra</string>
     <string name="signPasswordPlaceholder">Šifra</string>
     <string name="goLog">Imate nalog? Prijavite se</string>
+    <string name="newPass">Nova šifra</string>
+    <string name="newPassConf">Potvrdite novu šifru</string>
+    <string name="reset">Promeni šifru</string>
+    <string name="submitChanges">Potvrdi promene</string>
+    <string name="editPreferences">Izmeni preferencije</string>
+    <string name="dateHint">Datum rođenja</string>
+    <string name="changePass">Promenite lozinku</string>
+    <string name="done">Gotovo</string>
+    <string name="jobAdvertisement">Tekst</string>
+    <string name="hello_blank_fragment">Zdravo prazni fragmente</string>
+    <string name="writeMessageHint">Napiši novu poruku</string>
+    <string name="bio_hint">Biografija</string>
+    <string name="rating_intro_format1">Primetili smo da ste sarađivali sa %1$s.</string>
+    <string name="rating_intro_format2">Kako biste ocenili Vaše iskustvo sa %1$s?</string>
+    <string name="submitRating">Prosledi</string>
     <string name="newPassword">Nova šifra</string>
     <string name="newPasswordConfirmation">Potvrdite novu šifru</string>
     <string name="resetPassword">Promeni šifru</string>
@@ -119,4 +134,10 @@
     <string name="headerMyAds">Vaši oglasi</string>
     <string name="recommend">Preporučeno za Vas</string>
 
+    <string name="profileStudent">Profil</string>
+    <string name="notificationsStudent">Obaveštenja</string>
+    <string name="daysAgo">pre %1$d dana</string>
+    <string name="dayAgo">pre %1$d dan</string>
+    <string name="hoursAgo">pre %1$d sati</string>
+    <string name="lessThen6hourAgo">pre %1$d sata</string>
 </resources>
