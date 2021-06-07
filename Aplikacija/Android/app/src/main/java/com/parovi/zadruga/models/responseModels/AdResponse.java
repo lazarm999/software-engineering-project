@@ -1,5 +1,7 @@
 package com.parovi.zadruga.models.responseModels;
 
+import androidx.room.Embedded;
+
 import com.parovi.zadruga.models.entityModels.Location;
 import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.entityModels.User;

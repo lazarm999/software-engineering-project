@@ -1,5 +1,6 @@
 package com.parovi.zadruga;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -9,7 +10,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.icu.text.AlphabeticIndex;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,37 +18,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.parovi.zadruga.adapters.NotificationsAdapter;
-import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.models.entityModels.Notification;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
 import com.parovi.zadruga.models.nonEntityModels.CommentUser;
-import com.parovi.zadruga.models.requestModels.EditAdRequest;
-import com.parovi.zadruga.models.requestModels.PostAdRequest;
-import com.parovi.zadruga.models.responseModels.LoginResponse;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.LoginViewModel;
 import com.parovi.zadruga.viewModels.TmpViewModel;
 import com.quickblox.auth.session.QBSessionManager;
-import com.quickblox.auth.session.QBSettings;
-import com.quickblox.chat.QBChatService;
-import com.quickblox.chat.exception.QBChatException;
-import com.quickblox.chat.listeners.QBChatDialogMessageListener;
-import com.quickblox.chat.model.QBChatDialog;
-import com.quickblox.chat.model.QBChatMessage;
-import com.quickblox.core.LogLevel;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 /**/
 public class TmpActivity extends AppCompatActivity {
 
@@ -105,6 +89,7 @@ public class TmpActivity extends AppCompatActivity {
         Button tmpBtn2 = (Button) findViewById(R.id.tmpBtn2);
         Button tmpBtn3 = (Button) findViewById(R.id.tmpBtn3);
         Button tmpBtn4 = (Button) findViewById(R.id.tmpBtn4);
+        Button tmpBtn5 = (Button) findViewById(R.id.tmpBtn5);
         Button btnPostComment =  (Button) findViewById(R.id.btnPostComment);
         EditText etComment = (EditText) findViewById(R.id.etComment);
         TextView tvTmp= (TextView)  findViewById(R.id.tvTmp);
@@ -145,14 +130,25 @@ public class TmpActivity extends AppCompatActivity {
             }
         });
 
+        MutableLiveData<CustomResponse<?>> image = new MutableLiveData<>();
+        image.observe(this, new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if(customResponse.getStatus() == CustomResponse.Status.OK){
+                    Bitmap image = (Bitmap) customResponse.getBody();
+                    tmpImageView.setImageBitmap(image);
+                }
+            }
+        });
+
         tmpBtn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//etComment.getText().toString())
                 //TODO: za qbUser sifra mora bude duza od 8 karaktera
+                rep.loginUser(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "novaaasifraaaa"));
                 //rep.loginUser(loginData, new User("vuk.bibic@gmail.com", "sifra123"));
                 //rep.getUserById(getAccessToken(), new MutableLiveData<>(), 1);
                 //rep.populateData();
-                //rep.getProfilePicture(getAccessToken(), image, 3);
                 //rep.getAd(getAccessToken(), new MutableLiveData<>(), 24);
                 /*ArrayList<Integer> intList = new ArrayList<>();
                 intList.add(1);
@@ -165,7 +161,7 @@ public class TmpActivity extends AppCompatActivity {
                 rep.chooseApplicants(getAccessToken(), new MutableLiveData<>(), 11, intList);*/
                 //rep.applyForAd(getAccessToken(), new MutableLiveData<>(), 20, 12);
                 //rep.deleteAd(getAccessToken(), new MutableLiveData<>(), 29);
-                //rep.getComments(getAccessToken(), new MutableLiveData<>(), 18);
+                //rep.getComments("getAccessToken()", comments, 4);
                 //rep.postRating(getAccessToken(), new MutableLiveData<>(), new Rating(1, 3, 5, "braooo opasna si"));
                 /*ArrayList<Integer> addList = new ArrayList<>();
                 addList.add(3);
@@ -181,23 +177,26 @@ public class TmpActivity extends AppCompatActivity {
                 Chat tmpChat = tmpChats.get(0);
                 rep.getMessages(new MutableLiveData<>(), tmpChat.getQbChat(), 0);*/
                 //rep.loginUser(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar"));
-                String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
-                rep.getComments(token, comments, 4);
+               /* String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+                rep.getComments(token, comments, 4);*/
+                //rep.getProfilePicture(Utility.getAccessToken(TmpActivity.this), image, 1);
             }
         });
         tmpBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO: za qbUser sifra mora bude duza od 8 karaktera
-                rep.registerUser(new MutableLiveData<>(), new User("markocari", "fnjkdsnl", "dlkfhaslkjh", "markocar@gmail.com", "markocar"));
-                //rep.loginUser(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "sifra123"));
-                //rep.logOutUser(loggedOut);
-                //rep.getUserById(getAccessToken(), user, 19);
+                //rep.registerUser(new MutableLiveData<>(), new User("markocari", "fnjkdsnl", "dlkfhaslkjh", "markocar@gmail.com", "markocar"));
+                String vukovToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+                rep.logOutUser(vukovToken, new MutableLiveData<>(), 1);
+                //rep.getUserById(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), 2);
                 /*User u = new User();
                 u.setBio("ovo je novi bio");
                 u.setPhoneNumber("1223456799");
-                u.setUserId(19);
-                rep.updateUser(getAccessToken(), new MutableLiveData<>(), u);*/
+                u.setFkFacultyId(1);
+                u.setUserId(3);
+                rep.updateUser("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g",
+                        new MutableLiveData<>(), u);*/
                 //rep.banUser(getAccessToken(), new MutableLiveData<>(),  new Ban("jedan velikii baaaan"), 2);
                 //rep.unBanUser(getAccessToken(), new MutableLiveData<>(), 3);//nt raterId, int rateeId, Rating rating
                 //rep.editRating(getAccessToken(), new MutableLiveData<>(), new Rating(getUserId(), 3, 1, "jako slabo uradjeno"));
@@ -210,7 +209,7 @@ public class TmpActivity extends AppCompatActivity {
                 //rep.changePassword(getAccessToken(), new MutableLiveData<>(), 	128330407, "sifra123", "novaaasifraaaa");
                 //rep.deleteRating(getAccessToken(), new MutableLiveData<>(), 1, 3);
                 //rep.getAd(getAccessToken(), new MutableLiveData<>(), 28);
-                //rep.loginUser(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar"));
+                //rep.loginUser(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "novaaasifraaaaa));
                 //rep.connectToChatServer(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "novaaasifraaaa", 128330407));
                 //rep.connectToChatServer(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar", 128304620));
                 /*List<Chat> tmpChats = (List<Chat>) chats.getValue().getBody();
@@ -223,15 +222,22 @@ public class TmpActivity extends AppCompatActivity {
                 /*ArrayList<Integer> list = new ArrayList<>();
                 list.add(128330407);
                 rep.createChat(new MutableLiveData<>(), list, true, 28, 1);*/
-                rep.connectToChatServer(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar", 128304620));
+                //rep.connectToChatServer(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar", 128304620));
+                rep.loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));
             }
         });
         tmpBtn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String teinToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
+                rep.logOutUser(teinToken, new MutableLiveData<>(), 3);
             }
         });
-
+        tmpBtn5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
         //LOGIKA OKO CHAT-A
         //128119046 user2 id
 
@@ -279,132 +285,8 @@ public class TmpActivity extends AppCompatActivity {
                 }
             }
         });
-        //loginViewModel.logInQBUser(u, "sifra123");
+        //loginViewModel.logInQBUser(u, "sifra123");*/
 
-
-
-        tmpBtn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chatViewModel.connectToChatServer(u);
-            }
-        });*/
-
-        /*tmpBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tmpViewModel.logInUser(u, "sifra123").observe(TmpActivity.this, new Observer<Boolean>() {
-                    @Override
-                    public void onChanged(Boolean isLoggedIn) {
-                        if(isLoggedIn){
-                            Toast.makeText(TmpActivity.this, "login uspesan", Toast.LENGTH_SHORT).show();
-                            tmpViewModel.connectToChatServer(u).observe(TmpActivity.this, new Observer<Boolean>() {
-                                @Override
-                                public void onChanged(Boolean isConnected) {
-                                    if(isConnected){
-                                        Toast.makeText(TmpActivity.this, "chat server uspesan", Toast.LENGTH_SHORT).show();
-                                        tmp++;
-
-                                        QBChatService chatService = QBChatService.getInstance();
-                                        QBIncomingMessagesManager incomingMessagesManager = chatService.getIncomingMessagesManager();
-                                        Toast.makeText(TmpActivity.this, Boolean.toString( QBChatService.getInstance().isLoggedIn()), Toast.LENGTH_SHORT).show(); chatService.isLoggedIn();
-                                        incomingMessagesManager.addDialogMessageListener(new QBChatDialogMessageListener() {
-                                            @Override
-                                            public void processMessage(String dialogID, QBChatMessage qbChatMessage, Integer senderID) {
-                                                if(qbChatMessage != null){
-                                                    tvTmp.setText(qbChatMessage.getBody());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void processError(String dialogID, QBChatException e, QBChatMessage qbChatMessage, Integer senderID) {
-                                            }
-                                        });
-                                        QBChatDialog chat = new QBChatDialog();
-                                        chat.setDialogId("60a193f0ce5b15002dcf5c17");
-
-                                        chat.addMessageListener(new QBChatDialogMessageListener() {
-                                            @Override
-                                            public void processMessage(String s, QBChatMessage qbChatMessage, Integer integer) {
-                                                if(qbChatMessage != null){
-                                                    tvTmp.setText(qbChatMessage.getBody());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void processError(String s, QBChatException e, QBChatMessage qbChatMessage, Integer integer) {
-                                                if(qbChatMessage != null){
-                                                    tvTmp.setText(qbChatMessage.getBody());
-                                                }
-                                            }
-                                        });
-                                        tmpViewModel.getAllChats().observe(TmpActivity.this, new Observer<List<QBChatDialog>>() {
-                                            @Override
-                                            public void onChanged(List<QBChatDialog> qbChatDialogs) {
-                                                if(qbChatDialogs != null && qbChatDialogs.size() != 0){
-                                                    tmpViewModel.onChatMessageReceived().observe(TmpActivity.this, new Observer<QBChatMessage>() {
-                                                        @Override
-                                                        public void onChanged(QBChatMessage qbChatMessage) { if(qbChatMessage != null){
-                                                                tvTmp.setText(qbChatMessage.getBody());
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        Toast.makeText(TmpActivity.this, "chat server nije uspesan", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                            tmp++;
-                        } else {
-                            Toast.makeText(TmpActivity.this, "login nije uspesan", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                //sendNotification();
-                if(tmp == 0){
-                    tmpViewModel.logInUser(u, "sifra123").observe(TmpActivity.this, new Observer<Boolean>() {
-                        @Override
-                        public void onChanged(Boolean isLoggedIn) {
-                            if(isLoggedIn){
-                                Toast.makeText(TmpActivity.this, "login uspesan", Toast.LENGTH_SHORT).show();
-                                tmp++;
-                            } else {
-                                Toast.makeText(TmpActivity.this, "login nije uspesan", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } else if (tmp == 1){
-                    tmpViewModel.connectToChatServer(u).observe(TmpActivity.this, new Observer<Boolean>() {
-                        @Override
-                        public void onChanged(Boolean isConnected) {
-                            if(isConnected){
-                                Toast.makeText(TmpActivity.this, "chat server uspesan", Toast.LENGTH_SHORT).show();
-                                tmp++;
-                            } else {
-                                Toast.makeText(TmpActivity.this, "chat server nije uspesan", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } else if (tmp == 2){
-                    ArrayList<Integer> ids = new ArrayList<>();
-                    ids.add(128119046);
-                    tmpViewModel.insertChat(ids, true).observe(TmpActivity.this, new Observer<Boolean>() {
-                        @Override
-                        public void onChanged(Boolean isCreated) {
-                            if(isCreated != null){
-                                Toast.makeText(TmpActivity.this, "chat uspesan", Toast.LENGTH_SHORT).show();
-                                tmp++;
-                            } else {
-                                Toast.makeText(TmpActivity.this, "chat nije uspesan", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            }
-        });*/
         btnPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -417,12 +299,6 @@ public class TmpActivity extends AppCompatActivity {
                 } else {
                     Log.i("checklogut", "nije logoutvaon");
                 }
-            }
-        });
-        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
-            @Override
-            public void onSuccess(String s) {
-                Log.i("tokenic", s);
             }
         });
 
@@ -465,6 +341,24 @@ public class TmpActivity extends AppCompatActivity {
                 tmp++;
             }
         });*/
+    }
 
+    private void setFcmToken(String token, int userId){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Log.w("FETCH_FCM_TOKEN_FAILED", "Fetching FCM registration token failed", task.getException());
+                    return;
+                }
+                String token = task.getResult();
+                Log.i("tokenic", token);
+                SharedPreferences sp = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString(Constants.FCM_TOKEN_TAG, token);
+                editor.apply();
+                rep.setFcmToken(token, userId, token);
+            }
+        });
     }
 }

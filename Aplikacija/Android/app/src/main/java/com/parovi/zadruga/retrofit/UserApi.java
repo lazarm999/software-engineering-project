@@ -54,8 +54,6 @@ public interface UserApi {
     @POST("unban/{id}/")
     Call<ResponseBody> unBanUser(@Header("Authorization") String token, @Path("id") int id);
 
-    @PATCH
-    Call<Integer> patchUser(@Body User u);
 
     @GET("/apply/{id}")
     Call<List<User>> getAppliedUsers(@Header("Authorization") String token, @Path("id") int adId);
