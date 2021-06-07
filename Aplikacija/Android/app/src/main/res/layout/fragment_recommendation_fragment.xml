@@ -3,12 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="4dp"
     tools:context=".fragments.RecommendationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="hi" />
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:padding="10dp"
+        android:layout_below="@+id/relLayoutChips"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_condensed_bold_italic"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/recommend"
+            android:textColor="@color/lila"
+            android:textSize="30sp"  />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recViewRecommends"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:padding="1dp" />
+    </LinearLayout>
 </FrameLayout>

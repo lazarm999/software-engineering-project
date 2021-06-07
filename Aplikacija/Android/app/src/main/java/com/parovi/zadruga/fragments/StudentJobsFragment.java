@@ -1,14 +1,22 @@
 package com.parovi.zadruga.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.adapters.JobHistoryAdapter;
+import com.parovi.zadruga.items.AdWithStudentRatingItem;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,10 +65,29 @@ public class StudentJobsFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_student_jobs_fragment, container, false);
+        View layout = inflater.inflate(R.layout.fragment_student_jobs_fragment, container, false);
+
+        ArrayList<AdWithStudentRatingItem> jobs = new ArrayList<>();
+
+        jobs.add(new AdWithStudentRatingItem("Title 1", LocalDate.of(2021, 5, 29), 4));
+        jobs.add(new AdWithStudentRatingItem("Title 2", LocalDate.of(2020, 8, 22), 5));
+        jobs.add(new AdWithStudentRatingItem("Title 3", LocalDate.of(2021, 10, 30), 4));
+        jobs.add(new AdWithStudentRatingItem("Title 4", LocalDate.of(2021, 12, 4), 1));
+        jobs.add(new AdWithStudentRatingItem("Title 5", LocalDate.of(2021, 4, 28), 3));
+        jobs.add(new AdWithStudentRatingItem("Title 6", LocalDate.of(2021, 1, 15), 2));
+        jobs.add(new AdWithStudentRatingItem("Title 7", LocalDate.of(2021, 3, 13), 2));
+        jobs.add(new AdWithStudentRatingItem("Title 8", LocalDate.of(2021, 9, 30), 5));
+
+        RecyclerView recView = layout.findViewById(R.id.recyclerViewJobHistory);
+        recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        JobHistoryAdapter adapter = new JobHistoryAdapter(jobs);
+        recView.setAdapter(adapter);
+
+        return layout;
     }
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toast"
+    android:layout_width="300dp"
+    android:layout_height="100dp"
+    android:background="@color/lilaChip">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_toast"
+        app:tint="@color/background"
+        tools:ignore="VectorDrawableCompat" />
+
+    <TextView
+        android:id="@+id/txtToastHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginLeft="70dp"
+        android:fontFamily="@font/roboto_condensed_regular"
+        android:shadowColor="@color/black"
+        android:text="@string/toastHeader"
+        android:textAllCaps="false"
+        android:textColor="@color/background"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtToast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="75dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/roboto_condensed_regular"
+        android:inputType="textMultiLine"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+</RelativeLayout>

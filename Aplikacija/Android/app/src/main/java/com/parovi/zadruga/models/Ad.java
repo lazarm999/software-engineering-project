@@ -5,8 +5,6 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import javax.annotation.Nullable;
-
 import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;
 
@@ -34,6 +32,7 @@ public class Ad {
     private int feeFrom;
     private int freeTo;
     private int peopleNeeded;
+    //private Date date;
     //private boolean isClosed;
     @ColumnInfo(index = true)
     private int fkLocationId;
@@ -84,9 +83,7 @@ public class Ad {
         return freeTo;
     }
 
-    public void setFreeTo(int freeTo) {
-        this.freeTo = freeTo;
-    }
+    public void setFreeTo(int freeTo) { this.freeTo = freeTo; }
 
     public int getPeopleNeeded() {
         return peopleNeeded;
@@ -95,6 +92,10 @@ public class Ad {
     public void setPeopleNeeded(int peopleNeeded) {
         this.peopleNeeded = peopleNeeded;
     }
+
+    //public Date getDate() { return date; }
+
+    //public void setDate(Date date) { this.date = date; }
 
     public int getFkLocationId() {
         return fkLocationId;

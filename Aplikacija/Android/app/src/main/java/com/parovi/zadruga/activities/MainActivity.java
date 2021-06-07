@@ -1,7 +1,4 @@
 package com.parovi.zadruga.activities;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +12,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.parovi.zadruga.R;
 
@@ -56,7 +56,7 @@ public class MainActivity<AlterDialog> extends AppCompatActivity {
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+               Intent intent = new Intent(MainActivity.this, MainStudentActivity.class);
                startActivity(intent);
             }
         });
@@ -83,9 +83,9 @@ public class MainActivity<AlterDialog> extends AppCompatActivity {
     }
 
     private void showChangeLanguageDialog() {
-        final String[] listItems = {"Serbian", "English"};
+        final String[] listItems = {"SR", "EN"};
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
-        mBuilder.setTitle("Choose language...");
+        mBuilder.setTitle(R.string.changeLanguage);
         AlertDialog.Builder builder = mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

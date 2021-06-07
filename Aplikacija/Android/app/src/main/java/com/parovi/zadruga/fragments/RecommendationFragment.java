@@ -1,14 +1,22 @@
 package com.parovi.zadruga.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.adapters.AdAdapter;
+import com.parovi.zadruga.items.AdItem;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,10 +65,39 @@ public class RecommendationFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recommendation_fragment, container, false);
+        View layout = inflater.inflate(R.layout.fragment_recommendation_fragment, container, false);
+
+        ArrayList<AdItem> ads = new ArrayList<>();
+        ads.add(new AdItem("Title 1", "Description 1", LocalDate.now()));
+        ads.add(new AdItem("Title 2", "Description 2", LocalDate.of(2021, 06, 23)));
+        ads.add(new AdItem("Title 3", "Description 3", LocalDate.of(2020,12,04)));
+        ads.add(new AdItem("Title 4", "Description 4", LocalDate.of(2021, 10, 29)));
+        ads.add(new AdItem("Title 5", "Description 5", LocalDate.of(2020,04,22)));
+        ads.add(new AdItem("Title 1", "Description 1", LocalDate.now()));
+        ads.add(new AdItem("Title 2", "Description 2", LocalDate.of(2021, 06, 23)));
+        ads.add(new AdItem("Title 3", "Description 3", LocalDate.of(2020,12,04)));
+        ads.add(new AdItem("Title 4", "Description 4", LocalDate.of(2021, 10, 29)));
+        ads.add(new AdItem("Title 5", "Description 5", LocalDate.of(2020,04,22)));
+
+        RecyclerView recView = layout.findViewById(R.id.recViewRecommends);
+        recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        AdAdapter adapter = new AdAdapter((ads));
+        recView.setAdapter(adapter);
+
+
+        /*CardView cardAd = (CardView) layout.findViewById(R.id.cardAdItem);
+        cardAd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //pozovi Urosev activity za oglas
+            }
+        });*/
+
+        return layout;
     }
 }

@@ -1,14 +1,345 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/background"
     android:layout_height="match_parent"
     tools:context=".fragments.AdsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="hi feed" />
+<RelativeLayout
+    android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/background">
 
+<LinearLayout
+    android:id="@+id/relLayoutChips"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:id="@+id/linearHeader">
+
+        <ImageView
+            android:id="@+id/imgFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/ic_filter"
+            tools:ignore="VectorDrawableCompat" />
+
+        <TextView
+            android:id="@+id/txtFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/filterAds"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="145dp"
+            android:layout_marginLeft="145dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/filter"
+            android:textColor="@color/black"
+            android:textSize="9dp"
+            app:backgroundTint="@color/teal_200"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_filteric"
+            app:iconTint="@color/black"
+            app:rippleColor="@color/lila" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="6dp"
+        android:id="@+id/linearCategories">
+
+        <Button
+            android:id="@+id/btnChooseCateg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/filterCategories"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:backgroundTint="@color/lilaChip"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_categories"
+            app:iconTint="@color/black"
+            app:rippleColor="@color/lila" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/filterChips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearCategories"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cgFilters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipHostess"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/filterHostess"
+                app:chipSurfaceColor="@color/lilaChip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPromoter"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/filterPromoter"
+                app:chipSurfaceColor="@color/lilaChip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipKitchenSupport"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/filterKitchenSupportStaff"
+                app:chipSurfaceColor="@color/lilaChip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipInterviewer"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/filterInterviewer"
+                app:chipSurfaceColor="@color/lilaChip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCollectionOperations"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/filterCollectionOperations"
+                app:chipSurfaceColor="@color/lilaChip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipWaiter"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/filterWaiter"
+                app:chipSurfaceColor="@color/lilaChip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipLighterPhysicalJobs"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/filterLighterPhysicalJobs"
+                app:chipSurfaceColor="@color/lilaChip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipHeavierPhysicalJobs"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/filterHeavierPhysicalJobs"
+                app:chipSurfaceColor="@color/lilaChip" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <Button
+            android:id="@+id/btnOKFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="330dp"
+            android:layout_marginLeft="330dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="OK"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:backgroundTint="@color/teal_200"
+            app:cornerRadius="10dp"
+            app:rippleColor="@color/teal_200" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearFee"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgFees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            app:srcCompat="@drawable/ic_fees"
+            tools:ignore="VectorDrawableCompat"
+            android:layout_marginLeft="25dp" />
+
+        <TextView
+            android:id="@+id/txtFilterFee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/adFee"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/editTxtFeeFromFilter"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/border_for_feed"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:hint="@string/filterFeeFrom"
+            android:inputType="numberSigned"
+            android:textSize="16dp"
+            android:layout_marginLeft="20dp" />
+
+        <EditText
+            android:id="@+id/editTxtFeeToFilter"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="45dp"
+            android:background="@drawable/border_for_feed"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:hint="@string/filterFeeTo"
+            android:inputType="numberSigned"
+            android:textSize="16dp"
+            android:layout_marginLeft="60dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:id="@+id/linearLocation"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/ic_location"
+            tools:ignore="VectorDrawableCompat" />
+        <TextView
+            android:id="@+id/txtLocationFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/adLocation"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="16dp" />
+
+        <Spinner
+            android:id="@+id/spinnerLocationFilter"
+            android:layout_width="150dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="0dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="120dp"
+            android:background="@drawable/border_for_feed" />
+
+        <Button
+            android:id="@+id/btnSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="5dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/sort"
+            android:textColor="@color/black"
+            android:textSize="9dp"
+            app:backgroundTint="@color/teal_200"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_sort"
+            app:iconTint="@color/black"
+            app:rippleColor="@color/lila" />
+
+    </LinearLayout>
+
+</LinearLayout>
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/relLayoutChips"
+    android:paddingTop="10dp"
+    android:layout_marginTop="15dp"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recViewAds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp" />
+</LinearLayout>
+
+</RelativeLayout>
 </FrameLayout>

@@ -2,6 +2,9 @@
 
     <string name="app_name">Zadruga</string>
 
+    <string name="changeLanguage">Choose language...</string>
+    <string name="serbianLanguage">Serbian</string>
+    <string name="englishLanguage">English</string>
     <string name="login">LOGIN</string>
     <string name="question">Do not have an account?</string>
     <string name="signup">SIGN UP</string>
@@ -42,5 +45,78 @@
     <string name="achievements">Achievements</string>
     <string name="badges">Badges: </string>
     <string name="saveChanges">Save changes</string>
+    <string name="phoneStudent">Phone: </string>
+    <string name="adTitle">Title</string>
+    <string name="adTitlePlaceholder">Title</string>
+    <string name="headNewAd">Add new ad</string>
+    <string name="adDescriptionPlaceholder">Description</string>
+    <string name="adPeopleNeeded">Number of needed employees</string>
+    <string name="adFee">Fee</string>
+    <string name="adFeeFrom">From:</string>
+    <string name="adFeePlaceholder">0</string>
+    <string name="adFeeTo">To:</string>
+    <string name="newAdAdd">Add</string>
+    <string name="newAdCancel">Cancel</string>
+    <string name="adItemFee">Fee:</string>
+    <string name="adLocation">Location</string>
+    <string name="adApply">Apply</string>
+    <string name="adItemReadMore">Read more</string>
+    <string name="ratingStudent">Rate</string>
+    <string name="companyEmployer">Company:</string>
+    <string name="commentsGrades">Comments:</string>
+    <string name="commentsGradesPlaceholder">Type your comment here...</string>
+    <string name="gradeF">Grade F</string>
+    <string name="gradeD">Grade D</string>
+    <string name="gradeC">Grade C</string>
+    <string name="gradeB">Grade B</string>
+    <string name="gradeA">Grade A</string>
+    <string name="filterAds">Filters</string>
+    <string name="filterCategories">Categories</string>
+    <string name="filterPromoter">Promoter</string>
+    <string name="filterInterviewer">Interviewer</string>
+    <string name="filterHostess">Hostess</string>
+    <string name="filterWaiter">Waiter</string>
+    <string name="filterCollectionOperations">Collection operations</string>
+    <string name="filterKitchenSupportStaff">Kitchen support staff</string>
+    <string name="filterLighterPhysicalJobs">Lighter physical jobs</string>
+    <string name="filterHeavierPhysicalJobs">Heavier physical jobs</string>
+    <string name="filterFeeFrom">From</string>
+    <string name="filterFeeTo">To</string>
+    <string-array name="locations">
+        <item>Belgrade</item>
+        <item>Novi Sad</item>
+        <item>Niš</item>
+        <item>Kragujevac</item>
+        <item>Leskovac</item>
+        <item>Subotica</item>
+        <item>Kruševac</item>
+        <item>Kraljevo</item>
+        <item>Smederevo</item>
+        <item>Valjevo</item>
+        <item>Vranje</item>
+        <item>Pirot</item>
+    </string-array>
+    <string name="sort">Sort</string>
+    <string name="filter">Apply filters</string>
+    <string name="toastHeader">Something is missing</string>
+    <string-array name="choices">
+        <item>Hostess</item>
+        <item>Promoter</item>
+        <item>Kitchen support staff</item>
+        <item>Interviewer</item>
+        <item>Collection operations</item>
+        <item>Waiter</item>
+        <item>Lighter physical jobs</item>
+        <item>Heavier physical jobs</item>
+    </string-array>
+    <string name="category">Choose</string>
+    <string name="dialogMultipleChoiceTitle">Choose categories</string>
+    <string name="btnCancel">Cancel</string>
+    <string name="btnApply">Apply</string>
+    <string name="btnNeutral">Clean all</string>
+    <string name="missingData">Please fill all fields</string>
+    <string name="headerJobs">Previous jobs</string>
+    <string name="headerMyAds">Ads you have published</string>
+    <string name="recommend">Recommended for You</string>
 
 </resources>

@@ -66,9 +66,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         public NotificationViewHolder(@NonNull  View itemView) {
             super(itemView);
-            ivNotificationIcon = itemView.findViewById(R.id.ivNotificationIcon);
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvDesc = itemView.findViewById(R.id.tvDesc);
+            ivNotificationIcon = itemView.findViewById(R.id.imgAdItem);
+            tvTitle = itemView.findViewById(R.id.txtAdItemHeader);
+            tvDesc = itemView.findViewById(R.id.txtLocationAd);
         }
 
         public ImageView getIvNotificationIcon() {

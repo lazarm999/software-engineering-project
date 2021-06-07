@@ -4,14 +4,16 @@ public class NotificationItem {
     private int imgResource;
     private String title;
     private String desc;
+    private String type;
 
     public NotificationItem() {
     }
 
-    public NotificationItem(int imgResource, String title, String desc) {
+    public NotificationItem(int imgResource, String title, String desc, String type) {
         this.imgResource = imgResource;
         this.title = title;
         this.desc = desc;
+        this.type = type;
     }
 
     public int getImgResource() {
@@ -36,5 +38,13 @@ public class NotificationItem {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

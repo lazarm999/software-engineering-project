@@ -2,6 +2,7 @@ package com.parovi.zadruga.activities;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -12,10 +13,10 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.fragments.AdsFragment;
+import com.parovi.zadruga.fragments.EmployerProfileFragment;
+import com.parovi.zadruga.fragments.EmployersAdsFragment;
+import com.parovi.zadruga.fragments.NewAdFragment;
 import com.parovi.zadruga.fragments.NotificationsFragment;
-import com.parovi.zadruga.fragments.RecommendationFragment;
-import com.parovi.zadruga.fragments.StudentJobsFragment;
-import com.parovi.zadruga.fragments.StudentProfileFragment;
 
 public class MainEmployerActivity extends AppCompatActivity {
 
@@ -26,6 +27,7 @@ public class MainEmployerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_employer);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         loadFragment(new AdsFragment());
 
@@ -46,15 +48,15 @@ public class MainEmployerActivity extends AppCompatActivity {
                         loadFragment(fragment);
                         break;
                     case R.id.employerNewAd:
-                        fragment = new StudentJobsFragment();
+                        fragment = new NewAdFragment();
                         loadFragment(fragment);
                         break;
                     case R.id.employersAds:
-                        fragment = new RecommendationFragment();
+                        fragment = new EmployersAdsFragment();
                         loadFragment(fragment);
                         break;
                     case R.id.employerProfile:
-                        fragment = new StudentProfileFragment();
+                        fragment = new EmployerProfileFragment();
                         loadFragment(fragment);
                         break;
                 }

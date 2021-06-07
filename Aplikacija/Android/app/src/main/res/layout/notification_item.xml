@@ -1,47 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:id="@+id/adInALIstItem"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+<androidx.cardview.widget.CardView
+    android:padding="6dp"
+    android:id="@+id/cardViewAdItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="0dp"
+    android:background="@color/background">
+
+    <RelativeLayout
+        android:id="@+id/cardAdItem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/background">
 
         <ImageView
-            android:id="@+id/ivNotificationIcon"
-            android:layout_width="72dp"
-            android:layout_height="67dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/ic_launcher_background" />
+            android:id="@+id/imgAdItem"
+            android:layout_width="75dp"
+            android:layout_height="65dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="15dp"
+            tools:srcCompat="@android:drawable/screen_background_light" />
+
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/txtAdItemHeader"
             android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="90dp"
+            android:paddingBottom="5dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="Taj i taj ti je dao ocenu"
-            app:layout_constraintBottom_toBottomOf="@+id/ivNotificationIcon"
-            app:layout_constraintStart_toEndOf="@+id/ivNotificationIcon" />
+            android:textColor="@color/lila"
+            android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/tvDesc"
+            android:id="@+id/txtLocationAd"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="150dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="Bas si bio dobar radnik"
-            app:layout_constraintStart_toStartOf="@+id/ivNotificationIcon"
-            app:layout_constraintTop_toBottomOf="@+id/ivNotificationIcon" />
+            android:textColor="@color/lila"
+            app:layout_constraintStart_toStartOf="@+id/imgAdItem"
+            app:layout_constraintTop_toBottomOf="@+id/imgAdItem" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 
 
 </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
 
