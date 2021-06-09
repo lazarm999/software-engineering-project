@@ -26,7 +26,6 @@ class Register(generics.GenericAPIView, mixins.CreateModelMixin):
 
     def post(self, request, *args, **kwargs):
         password = request.data.get('password')
-        print(password)
         if not (password and len(password) >= 8):
             return r400('Password must be at least 8 characters long')
         return self.create(request, *args, **kwargs)
@@ -70,6 +69,7 @@ class UserDetail(generics.GenericAPIView, mixins.UpdateModelMixin, mixins.Destro
         phoneNumber = request.data.get('phoneNumber')
         companyName = request.data.get('companyName')
         facultyId = request.data.get('facultyId')
+        userQbId = request.data.get('userQbId')
 
         if facultyId:
             if user.isEmployer:
@@ -83,6 +83,7 @@ class UserDetail(generics.GenericAPIView, mixins.UpdateModelMixin, mixins.Destro
         user.lastName = lastName or user.lastName
         user.bio = bio or user.bio
         user.phoneNumber = phoneNumber or user.phoneNumber
+        user.userQbId = userQbId or user.userQbId
         try:
             user.save()
         except:
@@ -137,7 +138,8 @@ class ProfilePicture(APIView):
         user = get_object_or_404(User, pk=pk)
         user.imageName = str(uuid.uuid4())+'.png'
         image = Image.open(request.data.get('file'))
-        # TODO: png + format
+        image = image.resize((128, 128))
+        image = image.convert(mode='P', palette=Image.ADAPTIVE) #24b -> 8b boje
         try:
             image.save(os.path.join(ProfilePicture.imgsDir, user.imageName))
             user.save()
@@ -256,6 +258,10 @@ class AdList(generics.ListCreateAPIView):
         locationId = request.data.get('locationId')
         employerId = request._auth
 
+        user = get_object_or_404(User, pk=employerId)
+        if not user.isEmployer:
+            return r400('Only employers can post ads')
+
         if not (title and numberOfEmployees and compensationMin and \
             compensationMax and locationId):
             return r400('Please provide needed fields: title, numberOfEmployees \
@@ -273,7 +279,7 @@ class AdList(generics.ListCreateAPIView):
         ad.numberOfEmployees = numberOfEmployees
         ad.compensationMin = compensationMin
         ad.compensationMax = compensationMax
-        ad.employer = get_object_or_404(User, pk=employerId)
+        ad.employer = user
         ad.location = get_object_or_404(Location, pk=locationId)
         try:
             ad.save()
@@ -467,6 +473,7 @@ class Choose(APIView):
             return r400('This job is closed')
 
         userIds = request.data.get('userIds')
+        qbChatId = request.data.get('qbChatId')
         if len(userIds) == 0:
             return r400('Please specify a user to be chosen')
 
@@ -478,6 +485,7 @@ class Choose(APIView):
             with transaction.atomic():
                 users.update(chosen=True)
                 ad.isClosed=True
+                ad.qbChatId=qbChatId
                 ad.save()
         except:
             return r500('Failed to choose applicants')
@@ -522,4 +530,3 @@ class BadgeList(generics.ListAPIView):
 # TODO: forgot password, badzevi, notifikacije, recommender system
 # TODO: sql skripta za pocetno punjenje
 # TODO: Docker
-# TODO: Readme za instalaciju

@@ -54,7 +54,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['userId', 'firstName', 'lastName', 'email', 'username', 'password', 'bio', 'imageName',
-            'phoneNumber', 'isAdmin', 'isEmployer', 'companyName', 'faculty', 'banAdmin', 'banExplanation', 'badges']
+            'phoneNumber', 'isAdmin', 'isEmployer', 'companyName', 'faculty', 'banAdmin', 'banExplanation',
+            'badges', 'userQbId']
         extra_kwargs = {'password' : {'write_only' : True}}
 
 
@@ -80,11 +81,13 @@ class AdSerializer(serializers.ModelSerializer):
     employer = UserSerializer()
     location = LocationSerializer()
     tags = TagSerializer(many=True)
+    numberOfApplied = serializers.ReadOnlyField()
 
     class Meta:
         model = Ad
         fields = ['adId', 'title', 'description', 'numberOfEmployees', 'compensationMin', 
-            'compensationMax', 'employer', 'location', 'postTime', 'tags']
+            'compensationMax', 'employer', 'location', 'postTime', 'tags', 'numberOfApplied',
+            'qbChatId']
 
 
 class CommentSerializer(serializers.ModelSerializer):

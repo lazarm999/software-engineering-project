@@ -45,6 +45,7 @@ class User(models.Model):
     banAdmin = models.ForeignKey('User', on_delete=models.DO_NOTHING, null=True)
     banExplanation = models.TextField(null=True)
     badges = models.ManyToManyField(Badge, through='Earned')
+    userQbId = models.IntegerField()
 
 class Earned(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
@@ -77,6 +78,10 @@ class Ad(models.Model):
     isClosed = models.BooleanField(default=False)
     postTime = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, through='RelatedTo')
+    qbChatId = models.CharField(max_length=40, null=True)
+
+    def numberOfApplied(self):
+        return Applied.objects.filter(ad__adId=self.adId).count()
 
 
 class RelatedTo(models.Model):
