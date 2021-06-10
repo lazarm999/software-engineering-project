@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="4dp"
     tools:context=".fragments.RecommendationFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/background"
         android:padding="10dp"
-        android:layout_below="@+id/relLayoutChips"
+        android:layout_below="@+id/linearRecommend"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/txtRecommendedHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_condensed_bold_italic"
@@ -32,4 +36,5 @@
             android:layout_height="wrap_content"
             android:padding="1dp" />
     </LinearLayout>
-</FrameLayout>
+    </FrameLayout>
+</ScrollView>

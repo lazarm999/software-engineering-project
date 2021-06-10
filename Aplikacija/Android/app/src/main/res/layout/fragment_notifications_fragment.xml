@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.NotificationsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="hi" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:padding="10dp"
+        android:layout_below="@+id/linearNotifications"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtNotificationsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_condensed_bold_italic"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/notifications"
+            android:textColor="@color/lila"
+            android:textSize="30sp"  />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recViewNotifications"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:padding="1dp" />
+    </LinearLayout>
+    </FrameLayout>
+</ScrollView>

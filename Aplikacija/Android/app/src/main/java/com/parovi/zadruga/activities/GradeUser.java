@@ -32,35 +32,35 @@ public class GradeUser extends AppCompatActivity {
         range.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(progress >= 0 && progress <=20)
+                if(progress == 1)
                 {
                     gradeTxt.setText(R.string.gradeF);
                     gradeImg.setImageResource(R.drawable.ic_f_grade);
                     gradeTxt.startAnimation(txtAnim);
                     gradeImg.startAnimation(imageAnim);
                 }
-                else if(progress >= 21 && progress <= 40)
+                else if(progress == 2)
                 {
                     gradeTxt.setText(R.string.gradeD);
                     gradeImg.setImageResource(R.drawable.ic_d_grade);
                     gradeTxt.startAnimation(txtAnim);
                     gradeImg.startAnimation(imageAnim);
                 }
-                else if(progress >= 41 && progress <= 60)
+                else if(progress == 3)
                 {
                     gradeTxt.setText(R.string.gradeC);
                     gradeImg.setImageResource(R.drawable.ic_c_grade);
                     gradeTxt.startAnimation(txtAnim);
                     gradeImg.startAnimation(imageAnim);
                 }
-                else if(progress >= 61 && progress <= 80)
+                else if(progress == 4)
                 {
                     gradeTxt.setText(R.string.gradeB);
                     gradeImg.setImageResource(R.drawable.ic_b_grade);
                     gradeTxt.startAnimation(txtAnim);
                     gradeImg.startAnimation(imageAnim);
                 }
-                else if(progress >= 81)
+                else if(progress == 5)
                 {
                     gradeTxt.setText(R.string.gradeA);
                     gradeImg.setImageResource(R.drawable.ic_a_grade);

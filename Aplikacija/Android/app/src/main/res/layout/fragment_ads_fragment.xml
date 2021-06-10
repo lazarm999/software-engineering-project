@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/background"
     android:layout_height="match_parent"
     tools:context=".fragments.AdsFragment">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 <RelativeLayout
     android:layout_width="match_parent"
@@ -21,6 +24,7 @@ android:background="@color/background">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:padding="5dp"
         android:id="@+id/linearHeader">
 
@@ -46,22 +50,6 @@ android:background="@color/background">
             android:textColor="@color/black"
             android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/btnFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="145dp"
-            android:layout_marginLeft="145dp"
-            android:fontFamily="@font/roboto_condensed_regular"
-            android:text="@string/filter"
-            android:textColor="@color/black"
-            android:textSize="9dp"
-            app:backgroundTint="@color/teal_200"
-            app:cornerRadius="20dp"
-            app:icon="@drawable/ic_filteric"
-            app:iconTint="@color/black"
-            app:rippleColor="@color/lila" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -83,6 +71,22 @@ android:background="@color/background">
             app:backgroundTint="@color/lilaChip"
             app:cornerRadius="20dp"
             app:icon="@drawable/ic_categories"
+            app:iconTint="@color/black"
+            app:rippleColor="@color/lila" />
+
+        <Button
+            android:id="@+id/btnFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="105dp"
+            android:layout_marginLeft="105dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/filter"
+            android:textColor="@color/black"
+            android:textSize="9dp"
+            app:backgroundTint="@color/teal_200"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_filteric"
             app:iconTint="@color/black"
             app:rippleColor="@color/lila" />
 
@@ -342,4 +346,5 @@ android:background="@color/background">
 </LinearLayout>
 
 </RelativeLayout>
-</FrameLayout>
+    </FrameLayout>
+</ScrollView>

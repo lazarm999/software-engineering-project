@@ -88,6 +88,14 @@ public class StudentJobsFragment extends Fragment {
         JobHistoryAdapter adapter = new JobHistoryAdapter(jobs);
         recView.setAdapter(adapter);
 
+        /*CardView cardAd = (CardView) layout.findViewById(R.id.cardAdItem);
+        cardAd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //pozovi Urosev activity za oglas
+            }
+        });*/
+
         return layout;
     }
 }
