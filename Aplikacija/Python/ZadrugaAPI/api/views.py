@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password, check_password
 from django.db import transaction
+from django.db.models import F
 
 from rest_framework import generics, mixins
 from rest_framework.views import APIView
@@ -309,8 +310,15 @@ class AdList(generics.ListCreateAPIView):
         filterCompensationMin = request.data.get('filterCompensationMin')
         filterCompensationMax = request.data.get('filterCompensationMax')
         filterTagIds = request.data.get('filterTagIds')
+        sortLocationLatitude = request.data.get('sortLocationLatitude')
+        sortLocationLongitude = request.data.get('sortLocationLongitude')
 
-        ads = Ad.objects.all().order_by('-postTime')
+        ads = Ad.objects.all()
+        if sortLocationLatitude and sortLocationLongitude:
+            ads = ads.order_by((F('location__longitude')-sortLocationLongitude)**2
+                + (F('location__latitude')-sortLocationLatitude)**2 ,'-postTime')
+        else:
+            ads = ads.order_by('-postTime')
 
         if filterLocationId:
             ads = ads.filter(location__locId=filterLocationId)
@@ -588,5 +596,7 @@ class AdByQbChatId(APIView):
 # TODO: paginacija svuda
 # TODO: ne svi podaci za svaki upit
 # TODO: forgot password, badzevi, notifikacije, recommender system
+
 # TODO: sql skripta za pocetno punjenje
 # TODO: Docker
+# TODO: readme

@@ -21,6 +21,8 @@ class Tag(models.Model):
 class Location(models.Model):
     locId = models.BigIntegerField(primary_key=True)
     cityName = models.CharField(max_length=50)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
 
 
 class Badge(models.Model):
