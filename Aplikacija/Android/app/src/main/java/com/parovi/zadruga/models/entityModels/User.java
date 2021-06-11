@@ -47,6 +47,11 @@ public class User {
     @Ignore
     private List<Badge> badges;
 
+    public User(int userId, int userQbId) {
+        this.userId = userId;
+        this.userQbId = userQbId;
+    }
+
     public User(int userId, String firstName){
         this.userId = userId;
         this.firstName = firstName;

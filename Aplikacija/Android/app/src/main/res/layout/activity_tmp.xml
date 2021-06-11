@@ -35,11 +35,12 @@
             android:textColor="#FFFFFF"
             app:backgroundTint="#673AB7"
             app:rippleColor="#FFFFFF" />
+
         <Button
             android:id="@+id/tmpBtn2"
             android:layout_width="150dp"
             android:layout_height="48dp"
-            android:text="login 2"
+            android:text="connect vuk"
             android:textColor="#FFFFFF"
             app:backgroundTint="#673AB7"
             app:iconTint="#0C0909" />
@@ -54,7 +55,7 @@
             android:id="@+id/tmpBtn3"
             android:layout_width="150dp"
             android:layout_height="48dp"
-            android:text="create chat "
+            android:text="connect tea"
             android:textColor="#FFFFFF"
             app:backgroundTint="#673AB7"
             app:iconTint="#0C0909" />
@@ -63,7 +64,7 @@
             android:id="@+id/tmpBtn4"
             android:layout_width="150dp"
             android:layout_height="48dp"
-            android:text="tmpBtn4"
+            android:text="sendMessage"
             android:textColor="#FFFFFF"
             app:backgroundTint="#673AB7"
             app:rippleColor="#FFFFFF" />

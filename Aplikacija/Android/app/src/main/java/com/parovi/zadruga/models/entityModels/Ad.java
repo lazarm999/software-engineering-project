@@ -1,11 +1,14 @@
 package com.parovi.zadruga.models.entityModels;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -17,7 +20,6 @@ import static androidx.room.ForeignKey.SET_NULL;
  mogu da se nasledjuju entitiji
  @Fts4 - za Support full-text search
 */
-
 
 @Entity(foreignKeys = {@ForeignKey(entity = Location.class,
                         parentColumns = "locId",
@@ -45,10 +47,16 @@ public class Ad {
     @ColumnInfo(index = true)
     private int fkLocationId;
     @ColumnInfo(index = true)
-    @Nullable
-    private Integer fkEmployerId;
+    private int fkEmployerId;
     @ColumnInfo(index = true)
     private String fkQbChatId;
+
+    @Ignore
+    private List<Tag> tags;
+    @Ignore
+    private User employer;
+    @Ignore
+    private Location location;
 
     public Ad(){
 
@@ -136,11 +144,11 @@ public class Ad {
         this.fkLocationId = fkLocationId;
     }
 
-    public Integer getFkEmployerId() {
+    public int getFkEmployerId() {
         return fkEmployerId;
     }
 
-    public void setFkEmployerId(Integer fkEmployerId) {
+    public void setFkEmployerId(int fkEmployerId) {
         this.fkEmployerId = fkEmployerId;
     }
 
@@ -158,5 +166,29 @@ public class Ad {
 
     public void setFkQbChatId(String fkQbChatId) {
         this.fkQbChatId = fkQbChatId;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public User getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(User employer) {
+        this.employer = employer;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

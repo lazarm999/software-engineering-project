@@ -22,4 +22,5 @@ public class Constants {
     public static final String DECLINED = "declined";
     public static final String COMMENT = "comment";
     public static final String RATING = "rating";
+    public static final String LOGGED_IN_USER = "loggedInUser";
 }

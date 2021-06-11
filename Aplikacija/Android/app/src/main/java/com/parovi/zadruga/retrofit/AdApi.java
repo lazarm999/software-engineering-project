@@ -1,5 +1,6 @@
 package com.parovi.zadruga.retrofit;
 
+import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.requestModels.EditAdRequest;
 import com.parovi.zadruga.models.responseModels.AdResponse;
 import com.parovi.zadruga.models.requestModels.ChooseApplicantsRequest;
@@ -19,13 +20,13 @@ import retrofit2.http.Path;
 
 public interface AdApi {
     @GET("ad/{id}/")
-    Call<AdResponse> getAd(@Header("Authorization") String token, @Path("id") int id);
+    Call<Ad> getAd(@Header("Authorization") String token, @Path("id") int id);
 
     @POST("ad/")
-    Call<AdResponse> postAd(@Header("Authorization") String token, @Body PostAdRequest ad);
+    Call<Ad> postAd(@Header("Authorization") String token, @Body PostAdRequest ad);
 
     @GET("ad/")
-    Call<List<AdResponse>> getAds(@Header("Authorization") String token);
+    Call<List<Ad>> getAds(@Header("Authorization") String token);
 
     @POST("apply/{id}/")
     Call<ResponseBody> applyForAd(@Header("Authorization") String token, @Path("id") int adId);
