@@ -44,7 +44,8 @@ class Login(APIView):
         user = get_object_or_404(User, email=email)
         try:
             if check_password(password, user.password) and user.banAdmin is None:
-                return Response({'id': user.userId, 
+                serialized = UserSerializer(user)
+                return Response({'user': serialized.data, 
                     'token': jwt.encode({'id' : user.userId}, 
                     os.environ.get('SECRET_KEY'), algorithm="HS256")})
             else:
@@ -304,7 +305,22 @@ class AdList(generics.ListCreateAPIView):
         return r201(serializer.data)
 
     def get(self, request, *args, **kwargs):
+        filterLocationId = request.data.get('filterLocationId')
+        filterCompensationMin = request.data.get('filterCompensationMin')
+        filterCompensationMax = request.data.get('filterCompensationMax')
+        filterTagIds = request.data.get('filterTagIds')
+
         ads = Ad.objects.all().order_by('-postTime')
+
+        if filterLocationId:
+            ads = ads.filter(location__locId=filterLocationId)
+        if filterCompensationMin:
+            ads = ads.filter(compensationMax__gte=filterCompensationMin)
+        if filterCompensationMax:
+            ads = ads.filter(compensationMin__lte=filterCompensationMax)
+        if filterTagIds:
+            ads = ads.filter(tags__tagId__in=filterTagIds).distinct()
+
         serialized = AdSerializer(ads, many=True)
         return Response(serialized.data)
 
@@ -522,6 +538,50 @@ class BadgeList(generics.ListAPIView):
     serializer_class = BadgeSerializer
     
 
+class UserByQbUserId(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def get(self, request, pk, *args, **kwargs):
+        users = User.objects.filter(userQbId=pk)
+
+        if len(users) == 1:
+            serialized = UserSerializer(users[0])
+            return Response(serialized.data)
+        return r404('User with given QbUserId not found')
+
+
+class ChatMembers(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def get(self, request, *args, **kwargs):
+        userQbIds = request.data.get('userQbIds')
+
+        if not userQbIds:
+            return r400('Please provide userQbIds')
+
+        users = User.objects.filter(userQbId__in=userQbIds)
+
+        if len(users) != len(userQbIds):
+            return r400('Invalid ids')
+
+        serialized = UserSerializer(users, many=True)
+        return Response(serialized.data)
+
+
+class AdByQbChatId(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def get(self, request, pk, *args, **kwargs):
+        ad = Ad.objects.filter(qbChatId=pk)
+        
+        if len(ad) != 1:
+            return r404()
+
+        serialized = AdSerializer(ad[0])
+        return Response(serialized.data)
+
+
+# TODO: unique na qbId i chatId
 # TODO: ocenjivanje samo kad su saradjivali + zavrsen posao
 # TODO: filtriranje i sortiranje
 # TODO: prijavljivanje neprikladnog sadrzaja

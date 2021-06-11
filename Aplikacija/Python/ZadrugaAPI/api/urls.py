@@ -22,4 +22,7 @@ urlpatterns = [
     path('tagList/', views.TagList.as_view()),
     path('locationList/', views.LocationList.as_view()),
     path('badgeList/', views.BadgeList.as_view()),
+    path('userByQbUserId/<int:pk>/', views.UserByQbUserId.as_view()),
+    path('chatMembers/', views.ChatMembers.as_view()),
+    path('adByQbChatId/<str:pk>/', views.AdByQbChatId.as_view()),
 ]
