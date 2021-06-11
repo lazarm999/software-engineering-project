@@ -560,7 +560,7 @@ class UserByQbUserId(APIView):
 class ChatMembers(APIView):
     permission_classes = [IsLoggedIn]
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         userQbIds = request.data.get('userQbIds')
 
         if not userQbIds:
