@@ -1,3 +1,4 @@
+from api.logic import ProfilePictureLogic
 import os
 import uuid
 
@@ -120,16 +121,7 @@ class ProfilePicture(APIView):
     permission_classes = [IsLoggedIn, IsOwner]
 
     def get(self, request, pk):
-        imgName = get_object_or_404(User, pk=pk).imageName
-        if imgName:
-            imgPath = os.path.join(ProfilePicture.imgsDir, imgName)
-        else:
-            return r404()
-        with open(imgPath, 'rb') as f:
-            if f:
-                return HttpResponse(f.read(), content_type='image/png')
-            else:
-                return r404()
+        return ProfilePictureLogic.retrieveProfilePicture(pk)
 
     def post(self, request, pk):
         '''
@@ -148,6 +140,13 @@ class ProfilePicture(APIView):
         except:
             return r500('Failed saving profile picture')
         return r201()
+
+
+class ProfilePictureQb(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def get(self, request, pk):
+        return ProfilePictureLogic.retrieveProfilePicture(pk, isQb=True)
 
 
 class BanUser(APIView):

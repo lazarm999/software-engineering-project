@@ -5,6 +5,7 @@ urlpatterns = [
     path('register/', views.Register.as_view()),
     path('user/<int:pk>/', views.UserDetail.as_view()),
     path('profilePicture/<int:pk>/', views.ProfilePicture.as_view()),
+    path('profilePictureQb/<int:pk>/', views.ProfilePictureQb.as_view()),
     path('login/', views.Login.as_view()),
     path('passwordChange/', views.PasswordChange.as_view()),
     path('ban/<int:pk>/', views.BanUser.as_view()),
