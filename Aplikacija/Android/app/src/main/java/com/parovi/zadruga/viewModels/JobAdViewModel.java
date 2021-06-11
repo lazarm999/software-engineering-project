@@ -35,14 +35,6 @@ public class JobAdViewModel extends AndroidViewModel {
         loadComments();
     }
 
-    /*public MutableLiveData<JobAd> getJobAd() {
-        if (jobAd == null) {
-            jobAd = new MutableLiveData<JobAd>();
-            loadJobAd();
-        }
-        return jobAd;
-    }*/
-
     public boolean isAdMine() {
         return ((AdWithTags)ad.getValue().getBody()).adEmployerLocation.getEmployer().getUserId() == userId;
     }
@@ -71,24 +63,6 @@ public class JobAdViewModel extends AndroidViewModel {
         return isDeleted;
     }
 
-    /*private void loadJobAd() {
-        JobAd jobAd = new JobAd(id);
-        jobAd.setTitle("Istovar robe");
-        jobAd.setDescription("Description.....");
-        jobAd.setLocation("Nis");
-        jobAd.setCompensationFrom(10);
-        jobAd.setCompensationTo(20);
-        jobAd.setDate(LocalDate.now());
-        jobAd.setDuration(120);
-        List<ApplicantResume> applicants = new LinkedList<ApplicantResume>();
-        applicants.add(new ApplicantResume(1, "Uros", "@urostt_", true));
-        applicants.add(new ApplicantResume(2, "Lazar", "@lazarminic", false));
-        applicants.add(new ApplicantResume(3, "Vuk Bibic", "@vukbibic", false));
-        jobAd.setApplicants(applicants);
-        jobAd.setMine(false);
-        this.jobAd.setValue(jobAd);
-    }*/
-
     public boolean commentResponseOK() {
         return comments.getValue().getStatus() == CustomResponse.Status.OK;
     }
@@ -101,8 +75,7 @@ public class JobAdViewModel extends AndroidViewModel {
     private void loadComments() {
         zadrugaRepository.getComments(token, comments, adId);
     }
-    private boolean postAComment(String comment) {
+    public void postAComment(String comment) {
         zadrugaRepository.postComment(token, comments, adId, userId, comment);
-        return comments.getValue().getStatus() == CustomResponse.Status.OK;
     }
 }

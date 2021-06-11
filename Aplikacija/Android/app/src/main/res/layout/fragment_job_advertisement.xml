@@ -192,25 +192,25 @@
         android:layout_marginTop="10dp">
 
         <EditText
-            android:id="@+id/editTextTextMultiLine"
+            android:id="@+id/etComment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="start|top"
             android:hint="Ask a question..."
             android:inputType="textMultiLine"
-            app:layout_constraintEnd_toStartOf="@+id/imageView9"
+            app:layout_constraintEnd_toStartOf="@+id/imgPostComment"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView9"
+            android:id="@+id/imgPostComment"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:src="@drawable/ic_baseline_send_24"
-            app:layout_constraintBottom_toBottomOf="@+id/editTextTextMultiLine"
+            app:layout_constraintBottom_toBottomOf="@+id/etComment"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editTextTextMultiLine" />
+            app:layout_constraintTop_toTopOf="@+id/etComment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

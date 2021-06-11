@@ -21,6 +21,9 @@ import java.util.List;
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentViewHolder> {
     private List<CommentResponse> commentsList;
 
+    public CommentsAdapter() {
+        commentsList = new ArrayList<>();
+    }
     public void setCommentsList(List<CommentResponse> commentsList) {
         this.commentsList = commentsList;
         notifyDataSetChanged();
@@ -52,6 +55,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         }
         public void bind(CommentResponse currComment) {
             //binding.civProfileImage.setImageResource(R.drawable.accepted); //TODO: ovde treba da ide profilna
+
+            if (currComment.getUserImage() != null)
+                binding.civProfileImage.setImageBitmap(currComment.getUserImage());
             binding.tvUsername.setText(currComment.getUser().getUsername());
             binding.tvTimeAgo.setText("50 hours ago");
             binding.tvComment.setText(currComment.getComment());

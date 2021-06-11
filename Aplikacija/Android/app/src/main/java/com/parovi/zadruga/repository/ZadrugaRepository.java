@@ -2,6 +2,8 @@ package com.parovi.zadruga.repository;
 
 
 import android.app.Application;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -10,12 +12,14 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.PushNotification;
@@ -81,6 +85,10 @@ import com.quickblox.users.model.QBUser;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -94,7 +102,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-//token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+//VUKOV id = 1 token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+//TEIN id = 3 token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g"
 
 public class ZadrugaRepository  {
     private static ZadrugaRepository instance;
@@ -452,7 +461,7 @@ public class ZadrugaRepository  {
     }
 
     //Comments
-    public void postComment(String token, MutableLiveData<CustomResponse<?>> res, int adId, int userId, String comment){
+    public void postComment(String token, MutableLiveData<CustomResponse<?>> comments, int adId, int userId, String comment){
         CommentRequest c = new CommentRequest(comment);
         commentApi.postComment(token, adId, c).enqueue(new Callback<CommentResponse>() {
             @Override
@@ -462,14 +471,16 @@ public class ZadrugaRepository  {
                     tmpComment.setUser(response.body().getUser());
                     Comment tmpLocalComment = new Comment(response.body().getId(), userId, adId, comment, response.body().getPostTime());
                     tmpComment.setComment(tmpLocalComment);
-                    res.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                    List<CommentResponse> tmpList = (List<CommentResponse>) comments.getValue().getBody();
+                    tmpList.add(response.body());
+                    comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpList));
                     commentDao.insertComment(tmpLocalComment);
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<CommentResponse> call, @NotNull Throwable t) {
-                res.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                comments.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
             }
         });
     }
@@ -490,30 +501,29 @@ public class ZadrugaRepository  {
                             int commentId = c.getId();
                             userDao.insertUser(c.getUser());
                             commentDao.insertComment(new Comment(c.getId(), c.getUser().getUserId(), adId, c.getComment(), c.getPostTime()));
-                            userApi.getProfileImage(token, c.getId()).enqueue(new Callback<ResponseBody>() {
+                            MutableLiveData<CustomResponse<?>> profileImg = new MutableLiveData<>();
+                            Observer<CustomResponse<?>> imageObserver = new Observer<CustomResponse<?>>() {
                                 @Override
-                                public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> imgRes) {
-                                    //TODO: kako da proverim da l nesto moze da se kastuje
-                                    List<CommentResponse> commentList = (List<CommentResponse>) comments.getValue().getBody();
-                                    if(commentList != null){
-                                        for (int i = 0; i < commentList.size(); i++) {
-                                            if(commentList.get(i).getId() == commentId){
-                                                if(imgRes.body() != null) {
-                                                    Bitmap bmp = BitmapFactory.decodeStream(imgRes.body().byteStream());
-                                                    commentList.get(i).setUserImage(bmp);
+                                public void onChanged(CustomResponse<?> customResponse) {
+                                    if(customResponse.getStatus() == CustomResponse.Status.OK){
+                                        Bitmap bmImage = (Bitmap) customResponse.getBody();
+                                        List<CommentResponse> commentList = (List<CommentResponse>) comments.getValue().getBody();
+                                        if(commentList != null){
+                                            for (int i = 0; i < commentList.size(); i++) {
+                                                if(commentList.get(i).getId() == commentId){
+                                                    if(bmImage != null) commentList.get(i).setUserImage(bmImage);
+                                                    break;
                                                 }
-                                                break;
                                             }
                                         }
+                                        comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentList));
                                     }
-                                    comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentList));
+                                    if(!customResponse.isLocal())
+                                        profileImg.removeObserver(this);
                                 }
-
-                                @Override
-                                public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-
-                                }
-                            });
+                            };
+                            profileImg.observeForever(imageObserver);
+                            ZadrugaRepository.this.getProfilePicture(token, profileImg, c.getUser().getUserId());
                         }
                     } else {
                         synchronized (isSynced[0]){
@@ -555,15 +565,38 @@ public class ZadrugaRepository  {
     }
 
     private void getCommentsLocal(MutableLiveData<CustomResponse<?>> comments, int adId, Boolean[] isSynced){
-        Futures.addCallback(commentDao.getCommentsByAdId(adId), new FutureCallback<List<CommentWithUser>>() {
+        /*Futures.addCallback(commentDao.getCommentsByAdId(adId), new FutureCallback<List<CommentWithUser>>() {
             @Override
             public void onSuccess(@Nullable List<CommentWithUser> result) {
-                if(result != null){
+                if(result != null && result.size() > 0){
                     List<CommentResponse> tmpList = new ArrayList<>();
                     for (CommentWithUser c: result) {
+                        int commentId = c.getComment().getCommentId();
                         Comment tmpComment = c.getComment();
                         tmpList.add(new CommentResponse(tmpComment.getCommentId(), tmpComment.getFkAdId(),
                                 tmpComment.getComment(), tmpComment.getPostTime(), c.getUser()));
+                        MutableLiveData<CustomResponse<?>> profileImg = new MutableLiveData<>();
+                        Observer<CustomResponse<?>> imageObserver = new Observer<CustomResponse<?>>() {
+                            @Override
+                            public void onChanged(CustomResponse<?> customResponse) {
+                                if(customResponse.getStatus() == CustomResponse.Status.OK){
+                                    Bitmap bmImage = (Bitmap) customResponse.getBody();
+                                    List<CommentResponse> commentList = (List<CommentResponse>) comments.getValue().getBody();
+                                    if(commentList != null){
+                                        for (int i = 0; i < commentList.size(); i++) {
+                                            if(commentList.get(i).getId() == commentId){
+                                                if(bmImage != null) commentList.get(i).setUserImage(bmImage);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentList));
+                                }
+                                profileImg.removeObserver(this);
+                            }
+                        };
+                        profileImg.observeForever(imageObserver);
+                        ZadrugaRepository.this.getProfilePictureLocally(profileImg, c.getUser().getUserId(), new Boolean[]{false});
                     }
                     synchronized (isSynced[0]){
                         if(!isSynced[0])
@@ -576,7 +609,7 @@ public class ZadrugaRepository  {
             public void onFailure(@NotNull Throwable t) {
 
             }
-        }, executor);
+        }, executor);*/
 
     }
 
@@ -822,7 +855,6 @@ public class ZadrugaRepository  {
 
     public void getUserById(String token, MutableLiveData<CustomResponse<?>> user, int id){
         final Boolean[] isSynced = {false};
-
         getUserByIdLocal(user, id, isSynced);
         userApi.getUserById(token, id).enqueue(new Callback<User>() {
             @Override
@@ -849,11 +881,9 @@ public class ZadrugaRepository  {
                         }
                         lookupDao.insertUserBadges(tmpUserBadge);
                     }
-                } else if(response.code() / 100 == 4) {
-                    user.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, "Pogresno uneti podaci"));
-                } else if(response.code() / 100 == 5){
-                    user.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, "Greska kod servera"));
                 }
+                else
+                    notSuccessful(response.code(), user);
             }
 
             @Override
@@ -933,25 +963,103 @@ public class ZadrugaRepository  {
         });
     }
 
-    public void getProfilePicture(String token,  MutableLiveData<CustomResponse<?>> profilePicture, int id){
-        userApi.getProfileImage(token, id).enqueue(new Callback<ResponseBody>() {
+    private void responseNotSuccessful(int code, MutableLiveData<CustomResponse<?>> res){
+        if (code / 100 == 4){
+            CustomResponse<?> tmp = res.getValue();
+            if(tmp != null){
+                tmp.setMessage("Pogresno uneti podaci.");
+                res.postValue(tmp);
+            }
+            else
+                res.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, "Pogresno uneti podaci.", false));
+        } else if (code / 100 == 5){
+            CustomResponse<?> tmp = res.getValue();
+            if(tmp != null){
+                tmp.setMessage("Greska kod servera.");
+                res.postValue(tmp);
+            }
+            else
+                res.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, "Greska kod servera.", false));
+        }
+    }
+
+    public void getProfilePicture(String token,  MutableLiveData<CustomResponse<?>> profilePicture, int userId){
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+        Boolean[] isSynced = {false};
+        getProfilePictureLocally(profilePicture, userId, isSynced);
+        userApi.getProfileImage(token, userId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if(response.isSuccessful()){
                     if(response.body() != null){
                         Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
-                        profilePicture.postValue(new CustomResponse<>(CustomResponse.Status.OK, bmp));
+                        synchronized (isSynced[0]) {
+                            profilePicture.postValue(new CustomResponse<>(CustomResponse.Status.OK, bmp, false));
+                            isSynced[0] = true;
+                        }
+                        Log.i("saveImageLocally", saveImageLocally(bmp, userId));
                     } else {
-                        profilePicture.postValue(new CustomResponse<>(CustomResponse.Status.OK, null));
+                        responseNotSuccessful(response.code(), profilePicture);
                     }
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                profilePicture.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                profilePicture.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage(), false));
             }
         });
+    }
+
+    private void getProfilePictureLocally(MutableLiveData<CustomResponse<?>> profilePicture, int userId, Boolean[] isSynced){
+        if(App.getAppContext() == null){
+            return;
+        }
+        ContextWrapper cw = new ContextWrapper(App.getAppContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        try {
+            File f = new File(directory.getAbsolutePath(), userId + ".jpg");
+            Bitmap image = BitmapFactory.decodeStream(new FileInputStream(f));
+            synchronized (isSynced[0]){
+                if(!isSynced[0])
+                    profilePicture.postValue(new CustomResponse<>(CustomResponse.Status.OK, image, true));
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+            profilePicture.postValue(new CustomResponse<>(CustomResponse.Status.LOCAL_IMAGE_NOT_FOUND, e.getMessage(), true));
+        }
+    }
+
+    private String saveImageLocally(Bitmap profileImage, int userId){
+        if(App.getAppContext() == null){
+            return "";
+        }
+        ContextWrapper cw = new ContextWrapper(App.getAppContext());
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File[] files = directory.listFiles();
+        if(files != null && files.length > 30){
+            File oldestFile = null;
+            long oldestDate = Long.MAX_VALUE;
+            for(File f: files){
+                if(f.lastModified() < oldestDate){
+                    oldestFile = f;
+                    oldestDate = f.lastModified();
+                }
+            }
+            if(oldestFile != null){
+                oldestFile.delete();
+            }
+        }
+        File imagePath = new File(directory,userId + ".jpg");
+        try(FileOutputStream fos = new FileOutputStream(imagePath)) {
+            profileImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return directory.getAbsolutePath();
     }
 
     public void postProfilePicture(String token, MutableLiveData<CustomResponse<?>> isPosted, int id){

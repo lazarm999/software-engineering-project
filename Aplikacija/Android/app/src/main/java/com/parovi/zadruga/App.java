@@ -1,15 +1,19 @@
 package com.parovi.zadruga;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.LogLevel;
 
 public class App extends Application {
+    private static Context appContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        appContext = getApplicationContext();
         initQuickBlox();
     }
 
@@ -26,4 +30,8 @@ public class App extends Application {
         QBChatService.setConfigurationBuilder(configurationBuilder);
 
     }
+    public static Context getAppContext(){
+        return appContext;
+    }
+
 }

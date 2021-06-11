@@ -7,6 +7,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -34,10 +36,12 @@ public class User {
     private String fcmToken;
     @ColumnInfo(index = true)
     @Nullable
+    @SerializedName("facultyId")
     private Integer fkFacultyId;
     private String type; //u Constants su zapamceni tipovi naloga
     private int userQbId;
     private String password;
+
 
     @Ignore
     private Faculty faculty;

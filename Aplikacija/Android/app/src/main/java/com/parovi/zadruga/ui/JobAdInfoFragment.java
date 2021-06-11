@@ -47,6 +47,23 @@ public class JobAdInfoFragment extends Fragment {
         CommentsAdapter adapter = new CommentsAdapter();
         binding.rvComments.setAdapter(adapter);
         binding.rvComments.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.imgPostComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                model.postAComment(binding.etComment.getText().toString().trim());
+                binding.etComment.setText("");
+            }
+        });
+
+        model.getIsPosted().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK)
+                    Toast.makeText(requireContext(), "Your comment has been successfully posted", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(requireContext(), "Your comment failed to be posted", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         model.getAd().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
@@ -61,6 +78,9 @@ public class JobAdInfoFragment extends Fragment {
         model.getComments().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() != CustomResponse.Status.OK) {
+                    return;
+                }
                 adapter.setCommentsList((List<CommentResponse>)customResponse.getBody());
             }
         });
@@ -91,7 +111,5 @@ public class JobAdInfoFragment extends Fragment {
         }
 
     }
-    private void bindComments() {
 
-    }
 }

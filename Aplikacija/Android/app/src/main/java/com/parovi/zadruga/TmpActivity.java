@@ -7,9 +7,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.icu.text.AlphabeticIndex;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,34 +18,17 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.parovi.zadruga.adapters.NotificationsAdapter;
-import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.models.entityModels.Notification;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
 import com.parovi.zadruga.models.nonEntityModels.CommentUser;
-import com.parovi.zadruga.models.requestModels.EditAdRequest;
-import com.parovi.zadruga.models.requestModels.PostAdRequest;
-import com.parovi.zadruga.models.responseModels.LoginResponse;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.LoginViewModel;
 import com.parovi.zadruga.viewModels.TmpViewModel;
 import com.quickblox.auth.session.QBSessionManager;
-import com.quickblox.auth.session.QBSettings;
-import com.quickblox.chat.QBChatService;
-import com.quickblox.chat.exception.QBChatException;
-import com.quickblox.chat.listeners.QBChatDialogMessageListener;
-import com.quickblox.chat.model.QBChatDialog;
-import com.quickblox.chat.model.QBChatMessage;
-import com.quickblox.core.LogLevel;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 /**/
 public class TmpActivity extends AppCompatActivity {
 
@@ -106,7 +86,7 @@ public class TmpActivity extends AppCompatActivity {
         Button tmpBtn3 = (Button) findViewById(R.id.tmpBtn3);
         Button tmpBtn4 = (Button) findViewById(R.id.tmpBtn4);
         Button btnPostComment =  (Button) findViewById(R.id.btnPostComment);
-        EditText etComment = (EditText) findViewById(R.id.etComment);
+        EditText etComment = (EditText) findViewById(R.id.etCommentas);
         TextView tvTmp= (TextView)  findViewById(R.id.tvTmp);
         ImageView tmpImageView = (ImageView) findViewById(R.id.tmpImageView);
 

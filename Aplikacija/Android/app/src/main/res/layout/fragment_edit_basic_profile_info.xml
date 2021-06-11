@@ -43,11 +43,13 @@
             android:ems="10"
             android:inputType="textPersonName" />
 
-        <TextView
-            android:id="@+id/textView"
+        <EditText
+            android:id="@+id/etBio"
             style="@style/inputBio"
             android:layout_width="match_parent"
-            android:layout_height="84dp"
+            android:layout_height="100dp"
+            android:ems="10"
+            android:gravity="start|top"
             android:inputType="textMultiLine" />
 
         <EditText
@@ -59,8 +61,8 @@
             android:inputType="phone" />
 
         <EditText
-            android:id="@+id/etDateOfBirth"
-            style="@style/inputDateOfBirth"
+            android:id="@+id/etEmail"
+            style="@style/inputEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -85,7 +87,8 @@
             style="@style/finalButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/submitChanges" />
+            android:text="@string/submitChanges"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 </layout>
