@@ -162,21 +162,21 @@ public class TmpActivity extends AppCompatActivity {
                     rep.loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));*/
                 //rep.getUserById(getAccessToken(), new MutableLiveData<>(), 1);
                 //rep.populateData();
-                rep.getAd(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), 24);
-                ArrayList<Integer> intList = new ArrayList<>();
+                //rep.getAd(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), 24);
+                /*ArrayList<Integer> intList = new ArrayList<>();
                 intList.add(1);
                 intList.add(2);
                 intList.add(3);
                 rep.postAd(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), new PostAdRequest("opsan naslov", "valjda radi ovo",
                         50,
-                        250, 12, 1, intList));
+                        250, 12, 1, intList));*/
                 /*ArrayList<Integer> intList = new ArrayList<>();
-                intList.add(128330407);
+                intList.add(128304620);
                 intList.add(128586493);
                 List<User> us = new ArrayList<>();
+                us.add(new User(19, 128304620));
                 us.add(new User(3, 128586493));
-                rep.chooseApplicants("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA",
-                        new MutableLiveData<>(), 30, us, 1, 128330407);*/
+                rep.chooseApplicants(new MutableLiveData<>(), 20, us);*/
                 //rep.applyForAd(getAccessToken(), new MutableLiveData<>(), 20, 12);
                 //rep.deleteAd(getAccessToken(), new MutableLiveData<>(), 29);
                 //rep.getComments("getAccessToken()", comments, 4);
@@ -198,16 +198,18 @@ public class TmpActivity extends AppCompatActivity {
                /* String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
                 rep.getComments(token, comments, 4);*/
                 //rep.getProfilePicture(Utility.getAccessToken(TmpActivity.this), image, 1);
+                //rep.loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));
+                chatViewModel.getChatMembers();
+                //chatViewModel.getAd();
             }
         });
         tmpBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO: za qbUser sifra mora bude duza od 8 karaktera
+                //rep.logOutUser(new MutableLiveData<>());
                 /*rep.registerUser(new MutableLiveData<>(), new User("user124", "fnjkdsnl", "dlkfhaslkjh", "user124@gmail.com",
                         "sifra123"));*/
-                /*String vukovToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
-                rep.logOutUser(vukovToken, new MutableLiveData<>(), 1);*/
                 //rep.getUserById(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), 2);
                 /*User u = new User();
                 u.setBio("ovo je novi bio");
@@ -221,7 +223,7 @@ public class TmpActivity extends AppCompatActivity {
                 //rep.editRating(getAccessToken(), new MutableLiveData<>(), new Rating(getUserId(), 3, 1, "jako slabo uradjeno"));
                 //rep.getRatingByUserId(getAccessToken(), new MutableLiveData<>(), 11);
                 //rep.postProfilePicture(getAccessToken(), new MutableLiveData<>(), 1);
-                rep.getAds(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>());
+                //rep.getAds(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>());
                 //rep.unApplyForAd(getAccessToken(), new MutableLiveData<>(), 20, 28);
                 //rep.postComment(getAccessToken(), new MutableLiveData<>(), 18, 1, "gaaaaaaaaaaaas");
                 //rep.deleteComment(getAccessToken(), new MutableLiveData<>(), 5);
@@ -229,14 +231,14 @@ public class TmpActivity extends AppCompatActivity {
                 //rep.deleteRating(getAccessToken(), new MutableLiveData<>(), 1, 3);
                 //rep.getAd(getAccessToken(), new MutableLiveData<>(), 28);
                 //rep.loginUser(new MutableLiveData<>(), new User("user124@gmail.com", "sifra123"));
-                /*if(Utility.getUserId(TmpActivity.this) == 1)//, new User("vuk.bibic@gmail.com", "novaaasifraaaa", 128330407)
+               /* if(Utility.getUserId(TmpActivity.this) == 1)//, new User("vuk.bibic@gmail.com", "novaaasifraaaa", 128330407)
                     rep.connectToChatServer(new MutableLiveData<>());
                 else//, new User("tea@gmail.com", "sifra123", 128586493)
                     rep.connectToChatServer(new MutableLiveData<>());*/
                 //rep.connectToChatServer(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar", 128304620));
                 /*List<Chat> tmpChats = (List<Chat>) chats.getValue().getBody();
                 rep.sendMessage(new MutableLiveData<>(), tmpChats.get(0).getQbChat(), new User(), "porukaa novaaaaa");*/
-                //rep.loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));
+
             }
         });
         tmpBtn3.setOnClickListener(new View.OnClickListener() {
@@ -246,8 +248,8 @@ public class TmpActivity extends AppCompatActivity {
                 list.add(128330407);
                 rep.createChat(new MutableLiveData<>(), list, 28, 1);*/
                 //rep.connectToChatServer(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar", 128304620));
-                //rep.loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));
-                chatViewModel.sendMessage("jedna lepa porukica");
+                //rep.loginUser(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "novaaasifraaaa"));
+               // chatViewModel.sendMessage("jedna lepa porukica");
             }
         });
         tmpBtn4.setOnClickListener(new View.OnClickListener() {
@@ -257,7 +259,7 @@ public class TmpActivity extends AppCompatActivity {
                 rep.logOutUser(teinToken, new MutableLiveData<>(), 3);*/
                 //rep.sendMessage(new MutableLiveData<>(), );
                 //chatViewModel.adOnGlobalMessageReceived();
-                chatViewModel.adOnGlobalMessageReceived();
+                //chatViewModel.adOnGlobalMessageReceived();
             }
         });
         tmpBtn5.setOnClickListener(new View.OnClickListener() {

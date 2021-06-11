@@ -17,39 +17,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Utility {
     public enum ChatType{ PRIVATE, GROUP }
-    public static String dateTimeToTimeAgo(DateTime dt){
-        /*DateTime now = new DateTime();
-        long minutes= TimeUnit.MILLISECONDS.toMinutes(LocalDate.now() - past.getTime());
-        long hours=TimeUnit.MILLISECONDS.toHours(now.getTime() - past.getTime());
-        long days=TimeUnit.MILLISECONDS.toDays(now.getTime() - past.getTime());
-//
-//          System.out.println(TimeUnit.MILLISECONDS.toSeconds(now.getTime() - past.getTime()) + " milliseconds ago");
-//          System.out.println(TimeUnit.MILLISECONDS.toMinutes(now.getTime() - past.getTime()) + " minutes ago");
-//          System.out.println(TimeUnit.MILLISECONDS.toHours(now.getTime() - past.getTime()) + " hours ago");
-//          System.out.println(TimeUnit.MILLISECONDS.toDays(now.getTime() - past.getTime()) + " days ago");
-
-        if(seconds<60)
-        {
-            System.out.println(seconds+" seconds ago");
-        }
-        else if(minutes<60)
-        {
-            System.out.println(minutes+" minutes ago");
-        }
-        else if(hours<24)
-        {
-            System.out.println(hours+" hours ago");
-        }
-        else
-        {
-            System.out.println(days+" days ago");
-        }*/
-        return "";
-    }
 
     static public int getUserId(Context c){
-        SharedPreferences sp = c.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
-        return sp.getInt(Constants.LOGGED_USER_ID, -1);
+        return getLoggedInUser(c).getUserId();
+    }
+
+    static public int getUserQbId(Context c){
+        return getLoggedInUser(c).getUserQbId();
     }
 
     static public String getAccessToken(Context c){
@@ -57,13 +31,10 @@ public class Utility {
         return sp.getString(Constants.ACCESS_TOKEN, "");
     }
 
-    static public void saveLoggedUserInfo(Context c, int id, int qbId, String accessToken, String fcmToken, User user){
+    static public void saveLoggedUserInfo(Context c, String accessToken, User user){
         SharedPreferences sp = c.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.LOGGED_USER_ID, id);
-        editor.putInt(Constants.LOGGED_USER_QB_ID, qbId);
         editor.putString(Constants.ACCESS_TOKEN, accessToken);
-        editor.putString(Constants.FCM_TOKEN_TAG, fcmToken);
         Gson gson = new Gson();
         String json = gson.toJson(user);
         editor.putString(Constants.LOGGED_IN_USER, json);
@@ -73,10 +44,11 @@ public class Utility {
     static public void removeLoggedUserInfo(Context c){
         SharedPreferences sp = c.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.remove(Constants.LOGGED_USER_ID);
+        /*editor.remove(Constants.LOGGED_USER_ID);
         editor.remove(Constants.LOGGED_USER_QB_ID);
         editor.remove(Constants.ACCESS_TOKEN);
-        editor.remove(Constants.FCM_TOKEN_TAG);
+        editor.remove(Constants.FCM_TOKEN_TAG);*/
+        editor.remove(Constants.LOGGED_IN_USER);
         editor.apply();
     }
 
@@ -108,4 +80,33 @@ public class Utility {
         }
         editor.apply();
     }*/
+    public static String dateTimeToTimeAgo(DateTime dt){
+        /*DateTime now = new DateTime();
+        long minutes= TimeUnit.MILLISECONDS.toMinutes(LocalDate.now() - past.getTime());
+        long hours=TimeUnit.MILLISECONDS.toHours(now.getTime() - past.getTime());
+        long days=TimeUnit.MILLISECONDS.toDays(now.getTime() - past.getTime());
+//
+//          System.out.println(TimeUnit.MILLISECONDS.toSeconds(now.getTime() - past.getTime()) + " milliseconds ago");
+//          System.out.println(TimeUnit.MILLISECONDS.toMinutes(now.getTime() - past.getTime()) + " minutes ago");
+//          System.out.println(TimeUnit.MILLISECONDS.toHours(now.getTime() - past.getTime()) + " hours ago");
+//          System.out.println(TimeUnit.MILLISECONDS.toDays(now.getTime() - past.getTime()) + " days ago");
+
+        if(seconds<60)
+        {
+            System.out.println(seconds+" seconds ago");
+        }
+        else if(minutes<60)
+        {
+            System.out.println(minutes+" minutes ago");
+        }
+        else if(hours<24)
+        {
+            System.out.println(hours+" hours ago");
+        }
+        else
+        {
+            System.out.println(days+" days ago");
+        }*/
+        return "";
+    }
 }
