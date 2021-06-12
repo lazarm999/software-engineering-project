@@ -10,27 +10,27 @@ import com.parovi.zadruga.models.entityModels.User;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(primaryKeys = {"fkChatId", "fkUserId"},
+@Entity(primaryKeys = {"fkChatId", "fkQbUserId"},
         foreignKeys = {@ForeignKey(entity = Chat.class,
                         parentColumns = "chatId",
                         childColumns = "fkChatId",
                         onDelete = CASCADE),
                         @ForeignKey(entity = User.class,
                         parentColumns = "userQbId",
-                        childColumns = "fkUserId")})
+                        childColumns = "fkQbUserId")})
 public class UserChat {
     @ColumnInfo(index = true)
     @NonNull
     private String fkChatId;
     @ColumnInfo(index = true)
-    private int fkUserId;
+    private int fkQbUserId;
 
     public UserChat() {
     }
 
-    public UserChat(String fkChatId, int fkUserId) {
+    public UserChat(String fkChatId, int fkQbUserId) {
         this.fkChatId = fkChatId;
-        this.fkUserId = fkUserId;
+        this.fkQbUserId = fkQbUserId;
     }
 
     public String getFkChatId() {
@@ -41,11 +41,11 @@ public class UserChat {
         this.fkChatId = fkChatId;
     }
 
-    public int getFkUserId() {
-        return fkUserId;
+    public int getFkQbUserId() {
+        return fkQbUserId;
     }
 
-    public void setFkUserId(int fkUserId) {
-        this.fkUserId = fkUserId;
+    public void setFkQbUserId(int fkQbUserId) {
+        this.fkQbUserId = fkQbUserId;
     }
 }

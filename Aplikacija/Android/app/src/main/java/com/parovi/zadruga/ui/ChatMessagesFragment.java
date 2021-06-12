@@ -3,7 +3,9 @@ package com.parovi.zadruga.ui;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -43,6 +45,7 @@ public class ChatMessagesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -71,8 +74,13 @@ public class ChatMessagesFragment extends Fragment {
                 Toast.makeText(getContext(), "Message sent", Toast.LENGTH_SHORT).show();
             }
         });
-
-        setHasOptionsMenu(true);
+        binding.topAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                return NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment));
+            }
+        });
+        //binding.toolbar.setVisibility(View.GONE);
 
         return binding.getRoot();
     }
@@ -81,12 +89,15 @@ public class ChatMessagesFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.chat_overflow_menu, menu);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment))
-                || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.chatInfoFragment:
+                return NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment));
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -16,11 +16,19 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.parovi.zadruga.Constants;
-import com.parovi.zadruga.MainActivity;
+import com.parovi.zadruga.activities.MainActivity;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.models.entityModels.User;
+import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.retrofit.UserApi;
 
 import java.util.Random;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NotificationService extends FirebaseMessagingService {
 
@@ -63,7 +71,6 @@ public class NotificationService extends FirebaseMessagingService {
         }
     }
 
-    //TODO: ovo ce sigurno da radi, ali bi bilo bolje da se ovde odradi sva logika oko cuvanja umesto u nekom activitiju (korisi nesto drugo kao povratni tip umesto LiveData)
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
@@ -71,5 +78,14 @@ public class NotificationService extends FirebaseMessagingService {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(Constants.FCM_TOKEN_TAG, s);
         editor.apply();
+
+        Retrofit backend = new Retrofit.Builder()
+                .baseUrl(Constants.ZADRUGA_API_BASE_URL)
+                .build();
+        UserApi userApi;
+        userApi = backend.create(UserApi.class);
+        User user = new User();
+        user.setFcmToken(s);
+        userApi.updateUser(sp.getString(Constants.ACCESS_TOKEN, ""), sp.getInt(Constants.LOGGED_USER_ID, -1), user);
     }
 }

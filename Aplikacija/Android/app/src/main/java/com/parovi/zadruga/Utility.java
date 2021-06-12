@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.lifecycle.Observer;
 
+import com.google.gson.Gson;
 import com.google.type.DateTime;
 import com.parovi.zadruga.models.entityModels.User;
 import com.quickblox.auth.session.QBSettings;
@@ -56,12 +57,16 @@ public class Utility {
         return sp.getString(Constants.ACCESS_TOKEN, "");
     }
 
-    static public void saveLoggedUserInfo(Context c, int id, int qbId, String token){
+    static public void saveLoggedUserInfo(Context c, int id, int qbId, String accessToken, String fcmToken, User user){
         SharedPreferences sp = c.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(Constants.LOGGED_USER_ID, id);
         editor.putInt(Constants.LOGGED_USER_QB_ID, qbId);
-        editor.putString(Constants.ACCESS_TOKEN, token);
+        editor.putString(Constants.ACCESS_TOKEN, accessToken);
+        editor.putString(Constants.FCM_TOKEN_TAG, fcmToken);
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+        editor.putString(Constants.LOGGED_IN_USER, json);
         editor.apply();
     }
 
@@ -71,9 +76,17 @@ public class Utility {
         editor.remove(Constants.LOGGED_USER_ID);
         editor.remove(Constants.LOGGED_USER_QB_ID);
         editor.remove(Constants.ACCESS_TOKEN);
+        editor.remove(Constants.FCM_TOKEN_TAG);
         editor.apply();
     }
 
+
+    static public User getLoggedInUser(Context c){
+        SharedPreferences sp = c.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sp.getString(Constants.LOGGED_IN_USER, "");
+        return gson.fromJson(json, User.class);
+    }
     /*static private void checkIfFcmTokenTagIsChanged(Context c){
         SharedPreferences sp = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();

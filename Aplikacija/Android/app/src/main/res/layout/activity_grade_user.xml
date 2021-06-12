@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.GradeUser"
+    android:background="@color/background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:id="@+id/relativeGrades">
+
+        <SeekBar
+            android:id="@+id/seekBarGrades"
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="400dp"
+            android:layout_marginLeft="75dp"
+            android:progress="0"
+            app:tickMarkTint="@color/lila" />
+
+        <ImageView
+            android:id="@+id/imgGrades1"
+            android:layout_width="155dp"
+            android:layout_height="95dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="25dp"
+            android:foregroundGravity="center"
+            app:srcCompat="@drawable/grades1"
+            tools:ignore="UnknownId" />
+
+
+
+        <ImageView
+            android:id="@+id/imgGrade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="262dp"
+            android:layout_marginLeft="170dp"
+            app:srcCompat="@drawable/ic_f_grade"
+            app:tint="@color/black"
+            tools:ignore="VectorDrawableCompat" />
+
+        <TextView
+            android:id="@+id/txtGrade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="170dp"
+            android:layout_marginTop="350dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/gradeF"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imgGrades2"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_marginLeft="250dp"
+            android:layout_marginTop="50dp"
+            app:srcCompat="@drawable/grades3" />
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeGrades"
+        android:id="@+id/linearComments"
+        android:padding="40dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/txtComments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/commentsGrades"
+            android:textColor="@color/lila"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editTxtCommentsGrades"
+            android:layout_width="250dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginLeft="35dp"
+            android:background="@color/background"
+            android:ems="10"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:gravity="top"
+            android:hint="@string/commentsGradesPlaceholder"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:verticalScrollbarPosition="right" />
+
+    </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:orientation="horizontal"
+    android:layout_below="@+id/linearComments">
+
+    <Button
+        android:id="@+id/btnRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="270dp"
+        android:fontFamily="@font/roboto_condensed_regular"
+        android:padding="10dp"
+        android:text="@string/ratingStudent"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:backgroundTint="@color/lila"
+        app:cornerRadius="20dp"
+        app:icon="@drawable/ic_grade_button"
+        app:iconTint="@color/black"
+        app:rippleColor="@color/lila" />
+
+</LinearLayout>
+</RelativeLayout>

@@ -22,8 +22,5 @@ public class Constants {
     public static final String DECLINED = "declined";
     public static final String COMMENT = "comment";
     public static final String RATING = "rating";
-    //tipovi naloga
-    public static final String EMPLOYEE = "employee";
-    public static final String EMPLOYER = "employer";
-
+    public static final String LOGGED_IN_USER = "loggedInUser";
 }

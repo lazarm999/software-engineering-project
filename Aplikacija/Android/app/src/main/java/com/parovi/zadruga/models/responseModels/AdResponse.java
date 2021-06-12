@@ -15,6 +15,8 @@ public class AdResponse {
     private int compensationMax;
     private int numberOfEmployees;
     private Date postTime;
+    private int numberOfApplied;
+    private String qbChatId;
 
     private User employer;
     private Location location;

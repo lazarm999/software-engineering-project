@@ -34,8 +34,8 @@ public class ChatActivity extends AppCompatActivity{
 
         model = new ViewModelProvider(this).get(ChatsViewModel.class);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Chats");
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.setTitle("Chats");
 
         /*if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -49,6 +49,6 @@ public class ChatActivity extends AppCompatActivity{
     protected void onStart() {
         super.onStart();
         NavController navController = Navigation.findNavController(this, R.id.chat_nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController);
+        //NavigationUI.setupActionBarWithNavController(this, navController);
     }
 }

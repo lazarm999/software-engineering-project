@@ -71,9 +71,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         public NotificationViewHolder(@NonNull  View itemView, OnNotificationItemClickListener onClickListener) {
             super(itemView);
-            ivNotificationIcon = itemView.findViewById(R.id.ivNotificationIcon);
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvDesc = itemView.findViewById(R.id.tvDesc);
+            ivNotificationIcon = itemView.findViewById(R.id.imgAdItem);
+            tvTitle = itemView.findViewById(R.id.txtAdItemHeader);
+            tvDesc = itemView.findViewById(R.id.txtLocationAd);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

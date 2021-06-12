@@ -43,9 +43,97 @@
     <string name="newPassword">Nova šifra</string>
     <string name="newPasswordConfirmation">Potvrdite novu šifru</string>
     <string name="resetPassword">Promeni šifru</string>
-    <string name="feedStudent">Oglasi</string>
-    <string name="jobListStudent">Moj poslovi</string>
+    <string name="feed">Oglasi</string>
+    <string name="jobListStudent">Moj Poslovi</string>
     <string name="recommendationsStudent">Preporučeno</string>
+    <string name="profile">Profil</string>
+    <string name="notifications">Obaveštenja</string>
+    <string name="forYouStudent">Za Vas</string>
+    <string name="newAd">Novi Oglas</string>
+    <string name="myAds">Moji Oglasi</string>
+    <string name="editProfile">Izmeni Profil</string>
+    <string name="infoStudent">Opis: </string>
+    <string name="facultyStudent">Fakultet: </string>
+    <string name="achievements">Dostignuća</string>
+    <string name="badges">Bedževi: </string>
+    <string name="saveChanges">Sačuvaj izmene</string>
+    <string name="phoneStudent">Telefon: </string>
+    <string name="adTitle">Naslov</string>
+    <string name="adTitlePlaceholder">Naslov</string>
+    <string name="headNewAd">Dodaj novi oglas</string>
+    <string name="adDescriptionPlaceholder">Opis</string>
+    <string name="adPeopleNeeded">Broj potrebnih radnika</string>
+    <string name="adFee">Novčana naknada</string>
+    <string name="adFeeFrom">Od:</string>
+    <string name="adFeePlaceholder">0</string>
+    <string name="adFeeTo">Do:</string>
+    <string name="newAdAdd">Dodaj</string>
+    <string name="newAdCancel">Poništi</string>
+    <string name="changeLanguage">Izaberite jezik...</string>
+    <string name="adItemFee">Novčana naknada:</string>
+    <string name="adLocation">Lokacija</string>
+    <string name="adApply">Prijavite se</string>
+    <string name="serbianLanguage">Srpski</string>
+    <string name="englishLanguage">Engleski</string>
+    <string name="adItemReadMore">Saznajte više</string>
+    <string name="ratingStudent">Ocenite</string>
+    <string name="companyEmployer">Firma:</string>
+    <string name="commentsGrades">Komentari:</string>
+    <string name="commentsGradesPlaceholder">Ovde ostavite Vaš komentar...</string>
+    <string name="gradeF">Ocena 1</string>
+    <string name="gradeD">Ocena 2</string>
+    <string name="gradeC">Ocena 3</string>
+    <string name="gradeB">Ocena 4</string>
+    <string name="gradeA">Ocena 5</string>
+    <string name="filterAds">Filteri</string>
+    <string name="filterPromoter">Promoter</string>
+    <string name="filterInterviewer">Anketar</string>
+    <string name="filterHostess">Hostesa</string>
+    <string name="filterWaiter">Konobar</string>
+    <string name="filterCollectionOperations">Inkasantski poslovi</string>
+    <string name="filterCategories">Kategorije</string>
+    <string name="filterLighterPhysicalJobs">Lakši fizički poslovi</string>
+    <string name="filterHeavierPhysicalJobs">Teži fizički poslovi</string>
+    <string name="filterFeeFrom">Od</string>
+    <string name="filterFeeTo">Do</string>
+    <string-array name="locations">
+        <item>Beograd</item>
+        <item>Novi Sad</item>
+        <item>Niš</item>
+        <item>Kragujevac</item>
+        <item>Leskovac</item>
+        <item>Subotica</item>
+        <item>Kruševac</item>
+        <item>Kraljevo</item>
+        <item>Smederevo</item>
+        <item>Valjevo</item>
+        <item>Vranje</item>
+        <item>Pirot</item>
+    </string-array>
+    <string name="filterKitchenSupportStaff">Pomoćno osoblje u kuhinji</string>
+    <string name="sort">Sortirajte</string>
+    <string name="filter">Primeni filtere</string>
+    <string name="toastHeader">Obaveštenje</string>
+    <string-array name="choices">
+        <item>Hostesa</item>
+        <item>Promoter</item>
+        <item>Pomoćno osoblje u kuhinji</item>
+        <item>Anketar</item>
+        <item>Inkasantski poslovi</item>
+        <item>Konobar</item>
+        <item>Lakši fizički poslovi</item>
+        <item>Teži fizički poslovi</item>
+    </string-array>
+    <string name="category">Odaberite</string>
+    <string name="dialogMultipleChoiceTitle">Odaberite kategorije</string>
+    <string name="btnCancel">Otkažite</string>
+    <string name="btnApply">Primenite</string>
+    <string name="btnNeutral">"Uklonite sve "</string>
+    <string name="missingData">Niste popunili sva polja</string>
+    <string name="headerJobs">Poslovi koje ste radili do sada</string>
+    <string name="headerMyAds">Vaši oglasi</string>
+    <string name="recommend">Preporučeno za Vas</string>
+
     <string name="profileStudent">Profil</string>
     <string name="notificationsStudent">Obaveštenja</string>
     <string name="daysAgo">pre %1$d dana</string>

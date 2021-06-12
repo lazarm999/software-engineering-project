@@ -7,6 +7,10 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--for network based location-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--for GPS based location-->
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
     <application
         android:name=".App"
         android:usesCleartextTraffic="true"
@@ -16,39 +20,44 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Zadruga">
+        <activity android:name=".activities.NewAdActivityV2"/>
+        <activity android:name=".activities.GradeUser">
+        </activity>
+        <activity android:name=".activities.MainEmployerActivity" />
+        <activity android:name=".activities.MainActivity">
+
+        </activity>
         <activity android:name=".ui.RateUserActivity"/>
+        <activity android:name=".ui.JobAdActivity">
+        </activity>
+        <activity android:name=".ui.ChatActivity">
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.EditProfileActivity"/>
+
         <activity android:name=".TmpActivity">
 
         </activity>
-        <activity android:name=".MainActivity">
-        </activity>
-        <activity android:name=".ui.JobAdActivity">
-
-        </activity>
-        <activity android:name=".ui.ChatActivity" />
-        <activity android:name=".ui.EditProfileActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".PasswordResetActivity" />
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".LogInActivity" />
 
         <service android:name=".services.NotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-<!--        <activity android:name=".MainStudentActivity"></activity>-->
-<!--        <activity android:name=".PasswordResetActivity" />-->
-<!--        <activity android:name=".SignUpActivity" />-->
-<!--        <activity android:name=".LogInActivity" />-->
-<!--        <meta-data-->
-<!--            android:name="preloaded_fonts"-->
-<!--            android:resource="@array/preloaded_fonts" />-->
+
+        <activity android:name=".activities.MainStudentActivity" />
+        <activity android:name=".activities.PasswordResetActivity" />
+        <activity android:name=".activities.SignUpActivity" />
+        <activity android:name=".activities.LogInActivity" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

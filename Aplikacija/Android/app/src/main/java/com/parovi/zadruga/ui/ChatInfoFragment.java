@@ -4,8 +4,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,7 +59,7 @@ public class ChatInfoFragment extends Fragment {
         });
         binding.rvParticipants.setAdapter(adapter);
         binding.rvParticipants.setLayoutManager(new LinearLayoutManager(container.getContext()));
-
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment);
         return binding.getRoot();
     }
 }

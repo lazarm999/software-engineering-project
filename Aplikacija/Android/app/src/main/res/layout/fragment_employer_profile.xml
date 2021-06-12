@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.EmployerProfileFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <ImageView
+            android:id="@+id/imgProfileBackground"
+            android:layout_width="match_parent"
+            android:layout_height="275dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="-10dp"
+            app:srcCompat="@drawable/profile_background" />
+
+        <Button
+            android:id="@+id/BtnEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/background"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/editProfile"
+            android:textColor="@color/lila"
+            android:textSize="10sp"
+            app:backgroundTint="@color/background"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_edit_profile"
+            app:iconTint="@color/lila" />
+
+        <ImageView
+            android:id="@+id/imgProfileBlank"
+            android:layout_width="293dp"
+            android:layout_height="196dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="135dp"
+            android:background="@color/white"
+            app:srcCompat="@drawable/common_google_signin_btn_text_light" />
+
+        <TextView
+            android:id="@+id/editTextUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="240dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="Name Surname"
+            android:textColor="@color/lila"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/editTextUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="268dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="username"
+            android:textColor="@color/lila"
+            android:textSize="12sp"
+            android:textStyle="italic" />
+
+        <ImageView
+            android:id="@+id/imgUser"
+            android:layout_width="95dp"
+            android:layout_height="85dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="140dp"
+            app:srcCompat="@drawable/avatar" />
+
+        <Button
+            android:id="@+id/btnAchievements"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/txtBadges"
+            android:layout_below="@+id/editTextUsername"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/achievements"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            app:backgroundTint="@color/teal_200"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_achievements"
+            app:iconTint="@color/black"
+            app:rippleColor="@color/lila" />
+
+        <TextView
+            android:id="@+id/txtComp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="390dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/companyEmployer"
+            android:textColor="@color/lila"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtPhoneNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="430dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/phoneStudent"
+            android:textColor="@color/lila"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="135dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="430dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="064119359"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtInfoStudent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="470dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/infoStudent"
+            android:textColor="@color/lila"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtMultilineEditBio"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginStart="135dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="470dp"
+            android:background="@drawable/border_for_inputs"
+            android:ems="10"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:singleLine="false"
+            android:text="Employers's bio"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="620dp"
+            android:layout_marginLeft="260dp"
+            android:layout_marginStart="260dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/ratingStudent"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            app:backgroundTint="@color/teal_200"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_rate_user"
+            app:iconTint="@color/black"
+            app:rippleColor="@color/lila" />
+
+        <TextView
+            android:id="@+id/txtCompany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="135dp"
+            android:layout_marginLeft="135dp"
+            android:layout_marginTop="390dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="Company"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="205dp"
+            android:layout_marginRight="205dp"
+            android:layout_toStartOf="@+id/BtnEdit"
+            android:layout_toLeftOf="@+id/BtnEdit"
+            android:adjustViewBounds="true"
+            android:background="@color/material_on_surface_disabled"
+            android:tint="@color/background"
+            app:srcCompat="@drawable/ic_left_black_arrow"
+            tools:ignore="VectorDrawableCompat" />
+
+    </RelativeLayout>
+</FrameLayout>
