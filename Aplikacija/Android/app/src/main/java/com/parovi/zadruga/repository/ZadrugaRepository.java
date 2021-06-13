@@ -107,6 +107,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 //VUKOV token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
 //TEIN token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
 //Marko car token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTl9.x6y6ONrdWKne_hU11h_tJJUQYQFfBoM6R10o6Ji3ajE
+/*
+* grupni chat: vuk - 128330407, tea - 128586493,
+markocar - 128304620
+priv chat: vuk i tea*/
 public class ZadrugaRepository  {
     private static ZadrugaRepository instance;
     private final ZadrugaDatabase localDb;
@@ -1456,7 +1460,7 @@ public class ZadrugaRepository  {
 
     }
 
-    private Chat qbChatDialogToChat(QBChatDialog qbChat, int adId){
+    private Chat qbChatDialogToChat(QBChatDialog qbChat){
         //treba ovde api poziv da bih mogaao da izvucem info o korisniku koji je zadnji poslao poruku
         Chat chat;
         Utility.ChatType type;
@@ -1464,7 +1468,7 @@ public class ZadrugaRepository  {
             type = Utility.ChatType.PRIVATE;
         else
             type = Utility.ChatType.GROUP;
-        chat = new Chat(qbChat.getDialogId(), adId, type, "", qbChat.getOccupants().size(),
+        chat = new Chat(qbChat.getDialogId(), type, "", qbChat.getOccupants().size(),
                 qbChat.getLastMessage(),
                 qbChat.getLastMessageUserId(),
                 qbChat.getLastMessageDateSent(),qbChat.getCreatedAt(), qbChat);
@@ -1474,6 +1478,17 @@ public class ZadrugaRepository  {
     private Message qbChatMessageToMessage(QBChatMessage qbMess){
         return new Message(qbMess.getId(), qbMess.getSenderId(),
                 new Date(qbMess.getDateSent()), qbMess.getBody(), qbMess.getDialogId(), qbMess);
+    }
+
+    private int getChatIndexByQbId(List<Chat> chats, String qbChatId){
+        if(chats != null){
+            for (int i = 0; i < chats.size(); i++) {
+                if(chats.get(i).getChatId().equals(qbChatId)){
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     public void getAllChats(MutableLiveData<CustomResponse<?>> chats){
@@ -1491,12 +1506,14 @@ public class ZadrugaRepository  {
             @Override
             public void onSuccess(ArrayList<QBChatDialog> qbChats, Bundle params) {
                 if(qbChats != null){
-                    Utility.ChatType type;
                     List<Chat> tmpChats = new ArrayList<>();
                     for (QBChatDialog qbChat : qbChats) {
                         String qbChatId = qbChat.getDialogId();
-                        if(qbChat.getType() == QBDialogType.PRIVATE){
-                            type = Utility.ChatType.PRIVATE;
+                        Utility.ChatType type = qbChat.getType() == QBDialogType.PRIVATE ? Utility.ChatType.PRIVATE : Utility.ChatType.GROUP;
+                        Chat chat = qbChatDialogToChat(qbChat);
+                        tmpChats.add(chat);
+                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChats));
+                        if(type == Utility.ChatType.PRIVATE){
                             //id osobe sa kojom chetujes
                             int chatterQbId = qbChat.getOccupants().get(0) == userQbId ? qbChat.getOccupants().get(1) : qbChat.getOccupants().get(0);
                             userApi.getProfilePictureByUserQbId(token, chatterQbId).enqueue(new Callback<ResponseBody>() {
@@ -1504,16 +1521,12 @@ public class ZadrugaRepository  {
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                     if(response.isSuccessful() && response.body() != null){
                                         Bitmap bmImage = BitmapFactory.decodeStream(response.body().byteStream());
-                                        List<Chat> chatList = (List<Chat>) chats.getValue().getBody();
-                                        if(chatList != null){
-                                            for (int i = 0; i < chatList.size(); i++) {
-                                                if(chatList.get(i).getChatId().equals(qbChatId)){
-                                                    if(bmImage != null) chatList.get(i).setProfileImage(bmImage);
-                                                    break;
-                                                }
-                                            }
+                                        int i;
+                                        List<Chat> tmpChatList = (List<Chat>) chats.getValue().getBody();
+                                        if(bmImage != null && (i = getChatIndexByQbId(tmpChatList, qbChatId)) != -1){
+                                            tmpChatList.get(i).setProfileImage(bmImage);
                                         }
-                                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, chatList));
+                                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChatList));
                                     }
                                 }
 
@@ -1522,9 +1535,45 @@ public class ZadrugaRepository  {
 
                                 }
                             });
+                            userApi.getUserByQbUserId(token, chatterQbId).enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> call, Response<User> response) {
+                                    if(response.isSuccessful() && response.body() != null){
+                                        int i;
+                                        List<Chat> tmpChatList = (List<Chat>) chats.getValue().getBody();
+                                        if((i = getChatIndexByQbId(tmpChatList, qbChatId)) != -1){
+                                            tmpChatList.get(i).setChatTitle(response.body().getFirstName() + " " + response.body().getLastName());
+                                        }
+                                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChatList));
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> call, Throwable t) {
+
+                                }
+                            });
                         }
-                        else{
-                            type = Utility.ChatType.GROUP;
+                        else {
+                            adApi.getAdByQbChatId(Utility.getAccessToken(App.getAppContext()), qbChatId).enqueue(new Callback<Ad>() {
+                                @Override
+                                public void onResponse(Call<Ad> call, Response<Ad> response) {
+                                    if(response.isSuccessful() && response.body() != null){
+                                        int i;
+                                        List<Chat> tmpChatList = (List<Chat>) chats.getValue().getBody();
+                                        if((i = getChatIndexByQbId(tmpChatList, qbChatId)) != -1){
+                                            tmpChatList.get(i).setChatTitle(response.body().getTitle());
+                                            tmpChatList.get(i).setFkAdId(response.body().getAdId());
+                                        }
+                                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChatList));
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Ad> call, Throwable t) {
+
+                                }
+                            });
                         }
                         Utility.ChatType finalType = type;
                         if(qbChat.getLastMessageUserId() != null){
@@ -1532,16 +1581,12 @@ public class ZadrugaRepository  {
                                 @Override
                                 public void onResponse(Call<User> call, Response<User> response) {
                                     if(response.isSuccessful() && response.body() != null){
-                                        List<Chat> chatList = (List<Chat>) chats.getValue().getBody();
-                                        if(chatList != null){
-                                            for (int i = 0; i < chatList.size(); i++) {
-                                                if(chatList.get(i).getChatId().equals(qbChatId)){
-                                                    chatList.get(i).setLastSenderName(response.body().getUsername());
-                                                    break;
-                                                }
-                                            }
+                                        int i;
+                                        List<Chat> tmpChatList = (List<Chat>) chats.getValue().getBody();
+                                        if((i = getChatIndexByQbId(tmpChatList, qbChatId)) != -1){
+                                            tmpChatList.get(i).setLastSenderName(response.body().getUsername());
                                         }
-                                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, chatList));
+                                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChatList));
                                     } else
                                         responseNotSuccessful(response.code(), chats);
                                 }
@@ -1552,11 +1597,6 @@ public class ZadrugaRepository  {
                                 }
                             });
                         }
-                        Chat chat = new Chat(qbChat.getDialogId(), finalType, "", qbChat.getOccupants().size(),
-                                qbChat.getCreatedAt());
-                        chat.setQbChat(qbChat);
-                        tmpChats.add(chat);
-                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChats));
                     }
                 }
                 else
@@ -1586,7 +1626,7 @@ public class ZadrugaRepository  {
         }, executor);
     }
 
-    public void updateChat(MutableLiveData<CustomResponse<?>> chats, String chatId, int adId){
+    public void updateChat(MutableLiveData<CustomResponse<?>> chats, String chatId){
         final String token = Utility.getAccessToken(App.getAppContext());
         QBRestChatService.getChatDialogById(chatId).performAsync(new QBEntityCallback<QBChatDialog>() {
             @Override
@@ -1596,22 +1636,20 @@ public class ZadrugaRepository  {
                     public void onResponse(Call<User> call, Response<User> response) {
                         boolean isUpdated = false;
                         List<Chat> tmpChatList = (List<Chat>) chats.getValue().getBody();
-                        for (int i = 0; i < tmpChatList.size(); i++) {
-                            Chat chat = tmpChatList.get(i);
-                            if(chat.getChatId().equals(chatId)){
-                                Chat updatedChat = qbChatDialogToChat(qbChatDialog, adId);
-                                updatedChat.setProfileImage(chat.getProfileImage());
-                                if(response.isSuccessful() && response.body() != null) {
-                                    updatedChat.setLastSenderName(response.body().getUsername());
-                                }
-                                tmpChatList.remove(i);
-                                tmpChatList.add(0, updatedChat);
-                                isUpdated = true;
-                                break;
+                        int i;
+                        if((i = getChatIndexByQbId(tmpChatList, chatId)) != -1){
+                            Chat updatedChat = tmpChatList.get(i);
+                            updatedChat.setLastMessage(qbChatDialog.getLastMessage());
+                            updatedChat.setLastMessageDateSent(qbChatDialog.getLastMessageDateSent());
+                            if(response.isSuccessful() && response.body() != null) {
+                                updatedChat.setLastSenderName(response.body().getUsername());
                             }
+                            tmpChatList.remove(i);
+                            tmpChatList.add(tmpChatList.size() - 1, updatedChat);
+                            isUpdated = true;
                         }
                         if(!isUpdated){
-                            tmpChatList.add(0, qbChatDialogToChat(qbChatDialog, adId));
+                            tmpChatList.add(tmpChatList.size() - 1, qbChatDialogToChat(qbChatDialog));
                         }
                         chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChatList));
                     }
@@ -1631,7 +1669,10 @@ public class ZadrugaRepository  {
     }
 
     public void updateMessages(MutableLiveData<CustomResponse<?>> messages, QBChatMessage qbChatMessage){
-        List<Message> tmpList = (List<Message>) messages.getValue().getBody();
+        List<Message> tmpList = new ArrayList<>();
+        if(messages.getValue() != null){
+            tmpList = (List<Message>) messages.getValue().getBody();
+        }
         tmpList.add(qbChatMessageToMessage(qbChatMessage));
         messages.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpList));
     }
@@ -1702,17 +1743,22 @@ public class ZadrugaRepository  {
         });
     }
 
-    public void sendMessage(MutableLiveData<CustomResponse<?>> isSent, QBChatDialog qbChat, String message){
+    public void sendMessage(MutableLiveData<CustomResponse<?>> isSent, MutableLiveData<CustomResponse<?>> messages, MutableLiveData<CustomResponse<?>> chats,
+                            QBChatDialog qbChat, String message){
         User u = Utility.getLoggedInUser(App.getAppContext());
         QBChatMessage qbMessage = new QBChatMessage();
         qbMessage.setBody(message);
         qbMessage.setSaveToHistory(true);
         qbMessage.setProperty("username", u.getUsername());
         qbMessage.setSenderId(u.getUserQbId());
+        qbMessage.setDateSent((new Date()).getTime());
+        qbMessage.setDialogId(qbChat.getDialogId());
         qbChat.sendMessage(qbMessage, new QBEntityCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 isSent.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                updateMessages(messages, qbMessage);
+                updateChat(chats, qbChat.getDialogId());
                 //saveMessageLocally(qbMessage);
             }
 
@@ -1724,7 +1770,7 @@ public class ZadrugaRepository  {
         });
     }
 
-    public void getMessages(MutableLiveData<CustomResponse<?>> messages, QBChatDialog chat, int messagesSkipped){
+    public void getMessages(MutableLiveData<CustomResponse<?>> messages, QBChatDialog chat, int messagesSkipped, boolean shouldAppend){
         Boolean[] isSynced = {false};
         getMessagesLocally(messages, chat.getDialogId(), isSynced);
         QBMessageGetBuilder messageGetBuilder = new QBMessageGetBuilder();
@@ -1734,7 +1780,7 @@ public class ZadrugaRepository  {
             @Override
             public void onSuccess(ArrayList<QBChatMessage> qbChatMessages, Bundle bundle) {
                 List<Message> tmpMsgList;
-                if(messages.getValue() != null && messages.getValue().getBody() != null)
+                if(shouldAppend && messages.getValue() != null && messages.getValue().getBody() != null)
                     tmpMsgList = (List<Message>) messages.getValue().getBody();
                 else
                     tmpMsgList = new ArrayList<>();

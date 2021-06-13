@@ -52,6 +52,9 @@ public class Chat {
     private boolean isArchived;
 
     @Ignore
+    private String chatTitle;
+
+    @Ignore
     private QBChatDialog qbChat;
 
     @Ignore
@@ -60,10 +63,9 @@ public class Chat {
     public Chat() {
     }
 
-    public Chat(@NonNull String chatId, @Nullable Integer fkAdId, Utility.ChatType type, String lastSenderName, int numOfMembers, String lastMessage, int fkLastSenderId,
+    public Chat(@NonNull String chatId, Utility.ChatType type, String lastSenderName, int numOfMembers, String lastMessage, int fkLastSenderId,
                 long lastMessageDateSent, Date createdAt, QBChatDialog qbChat) {
         this.chatId = chatId;
-        this.fkAdId = fkAdId;
         this.type = type;
         this.lastSenderName = lastSenderName;
         this.numOfMembers = numOfMembers;
@@ -185,6 +187,14 @@ public class Chat {
 
     public void setProfileImage(Bitmap profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public String getChatTitle() {
+        return chatTitle;
+    }
+
+    public void setChatTitle(String chatTitle) {
+        this.chatTitle = chatTitle;
     }
 
     /*public int getFkCreatorId() {

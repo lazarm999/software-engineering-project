@@ -34,7 +34,7 @@ public class ChatViewModel extends AndroidViewModel {
         @Override
         public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
             rep.updateMessages(messages, qbChatMessage);
-            rep.updateChat(chats, dialogId, adId);
+            rep.updateChat(chats, dialogId);
         }
 
         @Override
@@ -62,7 +62,7 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void connectToChatServer(){
-        //rep.connectToChatServer(isConnected, u);
+        rep.connectToChatServer(isConnected);
     }
 
     public MutableLiveData<CustomResponse<?>> observeChats(){
@@ -73,12 +73,12 @@ public class ChatViewModel extends AndroidViewModel {
         return newMessage;
     }
 
-    public void adOnGlobalMessageReceived(){
+    public void addOnGlobalMessageReceived(){
         rep.addOnMessageReceivedGlobal(newMessageListener);
     }
 
     public void sendMessage(String message){
-        rep.sendMessage(isSent, ((List<Chat>)chats.getValue().getBody()).get(0).getQbChat(), message);
+        rep.sendMessage(isSent, messages, chats, ((List<Chat>)chats.getValue().getBody()).get(1).getQbChat(), message);
     }
 
     public void removeGlobalMessageListener(){

@@ -31,7 +31,7 @@
             android:id="@+id/tmpBtn1"
             android:layout_width="150dp"
             android:layout_height="48dp"
-            android:text="login 1"
+            android:text="1"
             android:textColor="#FFFFFF"
             app:backgroundTint="#673AB7"
             app:rippleColor="#FFFFFF" />
@@ -40,7 +40,7 @@
             android:id="@+id/tmpBtn2"
             android:layout_width="150dp"
             android:layout_height="48dp"
-            android:text="connect vuk"
+            android:text="2"
             android:textColor="#FFFFFF"
             app:backgroundTint="#673AB7"
             app:iconTint="#0C0909" />
@@ -55,7 +55,7 @@
             android:id="@+id/tmpBtn3"
             android:layout_width="150dp"
             android:layout_height="48dp"
-            android:text="connect tea"
+            android:text="3"
             android:textColor="#FFFFFF"
             app:backgroundTint="#673AB7"
             app:iconTint="#0C0909" />
@@ -64,7 +64,7 @@
             android:id="@+id/tmpBtn4"
             android:layout_width="150dp"
             android:layout_height="48dp"
-            android:text="sendMessage"
+            android:text="4"
             android:textColor="#FFFFFF"
             app:backgroundTint="#673AB7"
             app:rippleColor="#FFFFFF" />
