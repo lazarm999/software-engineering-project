@@ -1,16 +1,17 @@
 package com.parovi.zadruga.models.responseModels;
 
-public class LoginResponse {
-    private int id;
-    private String token;
-    private int qbId;
+import com.parovi.zadruga.models.entityModels.User;
 
-    public int getId() {
-        return id;
+public class LoginResponse {
+    private User user;
+    private String token;
+
+    public User getUser() {
+        return user;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getToken() {
@@ -19,13 +20,5 @@ public class LoginResponse {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public int getQbId() {
-        return qbId;
-    }
-
-    public void setQbId(int qbId) {
-        this.qbId = qbId;
     }
 }

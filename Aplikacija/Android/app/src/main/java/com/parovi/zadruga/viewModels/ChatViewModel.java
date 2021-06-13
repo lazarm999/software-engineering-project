@@ -21,20 +21,19 @@ import com.quickblox.chat.model.QBChatMessage;
 import java.util.List;
 
 public class ChatViewModel extends AndroidViewModel {
-    //connect to chat server -> adOnGlobalMessageReceived
-    private String currChatId;
     private LiveData<QBChatDialog> chat;
     private MutableLiveData<CustomResponse<?>> chats;
     private MutableLiveData<QBChatMessage> newMessage;
     private MutableLiveData<CustomResponse<?>> isSent;
     private MutableLiveData<CustomResponse<?>> isConnected;
     private MutableLiveData<CustomResponse<?>> messages;
+    private MutableLiveData<CustomResponse<?>> chatMembers;
+    private MutableLiveData<CustomResponse<?>> ad;
     private int adId = 5;
     private QBChatDialogMessageListener newMessageListener = new QBChatDialogMessageListener() {
         @Override
         public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
-            if(currChatId.equals(dialogId))
-                rep.updateMessages(messages, qbChatMessage);
+            rep.updateMessages(messages, qbChatMessage);
             rep.updateChat(chats, dialogId, adId);
         }
 
@@ -54,8 +53,8 @@ public class ChatViewModel extends AndroidViewModel {
         newMessage = new MutableLiveData<>();
         isSent = new MutableLiveData<>();
         messages = new MutableLiveData<>();
-        // loadChats()
-        // viewHolder.OnClickListener -> fragment.OnListItemClicked { model.loadMessages() }; NavigateTo(chat_messages_fragment)
+        chatMembers = new MutableLiveData<>();
+        ad = new MutableLiveData<>();
     }
 
     public MutableLiveData<CustomResponse<?>> observeIsConnected() {
@@ -69,15 +68,17 @@ public class ChatViewModel extends AndroidViewModel {
     public MutableLiveData<CustomResponse<?>> observeChats(){
         return chats;
     }
+
     public MutableLiveData<QBChatMessage> observeNewMessages(){
         return newMessage;
     }
+
     public void adOnGlobalMessageReceived(){
         rep.addOnMessageReceivedGlobal(newMessageListener);
     }
 
     public void sendMessage(String message){
-        rep.sendMessage(isSent, ((List<Chat>)chats.getValue().getBody()).get(0).getQbChat(), new User(3, 128586493), message);
+        rep.sendMessage(isSent, ((List<Chat>)chats.getValue().getBody()).get(0).getQbChat(), message);
     }
 
     public void removeGlobalMessageListener(){
@@ -85,7 +86,15 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void getAllChats(){
-        rep.getAllChats(chats, Utility.getUserId(App.getAppContext()));
+        rep.getAllChats(chats);
+    }
+
+    public void getChatMembers(){
+        rep.getChatMembers(chatMembers, ((List<Chat>)chats.getValue().getBody()).get(0).getQbChat());
+    }
+
+    public void getAd(){
+        rep.getAdByChatId(ad, ((List<Chat>)chats.getValue().getBody()).get(0).getQbChat().getDialogId());
     }
 
     public LiveData<CustomResponse<?>> observeMessages() {

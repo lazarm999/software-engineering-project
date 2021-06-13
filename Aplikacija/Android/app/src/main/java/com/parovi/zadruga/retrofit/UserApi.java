@@ -1,13 +1,10 @@
 package com.parovi.zadruga.retrofit;
 
-import androidx.room.Delete;
-
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
 import com.parovi.zadruga.models.requestModels.BanRequest;
 import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
+import com.parovi.zadruga.models.requestModels.ChatMembersRequest;
 import com.parovi.zadruga.models.responseModels.LoginResponse;
-import com.parovi.zadruga.models.responseModels.RatingResponse;
 
 import java.util.List;
 
@@ -15,7 +12,6 @@ import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
@@ -35,11 +31,17 @@ public interface UserApi {
     @GET("user/{id}/")
     Call<User> getUserById(@Header("Authorization") String token, @Path("id") int id);
 
+    @GET("userByQbUserId/{id}/")
+    Call<User> getUserByQbUserId(@Header("Authorization") String token, @Path("id") int qbId);
+
     @PATCH("user/{id}/")
     Call<Void> updateUser(@Header("Authorization") String token, @Path("id") int id, @Body User user);
 
     @GET("profilePicture/{id}/")
     Call<ResponseBody> getProfileImage(@Header("Authorization") String token, @Path("id") int id);
+
+    @GET("profilePictureQb/{id}/")
+    Call<ResponseBody> getProfilePictureByUserQbId(@Header("Authorization") String token, @Path("id") int userQbId);
 
     @PUT("passwordChange/")
     Call<ResponseBody> changePassword(@Header("Authorization") String token, @Body ChangePasswordRequest request);
@@ -54,7 +56,9 @@ public interface UserApi {
     @POST("unban/{id}/")
     Call<ResponseBody> unBanUser(@Header("Authorization") String token, @Path("id") int id);
 
-
-    @GET("/apply/{id}")
+    @GET("apply/{id}/")
     Call<List<User>> getAppliedUsers(@Header("Authorization") String token, @Path("id") int adId);
+
+    @POST("chatMembers/")
+    Call<List<User>> getChatMembers(@Header("Authorization") String token, @Body ChatMembersRequest userQbIds);
 }

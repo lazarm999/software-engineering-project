@@ -22,6 +22,9 @@ public interface AdApi {
     @GET("ad/{id}/")
     Call<Ad> getAd(@Header("Authorization") String token, @Path("id") int id);
 
+    @GET("adByQbChatId/{id}/")
+    Call<Ad> getAdByQbChatId(@Header("Authorization") String token, @Path("id") String qbChatId);
+
     @POST("ad/")
     Call<Ad> postAd(@Header("Authorization") String token, @Body PostAdRequest ad);
 

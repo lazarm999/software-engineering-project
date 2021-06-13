@@ -1,5 +1,7 @@
 package com.parovi.zadruga.models.entityModels;
 
+import android.graphics.Bitmap;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -47,6 +49,8 @@ public class User {
     private Faculty faculty;
     @Ignore
     private List<Badge> badges;
+    @Ignore
+    private Bitmap profileImage;
 
     public User(int userId, int userQbId) {
         this.userId = userId;
@@ -231,5 +235,13 @@ public class User {
 
     public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
+    }
+
+    public Bitmap getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Bitmap profileImage) {
+        this.profileImage = profileImage;
     }
 }

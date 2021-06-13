@@ -54,6 +54,9 @@ public class Chat {
     @Ignore
     private QBChatDialog qbChat;
 
+    @Ignore
+    private Bitmap profileImage;
+
     public Chat() {
     }
 
@@ -174,6 +177,14 @@ public class Chat {
 
     public void setQbChat(QBChatDialog qbChat) {
         this.qbChat = qbChat;
+    }
+
+    public Bitmap getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Bitmap profileImage) {
+        this.profileImage = profileImage;
     }
 
     /*public int getFkCreatorId() {

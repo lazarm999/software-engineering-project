@@ -11,7 +11,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
@@ -57,6 +56,7 @@ import com.parovi.zadruga.models.nonEntityModels.CommentWithUser;
 import com.parovi.zadruga.models.nonEntityModels.UserWithFaculty;
 import com.parovi.zadruga.models.requestModels.BanRequest;
 import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
+import com.parovi.zadruga.models.requestModels.ChatMembersRequest;
 import com.parovi.zadruga.models.requestModels.ChooseApplicantsRequest;
 import com.parovi.zadruga.models.requestModels.CommentRequest;
 import com.parovi.zadruga.models.requestModels.EditAdRequest;
@@ -73,7 +73,6 @@ import com.parovi.zadruga.retrofit.RatingApi;
 import com.parovi.zadruga.retrofit.UserApi;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.chat.QBChatService;
-import com.quickblox.chat.QBIncomingMessagesManager;
 import com.quickblox.chat.QBRestChatService;
 import com.quickblox.chat.listeners.QBChatDialogMessageListener;
 import com.quickblox.chat.model.QBChatDialog;
@@ -87,31 +86,27 @@ import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
-import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import de.measite.minidns.record.A;
 import okhttp3.ResponseBody;
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-//token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
-
+//VUKOV token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+//TEIN token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
+//Marko car token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTl9.x6y6ONrdWKne_hU11h_tJJUQYQFfBoM6R10o6Ji3ajE
 public class ZadrugaRepository  {
     private static ZadrugaRepository instance;
     private final ZadrugaDatabase localDb;
@@ -356,7 +351,9 @@ public class ZadrugaRepository  {
         });
     }
 
-    public void chooseApplicants(String token, MutableLiveData<CustomResponse<?>> isSucc, int adId, List<User> chosenUsers, int employerUserId, int employerQbUserId){
+    public void chooseApplicants(MutableLiveData<CustomResponse<?>> isSucc, int adId, List<User> chosenUsers){
+        final String token = Utility.getAccessToken(App.getAppContext());
+        int employerQbUserId = Utility.getUserQbId(App.getAppContext());
         List<Integer> qbUserIds = new ArrayList<>();
         List<Integer> userIds = new ArrayList<>();
         for (User u : chosenUsers) {
@@ -370,6 +367,7 @@ public class ZadrugaRepository  {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
+                    //TODO: treba da se upise kod vuka i qbChatId vezan za oglas
                     adApi.chooseApplicants(token, adId, new ChooseApplicantsRequest(userIds, (String)customResponse.getBody())).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -392,7 +390,7 @@ public class ZadrugaRepository  {
             }
         };
         newQbChatId.observeForever(observer);
-        ZadrugaRepository.this.createChat(newQbChatId, qbUserIds, adId, employerUserId);
+        ZadrugaRepository.this.createChat(newQbChatId, qbUserIds, adId);
     }
 
     public void unApplyForAd(String token, MutableLiveData<CustomResponse<?>> isUnApplied, int userId, int adId){
@@ -491,10 +489,10 @@ public class ZadrugaRepository  {
         });
     }
 
-    public void getComments(String token, MutableLiveData<CustomResponse<?>> comments, int adId){
+    public void getComments(MutableLiveData<CustomResponse<?>> comments, int adId){
+        final String token = Utility.getAccessToken(App.getAppContext());
         Boolean[] isSynced = {false};
         getCommentsLocal(comments, adId, isSynced);
-        String finalToken = token;
         commentApi.getComments(token, adId).enqueue(new Callback<List<CommentResponse>>() {
             @Override
             public void onResponse(@NotNull Call<List<CommentResponse>> call, @NotNull Response<List<CommentResponse>> response) {
@@ -530,7 +528,7 @@ public class ZadrugaRepository  {
                                 }
                             };
                             profileImg.observeForever(imageObserver);
-                            ZadrugaRepository.this.getProfilePicture(finalToken, profileImg, c.getUser().getUserId());
+                            ZadrugaRepository.this.getProfilePicture(profileImg, c.getUser().getUserId());
                         }
                     } else {
                         synchronized (isSynced[0]){
@@ -713,8 +711,9 @@ public class ZadrugaRepository  {
 
     }
 
-    public void loginUser(MutableLiveData<CustomResponse<?>> loginResponse, User u){
+    public void loginUser(MutableLiveData<CustomResponse<?>> isLoginSuccessful, User u){
         //TODO: da l treba da se obestava korisnik sta je tacno problem
+        //TODO: ovde treba da vuku posaljes fcmToken, kako bi znao kome da salje notif
         userApi.loginUser(u).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> response) {
@@ -727,57 +726,41 @@ public class ZadrugaRepository  {
                         @Override
                         public void onSuccess(QBUser user, Bundle args) {
                             Log.i("logIn", "braoooo");
-                            response.body().setQbId(user.getId());
-                            loginResponse.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
-                            user.setExternalId(Integer.toString(response.body().getId()));
-                            QBUsers.updateUser(user).performAsync(new QBEntityCallback<QBUser>() {
-                                @Override
-                                public void onSuccess(QBUser qbUser, Bundle bundle) {
-                                    Log.i("setExternalId", "onSuccess: ");
-                                }
-
-                                @Override
-                                public void onError(QBResponseException e) {
-                                    Log.i("setExternalId", "onError: ");
-                                }
-                            });
-                            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                            isLoginSuccessful.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
+                            /*FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
                                 @Override
                                 public void onComplete(@NonNull Task<String> task) {
                                     if (!task.isSuccessful()) {
                                         Log.w("FETCH_FCM_TOKEN_FAILED", "Fetching FCM registration token failed", task.getException());
                                         return;
                                     }
-                                    //TODO: zameni ovo new User(), sa pravim korisnikom
-                                    Utility.saveLoggedUserInfo(App.getAppContext(), response.body().getId(), user.getId(), response.body().getToken(),
-                                            task.getResult(), new User());
                                 }
-                            });
-                            //TODO: da l ovde kad se korisnik loginuje treba da tebi saljem dodatan zahtev il da ti promenis tvoj zahtev u startu,
-                            // vezano za info oko ulogovanog korisnika
-                            //userDao.insertUser(response.body());
+                            });*/
+                            response.body().getUser().setPassword(u.getPassword());
+                            Utility.saveLoggedUserInfo(App.getAppContext(), response.body().getToken(), response.body().getUser());
+                            userDao.insertUser(response.body().getUser());
                         }
 
                         @Override
                         public void onError(QBResponseException error) {
                             Log.i("logIn", "ne braoooo");
-                            loginResponse.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, error.getMessage()));
+                            isLoginSuccessful.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, error.getMessage()));
                         }
                     });
                 }
                 else
-                    responseNotSuccessful(response.code(), loginResponse);
+                    responseNotSuccessful(response.code(), isLoginSuccessful);
             }
 
             @Override
             public void onFailure(@NotNull Call<LoginResponse> call, @NotNull Throwable t) {
                 Log.i("logIn", "ne braoooo");
-                loginResponse.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                isLoginSuccessful.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
             }
         });
     }
 
-    public void logOutUser(String token, MutableLiveData<CustomResponse<?>> isLoggedOut, int userId){
+    public void logOutUser(MutableLiveData<CustomResponse<?>> isLoggedOut){
         if (QBSessionManager.getInstance().getSessionParameters() == null) {
             return;
         }
@@ -858,11 +841,8 @@ public class ZadrugaRepository  {
                         }
                         lookupDao.insertUserBadges(tmpUserBadge);
                     }
-                } else if(response.code() / 100 == 4) {
-                    user.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, "Pogresno uneti podaci"));
-                } else if(response.code() / 100 == 5){
-                    user.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, "Greska kod servera"));
-                }
+                } else
+                    responseNotSuccessful(response.code(), user);
             }
 
             @Override
@@ -942,7 +922,8 @@ public class ZadrugaRepository  {
         });
     }
 
-    public void getProfilePicture(String token,  MutableLiveData<CustomResponse<?>> profilePicture, int userId){
+    public void getProfilePicture(MutableLiveData<CustomResponse<?>> profilePicture, int userId){
+        final String token = Utility.getAccessToken(App.getAppContext());
         Boolean[] isSynced = {false};
         getProfilePictureLocally(profilePicture, userId, isSynced);
         userApi.getProfileImage(token, userId).enqueue(new Callback<ResponseBody>() {
@@ -1397,27 +1378,22 @@ public class ZadrugaRepository  {
         });
     }
 
-    public void createChat(MutableLiveData<CustomResponse<?>> newChatId, List<Integer> memberIds, int adId, int employerUserId){
+    public void createChat(MutableLiveData<CustomResponse<?>> newChatId, List<Integer> memberIds, int adId){
         if(memberIds.size() < 2){
             newChatId.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, null, "Chat morati imati najmanje 2 clana"));
             return;
         }
         QBChatDialog dialog = new QBChatDialog();
-        Utility.ChatType chatType;
         boolean isPrivate = memberIds.size() == 2;
         if(isPrivate){
-            chatType = Utility.ChatType.PRIVATE;
             dialog.setType(QBDialogType.PRIVATE);
         }
         else{
-            chatType = Utility.ChatType.GROUP;
             dialog.setType(QBDialogType.GROUP);
         }
         dialog.setOccupantsIds(memberIds);
-        QBDialogCustomData customData = new QBDialogCustomData();
-        customData.putInteger("adId", adId);
-        dialog.setCustomData(customData);
-
+        //CHAT MORA DA IMA IME!
+        dialog.setName("ioeeeeeeeeeeeeee");
 
         QBRestChatService.createChatDialog(dialog).performAsync(new QBEntityCallback<QBChatDialog>() {
             @Override
@@ -1488,7 +1464,7 @@ public class ZadrugaRepository  {
             type = Utility.ChatType.PRIVATE;
         else
             type = Utility.ChatType.GROUP;
-        chat = new Chat(qbChat.getDialogId(), adId, type, "treba ide ime ovde", qbChat.getOccupants().size(),
+        chat = new Chat(qbChat.getDialogId(), adId, type, "", qbChat.getOccupants().size(),
                 qbChat.getLastMessage(),
                 qbChat.getLastMessageUserId(),
                 qbChat.getLastMessageDateSent(),qbChat.getCreatedAt(), qbChat);
@@ -1500,7 +1476,10 @@ public class ZadrugaRepository  {
                 new Date(qbMess.getDateSent()), qbMess.getBody(), qbMess.getDialogId(), qbMess);
     }
 
-    public void getAllChats(MutableLiveData<CustomResponse<?>> chats, int userId){
+    public void getAllChats(MutableLiveData<CustomResponse<?>> chats){
+        final String token = Utility.getAccessToken(App.getAppContext());
+        int userId = Utility.getUserId(App.getAppContext());
+        int userQbId = Utility.getUserQbId(App.getAppContext());
         Boolean[] isSynced = {false};
         getAllChatsLocal(chats, userId, isSynced);
 
@@ -1514,20 +1493,71 @@ public class ZadrugaRepository  {
                 if(qbChats != null){
                     Utility.ChatType type;
                     List<Chat> tmpChats = new ArrayList<>();
-                    Chat chat;
                     for (QBChatDialog qbChat : qbChats) {
+                        String qbChatId = qbChat.getDialogId();
                         if(qbChat.getType() == QBDialogType.PRIVATE){
                             type = Utility.ChatType.PRIVATE;
+                            //id osobe sa kojom chetujes
+                            int chatterQbId = qbChat.getOccupants().get(0) == userQbId ? qbChat.getOccupants().get(1) : qbChat.getOccupants().get(0);
+                            userApi.getProfilePictureByUserQbId(token, chatterQbId).enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    if(response.isSuccessful() && response.body() != null){
+                                        Bitmap bmImage = BitmapFactory.decodeStream(response.body().byteStream());
+                                        List<Chat> chatList = (List<Chat>) chats.getValue().getBody();
+                                        if(chatList != null){
+                                            for (int i = 0; i < chatList.size(); i++) {
+                                                if(chatList.get(i).getChatId().equals(qbChatId)){
+                                                    if(bmImage != null) chatList.get(i).setProfileImage(bmImage);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, chatList));
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                }
+                            });
                         }
                         else{
                             type = Utility.ChatType.GROUP;
                         }
-                        chat = new Chat(qbChat.getDialogId(), type, "treba ide ime", qbChat.getOccupants().size(),
+                        Utility.ChatType finalType = type;
+                        if(qbChat.getLastMessageUserId() != null){
+                            userApi.getUserByQbUserId(token, qbChat.getLastMessageUserId()).enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> call, Response<User> response) {
+                                    if(response.isSuccessful() && response.body() != null){
+                                        List<Chat> chatList = (List<Chat>) chats.getValue().getBody();
+                                        if(chatList != null){
+                                            for (int i = 0; i < chatList.size(); i++) {
+                                                if(chatList.get(i).getChatId().equals(qbChatId)){
+                                                    chatList.get(i).setLastSenderName(response.body().getUsername());
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, chatList));
+                                    } else
+                                        responseNotSuccessful(response.code(), chats);
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> call, Throwable t) {
+                                    chats.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                                }
+                            });
+                        }
+                        Chat chat = new Chat(qbChat.getDialogId(), finalType, "", qbChat.getOccupants().size(),
                                 qbChat.getCreatedAt());
                         chat.setQbChat(qbChat);
                         tmpChats.add(chat);
+                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChats));
                     }
-                    chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChats));
                 }
                 else
                     chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, new ArrayList<Chat>()));
@@ -1556,26 +1586,41 @@ public class ZadrugaRepository  {
         }, executor);
     }
 
-    //treba i token ovde da se prosledi da bih mogaao da izvucem info o korisniku koji je zadnji poslao poruku
     public void updateChat(MutableLiveData<CustomResponse<?>> chats, String chatId, int adId){
+        final String token = Utility.getAccessToken(App.getAppContext());
         QBRestChatService.getChatDialogById(chatId).performAsync(new QBEntityCallback<QBChatDialog>() {
             @Override
             public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
-                boolean isUpdated = false;
-                List<Chat> tmpChatList = (List<Chat>) chats.getValue().getBody();
-                for (int i = 0; i < tmpChatList.size(); i++) {
-                    Chat chat = tmpChatList.get(i);
-                    if(chat.getChatId().equals(chatId)){
-                        tmpChatList.set(i, qbChatDialogToChat(qbChatDialog, adId));
-                        isUpdated = true;
-                        break;
+                userApi.getUserByQbUserId(token, qbChatDialog.getLastMessageUserId()).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        boolean isUpdated = false;
+                        List<Chat> tmpChatList = (List<Chat>) chats.getValue().getBody();
+                        for (int i = 0; i < tmpChatList.size(); i++) {
+                            Chat chat = tmpChatList.get(i);
+                            if(chat.getChatId().equals(chatId)){
+                                Chat updatedChat = qbChatDialogToChat(qbChatDialog, adId);
+                                updatedChat.setProfileImage(chat.getProfileImage());
+                                if(response.isSuccessful() && response.body() != null) {
+                                    updatedChat.setLastSenderName(response.body().getUsername());
+                                }
+                                tmpChatList.remove(i);
+                                tmpChatList.add(0, updatedChat);
+                                isUpdated = true;
+                                break;
+                            }
+                        }
+                        if(!isUpdated){
+                            tmpChatList.add(0, qbChatDialogToChat(qbChatDialog, adId));
+                        }
+                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChatList));
                     }
-                }
-                //ako nije pronasao chat, to znaci da je korisnik postao clan novog chat-a
-                if(!isUpdated)
-                    tmpChatList.add(qbChatDialogToChat(qbChatDialog, adId));
-                chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChatList));
 
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+
+                    }
+                });
             }
 
             @Override
@@ -1591,26 +1636,79 @@ public class ZadrugaRepository  {
         messages.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpList));
     }
 
-    public void getChatMembers(QBChatDialog chat){
-        /*TODO:
-         da ja vuku posaljem listu qbid-eva i da on meni vrati sve usere iz te liste*/
-        chat.getOccupants();
+    public void getChatMembers(MutableLiveData<CustomResponse<?>> chatMembers, QBChatDialog chat) {
+        final String token = Utility.getAccessToken(App.getAppContext());
+        ChatMembersRequest req = new ChatMembersRequest(chat.getOccupants());
+        userApi.getChatMembers(token, req).enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    chatMembers.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
+                    for (User user : response.body()) {
+                        int userId = user.getUserId();
+                        userDao.insertUser(user);
+                        MutableLiveData<CustomResponse<?>> profileImg = new MutableLiveData<>();
+                        Observer<CustomResponse<?>> imageObserver = new Observer<CustomResponse<?>>() {
+                            @Override
+                            public void onChanged(CustomResponse<?> customResponse) {
+                                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                                    Bitmap bmImage = (Bitmap) customResponse.getBody();
+                                    List<User> users = (List<User>) chatMembers.getValue().getBody();
+                                    if (users != null) {
+                                        for (int i = 0; i < users.size(); i++) {
+                                            if (users.get(i).getUserId() == userId) {
+                                                if (bmImage != null)
+                                                    users.get(i).setProfileImage(bmImage);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    chatMembers.postValue(new CustomResponse<>(CustomResponse.Status.OK, users));
+                                }
+                                if (!customResponse.isLocal())
+                                    profileImg.removeObserver(this);
+                            }
+                        };
+                        profileImg.observeForever(imageObserver);
+                        ZadrugaRepository.this.getProfilePicture(profileImg, userId);
+                    }
+                } else
+                    responseNotSuccessful(response.code(), chatMembers);
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                chatMembers.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+            }
+        });
     }
 
-    public void getAdByChatId(QBChatDialog chat){
-        /*TODO:
-         ja saljem vuku id chata a on meni vraca oglas vezan za taj chat*/
-        chat.getDialogId();
+    public void getAdByChatId(MutableLiveData<CustomResponse<?>> ad, String qbChatId){
+        final String token = Utility.getAccessToken(App.getAppContext());
+        adApi.getAdByQbChatId(token, qbChatId).enqueue(new Callback<Ad>() {
+            @Override
+            public void onResponse(Call<Ad> call, Response<Ad> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    ad.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
+                    saveAdLocally(response.body());
+                } else
+                    responseNotSuccessful(response.code(), ad);
+            }
+
+            @Override
+            public void onFailure(Call<Ad> call, Throwable t) {
+                    ad.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+            }
+        });
     }
 
-    public void sendMessage(MutableLiveData<CustomResponse<?>> isSent, QBChatDialog qbChat, User u, String message){
+    public void sendMessage(MutableLiveData<CustomResponse<?>> isSent, QBChatDialog qbChat, String message){
+        User u = Utility.getLoggedInUser(App.getAppContext());
         QBChatMessage qbMessage = new QBChatMessage();
         qbMessage.setBody(message);
         qbMessage.setSaveToHistory(true);
         qbMessage.setProperty("username", u.getUsername());
         qbMessage.setSenderId(u.getUserQbId());
-        /*qbMessage.setProperty("username", "imeeeeeee");
-        qbMessage.setSenderId(128304620);*/
         qbChat.sendMessage(qbMessage, new QBEntityCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
