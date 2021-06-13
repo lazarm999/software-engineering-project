@@ -305,12 +305,15 @@ class AdList(generics.ListCreateAPIView):
         return r201(serializer.data)
 
     def get(self, request, *args, **kwargs):
-        filterLocationId = request.data.get('filterLocationId')
-        filterCompensationMin = request.data.get('filterCompensationMin')
-        filterCompensationMax = request.data.get('filterCompensationMax')
-        filterTagIds = request.data.get('filterTagIds')
-        sortLocationLatitude = request.data.get('sortLocationLatitude')
-        sortLocationLongitude = request.data.get('sortLocationLongitude')
+        print(request.query_params)
+        filterLocationId = request.query_params.get('filterLocationId')
+        filterCompensationMin = request.query_params.get('filterCompensationMin')
+        filterCompensationMax = request.query_params.get('filterCompensationMax')
+        sortLocationLatitude = request.query_params.get('sortLocationLatitude')
+        sortLocationLongitude = request.query_params.get('sortLocationLongitude')
+
+        filterTagIds = request.query_params.get('filterTagIds')
+        filterTagIds = [int(x) for x in filterTagIds]
 
         ads = Ad.objects.all()
         if sortLocationLatitude and sortLocationLongitude:
