@@ -25,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import com.parovi.zadruga.App;
 import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.GpsTracker;
 import com.parovi.zadruga.PushNotification;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.daos.AdDao;
@@ -60,6 +61,7 @@ import com.parovi.zadruga.models.requestModels.ChatMembersRequest;
 import com.parovi.zadruga.models.requestModels.ChooseApplicantsRequest;
 import com.parovi.zadruga.models.requestModels.CommentRequest;
 import com.parovi.zadruga.models.requestModels.EditAdRequest;
+import com.parovi.zadruga.models.requestModels.FilterAndSortRequest;
 import com.parovi.zadruga.models.requestModels.PostAdRequest;
 import com.parovi.zadruga.models.responseModels.AdResponse;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
@@ -93,6 +95,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -103,6 +106,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Query;
 
 //VUKOV token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
 //TEIN token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
@@ -302,7 +306,6 @@ public class ZadrugaRepository  {
                         isSynced[0] = true;
                     }
                 }
-
             }
 
             @Override
@@ -310,6 +313,82 @@ public class ZadrugaRepository  {
                 ads.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
             }
         });
+    }
+    //kad neces da se sortira po nekom parametru samo prosledis null na tom mestu
+    public void getAds(String token, MutableLiveData<CustomResponse<?>> ads, Integer locId, Integer compensationMin, Integer compensationMax, List<Integer> tagIds,
+                        boolean sortByLocation) {
+        /*TODO: ovo treba da ide u neki aktiviti
+        * if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        *  && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+                }*/
+        final Boolean[] isSynced = {false};
+        //getAdsLocal(ads, isSynced);
+        if(sortByLocation){
+            GpsTracker gpsTracker = new GpsTracker(App.getAppContext());
+            MutableLiveData<CustomResponse<?>> location = new MutableLiveData<>();
+            Observer<CustomResponse<?>> observer = new Observer<CustomResponse<?>>() {
+                @Override
+                public void onChanged(CustomResponse<?> customResponse) {
+                    Double latitude = null;
+                    Double longitude = null;
+                    if(customResponse.getStatus() == CustomResponse.Status.OK && customResponse.getBody() != null){
+                        latitude = ((android.location.Location) customResponse.getBody()).getLatitude();
+                        longitude = ((android.location.Location) customResponse.getBody()).getLongitude();
+                        Log.i("location", "Location fetched");//&filterTagIds=3&filterCompensationMin=0&filterCompensationMax=2000
+                    }//&filterTagIds=1&filterTagIds=3
+                    adApi.getAds(token, locId, compensationMin, compensationMax, tagIds, latitude, longitude).enqueue(new Callback<List<Ad>>() {
+                        @Override
+                        public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
+                            if(response.isSuccessful() && response.body() != null) {
+                                List<Ad> tmpAdList;
+                                if(ads.getValue() != null && ads.getValue().getBody() != null)
+                                    tmpAdList = (List<Ad>) ads.getValue().getBody();
+                                else
+                                    tmpAdList = new ArrayList<>();
+                                saveAdsLocally(response.body());
+                                tmpAdList.addAll(response.body());
+                                synchronized (isSynced[0]) {
+                                    ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAdList));
+                                    isSynced[0] = true;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull Call<List<Ad>> call, @NotNull Throwable t) {
+                            ads.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                        }
+                    });
+                }
+            };
+            location.observeForever(observer);
+            gpsTracker.getLocation(location);
+        } else {
+            adApi.getAds(token, locId, compensationMin, compensationMax, tagIds, null, null).enqueue(new Callback<List<Ad>>() {
+                @Override
+                public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
+                    if(response.isSuccessful() && response.body() != null) {
+                        List<Ad> tmpAdList;
+                        if(ads.getValue() != null && ads.getValue().getBody() != null)
+                            tmpAdList = (List<Ad>) ads.getValue().getBody();
+                        else
+                            tmpAdList = new ArrayList<>();
+                        saveAdsLocally(response.body());
+                        tmpAdList.addAll(response.body());
+                        synchronized (isSynced[0]) {
+                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAdList));
+                            isSynced[0] = true;
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<List<Ad>> call, @NotNull Throwable t) {
+                    ads.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                }
+            });
+        }
     }
 
     public void getAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced){

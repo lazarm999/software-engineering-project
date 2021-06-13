@@ -33,8 +33,10 @@ public class ChatViewModel extends AndroidViewModel {
     private QBChatDialogMessageListener newMessageListener = new QBChatDialogMessageListener() {
         @Override
         public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
-            rep.updateMessages(messages, qbChatMessage);
-            rep.updateChat(chats, dialogId);
+            if(qbChatMessage.getSenderId() != Utility.getUserQbId(App.getAppContext())){
+                rep.updateMessages(messages, qbChatMessage);
+                rep.updateChat(chats, dialogId);
+            }
         }
 
         @Override
