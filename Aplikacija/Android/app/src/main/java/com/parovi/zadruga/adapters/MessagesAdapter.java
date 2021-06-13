@@ -8,8 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.R;
-import com.parovi.zadruga.data.Message;
+import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.models.entityModels.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +19,26 @@ import java.util.List;
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
     private static final int MY_MESSAGE = 1;
     private static final int OTHERS_MESSAGE = 0;
+    private int userId;
     private List<Message> messages;
+
+    public MessagesAdapter() {
+        messages = new ArrayList<Message>();
+        this.userId = Utility.getUserQbId(App.getAppContext());
+    }
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+        notifyDataSetChanged();
     }
+
+    public void onMessageAdded() {
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemViewType(int position) {
-        return messages.get(position).isMine() ? MY_MESSAGE : OTHERS_MESSAGE;
+        return messages.get(position).getFkSenderId() == userId ? MY_MESSAGE : OTHERS_MESSAGE;
     }
 
     @NonNull
@@ -38,7 +52,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        holder.textView.setText(messages.get(position).getContent());
+        holder.bind(messages.get(position));
     }
 
     @Override
@@ -53,9 +67,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             super(itemView);
             textView = itemView.findViewById(R.id.tvMessageContent);
         }
-    }
-    public void onMessageAdded() {
-        notifyDataSetChanged();
+
+        public void bind(Message message) {
+            textView.setText(message.getMessage());
+        }
     }
 
 }

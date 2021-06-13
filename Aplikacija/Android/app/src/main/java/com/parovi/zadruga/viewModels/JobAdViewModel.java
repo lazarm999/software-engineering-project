@@ -73,7 +73,7 @@ public class JobAdViewModel extends AndroidViewModel {
         zadrugaRepository.getAd(token, ad, adId);
     }
     private void loadComments() {
-        zadrugaRepository.getComments(token, comments, adId);
+        zadrugaRepository.getComments(comments, adId);
     }
     public void postAComment(String comment) {
         zadrugaRepository.postComment(token, comments, adId, userId, comment);

@@ -6,11 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.models.entityModels.Chat;
+import com.parovi.zadruga.models.entityModels.Message;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 import com.quickblox.chat.exception.QBChatException;
@@ -18,10 +20,11 @@ import com.quickblox.chat.listeners.QBChatDialogMessageListener;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatViewModel extends AndroidViewModel {
-    private LiveData<QBChatDialog> chat;
+    private QBChatDialog activeChat;
     private MutableLiveData<CustomResponse<?>> chats;
     private MutableLiveData<QBChatMessage> newMessage;
     private MutableLiveData<CustomResponse<?>> isSent;
@@ -33,7 +36,8 @@ public class ChatViewModel extends AndroidViewModel {
     private QBChatDialogMessageListener newMessageListener = new QBChatDialogMessageListener() {
         @Override
         public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
-            rep.updateMessages(messages, qbChatMessage);
+            if (activeChat != null && activeChat.getDialogId().equals(dialogId))
+                rep.updateMessages(messages, qbChatMessage);
             rep.updateChat(chats, dialogId, adId);
         }
 
@@ -62,42 +66,54 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void connectToChatServer(){
-        //rep.connectToChatServer(isConnected, u);
+        rep.connectToChatServer(isConnected);
+    }
+    public void setActiveChat(QBChatDialog chatDialog) {
+        activeChat = chatDialog;
     }
 
-    public MutableLiveData<CustomResponse<?>> observeChats(){
+    public MutableLiveData<CustomResponse<?>> getChats(){
         return chats;
     }
 
-    public MutableLiveData<QBChatMessage> observeNewMessages(){
+    public MutableLiveData<QBChatMessage> getNewMessage(){
         return newMessage;
     }
 
-    public void adOnGlobalMessageReceived(){
+    public void addOnGlobalMessageReceived(){
         rep.addOnMessageReceivedGlobal(newMessageListener);
     }
 
     public void sendMessage(String message){
-        rep.sendMessage(isSent, ((List<Chat>)chats.getValue().getBody()).get(0).getQbChat(), message);
+        rep.sendMessage(isSent, activeChat, message);
     }
 
     public void removeGlobalMessageListener(){
         rep.removeGlobalMessageReceivedListener(newMessageListener);
     }
 
-    public void getAllChats(){
+    public void loadAllChats(){
         rep.getAllChats(chats);
     }
 
-    public void getChatMembers(){
-        rep.getChatMembers(chatMembers, ((List<Chat>)chats.getValue().getBody()).get(0).getQbChat());
+    public void loadChatMembers(){
+        rep.getChatMembers(chatMembers, activeChat);
+    }
+
+    public void loadMessages(int offset) {
+        rep.getMessages(messages, activeChat, offset);
+    }
+
+    public void clearMessages() {
+        activeChat = null;
+        messages.getValue().setBody(null);
     }
 
     public void getAd(){
-        rep.getAdByChatId(ad, ((List<Chat>)chats.getValue().getBody()).get(0).getQbChat().getDialogId());
+        rep.getAdByChatId(ad, activeChat.getDialogId());
     }
 
-    public LiveData<CustomResponse<?>> observeMessages() {
+    public LiveData<CustomResponse<?>> getMessages() {
         return messages;
     }
 

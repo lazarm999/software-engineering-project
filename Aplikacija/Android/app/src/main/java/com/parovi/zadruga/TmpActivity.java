@@ -1,6 +1,5 @@
 package com.parovi.zadruga;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -8,35 +7,23 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.icu.text.AlphabeticIndex;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.parovi.zadruga.adapters.NotificationsAdapter;
 import com.parovi.zadruga.models.entityModels.Notification;
-import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.nonEntityModels.CommentUser;
-import com.parovi.zadruga.models.requestModels.EditAdRequest;
-import com.parovi.zadruga.models.requestModels.PostAdRequest;
-import com.parovi.zadruga.models.responseModels.LoginResponse;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.LoginViewModel;
 import com.parovi.zadruga.viewModels.TmpViewModel;
-import com.quickblox.auth.session.QBSessionManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**/
 public class TmpActivity extends AppCompatActivity {
@@ -145,7 +132,7 @@ public class TmpActivity extends AppCompatActivity {
             }
         });
 
-        chatViewModel.observeChats().observe(this, new Observer<CustomResponse<?>>() {
+        chatViewModel.getChats().observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
@@ -202,7 +189,7 @@ public class TmpActivity extends AppCompatActivity {
                 rep.getComments(token, comments, 4);*/
                 //rep.getProfilePicture(Utility.getAccessToken(TmpActivity.this), image, 1);
                 //rep.loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));
-                chatViewModel.getChatMembers();
+                chatViewModel.loadChatMembers();
                 //chatViewModel.getAd();
             }
         });
@@ -268,7 +255,7 @@ public class TmpActivity extends AppCompatActivity {
         tmpBtn5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatViewModel.getAllChats();
+                chatViewModel.loadAllChats();
             }
         });
         //LOGIKA OKO CHAT-A

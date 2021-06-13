@@ -24,11 +24,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.adapters.MessagesAdapter;
-import com.parovi.zadruga.data.Chat;
-import com.parovi.zadruga.data.Message;
+import com.parovi.zadruga.models.entityModels.Chat;
+import com.parovi.zadruga.models.entityModels.Message;
 import com.parovi.zadruga.databinding.FragmentChatMessagesBinding;
+import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.ChatsViewModel;
 
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ChatMessagesFragment extends Fragment {
-    private ChatsViewModel model;
+    private ChatViewModel model;
     private FragmentChatMessagesBinding binding;
     public ChatMessagesFragment() {
         // Required empty public constructor
@@ -53,25 +56,32 @@ public class ChatMessagesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentChatMessagesBinding.inflate(inflater, container, false);
-        model = new ViewModelProvider(requireActivity()).get(ChatsViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
         MessagesAdapter adapter = new MessagesAdapter();
-        model.getChatInFocus().observe(requireActivity(), new Observer<Chat>() {
+        model.getMessages().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
-            public void onChanged(Chat chat) {
-                adapter.setMessages(chat.getMessages());
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK && customResponse.getBody() != null)
+                    adapter.setMessages((List<Message>)customResponse.getBody());
+            }
+        });
+        model.observeIsConnected().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                ;
             }
         });
         binding.rvMessages.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(container.getContext());
         layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(true);
+        //layoutManager.setReverseLayout(true);
         binding.rvMessages.setLayoutManager(layoutManager);
 
         binding.imgbtnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                model.sendMessage(binding.etmlNewMessage.getText().toString());
                 binding.etmlNewMessage.setText("");
-                Toast.makeText(getContext(), "Message sent", Toast.LENGTH_SHORT).show();
             }
         });
         binding.topAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -80,9 +90,15 @@ public class ChatMessagesFragment extends Fragment {
                 return NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment));
             }
         });
-        //binding.toolbar.setVisibility(View.GONE);
 
+        model.loadMessages(0);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroy() {
+        model.clearMessages();
+        super.onDestroy();
     }
 
     @Override

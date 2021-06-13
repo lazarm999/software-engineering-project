@@ -62,6 +62,6 @@ public class UserProfileViewModel extends AndroidViewModel {
         repository.getUserById(token, userInfo, id);
     }
     private void loadUserProfileImage() {
-        repository.getProfilePicture(token, profileImage, id);
+        repository.getProfilePicture(profileImage, id);
     }
 }
