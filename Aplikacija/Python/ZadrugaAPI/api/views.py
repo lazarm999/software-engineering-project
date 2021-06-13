@@ -313,7 +313,7 @@ class AdList(generics.ListCreateAPIView):
         sortLocationLongitude = request.query_params.get('sortLocationLongitude')
 
         filterTagIds = request.query_params.get('filterTagIds')
-        filterTagIds = [int(x) for x in filterTagIds]
+        filterTagIds = [int(x) for x in filterTagIds] if filterTagIds else None
 
         ads = Ad.objects.all()
         if sortLocationLatitude and sortLocationLongitude:
