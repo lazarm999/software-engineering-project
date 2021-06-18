@@ -28,7 +28,7 @@ class TagSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ['locId', 'cityName']
+        fields = ['locId', 'cityName', 'latitude', 'longitude']
 
 
 class BadgeSerializer(serializers.ModelSerializer):
