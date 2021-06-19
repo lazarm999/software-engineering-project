@@ -590,6 +590,22 @@ class AdByQbChatId(APIView):
         return Response(serialized.data)
 
 
+class UserAds(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def get(self, request, pk, *args, **kwargs):
+        user = get_object_or_404(User, pk=pk)
+
+        if not user:
+            return r404('User not found')
+
+        if user.isEmployer:
+            ads = Ad.objects.filter(employer_id=user.userId)
+        else:
+            ads = Ad.objects.filter(applicants__user_id=pk, applicants__chosen=True)
+        serialized = AdSerializer(ads, many=True)
+        return Response(serialized.data)
+
 # TODO: unique na qbId i chatId
 # TODO: ocenjivanje samo kad su saradjivali + zavrsen posao
 # TODO: filtriranje i sortiranje
