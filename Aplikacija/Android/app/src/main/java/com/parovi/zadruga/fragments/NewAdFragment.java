@@ -91,14 +91,18 @@ public class NewAdFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_new_ad, container, false);
         Spinner spinnerLocations = (Spinner) layout.findViewById(R.id.spinnerLocation);
+        ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_list_item_1, new ArrayList<String>());
+        adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerLocations.setAdapter(adapterLoc);
         model = new ViewModelProvider(requireActivity()).get(NewAdViewModel.class);
 
         model.getLocations().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                model.getCities(Utility.getAccessToken(container.getContext()));
                 if(customResponse.getStatus() == CustomResponse.Status.OK)
                 {
+                    adapterLoc.clear();
+                    adapterLoc.addAll(model.getAllCities());
                     makeToast(R.string.successfulLocation);
                 }
                 else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
@@ -110,13 +114,13 @@ public class NewAdFragment extends Fragment {
                     makeToast(R.string.serverErrorNewAd);
                 }
 
-                        ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_list_item_1, model.getCities(Utility.getAccessToken(container.getContext())));
-                        adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerLocations.setAdapter(adapterLoc);
+
 
 
             }
         });
+
+
 
         etNewAdFeeFrom = (EditText) layout.findViewById(R.id.editTxtNewAdFeeFrom);
         etNewAdFeeTo = (EditText) layout.findViewById(R.id.editTxtNewAdFeeTo);

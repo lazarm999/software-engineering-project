@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,10 +67,6 @@ public class AdsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -159,7 +156,7 @@ public class AdsFragment extends Fragment {
         chipHeavierPhysicalJobs.setOnCheckedChangeListener(checkedChangeListener);
         chipHeavierPhysicalJobs.setOnCheckedChangeListener(checkedChangeListener);
 
-        /*btnSort.setOnClickListener(new View.OnClickListener() {
+        btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //sortByLocation(spinnerLocations.getSelectedItem().toString());
@@ -184,7 +181,7 @@ public class AdsFragment extends Fragment {
             public void onClick(View v) {
                 //pozovi Urosev activity za oglas
             }
-        });*/
+        });
         return layout;
     }
 
