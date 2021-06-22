@@ -32,6 +32,10 @@ public class MainStudentActivity extends AppCompatActivity {
 
         loadFragment(new AdsFragment());
 
+        /*if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                *  && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);*/
+
         bottom_nav = (BottomNavigationView) findViewById(R.id.bottom_nav_student);
         frame = findViewById(R.id.frame_student_layout);
 

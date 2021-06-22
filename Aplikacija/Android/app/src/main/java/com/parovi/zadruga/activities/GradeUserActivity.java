@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.parovi.zadruga.R;
 
-public class GradeUser extends AppCompatActivity {
+public class GradeUserActivity extends AppCompatActivity {
 
     TextView gradeTxt;
     ImageView gradeImg;

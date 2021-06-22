@@ -25,6 +25,7 @@ public class JobAdViewModel extends ViewModel {
     MutableLiveData<CustomResponse<?>> isPosted;//Boolean
     MutableLiveData<CustomResponse<?>> isDeleted;//Boolean
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public MutableLiveData<JobAd> getJobAd() {
         if (jobAd == null) {
             jobAd = new MutableLiveData<JobAd>();
@@ -33,6 +34,7 @@ public class JobAdViewModel extends ViewModel {
         return jobAd;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadJobAd() {
         JobAd jobAd = new JobAd(id);
         jobAd.setTitle("Istovar robe");

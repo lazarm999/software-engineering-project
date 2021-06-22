@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -15,23 +16,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Zadruga">
-        <activity android:name=".activities.GradeUser">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".activities.UsersAchievementsActivity"></activity>
+        <activity android:name=".activities.GradeUserActivity">
         </activity>
         <activity android:name=".activities.MainEmployerActivity" />
         <activity android:name=".activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".ui.RateUserActivity"/>
-        <activity android:name=".TmpActivity">
-        </activity>
-        <activity android:name=".ui.JobAdActivity">
-        </activity>
+        <activity android:name=".ui.RateUserActivity" />
+        <activity android:name=".TmpActivity"></activity>
+        <activity android:name=".ui.JobAdActivity"></activity>
         <activity android:name=".ui.ChatActivity" />
-        <activity android:name=".ui.EditProfileActivity"/>
+        <activity android:name=".ui.EditProfileActivity" />
 
         <service android:name=".services.NotificationService">
             <intent-filter>

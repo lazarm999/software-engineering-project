@@ -1,7 +1,9 @@
 package com.parovi.zadruga.ui;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -32,6 +34,7 @@ public class JobAdInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class JobAdInfoFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void bind(JobAd jobAd) {
         binding.tvJobTitle.setText(jobAd.getTitle());
         binding.tvJobDesc.setText(jobAd.getDescription());

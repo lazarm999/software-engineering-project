@@ -140,4 +140,9 @@
     <string name="dayAgo">pre %1$d dan</string>
     <string name="hoursAgo">pre %1$d sati</string>
     <string name="lessThen6hourAgo">pre %1$d sata</string>
+    <string name="successfulNewAd">Uspešno ste dodali novi oglas!</string>
+    <string name="badRequestNewAd">Niste popunili sva polja za unos!</string>
+    <string name="serverErrorNewAd">Problem prilikom pristupanja serveru!</string>
+    <string name="successfulLocation">Uspešno pribavljanje lokacija!</string>
+    <string name="badRequestLocation">Odaberite polje za odabir lokacije!</string>
 </resources>
