@@ -18,7 +18,12 @@
         android:id="@+id/chatMessagesFragment"
         android:name="com.parovi.zadruga.ui.ChatMessagesFragment"
         android:label="fragment_chat_messages"
-        tools:layout="@layout/fragment_chat_messages" />
+        tools:layout="@layout/fragment_chat_messages" >
+        <action
+            android:id="@+id/action_chatMessagesFragment_to_chatInfoFragment"
+            app:destination="@id/chatInfoFragment"
+            app:popUpTo="@id/chatMessagesFragment" />
+    </fragment>
     <fragment
         android:id="@+id/chatInfoFragment"
         android:name="com.parovi.zadruga.ui.ChatInfoFragment"

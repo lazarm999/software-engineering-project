@@ -1,13 +1,7 @@
 package com.parovi.zadruga;
 
 public class CustomResponse<T> {
-    public boolean isLocal() {
-        return isLocal;
-    }
 
-    public void setLocal(boolean local) {
-        isLocal = local;
-    }
 
     public enum Status{
         OK, BAD_REQUEST, SERVER_ERROR, LOCAL_DB_ERROR, LOCAL_IMAGE_NOT_FOUND
@@ -68,5 +62,13 @@ public class CustomResponse<T> {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public boolean isLocal() {
+        return isLocal;
+    }
+
+    public void setLocal(boolean local) {
+        isLocal = local;
     }
 }

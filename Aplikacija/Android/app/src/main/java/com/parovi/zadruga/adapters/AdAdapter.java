@@ -11,41 +11,46 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.databinding.AdItemBinding;
+import com.parovi.zadruga.databinding.ChatResumeLayoutBinding;
 import com.parovi.zadruga.items.AdItem;
+import com.parovi.zadruga.models.entityModels.Ad;
 
 import java.util.ArrayList;
 
 public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
 
-    private ArrayList<AdItem> adList;
+    private ArrayList<Ad> adList;
 
-    public AdAdapter(ArrayList<AdItem> ads)
+    public AdAdapter(ArrayList<Ad> ads)
     {
         this.adList = ads;
+    }
+
+    private AdListListener fragment;
+
+    public AdAdapter(AdListListener fragment) {
+        super();
+        this.fragment = fragment;
     }
 
     @NonNull
     @Override
     public AdAdapter.AdViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ad_item,parent,false);
-        AdViewHolder avh = new AdViewHolder(v);
-        return avh;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        AdItemBinding binding = AdItemBinding.inflate(inflater, parent, false);
+        return new AdViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AdAdapter.AdViewHolder holder, int position) {
-        AdItem currAd = adList.get(position);
-        holder.tvTitle.setText(currAd.getTitle());
-        holder.etDescription.setText(currAd.getDesc());
-        holder.imgRes.setImageResource(R.drawable.ad_item);
-        holder.etDate.setText(currAd.getDate().toString());
-
-        /*holder.card.setOnClickListener(new View.OnClickListener() {
+        holder.bindTo(adList.get(position));
+        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //otvoriti odgvovarajuci oglas - getAdById();
+                fragment.onAdSelected(adList.get(position));
             }
-        });*/
+        });
     }
 
     @Override
@@ -54,35 +59,23 @@ public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
     }
 
     public class AdViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvTitle;
-        private TextView etDescription;
-        private TextView etDate;
-        private ImageView imgRes;
-        private CardView card;
+        public AdItemBinding binding;
 
 
-        public AdViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            tvTitle = itemView.findViewById(R.id.txtAdItemHeader);
-            etDescription = itemView.findViewById(R.id.editTxtDescriptionAd);
-            etDate = itemView.findViewById(R.id.editTxtAdItemDate);
-            imgRes = itemView.findViewById(R.id.imgAdItem);
-            card = itemView.findViewById(R.id.cardAdItem);
-
+        public AdViewHolder(@NonNull AdItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
-        public TextView getTvTitle() {
-            return tvTitle;
+        public void bindTo(Ad ad) {
+            binding.txtAdItemHeader.setText(ad.getTitle());
+            binding.editTxtDescriptionAd.setText(ad.getDescription());
+            binding.imgAdItem.setImageResource(R.drawable.ad_item);
+            binding.editTxtAdItemDate.setText(ad.getPostTime().toString());
         }
-        public TextView getEtDescription() {
-            return etDescription;
-        }
-        public TextView getEtDate() {
-            return etDate;
-        }
-        public ImageView getImgRes() {
-            return imgRes;
-        }
+    }
+
+    public interface AdListListener {
+        void onAdSelected(Ad ad);
     }
 }

@@ -3,7 +3,9 @@ package com.parovi.zadruga.ui;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -22,11 +24,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.adapters.MessagesAdapter;
-import com.parovi.zadruga.data.Chat;
-import com.parovi.zadruga.data.Message;
+import com.parovi.zadruga.models.entityModels.Chat;
+import com.parovi.zadruga.models.entityModels.Message;
 import com.parovi.zadruga.databinding.FragmentChatMessagesBinding;
+import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.ChatsViewModel;
 
 import java.util.ArrayList;
@@ -34,7 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ChatMessagesFragment extends Fragment {
-    private ChatsViewModel model;
+    private ChatViewModel model;
     private FragmentChatMessagesBinding binding;
     public ChatMessagesFragment() {
         // Required empty public constructor
@@ -43,6 +48,7 @@ public class ChatMessagesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -50,43 +56,59 @@ public class ChatMessagesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentChatMessagesBinding.inflate(inflater, container, false);
-        model = new ViewModelProvider(requireActivity()).get(ChatsViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
         MessagesAdapter adapter = new MessagesAdapter();
-        model.getChatInFocus().observe(requireActivity(), new Observer<Chat>() {
+        model.observeMessages().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
-            public void onChanged(Chat chat) {
-                adapter.setMessages(chat.getMessages());
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK && customResponse.getBody() != null)
+                    adapter.setMessages((List<Message>)customResponse.getBody());
             }
         });
         binding.rvMessages.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(container.getContext());
         layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(true);
+        //layoutManager.setReverseLayout(true);
         binding.rvMessages.setLayoutManager(layoutManager);
 
         binding.imgbtnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                model.sendMessage(binding.etmlNewMessage.getText().toString());
                 binding.etmlNewMessage.setText("");
-                Toast.makeText(getContext(), "Message sent", Toast.LENGTH_SHORT).show();
+            }
+        });
+        binding.topAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                return NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment));
             }
         });
 
-        setHasOptionsMenu(true);
-
+        binding.topAppBar.setTitle(model.getActiveChat().getChatTitle());
+        model.loadMessages(0);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroy() {
+        model.clearMessages();
+        super.onDestroy();
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.chat_overflow_menu, menu);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment))
-                || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.chatInfoFragment:
+                return NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment));
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

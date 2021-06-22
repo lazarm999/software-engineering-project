@@ -12,12 +12,13 @@ import android.os.Bundle;
 
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ActivityChatBinding;
+import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.ChatsViewModel;
 
 import java.util.zip.Inflater;
 
 public class ChatActivity extends AppCompatActivity{
-    private ChatsViewModel model;
+    private ChatViewModel model;
     private ActivityChatBinding binding;
 
     @Override
@@ -32,10 +33,10 @@ public class ChatActivity extends AppCompatActivity{
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        model = new ViewModelProvider(this).get(ChatsViewModel.class);
+        model = new ViewModelProvider(this).get(ChatViewModel.class);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Chats");
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.setTitle("Chats");
 
         /*if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -49,6 +50,6 @@ public class ChatActivity extends AppCompatActivity{
     protected void onStart() {
         super.onStart();
         NavController navController = Navigation.findNavController(this, R.id.chat_nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController);
+        //NavigationUI.setupActionBarWithNavController(this, navController);
     }
 }

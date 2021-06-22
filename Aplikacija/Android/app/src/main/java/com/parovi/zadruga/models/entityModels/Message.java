@@ -1,12 +1,15 @@
 package com.parovi.zadruga.models.entityModels;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
+import com.quickblox.chat.model.QBChatMessage;
 
 import java.util.Date;
 
@@ -30,17 +33,22 @@ public class Message {
     private int fkSenderId;
     private Date dateSent;
     private String message;
+    @ColumnInfo(index = true)
     private String qbChatId;
+
+    @Ignore
+    private QBChatMessage qbChatMessage;
 
     public Message() {
     }
 
-    public Message(@NonNull String msgId, int fkSenderId, Date dateSent, String message, String qbChatId) {
+    public Message(@NonNull String msgId, int fkSenderId, Date dateSent, String message, String qbChatId, QBChatMessage qbChatMessage) {
         this.msgId = msgId;
         this.fkSenderId = fkSenderId;
         this.dateSent = dateSent;
         this.message = message;
         this.qbChatId = qbChatId;
+        this.qbChatMessage = qbChatMessage;
     }
 
     public Message(Timestamp sentTime, String message) {
@@ -85,5 +93,13 @@ public class Message {
 
     public void setQbChatId(String qbChatId) {
         this.qbChatId = qbChatId;
+    }
+
+    public QBChatMessage getQbChatMessage() {
+        return qbChatMessage;
+    }
+
+    public void setQbChatMessage(QBChatMessage qbChatMessage) {
+        this.qbChatMessage = qbChatMessage;
     }
 }

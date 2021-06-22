@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -17,17 +18,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.adapters.ChatResumesAdapter;
+import com.parovi.zadruga.adapters.ChatsAdapter;
+import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.data.ChatResume;
 import com.parovi.zadruga.databinding.FragmentChatListBinding;
+import com.parovi.zadruga.models.entityModels.User;
+import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.ChatsViewModel;
+import com.quickblox.chat.model.QBChatDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class ChatListFragment extends Fragment implements ChatResumesAdapter.ChatListListener {
-    private ChatsViewModel model;
+public class ChatListFragment extends Fragment implements ChatsAdapter.ChatListListener {
+    private ChatViewModel model;
     private FragmentChatListBinding binding;
 
     public ChatListFragment() {
@@ -45,23 +54,49 @@ public class ChatListFragment extends Fragment implements ChatResumesAdapter.Cha
         // Inflate the layout for this fragment
         binding = FragmentChatListBinding.inflate(inflater, container, false);
 
-        model = new ViewModelProvider(requireActivity()).get(ChatsViewModel.class);
-        ChatResumesAdapter adapter = new ChatResumesAdapter(this);
-        model.getChatList().observe(requireActivity(), new Observer<List<ChatResume>>() {
+        model = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
+
+        MutableLiveData<CustomResponse<?>> isLoggedIn = new MutableLiveData<>();
+        ZadrugaRepository.getInstance(requireActivity().getApplication()).loginUser(isLoggedIn, new User("vuk.bibic@gmail.com", "novaaasifraaaa"));
+        isLoggedIn.observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
-            public void onChanged(List<ChatResume> chatResumes) {
-                adapter.setChats(chatResumes);
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    model.connectToChatServer();
+                }
+            }
+        });
+
+
+        model.observeIsConnected().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    model.addOnGlobalMessageReceived();
+                    model.loadAllChats();
+                }
+            }
+        });
+        ChatsAdapter adapter = new ChatsAdapter(this);
+        //ChatResumesAdapter adapter = new ChatResumesAdapter(this);
+        model.observeChats().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK)
+                    adapter.submitList(new ArrayList<>((List<Chat>)customResponse.getBody()));
             }
         });
         binding.rvChatList.setAdapter(adapter);
-        binding.rvChatList.setLayoutManager(new LinearLayoutManager(container.getContext()));
-
+        LinearLayoutManager layoutManager = new LinearLayoutManager(container.getContext());
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+        binding.rvChatList.setLayoutManager(layoutManager);
         return binding.getRoot();
     }
 
     @Override
-    public void onChatResumeSelected(long id) {
-        Toast.makeText(getContext(), "Chat with id = " + Long.toString(id), Toast.LENGTH_LONG).show();
+    public void onChatResumeSelected(Chat chat) {
+        model.setActiveChat(chat);
         Navigation.findNavController(binding.getRoot()).navigate(ChatListFragmentDirections.actionChatListFragmentToChatMessagesFragment());
     }
 }

@@ -24,6 +24,6 @@ public interface ChatDao {
 
     @Query("SELECT Chat.* FROM UserChat " +
             "INNER JOIN Chat ON Chat.chatId LIKE UserChat.fkChatId " +
-            "WHERE UserChat.fkUserId = :userId")
+            "WHERE UserChat.fkQbUserId = :userId")
     ListenableFuture<List<Chat>> getAllChatsByUserId(int userId);
 }

@@ -1,5 +1,6 @@
 package com.parovi.zadruga.adapters;
 
+import android.app.Application;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -12,24 +13,31 @@ import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.data.ChatResume;
 import com.parovi.zadruga.databinding.ChatResumeLayoutBinding;
+import com.parovi.zadruga.models.entityModels.Chat;
+import com.quickblox.chat.model.QBChatDialog;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatResumesAdapter extends RecyclerView.Adapter<ChatResumesAdapter.ChatResumeViewHolder> {
-    private List<ChatResume> chats;
+    private List<Chat> chats;
     private ChatListListener chatListListener;
 
     public ChatResumesAdapter(ChatListListener chatListListener) {
         this.chatListListener = chatListListener;
+        chats = new ArrayList<Chat>();
     }
 
-    public void setChats(List<ChatResume> chats) {
+    public void setChats(List<Chat> chats) {
         this.chats = chats;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -44,12 +52,12 @@ public class ChatResumesAdapter extends RecyclerView.Adapter<ChatResumesAdapter.
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ChatResumeViewHolder holder, int position) {
-        ChatResume chatResume = chats.get(position);
+        Chat chatResume = chats.get(position);
         holder.bind(chatResume);
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatListListener.onChatResumeSelected(chatResume.getId());
+                chatListListener.onChatResumeSelected(chatResume);
             }
         });
     }
@@ -67,16 +75,17 @@ public class ChatResumesAdapter extends RecyclerView.Adapter<ChatResumesAdapter.
             this.binding = binding;
         }
         @RequiresApi(api = Build.VERSION_CODES.O)
-        public void bind(ChatResume chatResume) {
+        public void bind(Chat chatResume) {
             binding.tvChatTitle.setText(chatResume.getChatTitle());
-            binding.tvLastMessage.setText(chatResume.getLastMessage());
-            binding.tvTimeOfLastMsg.setText(chatResume.getTimeOfLastMessage().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
-            binding.tvLastMessage.setTypeface(null,
-                    chatResume.isSeen() ? Typeface.NORMAL : Typeface.BOLD);
+            String subtitle = chatResume.getFkLastSenderId() == Utility.getUserId(App.getAppContext()) ? "You" : chatResume.getLastSenderName() + ": ";
+            subtitle += chatResume.getLastMessage();
+            binding.tvLastMessage.setText(subtitle);
+            binding.tvTimeOfLastMsg.setText(Long.toString(chatResume.getLastMessageDateSent()));//.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
+            binding.imgChatImage.setImageBitmap(chatResume.getProfileImage());
         }
     }
 
     public interface ChatListListener {
-        void onChatResumeSelected(long id);
+        void onChatResumeSelected(Chat chat);
     }
 }

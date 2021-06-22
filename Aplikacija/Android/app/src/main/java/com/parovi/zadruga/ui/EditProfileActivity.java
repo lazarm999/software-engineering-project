@@ -22,8 +22,8 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        NavController navController = Navigation.findNavController(this, R.id.edit_profile_nav_host_frag);
-        NavigationUI.setupActionBarWithNavController(this, navController);
+        //NavController navController = Navigation.findNavController(this, R.id.edit_profile_nav_host_frag);
+        //NavigationUI.setupActionBarWithNavController(this, navController);
     }
     @Override
     public boolean onSupportNavigateUp() {

@@ -1,5 +1,7 @@
 package com.parovi.zadruga.models.entityModels;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -45,19 +47,37 @@ public class Chat {
     private String lastMessage;
     @ColumnInfo(index = true)
     private int fkLastSenderId;
-    private Date lastMessageDateSent;
+    private long lastMessageDateSent;
     private Date createdAt;
     private boolean isArchived;
 
     @Ignore
+    private String chatTitle;
+
+    @Ignore
     private QBChatDialog qbChat;
+
+    @Ignore
+    private Bitmap profileImage;
 
     public Chat() {
     }
 
+    public Chat(@NonNull String chatId, Utility.ChatType type, String lastSenderName, int numOfMembers, String lastMessage, int fkLastSenderId,
+                long lastMessageDateSent, Date createdAt, QBChatDialog qbChat) {
+        this.chatId = chatId;
+        this.type = type;
+        this.lastSenderName = lastSenderName;
+        this.numOfMembers = numOfMembers;
+        this.lastMessage = lastMessage;
+        this.fkLastSenderId = fkLastSenderId;
+        this.lastMessageDateSent = lastMessageDateSent;
+        this.createdAt = createdAt;
+        this.qbChat = qbChat;
+    }
+
     public Chat(@NonNull String chatId, Utility.ChatType type, String lastSenderName, int numOfMembers, Date createdAt) {
         this.chatId = chatId;
-        //this.fkCreatorId = fkCreatorId;
         this.type = type;
         this.lastSenderName = lastSenderName;
         this.numOfMembers = numOfMembers;
@@ -73,6 +93,7 @@ public class Chat {
     }
 
     @Exclude
+
     public String getChatId() {
         return chatId;
     }
@@ -137,11 +158,11 @@ public class Chat {
         this.fkLastSenderId = fkLastSenderId;
     }
 
-    public Date getLastMessageDateSent() {
+    public long getLastMessageDateSent() {
         return lastMessageDateSent;
     }
 
-    public void setLastMessageDateSent(Date lastMessageDateSent) {
+    public void setLastMessageDateSent(long lastMessageDateSent) {
         this.lastMessageDateSent = lastMessageDateSent;
     }
 
@@ -159,6 +180,22 @@ public class Chat {
 
     public void setQbChat(QBChatDialog qbChat) {
         this.qbChat = qbChat;
+    }
+
+    public Bitmap getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Bitmap profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getChatTitle() {
+        return chatTitle;
+    }
+
+    public void setChatTitle(String chatTitle) {
+        this.chatTitle = chatTitle;
     }
 
     /*public int getFkCreatorId() {
