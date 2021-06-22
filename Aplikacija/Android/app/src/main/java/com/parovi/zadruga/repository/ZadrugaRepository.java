@@ -414,7 +414,7 @@ public class ZadrugaRepository  {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if(response.isSuccessful() && response.body() != null) {
-                    isUnApplied.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                    isUnApplied.postValue(new CustomResponse<>(CustomResponse.Status.OK, false));
                     appliedDao.deleteApplied(new Applied(userId, adId));
                 } else {
                     isUnApplied.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, "Pogresno uneti podaci"));
@@ -1037,7 +1037,7 @@ public class ZadrugaRepository  {
     public void postProfilePicture(String token, MutableLiveData<CustomResponse<?>> isPosted, Uri imageUri, Bitmap newProfileImage){
         int id = Utility.getLoggedInUser(App.getAppContext()).getUserId();
         ContentResolver contentResolver = App.getAppContext().getContentResolver();
-        String readOnly = "r";
+        /*String readOnly = "r";
         try {
             ParcelFileDescriptor pfd = contentResolver.openFileDescriptor(imageUri, readOnly);
             File file = new File(imageUri.getPath());
@@ -1062,13 +1062,13 @@ public class ZadrugaRepository  {
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-        File file = new File(imageUri.getPath());
+        }*/
+        /*File file = new File(imageUri.getPath());
         RequestBody requestBody = RequestBody.create(
                 MediaType.parse(App.getAppContext().getContentResolver().getType(imageUri)),
                 file);
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("profileImage", file.getName(), requestBody);
-        userApi.postProfilePicture(token, id, filePart).enqueue(new Callback<ResponseBody>() {
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("profileImage", file.getName(), requestBody);*/
+        userApi.postProfilePicture(token, id, newProfileImage).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if(response.isSuccessful()){

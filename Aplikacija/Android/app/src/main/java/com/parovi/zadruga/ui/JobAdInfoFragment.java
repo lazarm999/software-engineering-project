@@ -125,7 +125,7 @@ public class JobAdInfoFragment extends Fragment {
             binding.btnApply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    model.unapplyForAd();
+                    model.withdrawApplication();
                 }
             });
         }

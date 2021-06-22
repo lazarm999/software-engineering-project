@@ -89,7 +89,7 @@ public class JobAdViewModel extends AndroidViewModel {
     public void applyForAd() {
         zadrugaRepository.applyForAd(token, appliedTo, userId, adId);
     }
-    public void unapplyForAd() {
+    public void withdrawApplication() {
         zadrugaRepository.unApplyForAd(token, appliedTo, userId, adId);
     }
 }

@@ -1,5 +1,7 @@
 package com.parovi.zadruga.retrofit;
 
+import android.graphics.Bitmap;
+
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.requestModels.BanRequest;
 import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
@@ -48,7 +50,7 @@ public interface UserApi {
 
     @Multipart
     @POST("profilePicture/{id}/")
-    Call<ResponseBody> postProfilePicture(@Header("Authorization") String token, @Path("id") int id, @Part MultipartBody.Part image);
+    Call<ResponseBody> postProfilePicture(@Header("Authorization") String token, @Path("id") int id, @Body Bitmap image);
 
     @POST("ban/{id}/")
     Call<ResponseBody> banUser(@Header("Authorization") String token, @Path("id") int id, @Body BanRequest banRequest);

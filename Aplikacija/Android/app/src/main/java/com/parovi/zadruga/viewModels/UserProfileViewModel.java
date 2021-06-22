@@ -107,6 +107,7 @@ public class UserProfileViewModel extends AndroidViewModel {
         }
         return inSampleSize;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public static Bitmap decodeSampledBitmapFromUri(Uri uri, int reqWidth, int reqHeight, Resources res) {
         // First decode with inJustDecodeBounds=true to check dimensions

@@ -56,34 +56,13 @@ public class ChatListFragment extends Fragment implements ChatsAdapter.ChatListL
 
         model = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
 
-        MutableLiveData<CustomResponse<?>> isLoggedIn = new MutableLiveData<>();
-        ZadrugaRepository.getInstance(requireActivity().getApplication()).loginUser(isLoggedIn, new User("vuk.bibic@gmail.com", "novaaasifraaaa"));
-        isLoggedIn.observe(requireActivity(), new Observer<CustomResponse<?>>() {
-            @Override
-            public void onChanged(CustomResponse<?> customResponse) {
-                if (customResponse.getStatus() == CustomResponse.Status.OK) {
-                    model.connectToChatServer();
-                }
-            }
-        });
-
-
-        model.observeIsConnected().observe(requireActivity(), new Observer<CustomResponse<?>>() {
-            @Override
-            public void onChanged(CustomResponse<?> customResponse) {
-                if (customResponse.getStatus() == CustomResponse.Status.OK) {
-                    model.addOnGlobalMessageReceived();
-                    model.loadAllChats();
-                }
-            }
-        });
         ChatsAdapter adapter = new ChatsAdapter(this);
         //ChatResumesAdapter adapter = new ChatResumesAdapter(this);
         model.observeChats().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK)
-                    adapter.submitList(new ArrayList<>((List<Chat>)customResponse.getBody()));
+                    adapter.submitList((List<Chat>)customResponse.getBody());
             }
         });
         binding.rvChatList.setAdapter(adapter);
