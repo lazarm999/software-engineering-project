@@ -142,6 +142,10 @@
     <string name="rating_intro_format1">We\'ve seen you\'ve collaborated with %1$s.</string>
     <string name="rating_intro_format2">How would you rate your experience with %1$s?</string>
     <string name="submitRating">Submit</string>
-
+    <string name="successfulNewAd">You created new ad successfully!</string>
+    <string name="badRequestNewAd">Please fill in all the required fields!</string>
+    <string name="serverErrorNewAd">There was a problem with server connection!</string>
+    <string name="successfulLocation">Getting locations was successful!</string>
+    <string name="badRequestLocation">Please click in a location field!</string>
 
 </resources>

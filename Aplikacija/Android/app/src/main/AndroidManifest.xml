@@ -20,30 +20,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Zadruga">
-        <activity android:name=".activities.NewAdActivityV2"/>
-        <activity android:name=".activities.GradeUser">
+        <activity android:name=".activities.UsersAchievementsActivity"></activity>
+        <activity android:name=".activities.GradeUserActivity">
         </activity>
         <activity android:name=".activities.MainEmployerActivity" />
-        <activity android:name=".activities.MainActivity">
-
-        </activity>
+        <activity android:name=".activities.MainActivity"/>
         <activity android:name=".ui.RateUserActivity"/>
         <activity android:name=".ui.JobAdActivity">
         </activity>
         <activity android:name=".ui.ChatActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity android:name=".ui.EditProfileActivity">
-
         </activity>
 
         <activity android:name=".TmpActivity">
-
         </activity>
 
         <service android:name=".services.NotificationService">

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.EmployerProfileFragment">
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,7 +28,7 @@
             app:srcCompat="@drawable/profile_background" />
 
         <Button
-            android:id="@+id/BtnEdit"
+            android:id="@+id/btnEdit"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_alignParentTop="true"
@@ -34,13 +37,13 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/background"
+            android:background="@drawable/border_for_inputs"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/editProfile"
             android:textColor="@color/lila"
             android:textSize="10sp"
             app:backgroundTint="@color/background"
-            app:cornerRadius="20dp"
+            app:cornerRadius="30dp"
             app:icon="@drawable/ic_edit_profile"
             app:iconTint="@color/lila" />
 
@@ -213,7 +216,7 @@
             android:textSize="18sp" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -234,3 +237,4 @@
 
     </RelativeLayout>
 </FrameLayout>
+</ScrollView>
