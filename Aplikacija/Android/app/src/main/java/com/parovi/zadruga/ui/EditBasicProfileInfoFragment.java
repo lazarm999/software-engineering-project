@@ -1,8 +1,13 @@
 package com.parovi.zadruga.ui;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,14 +19,16 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.data.UserInfo;
 import com.parovi.zadruga.databinding.FragmentEditBasicProfileInfoBinding;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.viewModels.UserProfileViewModel;
 
+import java.io.FileDescriptor;
+
 public class EditBasicProfileInfoFragment extends Fragment {
     private UserProfileViewModel model;
     private FragmentEditBasicProfileInfoBinding binding;
+    private ActivityResultLauncher<String> getContent;
 
     public EditBasicProfileInfoFragment() {
         // Required empty public constructor
@@ -38,6 +45,14 @@ public class EditBasicProfileInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentEditBasicProfileInfoBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(UserProfileViewModel.class);
+        getContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+                new ActivityResultCallback<Uri>() {
+                    @Override
+                    public void onActivityResult(Uri uri) {
+                        if (uri != null)
+                            model.updateUserProfilePhoto(getResources(), uri, binding.ivProfilePhoto.getWidth(), binding.ivProfilePhoto.getHeight());
+                    }
+                });
 
         model.getUserInfo().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
@@ -53,7 +68,16 @@ public class EditBasicProfileInfoFragment extends Fragment {
             }
         });
 
-        model.getIsUpdated().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+        model.getIsProfileImageUpdated().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    ;
+                }
+            }
+        });
+
+        model.getIsUserUpdated().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK)
@@ -66,6 +90,7 @@ public class EditBasicProfileInfoFragment extends Fragment {
             public void onClick(View v) {
                 readViews((User)model.getUserInfo().getValue().getBody());
                 model.updateUser();
+                ((BitmapDrawable)binding.ivProfilePhoto.getDrawable()).getBitmap();
             }
         });
 
@@ -73,6 +98,13 @@ public class EditBasicProfileInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(binding.getRoot()).navigate(EditBasicProfileInfoFragmentDirections.actionEditBasicProfileInfoFragmentToSelectPreferencesFragment());
+            }
+        });
+
+        binding.ivPickPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getContent.launch("image/*");
             }
         });
         return binding.getRoot();

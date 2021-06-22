@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.adapters.ChatResumesAdapter;
+import com.parovi.zadruga.adapters.ChatsAdapter;
 import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.data.ChatResume;
 import com.parovi.zadruga.databinding.FragmentChatListBinding;
@@ -30,10 +31,11 @@ import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.ChatsViewModel;
 import com.quickblox.chat.model.QBChatDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class ChatListFragment extends Fragment implements ChatResumesAdapter.ChatListListener {
+public class ChatListFragment extends Fragment implements ChatsAdapter.ChatListListener {
     private ChatViewModel model;
     private FragmentChatListBinding binding;
 
@@ -75,12 +77,13 @@ public class ChatListFragment extends Fragment implements ChatResumesAdapter.Cha
                 }
             }
         });
-        ChatResumesAdapter adapter = new ChatResumesAdapter(this);
-        model.getChats().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+        ChatsAdapter adapter = new ChatsAdapter(this);
+        //ChatResumesAdapter adapter = new ChatResumesAdapter(this);
+        model.observeChats().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK)
-                    adapter.setChats((List<Chat>)customResponse.getBody());
+                    adapter.submitList(new ArrayList<>((List<Chat>)customResponse.getBody()));
             }
         });
         binding.rvChatList.setAdapter(adapter);
@@ -92,7 +95,7 @@ public class ChatListFragment extends Fragment implements ChatResumesAdapter.Cha
     }
 
     @Override
-    public void onChatResumeSelected(QBChatDialog chat) {
+    public void onChatResumeSelected(Chat chat) {
         model.setActiveChat(chat);
         Navigation.findNavController(binding.getRoot()).navigate(ChatListFragmentDirections.actionChatListFragmentToChatMessagesFragment());
     }

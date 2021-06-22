@@ -1,5 +1,6 @@
 package com.parovi.zadruga.adapters;
 
+import android.app.Application;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.data.ChatResume;
@@ -55,7 +57,7 @@ public class ChatResumesAdapter extends RecyclerView.Adapter<ChatResumesAdapter.
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatListListener.onChatResumeSelected(chatResume.getQbChat());
+                chatListListener.onChatResumeSelected(chatResume);
             }
         });
     }
@@ -74,21 +76,16 @@ public class ChatResumesAdapter extends RecyclerView.Adapter<ChatResumesAdapter.
         }
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void bind(Chat chatResume) {
-            if (chatResume.getType() == Utility.ChatType.PRIVATE)
-                binding.tvChatTitle.setText(chatResume.getLastSenderName());
-            else if (chatResume.getType() == Utility.ChatType.GROUP)
-                binding.tvChatTitle.setText("Group chat");
-            else
-                binding.tvChatTitle.setText(chatResume.getChatId());
-            binding.tvLastMessage.setText(chatResume.getLastMessage());
+            binding.tvChatTitle.setText(chatResume.getChatTitle());
+            String subtitle = chatResume.getFkLastSenderId() == Utility.getUserId(App.getAppContext()) ? "You" : chatResume.getLastSenderName() + ": ";
+            subtitle += chatResume.getLastMessage();
+            binding.tvLastMessage.setText(subtitle);
             binding.tvTimeOfLastMsg.setText(Long.toString(chatResume.getLastMessageDateSent()));//.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
-            //binding.tvLastMessage.setTypeface(null,
-             //       chatResume.get ? Typeface.NORMAL : Typeface.BOLD);
             binding.imgChatImage.setImageBitmap(chatResume.getProfileImage());
         }
     }
 
     public interface ChatListListener {
-        void onChatResumeSelected(QBChatDialog chat);
+        void onChatResumeSelected(Chat chat);
     }
 }

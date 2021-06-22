@@ -17,7 +17,7 @@ import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.adapters.CommentsAdapter;
 import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
-import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
+import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.viewModels.JobAdViewModel;
 
@@ -64,7 +64,6 @@ public class JobAdInfoFragment extends Fragment {
                     Toast.makeText(requireContext(), "Your comment failed to be posted", Toast.LENGTH_SHORT).show();
             }
         });
-
         model.getAd().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
@@ -72,7 +71,15 @@ public class JobAdInfoFragment extends Fragment {
                     Toast.makeText(requireContext() , "Greska", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                bindAdInfo(new JobAdInfo((AdWithTags) customResponse.getBody()));
+                bindAdInfo(new JobAdInfo((Ad)customResponse.getBody()));
+            }
+        });
+        model.getAppliedTo().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() != CustomResponse.Status.OK)
+                    return;
+                appliedStatusChanged((boolean)customResponse.getBody());
             }
         });
         model.getComments().observe(requireActivity(), new Observer<CustomResponse<?>>() {
@@ -106,10 +113,31 @@ public class JobAdInfoFragment extends Fragment {
                 }
             });
         }
-        else {
-            // apliciraj za posao
+        else { // user
+            appliedStatusChanged(false);
         }
 
+    }
+
+    private void appliedStatusChanged(boolean applied) {
+        if (applied){
+            binding.btnApply.setText("Unapply");
+            binding.btnApply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    model.unapplyForAd();
+                }
+            });
+        }
+        else {
+            binding.btnApply.setText("Apply");
+            binding.btnApply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    model.applyForAd();
+                }
+            });
+        }
     }
 
 }

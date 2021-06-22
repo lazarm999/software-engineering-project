@@ -45,10 +45,13 @@ public class SelectWorkersFragment extends Fragment {
         model.getAd().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                adapter.setUsers(new ArrayList<ApplicantResume>());
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    // fill the adapter
+                }
             }
         });
-                binding.rvWorkers.setAdapter(adapter);
+
+        binding.rvWorkers.setAdapter(adapter);
         binding.rvWorkers.setLayoutManager(new LinearLayoutManager(container.getContext()));
 
         return binding.getRoot();

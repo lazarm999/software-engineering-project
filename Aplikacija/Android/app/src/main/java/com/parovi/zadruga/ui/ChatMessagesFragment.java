@@ -58,17 +58,11 @@ public class ChatMessagesFragment extends Fragment {
         binding = FragmentChatMessagesBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
         MessagesAdapter adapter = new MessagesAdapter();
-        model.getMessages().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+        model.observeMessages().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK && customResponse.getBody() != null)
                     adapter.setMessages((List<Message>)customResponse.getBody());
-            }
-        });
-        model.observeIsConnected().observe(requireActivity(), new Observer<CustomResponse<?>>() {
-            @Override
-            public void onChanged(CustomResponse<?> customResponse) {
-                ;
             }
         });
         binding.rvMessages.setAdapter(adapter);
@@ -91,6 +85,7 @@ public class ChatMessagesFragment extends Fragment {
             }
         });
 
+        binding.topAppBar.setTitle(model.getActiveChat().getChatTitle());
         model.loadMessages(0);
         return binding.getRoot();
     }

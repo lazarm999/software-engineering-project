@@ -18,8 +18,7 @@ public class JobAdInfo {
     //private List<ApplicantResume> applicants;
     private User author;
 
-    public JobAdInfo(AdWithTags adWithTags) {
-        Ad ad = adWithTags.adEmployerLocation.getAd();
+    public JobAdInfo(Ad ad) {
         id = ad.getAdId();
         title = ad.getTitle();
         description = ad.getDescription();
@@ -27,8 +26,8 @@ public class JobAdInfo {
         compensationFrom = ad.getCompensationMin();
         compensationTo = ad.getCompensationMax();
         noApplicantsRequired = ad.getNumberOfEmployees();
-        author = adWithTags.adEmployerLocation.getEmployer();
-        location = adWithTags.adEmployerLocation.getLocation().getCityName();
+        author = ad.getEmployer();
+        location = ad.getLocation().getCityName();
     }
 
     public boolean isAuthor(int userId) {

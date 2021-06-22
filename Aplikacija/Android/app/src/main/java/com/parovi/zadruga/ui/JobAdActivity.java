@@ -25,14 +25,12 @@ public class JobAdActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         model = new ViewModelProvider(this).get(JobAdViewModel.class);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Chats");
+        //ActionBar actionBar = getSupportActionBar();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         NavController navController = Navigation.findNavController(this, R.id.job_ad_nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController);
     }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.data.JobAdInfo;
+import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 
@@ -22,6 +23,8 @@ public class JobAdViewModel extends AndroidViewModel {
     MutableLiveData<CustomResponse<?>> comments;//List<CommentResponse>
     MutableLiveData<CustomResponse<?>> isPosted;//Boolean
     MutableLiveData<CustomResponse<?>> isDeleted;//Boolean
+    MutableLiveData<CustomResponse<?>> appliedTo;
+
     ZadrugaRepository zadrugaRepository;
 
     public JobAdViewModel(@NonNull Application app) {
@@ -31,12 +34,13 @@ public class JobAdViewModel extends AndroidViewModel {
         comments = new MutableLiveData<>();
         isPosted = new MutableLiveData<>();
         isDeleted = new MutableLiveData<>();
+        appliedTo = new MutableLiveData<>();
         loadAd();
         loadComments();
     }
 
     public boolean isAdMine() {
-        return ((AdWithTags)ad.getValue().getBody()).adEmployerLocation.getEmployer().getUserId() == userId;
+        return ((Ad)ad.getValue().getBody()).getEmployer().getUserId() == userId;
     }
 
     public int getAdId() {
@@ -63,6 +67,10 @@ public class JobAdViewModel extends AndroidViewModel {
         return isDeleted;
     }
 
+    public MutableLiveData<CustomResponse<?>> getAppliedTo() {
+        return appliedTo;
+    }
+
     public boolean commentResponseOK() {
         return comments.getValue().getStatus() == CustomResponse.Status.OK;
     }
@@ -77,5 +85,11 @@ public class JobAdViewModel extends AndroidViewModel {
     }
     public void postAComment(String comment) {
         zadrugaRepository.postComment(token, comments, adId, userId, comment);
+    }
+    public void applyForAd() {
+        zadrugaRepository.applyForAd(token, appliedTo, userId, adId);
+    }
+    public void unapplyForAd() {
+        zadrugaRepository.unApplyForAd(token, appliedTo, userId, adId);
     }
 }

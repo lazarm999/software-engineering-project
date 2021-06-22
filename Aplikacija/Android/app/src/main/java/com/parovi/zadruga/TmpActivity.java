@@ -1,5 +1,6 @@
 package com.parovi.zadruga;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -7,23 +8,32 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.parovi.zadruga.adapters.NotificationsAdapter;
 import com.parovi.zadruga.models.entityModels.Notification;
+import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.nonEntityModels.CommentUser;
+import com.parovi.zadruga.models.requestModels.PostAdRequest;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.LoginViewModel;
 import com.parovi.zadruga.viewModels.TmpViewModel;
+import com.quickblox.auth.session.QBSessionManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**/
 public class TmpActivity extends AppCompatActivity {
@@ -111,7 +121,7 @@ public class TmpActivity extends AppCompatActivity {
         rep.deleteAd(Utility.getAccessToken(this), new MutableLiveData<>(), 24);
 
         MutableLiveData<CustomResponse<?>> chats = new MutableLiveData<>();
-        chats.observe(this, new Observer<CustomResponse<?>>() {
+        chatViewModel.observeChats().observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> response) {
                 if(response != null){
@@ -123,16 +133,16 @@ public class TmpActivity extends AppCompatActivity {
             }
         });
 
-        MutableLiveData<CustomResponse<?>> chat = new MutableLiveData<>();
-        chat.observe(this, new Observer<CustomResponse<?>>() {
+        chatViewModel.observeMessages().observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
+
                 }
             }
         });
 
-        chatViewModel.getChats().observe(this, new Observer<CustomResponse<?>>() {
+        chatViewModel.observeChats().observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
@@ -145,6 +155,7 @@ public class TmpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {//etComment.getText().toString())
                 //TODO: za qbUser sifra mora bude duza od 8 karaktera
+                //rep.loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));
                 //rep.loginUser(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "novaaasifraaaa"));
                 /*if(Utility.getUserId(TmpActivity.this) == 1)
                     rep.loginUser(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "sifra123"));
@@ -189,13 +200,14 @@ public class TmpActivity extends AppCompatActivity {
                 rep.getComments(token, comments, 4);*/
                 //rep.getProfilePicture(Utility.getAccessToken(TmpActivity.this), image, 1);
                 //rep.loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));
-                chatViewModel.loadChatMembers();
+                //chatViewModel.getChatMembers();
                 //chatViewModel.getAd();
             }
         });
         tmpBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                chatViewModel.addOnGlobalMessageReceived();
                 //TODO: za qbUser sifra mora bude duza od 8 karaktera
                 //rep.logOutUser(new MutableLiveData<>());
                 /*rep.registerUser(new MutableLiveData<>(), new User("user124", "fnjkdsnl", "dlkfhaslkjh", "user124@gmail.com",
@@ -234,6 +246,8 @@ public class TmpActivity extends AppCompatActivity {
         tmpBtn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                chatViewModel.connectToChatServer();
+
                 /*ArrayList<Integer> list = new ArrayList<>();
                 list.add(128330407);
                 rep.createChat(new MutableLiveData<>(), list, 28, 1);*/
@@ -248,14 +262,13 @@ public class TmpActivity extends AppCompatActivity {
                 /*String teinToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
                 rep.logOutUser(teinToken, new MutableLiveData<>(), 3);*/
                 //rep.sendMessage(new MutableLiveData<>(), );
-                //chatViewModel.adOnGlobalMessageReceived();
-                //chatViewModel.adOnGlobalMessageReceived();
+                chatViewModel.addOnGlobalMessageReceived();
             }
         });
         tmpBtn5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatViewModel.loadAllChats();
+//                chatViewModel.getAllChats();
             }
         });
         //LOGIKA OKO CHAT-A
@@ -310,10 +323,7 @@ public class TmpActivity extends AppCompatActivity {
         btnPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*QBChatMessage chatMessage = new QBChatMessage();
-                chatMessage.setBody(etComment.getText().toString());
-                chatMessage.setSaveToHistory(true);
-                chatViewModel.sendMessage(chatMessage);*/
+                chatViewModel.sendMessage("teina poruka");
             }
         });
 

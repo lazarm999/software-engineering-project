@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatViewModel extends AndroidViewModel {
-    private QBChatDialog activeChat;
+    private Chat activeChat;
     private MutableLiveData<CustomResponse<?>> chats;
     private MutableLiveData<QBChatMessage> newMessage;
     private MutableLiveData<CustomResponse<?>> isSent;
@@ -36,9 +36,10 @@ public class ChatViewModel extends AndroidViewModel {
     private QBChatDialogMessageListener newMessageListener = new QBChatDialogMessageListener() {
         @Override
         public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
-            if (activeChat != null && activeChat.getDialogId().equals(dialogId))
+            if (qbChatMessage.getSenderId() != Utility.getUserQbId(App.getAppContext()) &&
+                    activeChat != null && activeChat.getQbChat().getDialogId().equals(dialogId))
                 rep.updateMessages(messages, qbChatMessage);
-            rep.updateChat(chats, dialogId, adId);
+            rep.updateChat(chats, dialogId);
         }
 
         @Override
@@ -68,15 +69,19 @@ public class ChatViewModel extends AndroidViewModel {
     public void connectToChatServer(){
         rep.connectToChatServer(isConnected);
     }
-    public void setActiveChat(QBChatDialog chatDialog) {
-        activeChat = chatDialog;
+    public void setActiveChat(Chat chat) {
+        activeChat = chat;
     }
 
-    public MutableLiveData<CustomResponse<?>> getChats(){
+    public MutableLiveData<CustomResponse<?>> observeChats(){
         return chats;
     }
 
-    public MutableLiveData<QBChatMessage> getNewMessage(){
+    public MutableLiveData<CustomResponse<?>> observeMembers() {
+        return chatMembers;
+    }
+
+    public MutableLiveData<QBChatMessage> observeNewMessages(){
         return newMessage;
     }
 
@@ -85,7 +90,7 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void sendMessage(String message){
-        rep.sendMessage(isSent, activeChat, message);
+        rep.sendMessage(isSent, messages, chats, activeChat.getQbChat(), message);
     }
 
     public void removeGlobalMessageListener(){
@@ -97,11 +102,11 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void loadChatMembers(){
-        rep.getChatMembers(chatMembers, activeChat);
+        rep.getChatMembers(chatMembers, activeChat.getQbChat());
     }
 
     public void loadMessages(int offset) {
-        rep.getMessages(messages, activeChat, offset);
+        rep.getMessages(messages, activeChat.getQbChat(), offset, false);
     }
 
     public void clearMessages() {
@@ -109,12 +114,24 @@ public class ChatViewModel extends AndroidViewModel {
         messages.getValue().setBody(null);
     }
 
-    public void getAd(){
-        rep.getAdByChatId(ad, activeChat.getDialogId());
+    public void loadAd(){
+        rep.getAdByChatId(ad, activeChat.getQbChat().getDialogId());
     }
 
-    public LiveData<CustomResponse<?>> getMessages() {
+    public MutableLiveData<CustomResponse<?>> observeAd() {
+        return ad;
+    }
+
+    public LiveData<CustomResponse<?>> observeMessages() {
         return messages;
+    }
+
+    public void isActiveChatPrivate() {
+        return;
+    }
+
+    public Chat getActiveChat() {
+        return activeChat;
     }
 
     /*private QBChatDialog getChatById(String chatId){
