@@ -26,5 +26,6 @@ urlpatterns = [
     path('userByQbUserId/<int:pk>/', views.UserByQbUserId.as_view()),
     path('chatMembers/', views.ChatMembers.as_view()),
     path('adByQbChatId/<str:pk>/', views.AdByQbChatId.as_view()),
-    path('userAds/<int:pk>/', views.UserAds.as_view())
+    path('userAds/<int:pk>/', views.UserAds.as_view()),
+    path('userFcm/', views.UserFCMView.as_view())
 ]

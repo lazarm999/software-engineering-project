@@ -613,7 +613,7 @@ class UserAds(APIView):
         return Response(serialized.data)
 
 
-class UserFCM(APIView):
+class UserFCMView(APIView):
     permission_classes = [IsLoggedIn]
 
     def post(self, request, *args, **kwargs):
@@ -624,16 +624,27 @@ class UserFCM(APIView):
 
         if oldToken:
             userFcm = get_object_or_404(UserFCM, pk=oldToken)
+
+            try:
+                userFcm.delete()
+                userFcm.fcmToken = token
+                userFcm.save()
+            except:
+                return r500('Error saving FCM token')
+
         else:
             user = get_object_or_404(User, pk=request._auth)
             
             userFcm = UserFCM()
             userFcm.fcmToken = token
             userFcm.user = user
-        try:
-            userFcm.save()
-        except:
-            return r500('Error saving FCM token')
+            try:
+                userFcm.save()
+            except:
+                return r500('Error saving FCM token')
+
+        serialized = UserFCMSerializer(userFcm)
+        return r201(serialized.data)
 
     def delete(self, request, *args, **kwargs):
         token = request.data.get('fcmToken')
@@ -641,10 +652,13 @@ class UserFCM(APIView):
             return r400('Please provide fcmToken')
 
         userFcm = get_object_or_404(UserFCM, pk=token)
+        if userFcm.user.userId != request._auth:
+            return r401('Unauthorized')
         try:
             userFcm.delete()
         except:
             return r500('Error deleting FCM token')
+        return r204()
 
 
 # TODO: prijavljivanje neprikladnog sadrzaja
