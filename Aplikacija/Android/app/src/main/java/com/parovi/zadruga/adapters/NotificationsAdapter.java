@@ -1,7 +1,6 @@
 package com.parovi.zadruga.adapters;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.databinding.ItemNotificationBinding;
 import com.parovi.zadruga.models.entityModels.Notification;
 
 import java.util.ArrayList;
@@ -18,11 +18,17 @@ import java.util.ArrayList;
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationViewHolder> {
 
     private ArrayList<Notification> notificationsList;
-    private OnNotificationItemClickListener onClickListener;
 
-    public NotificationsAdapter(ArrayList<Notification> notificationsList, OnNotificationItemClickListener onClickListener){
+    private NotificationListener fragment;
+
+    public NotificationsAdapter(NotificationListener fragment)
+    {
+        super();
+        this.fragment = fragment;
+    }
+
+    public NotificationsAdapter(ArrayList<Notification> notificationsList){
         this.notificationsList = notificationsList;
-        this.onClickListener = onClickListener;
     }
 
     public Notification getNotification(int i){
@@ -32,30 +38,30 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @NonNull
     @Override
     public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification, parent, false);
-        NotificationViewHolder nvh = new NotificationViewHolder(v, onClickListener);
-        return nvh;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        ItemNotificationBinding binding = ItemNotificationBinding.inflate(inflater, parent, false);
+        return new  NotificationsAdapter.NotificationViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NotificationsAdapter.NotificationViewHolder holder, int position) {
         Notification currNotification = notificationsList.get(position);
         if(currNotification.getType().equals(Constants.ACCEPTED)){
-            holder.ivNotificationIcon.setImageResource(R.drawable.accepted);
-            holder.tvTitle.setText("Odabrani ste za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-            holder.tvDesc.setText("brao prifacen si");
+            holder.binding.ivNotificationIcon.setImageResource(R.drawable.accepted);
+            holder.binding.tvTitle.setText("Odabrani ste za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+            holder.binding.tvDesc.setText("brao prifacen si");
         } else if(currNotification.getType().equals(Constants.DECLINED)){
-            holder.ivNotificationIcon.setImageResource(R.drawable.declined);
-            holder.tvTitle.setText("Niste odabrani za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-            holder.tvDesc.setText("vise srece drugi put");
+            holder.binding.ivNotificationIcon.setImageResource(R.drawable.declined);
+            holder.binding.tvTitle.setText("Niste odabrani za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+            holder.binding.tvDesc.setText("vise srece drugi put");
         } else if(currNotification.getType().equals(Constants.COMMENT)){
-            holder.ivNotificationIcon.setImageResource(R.drawable.comment);
-            holder.tvTitle.setText("Korisnik taj i taj je komentarisao oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-            holder.tvDesc.setText("prozivao te tamo nesto po oglasi");
+            holder.binding.ivNotificationIcon.setImageResource(R.drawable.comment);
+            holder.binding.tvTitle.setText("Korisnik taj i taj je komentarisao oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+            holder.binding.tvDesc.setText("prozivao te tamo nesto po oglasi");
         } else if(currNotification.getType().equals(Constants.RATING)){
-            holder.ivNotificationIcon.setImageResource(R.drawable.rating);
-            holder.tvTitle.setText("Korisnik taj i taj vas je ocenio" + Integer.toString(currNotification.getFkSenderId()));
-            holder.tvDesc.setText("dao ti keca");
+            holder.binding.ivNotificationIcon.setImageResource(R.drawable.rating);
+            holder.binding.tvTitle.setText("Korisnik taj i taj vas je ocenio" + Integer.toString(currNotification.getFkSenderId()));
+            holder.binding.tvDesc.setText("dao ti keca");
         }
     }
 
@@ -65,37 +71,32 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     public static class NotificationViewHolder extends RecyclerView.ViewHolder{
-        private ImageView ivNotificationIcon;
-        private TextView tvTitle;
-        private TextView tvDesc;
+        public ItemNotificationBinding binding;
 
-        public NotificationViewHolder(@NonNull  View itemView, OnNotificationItemClickListener onClickListener) {
-            super(itemView);
-            ivNotificationIcon = itemView.findViewById(R.id.imgAdItem);
-            tvTitle = itemView.findViewById(R.id.txtAdItemHeader);
-            tvDesc = itemView.findViewById(R.id.txtLocationAd);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickListener.onClick(getAdapterPosition());
-                }
-            });
+        public NotificationViewHolder(@NonNull ItemNotificationBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
+            public void bindTo(Notification notification) {
+                binding.tvTitle.setText(notification.getTitile());
+                binding.tvDesc.setText(notification.getDesc());
+            }
+
         public ImageView getIvNotificationIcon() {
-            return ivNotificationIcon;
+            return binding.ivNotificationIcon;
         }
 
         public TextView getTvTitle() {
-            return tvTitle;
+            return binding.tvTitle;
         }
 
         public TextView getTvDesc() {
-            return tvDesc;
+            return binding.tvDesc;
         }
     }
 
-    public interface OnNotificationItemClickListener{
-        public void onClick(int position);
+    public interface NotificationListener {
+        void onNotificationSelected(Notification notification);
     }
 }

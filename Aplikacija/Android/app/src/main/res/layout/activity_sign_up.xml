@@ -34,7 +34,7 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/signName"
             android:textColor="@color/lila"
-            android:textSize="9dp" />
+            android:textSize="12dp" />
 
         <EditText
             android:id="@+id/txtName"
@@ -48,7 +48,7 @@
             android:hint="@string/signNamePlaceholder"
             android:inputType="textPersonName"
             android:textColor="@color/lila"
-            android:textSize="12dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/lblSurname"
@@ -64,7 +64,7 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/signSurname"
             android:textColor="@color/lila"
-            android:textSize="9dp" />
+            android:textSize="12dp" />
 
         <EditText
             android:id="@+id/txtSurname"
@@ -78,7 +78,7 @@
             android:hint="@string/signSurnamePlaceholder"
             android:inputType="textPersonName"
             android:textColor="@color/lila"
-            android:textSize="12dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/lblGender"
@@ -94,7 +94,7 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/gender"
             android:textColor="@color/lila"
-            android:textSize="9dp" />
+            android:textSize="12dp" />
 
         <CheckBox
             android:id="@+id/checkBoxM"
@@ -110,7 +110,7 @@
             android:layout_marginBottom="365dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/genderM"
-            android:textSize="9sp"
+            android:textSize="12dp"
             android:textStyle="bold"
             app:buttonTint="@color/lila" />
 
@@ -128,7 +128,7 @@
             android:layout_marginBottom="365dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/genderF"
-            android:textSize="9sp"
+            android:textSize="12dp"
             android:textStyle="bold"
             app:buttonTint="@color/lila" />
 
@@ -146,7 +146,7 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/username"
             android:textColor="@color/lila"
-            android:textSize="9dp" />
+            android:textSize="12dp" />
 
         <EditText
             android:id="@+id/txtUsername"
@@ -160,7 +160,7 @@
             android:hint="@string/usernamePlaceholder"
             android:inputType="textPersonName"
             android:textColor="@color/lila"
-            android:textSize="12dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/lblEmail"
@@ -176,7 +176,7 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/email"
             android:textColor="@color/lila"
-            android:textSize="9dp" />
+            android:textSize="12dp" />
 
         <EditText
             android:id="@+id/txtEmail"
@@ -190,7 +190,7 @@
             android:hint="@string/emailPlaceholder"
             android:inputType="textPersonName"
             android:textColor="@color/lila"
-            android:textSize="12dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/lblMobile"
@@ -206,7 +206,7 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/mobile"
             android:textColor="@color/lila"
-            android:textSize="9dp" />
+            android:textSize="12dp" />
 
         <EditText
             android:id="@+id/txtMobile"
@@ -220,7 +220,7 @@
             android:hint="@string/mobilePlaceholder"
             android:inputType="textPersonName"
             android:textColor="@color/lila"
-            android:textSize="12dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/lblPass"
@@ -236,7 +236,7 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/signPassword"
             android:textColor="@color/lila"
-            android:textSize="9dp" />
+            android:textSize="12dp" />
 
         <EditText
             android:id="@+id/txtPass"
@@ -253,7 +253,7 @@
             android:hint="@string/signPasswordPlaceholder"
             android:inputType="textPersonName"
             android:textColor="@color/lila"
-            android:textSize="12dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/txtLog"
@@ -265,25 +265,27 @@
             android:layout_centerHorizontal="true"
             android:layout_marginStart="116dp"
             android:layout_marginLeft="116dp"
-            android:layout_marginTop="660dp"
+            android:layout_marginTop="640dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/goLog"
             android:textColor="@color/lila"
-            android:textSize="12dp"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnSignUp"
             android:layout_width="258dp"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="250dp"
-            android:layout_marginBottom="66dp"
+            android:layout_marginEnd="65dp"
+            android:layout_marginBottom="0dp"
             android:fontFamily="@font/roboto_condensed_regular"
+            android:foregroundGravity="center"
             android:text="@string/signup"
             android:textColor="@color/background"
-            android:textSize="14sp"
+            android:textSize="16dp"
             app:backgroundTint="@color/lila"
             app:cornerRadius="20dp" />
     </RelativeLayout>

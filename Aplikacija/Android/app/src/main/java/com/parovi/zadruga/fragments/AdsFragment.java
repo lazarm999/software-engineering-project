@@ -49,12 +49,6 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         ads.add(new AdItem("Title 3", "Description 3", LocalDate.of(2020,12,04)));
         ads.add(new AdItem("Title 4", "Description 4", LocalDate.of(2021, 10, 29)));
         ads.add(new AdItem("Title 5", "Description 5", LocalDate.of(2020,04,22)));
-        ads.add(new AdItem("Title 1", "Description 1", LocalDate.now()));
-        ads.add(new AdItem("Title 2", "Description 2", LocalDate.of(2021, 06, 23)));
-        ads.add(new AdItem("Title 3", "Description 3", LocalDate.of(2020,12,04)));
-        ads.add(new AdItem("Title 4", "Description 4", LocalDate.of(2021, 10, 29)));
-        ads.add(new AdItem("Title 5", "Description 5", LocalDate.of(2020,04,22)));
-
         RecyclerView recView = binding.recViewAds;
         recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         AdAdapter adapter = new AdAdapter(this);

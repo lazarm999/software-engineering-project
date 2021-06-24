@@ -5,6 +5,7 @@ import com.parovi.zadruga.R;
 import java.time.LocalDate;
 
 public class AdWithStudentRatingItem {
+    protected long id;
     private String title;
     private LocalDate date;
     private float rating;
@@ -15,14 +16,16 @@ public class AdWithStudentRatingItem {
 
     }
 
-    public AdWithStudentRatingItem(String title, LocalDate date, float rating)
+    public AdWithStudentRatingItem(long id, String title, LocalDate date, float rating)
     {
+        this.id = id;
         this.title = title;
         this.date = date;
         this.rating = rating;
         this.icRating = R.drawable.ic_users_grade;
     }
 
+    public long getId() {return this.id;}
     public String getTitle() {return this.title;}
     public void setTitle(String title) {this.title = title;}
     public LocalDate getDate() {return this.date;}

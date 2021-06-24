@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -12,15 +13,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/signup"
-        tools:srcCompat="@drawable/signup" />
+        app:srcCompat="@drawable/preferences"
+        tools:srcCompat="@drawable/preferences" />
 
     <Switch
         android:id="@+id/switchJobType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_condensed_regular"
         android:text="Moleraj"
+        android:textColor="@color/lila"
+        android:textColorHighlight="@color/lila"
         android:textSize="18sp"
+        android:thumbTint="@color/lilaChip"
         app:layout_constraintEnd_toEndOf="@+id/imageView4"
         app:layout_constraintStart_toStartOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />

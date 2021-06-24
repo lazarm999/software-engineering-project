@@ -27,6 +27,8 @@ public class Notification
     //TODO: da l ovde da pisem "fk" posto ce chat nece da se cuva u nasoj bazi
     private int fkChatId;
     private String type;
+    private String title;
+    private String desc;
 
     public Notification() {
     }
@@ -37,12 +39,14 @@ public class Notification
     }
 
     @Ignore
-    public Notification(int notifId, int fkSenderId, int fkAdId, int fkChatId, String type) {
+    public Notification(int notifId, int fkSenderId, int fkAdId, int fkChatId, String type, String title, String desc) {
         this.notifId = notifId;
         this.fkSenderId = fkSenderId;
         this.fkAdId = fkAdId;
         this.fkChatId = fkChatId;
         this.type = type;
+        this.title = title;
+        this.desc = desc;
     }
 
     public int getNotifId() {
@@ -84,4 +88,21 @@ public class Notification
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getTitile() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
 }

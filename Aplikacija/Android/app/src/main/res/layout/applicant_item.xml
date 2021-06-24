@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/border_for_notification"
     android:padding="10dp">
 
     <androidx.cardview.widget.CardView
@@ -26,7 +27,8 @@
         android:layout_width="82dp"
         android:layout_height="26dp"
         android:layout_marginStart="10dp"
-        android:text="TextView"
+        android:fontFamily="@font/roboto_condensed_regular"
+        android:text="Name"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/cardView7"
         app:layout_constraintTop_toTopOf="@+id/cardView7" />
@@ -35,7 +37,10 @@
         android:id="@+id/tvApplicantUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginTop="7dp"
+        android:fontFamily="@font/roboto_condensed_bold_italic"
+        android:text="username"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/tvApplicantName"
         app:layout_constraintTop_toBottomOf="@+id/tvApplicantName" />
 
@@ -43,7 +48,9 @@
         android:id="@+id/cboxSelected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:buttonTint="@color/lila"
         android:checked="false"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardView7" />
 

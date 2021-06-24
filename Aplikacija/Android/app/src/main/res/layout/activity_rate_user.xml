@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:padding="10dp">
 
     <TextView
         android:id="@+id/tvIntro1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/background"
         android:text="@string/rating_intro_format1"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,12 +41,16 @@
         app:layout_constraintTop_toBottomOf="@+id/tvIntro2" />
 
     <Button
-        android:id="@+id/btnSubmitRating"
+        android:id="@+id/btnRate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:text="@string/submitRating"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:backgroundTint="@color/lila"
+        app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userRatingBar" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="270dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

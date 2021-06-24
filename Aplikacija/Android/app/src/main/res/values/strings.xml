@@ -147,5 +147,14 @@
     <string name="serverErrorNewAd">There was a problem with server connection!</string>
     <string name="successfulLocation">Getting locations was successful!</string>
     <string name="badRequestLocation">Please click in a location field!</string>
+    <string name="editName">*Name</string>
+    <string name="editSurname">*Surname</string>
+    <string name="editBio">Edit bio...</string>
+    <string name="people">People</string>
+    <string name="descriptionOfAd">Describe your job offer in a few sentences...</string>
+    <string name="adApplyChanges">Apply changes</string>
+    <string name="questionAd">Ask a question...</string>
+    <string name="applicants">Applicants</string>
+    <string name="preferences">Choose preferences</string>
 
 </resources>

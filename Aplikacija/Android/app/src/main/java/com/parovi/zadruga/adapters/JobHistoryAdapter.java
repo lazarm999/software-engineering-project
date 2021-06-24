@@ -52,6 +52,8 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
         private TextView txtGrade;
         private ImageView imgRes;
 
+       // public JobHistoryBinding binding;
+
         public JobHistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.txtAdTitle);
@@ -65,5 +67,9 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
         public TextView getEtGrade() {return this.txtGrade;}
         public ImageView getImgRes() {return this.imgRes;}
 
+    }
+
+    public interface JobHistoryListListener {
+        void onJobSelected(AdWithStudentRatingItem item);
     }
 }

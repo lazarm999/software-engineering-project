@@ -3,17 +3,12 @@ package com.parovi.zadruga.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.AdItemBinding;
-import com.parovi.zadruga.databinding.ChatResumeLayoutBinding;
-import com.parovi.zadruga.items.AdItem;
 import com.parovi.zadruga.models.entityModels.Ad;
 
 import java.util.ArrayList;
@@ -68,9 +63,9 @@ public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
         }
 
         public void bindTo(Ad ad) {
-            binding.txtAdItemHeader.setText(ad.getTitle());
+            binding.txtDescForAd.setText(ad.getTitle());
             binding.editTxtDescriptionAd.setText(ad.getDescription());
-            binding.imgAdItem.setImageResource(R.drawable.ad_item);
+            binding.imgAdIcon.setImageResource(R.drawable.ad_item);
             binding.editTxtAdItemDate.setText(ad.getPostTime().toString());
         }
     }
