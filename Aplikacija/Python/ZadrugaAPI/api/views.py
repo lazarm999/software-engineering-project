@@ -1,4 +1,4 @@
-from api.logic import ProfilePictureLogic
+from api.logic import NotificationLogic, ProfilePictureLogic
 import os
 import uuid
 
@@ -134,12 +134,15 @@ class ProfilePicture(APIView):
         image = Image.open(request.data.get('file'))
         image = image.resize((128, 128))
         image = image.convert(mode='P', palette=Image.ADAPTIVE) #24b -> 8b boje
+        imgPath = os.path.join(ProfilePicture.imgsDir, user.imageName)
         try:
-            image.save(os.path.join(ProfilePicture.imgsDir, user.imageName))
+            image.save(imgPath)
             user.save()
         except:
             return r500('Failed saving profile picture')
-        return r201()
+
+        with open(imgPath, 'rb') as f:
+            return HttpResponse(f.read(), content_type='image/png')
 
 
 class ProfilePictureQb(APIView):
@@ -420,7 +423,9 @@ class CommentList(APIView):
         c.ad = get_object_or_404(Ad, pk=adId)
         c.comment = comment
         try:
-            c.save()
+            with transaction.atomic():
+                c.save()
+                NotificationLogic.sendCommentNotification(c)
         except:
             return r500('Failed to save comment')
         serialized = CommentSerializer(c)
@@ -512,6 +517,7 @@ class Choose(APIView):
                 ad.isClosed=True
                 ad.qbChatId=qbChatId
                 ad.save()
+                NotificationLogic.sendChosenNotifications(ad, userIds)
         except:
             return r500('Failed to choose applicants')
         return r204()
@@ -606,14 +612,44 @@ class UserAds(APIView):
         serialized = AdSerializer(ads, many=True)
         return Response(serialized.data)
 
-# TODO: unique na qbId i chatId
-# TODO: ocenjivanje samo kad su saradjivali + zavrsen posao
-# TODO: filtriranje i sortiranje
+
+class UserFCM(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def post(self, request, *args, **kwargs):
+        oldToken = request.data.get('oldFcmToken')
+        token = request.data.get('fcmToken')
+        if not token:
+            return r400('Please provide fcmToken')
+
+        if oldToken:
+            userFcm = get_object_or_404(UserFCM, pk=oldToken)
+        else:
+            user = get_object_or_404(User, pk=request._auth)
+            
+            userFcm = UserFCM()
+            userFcm.fcmToken = token
+            userFcm.user = user
+        try:
+            userFcm.save()
+        except:
+            return r500('Error saving FCM token')
+
+    def delete(self, request, *args, **kwargs):
+        token = request.data.get('fcmToken')
+        if not token:
+            return r400('Please provide fcmToken')
+
+        userFcm = get_object_or_404(UserFCM, pk=token)
+        try:
+            userFcm.delete()
+        except:
+            return r500('Error deleting FCM token')
+
+
 # TODO: prijavljivanje neprikladnog sadrzaja
 # TODO: paginacija svuda
-# TODO: ne svi podaci za svaki upit
-# TODO: forgot password, badzevi, notifikacije, recommender system
+# TODO: badzevi, notifikacije, recommender system
 
 # TODO: sql skripta za pocetno punjenje
 # TODO: Docker
-# TODO: readme

@@ -48,6 +48,7 @@ class User(models.Model):
     banExplanation = models.TextField(null=True)
     badges = models.ManyToManyField(Badge, through='Earned')
     userQbId = models.IntegerField()
+    registrationDate = models.DateTimeField(auto_now_add=True)
 
 class Earned(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
@@ -99,10 +100,15 @@ class Comment(models.Model):
     ad = models.ForeignKey('Ad', related_name='comments', on_delete=models.CASCADE)
     comment = models.TextField()
     postTime = models.DateTimeField(auto_now_add=True)
+
+
+    def taggedIndices(self):
+        from api.logic import CommentLogic
+        return CommentLogic.extractTaggedUsers(self.comment, False)
     
 
 class Applied(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.ForeignKey('User', related_name='applies', on_delete=models.CASCADE)
     ad = models.ForeignKey('Ad', related_name='applicants', on_delete=models.CASCADE)
     chosen = models.BooleanField(default=False)
 
@@ -110,6 +116,20 @@ class Applied(models.Model):
         constraints = [models.UniqueConstraint(fields=['ad', 'user'], name='applied_pk')]
     
 
-# TODO: Notifications
+class UserFCM(models.Model):
+    fcmToken = models.CharField(max_length=200, primary_key=True)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+
+
 class Notification(models.Model):
-    pass
+    notificationId = models.BigAutoField(primary_key=True)
+    ad = models.ForeignKey('Ad', on_delete=models.CASCADE, null=True)
+    accepted = models.BooleanField(null=True)
+    comment = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True)
+    tagged = models.BooleanField(null=True)
+    rating = models.ForeignKey('Rating', on_delete=models.CASCADE, null=True)
+
+
+class UserNotification(models.Model):
+    notification = models.ForeignKey('Notification', on_delete=models.CASCADE)
+    user = models.ForeignKey('User', related_name='notifications', on_delete=models.CASCADE)

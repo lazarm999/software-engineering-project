@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from api.logic import CommentLogic
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
@@ -93,10 +93,11 @@ class AdSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     ad = PrimaryKeyRelatedField(queryset=Ad.objects.all())
+    taggedIndices = serializers.ReadOnlyField()
 
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'ad', 'comment', 'postTime']
+        fields = ['id', 'user', 'ad', 'comment', 'postTime', 'taggedIndices']
 
 
 class AppliedSerializer(serializers.ModelSerializer):
@@ -106,3 +107,21 @@ class AppliedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Applied
         fields = ['user', 'ad', 'chosen']
+
+
+class UserFCMSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = UserFCM
+        fields = ['user', 'fcmToken']
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    ad = AdSerializer()
+    comment = CommentSerializer()
+    rating = RatingSerializer()
+
+    class Meta:
+        model = Notification
+        fields = ['notificationId', 'ad', 'accepted', 'comment', 'rating', 'tagged']
