@@ -624,6 +624,8 @@ class UserFCMView(APIView):
 
         if oldToken:
             userFcm = get_object_or_404(UserFCM, pk=oldToken)
+            if userFcm.user.userId != request._auth:
+                return r401('Unauthorized')
 
             try:
                 userFcm.delete()
@@ -646,12 +648,11 @@ class UserFCMView(APIView):
         serialized = UserFCMSerializer(userFcm)
         return r201(serialized.data)
 
-    def delete(self, request, *args, **kwargs):
-        token = request.data.get('fcmToken')
-        if not token:
-            return r400('Please provide fcmToken')
+class UserFCMDeleteView(APIView):
+    permission_classes = [IsLoggedIn]
 
-        userFcm = get_object_or_404(UserFCM, pk=token)
+    def delete(self, request, pk, *args, **kwargs):
+        userFcm = get_object_or_404(UserFCM, pk=pk)
         if userFcm.user.userId != request._auth:
             return r401('Unauthorized')
         try:
