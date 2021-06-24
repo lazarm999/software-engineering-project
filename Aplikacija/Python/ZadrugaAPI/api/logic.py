@@ -130,7 +130,8 @@ class NotificationLogic:
             userNotifs.append(userNotif)
 
         commentOwnerNotification.save()
-        taggedNotification.save()
+        if taggedNotification:
+            taggedNotification.save()
         ownerNotif.save()
         for notif in userNotifs:
             notif.save()
