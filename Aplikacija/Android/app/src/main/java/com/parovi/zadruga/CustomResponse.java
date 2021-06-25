@@ -4,7 +4,7 @@ public class CustomResponse<T> {
 
 
     public enum Status{
-        OK, BAD_REQUEST, SERVER_ERROR, LOCAL_DB_ERROR, LOCAL_IMAGE_NOT_FOUND
+        OK, BAD_REQUEST, SERVER_ERROR, LOCAL_DB_ERROR, LOCAL_IMAGE_NOT_FOUND, EXCEPTION_ERROR
     }
 
     private Status status;

@@ -21,8 +21,7 @@
         tools:layout="@layout/fragment_chat_messages" >
         <action
             android:id="@+id/action_chatMessagesFragment_to_chatInfoFragment"
-            app:destination="@id/chatInfoFragment"
-            app:popUpTo="@id/chatMessagesFragment" />
+            app:destination="@id/chatInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatInfoFragment"

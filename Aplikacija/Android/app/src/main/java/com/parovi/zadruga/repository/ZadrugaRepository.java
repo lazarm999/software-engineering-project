@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.os.ParcelFileDescriptor;
@@ -15,6 +17,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.room.util.FileUtil;
@@ -100,6 +103,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -142,7 +146,7 @@ public class ZadrugaRepository  {
     private final NotificationApi notificationApi;
 
     private final Executor executor;
-
+    
     public synchronized static ZadrugaRepository getInstance(Application app) {
         if (instance == null) {
             instance = new ZadrugaRepository(app);
@@ -1032,6 +1036,39 @@ public class ZadrugaRepository  {
                 isPosted.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
             }
         });*/
+    }
+
+    public void postProfilePicture(MutableLiveData<CustomResponse<?>> profileImage, Uri imageUri, Bitmap newProfileImage){
+        String token = Utility.getAccessToken(App.getAppContext());
+        int id = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+        InputStream in;
+        byte[] buff;
+        try {
+            in = App.getAppContext().getContentResolver().openInputStream(imageUri);
+            buff = new byte[in.available()];
+            while (in.read(buff) != -1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            profileImage.postValue(new CustomResponse<>(CustomResponse.Status.EXCEPTION_ERROR, e.getMessage()));
+            return;
+        }
+        RequestBody imageRequest = RequestBody.create(MediaType.parse("application/octet-stream"), buff);
+        userApi.postProfilePicture(token, id, imageRequest).enqueue(new Callback<ResponseBody>() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
+            @Override
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    profileImage.postValue(new CustomResponse<>(CustomResponse.Status.OK, newProfileImage));
+                    if(newProfileImage != null)
+                        saveImageLocally(newProfileImage, Utility.getLoggedInUser(App.getAppContext()).getUserId());
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                profileImage.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+            }
+        });
     }
 
     public void postProfilePicture(String token, MutableLiveData<CustomResponse<?>> isPosted, Uri imageUri, Bitmap newProfileImage){

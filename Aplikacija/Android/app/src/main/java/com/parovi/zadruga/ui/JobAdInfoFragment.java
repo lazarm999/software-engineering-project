@@ -19,13 +19,13 @@ import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
-import com.parovi.zadruga.viewModels.JobAdViewModel;
+import com.parovi.zadruga.viewModels.AdViewModel;
 
 import java.util.List;
 
 
 public class JobAdInfoFragment extends Fragment {
-    private JobAdViewModel model;
+    private AdViewModel model;
     private FragmentJobAdvertisementBinding binding;
 
     public JobAdInfoFragment() {
@@ -42,7 +42,7 @@ public class JobAdInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentJobAdvertisementBinding.inflate(inflater, container, false);
-        model = new ViewModelProvider(requireActivity()).get(JobAdViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
 
         CommentsAdapter adapter = new CommentsAdapter();
         binding.rvComments.setAdapter(adapter);

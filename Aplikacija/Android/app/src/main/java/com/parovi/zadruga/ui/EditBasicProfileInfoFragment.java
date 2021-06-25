@@ -72,7 +72,7 @@ public class EditBasicProfileInfoFragment extends Fragment {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
-                    ;
+                    model.loadUserProfileImage();
                 }
             }
         });

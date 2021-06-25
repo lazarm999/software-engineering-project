@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,23 +18,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
-import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.adapters.MessagesAdapter;
-import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.models.entityModels.Message;
 import com.parovi.zadruga.databinding.FragmentChatMessagesBinding;
 import com.parovi.zadruga.viewModels.ChatViewModel;
-import com.parovi.zadruga.viewModels.ChatsViewModel;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ChatMessagesFragment extends Fragment {
@@ -48,7 +38,7 @@ public class ChatMessagesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
     }
 
     @Override
@@ -81,7 +71,16 @@ public class ChatMessagesFragment extends Fragment {
         binding.topAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                return NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment));
+                model.loadChatMembers();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.chat_nav_host_fragment, ChatInfoFragment.class, null)
+                        .addToBackStack(null)
+                        .commit();
+                return true;
+                // ne radi iz nepoznatog razloga
+                //NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment));
             }
         });
 
@@ -92,7 +91,7 @@ public class ChatMessagesFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        model.clearMessages();
+        model.leaveChat();
         super.onDestroy();
     }
 

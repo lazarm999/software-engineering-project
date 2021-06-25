@@ -17,10 +17,13 @@ import com.parovi.zadruga.items.AdItem;
 import com.parovi.zadruga.models.entityModels.Ad;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import de.measite.minidns.record.A;
 
 public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
 
-    private ArrayList<Ad> adList;
+    private List<Ad> adList;
 
     public AdAdapter(ArrayList<Ad> ads)
     {
@@ -31,6 +34,7 @@ public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
 
     public AdAdapter(AdListListener fragment) {
         super();
+        adList = new ArrayList<Ad>();
         this.fragment = fragment;
     }
 

@@ -24,6 +24,7 @@ public class UserResumesAdapter extends RecyclerView.Adapter<UserResumesAdapter.
 
     public void setUsers(List<User> users) {
         this.users = users;
+        notifyDataSetChanged();
     }
 
     @NonNull

@@ -26,7 +26,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class UserProfileViewModel extends AndroidViewModel {
-    private final int id = 3;
+    private final int id = Utility.getLoggedInUser(App.getAppContext()).getUserId();
     private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
     private MutableLiveData<CustomResponse<?>> userInfo;
     private MutableLiveData<CustomResponse<?>> profileImage;
@@ -73,16 +73,16 @@ public class UserProfileViewModel extends AndroidViewModel {
         repository.updateUser(token, isUserUpdated, (User)userInfo.getValue().getBody());
     }
     public void updateUserProfilePhoto(Resources res, Uri uri, int reqWidth, int reqHeight) {
-        repository.postProfilePicture(token,
-                isProfileImageUpdated,
+        repository.postProfilePicture(
+                profileImage,
                 uri,
                 decodeSampledBitmapFromUri(uri, reqWidth, reqHeight, res));
     }
 
-    private void loadUserInfo() {
+    public void loadUserInfo() {
         repository.getUserById(token, userInfo, id);
     }
-    private void loadUserProfileImage() {
+    public void loadUserProfileImage() {
         repository.getProfilePicture(profileImage, id);
     }
 

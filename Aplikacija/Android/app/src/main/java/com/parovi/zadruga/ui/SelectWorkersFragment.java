@@ -13,18 +13,12 @@ import android.view.ViewGroup;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.adapters.ApplicantResumeAdapter;
-import com.parovi.zadruga.data.ApplicantResume;
-import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.databinding.FragmentSelectWorkersBinding;
-import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
-import com.parovi.zadruga.viewModels.JobAdViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.parovi.zadruga.viewModels.AdViewModel;
 
 
 public class SelectWorkersFragment extends Fragment {
-    private JobAdViewModel model;
+    private AdViewModel model;
     private FragmentSelectWorkersBinding binding;
     public SelectWorkersFragment() {
         // Required empty public constructor
@@ -39,7 +33,7 @@ public class SelectWorkersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSelectWorkersBinding.inflate(inflater, container, false);
-        model = new ViewModelProvider(requireActivity()).get(JobAdViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
 
         ApplicantResumeAdapter adapter = new ApplicantResumeAdapter();
         model.getAd().observe(requireActivity(), new Observer<CustomResponse<?>>() {

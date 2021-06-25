@@ -11,11 +11,13 @@ import com.parovi.zadruga.models.responseModels.LoginResponse;
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -47,6 +49,12 @@ public interface UserApi {
 
     @PUT("passwordChange/")
     Call<ResponseBody> changePassword(@Header("Authorization") String token, @Body ChangePasswordRequest request);
+
+    @Headers({
+            "Content-Disposition: attachment; filename=nebitno.png"
+    })
+    @POST("profilePicture/{id}/")
+    Call<ResponseBody> postProfilePicture(@Header("Authorization") String token, @Path("id") int id, @Body RequestBody image);
 
     @Multipart
     @POST("profilePicture/{id}/")

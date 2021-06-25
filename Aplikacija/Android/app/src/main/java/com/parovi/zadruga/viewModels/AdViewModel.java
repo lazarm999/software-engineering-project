@@ -12,7 +12,7 @@ import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 
-public class JobAdViewModel extends AndroidViewModel {
+public class AdViewModel extends AndroidViewModel {
     private final int adId = 4;
     private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
     private final int userId = 1;
@@ -27,7 +27,7 @@ public class JobAdViewModel extends AndroidViewModel {
 
     ZadrugaRepository zadrugaRepository;
 
-    public JobAdViewModel(@NonNull Application app) {
+    public AdViewModel(@NonNull Application app) {
         super(app);
         zadrugaRepository = ZadrugaRepository.getInstance(app);
         ad = new MutableLiveData<>();

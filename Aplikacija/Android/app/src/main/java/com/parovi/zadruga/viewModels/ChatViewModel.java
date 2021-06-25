@@ -109,13 +109,17 @@ public class ChatViewModel extends AndroidViewModel {
         rep.getMessages(messages, activeChat.getQbChat(), offset, false);
     }
 
-    public void clearMessages() {
+    public void leaveChat() {
         activeChat = null;
         messages.getValue().setBody(null);
     }
 
     public void loadAd(){
         rep.getAdByChatId(ad, activeChat.getQbChat().getDialogId());
+    }
+
+    public int getAdId() {
+        return adId;
     }
 
     public MutableLiveData<CustomResponse<?>> observeAd() {
