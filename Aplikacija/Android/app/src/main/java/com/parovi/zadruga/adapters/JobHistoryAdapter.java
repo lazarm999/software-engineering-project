@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.databinding.AdInAListItemBinding;
 import com.parovi.zadruga.items.AdWithStudentRatingItem;
 
 import java.util.ArrayList;
@@ -17,6 +18,14 @@ import java.util.ArrayList;
 public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.JobHistoryViewHolder> {
 
     private ArrayList<AdWithStudentRatingItem> jobList;
+
+    private JobHistoryListListener fragment;
+
+    public JobHistoryAdapter(JobHistoryListListener fragment)
+    {
+        super();
+        this.fragment = fragment;
+    }
 
     public JobHistoryAdapter(ArrayList<AdWithStudentRatingItem> jobs)
     {
@@ -52,7 +61,7 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
         private TextView txtGrade;
         private ImageView imgRes;
 
-       // public JobHistoryBinding binding;
+        public AdInAListItemBinding binding;
 
         public JobHistoryViewHolder(@NonNull View itemView) {
             super(itemView);

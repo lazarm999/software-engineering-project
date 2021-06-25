@@ -16,9 +16,9 @@ public class AdWithStudentRatingItem {
 
     }
 
-    public AdWithStudentRatingItem(long id, String title, LocalDate date, float rating)
+    public AdWithStudentRatingItem(String title, LocalDate date, float rating)
     {
-        this.id = id;
+        //this.id = id;
         this.title = title;
         this.date = date;
         this.rating = rating;

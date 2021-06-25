@@ -17,9 +17,9 @@ public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
 
     private ArrayList<Ad> adList;
 
-    public AdAdapter(ArrayList<Ad> ads)
+    public AdAdapter()
     {
-        this.adList = ads;
+
     }
 
     private AdListListener fragment;
@@ -27,6 +27,11 @@ public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
     public AdAdapter(AdListListener fragment) {
         super();
         this.fragment = fragment;
+    }
+
+    public void setAds(ArrayList<Ad> ads)
+    {
+        this.adList = ads;
     }
 
     @NonNull

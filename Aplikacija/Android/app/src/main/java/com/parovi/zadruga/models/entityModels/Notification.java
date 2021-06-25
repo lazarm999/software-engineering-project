@@ -89,7 +89,7 @@ public class Notification
         this.type = type;
     }
 
-    public String getTitile() {
+    public String getTitle() {
         return title;
     }
 

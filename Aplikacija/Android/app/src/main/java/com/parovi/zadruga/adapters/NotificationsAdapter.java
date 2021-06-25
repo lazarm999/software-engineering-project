@@ -79,7 +79,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         }
 
             public void bindTo(Notification notification) {
-                binding.tvTitle.setText(notification.getTitile());
+                binding.tvTitle.setText(notification.getTitle());
                 binding.tvDesc.setText(notification.getDesc());
             }
 
