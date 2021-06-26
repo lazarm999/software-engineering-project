@@ -3,13 +3,17 @@
     <string name="app_name">Zadruga</string>
 
     <string name="changeLanguage">Choose language...</string>
+    <string name="type">*Type of user</string>
+    <string name="student">Student</string>
+    <string name="employer">Employer</string>
     <string name="serbianLanguage">Serbian</string>
+    <string name="notAllFull">You did not fill all fields!</string>
     <string name="englishLanguage">English</string>
     <string name="login">LOGIN</string>
     <string name="question">Do not have an account?</string>
     <string name="signup">SIGN UP</string>
     <string name="language">Change language</string>
-    <string name="logName">Name</string>
+    <string name="logName">Username</string>
     <string name="logPassword">Password</string>
     <string name="restorePassword">Change your password</string>
     <string name="signName">* Name:</string>

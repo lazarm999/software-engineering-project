@@ -1,11 +1,16 @@
 package com.parovi.zadruga.models.entityModels;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
@@ -28,6 +33,11 @@ import static androidx.room.ForeignKey.SET_NULL;
                         @ForeignKey(entity = User.class,
                         parentColumns = "userId",
                         childColumns = "fkEmployerId",
+                        onDelete = SET_NULL,
+                        onUpdate = CASCADE),
+                        @ForeignKey(entity = Chat.class,
+                        parentColumns = "chatId",
+                        childColumns = "fkQbChatId",
                         onDelete = SET_NULL,
                         onUpdate = CASCADE)})
 public class Ad {
@@ -66,21 +76,27 @@ public class Ad {
         this.numberOfEmployees = numberOfEmployees;
     }
 
-    public Ad(int adId, String title, String description, int compensationMin, int compensationMax, int numberOfEmployees, Date postTime) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Ad(int adId, String title, String description, int compensationMin, int compensationMax, int numberOfEmployees, LocalDate postTime) {
         this.adId = adId;
         this.title = title;
         this.description = description;
         this.compensationMin = compensationMin;
         this.compensationMax = compensationMax;
         this.numberOfEmployees = numberOfEmployees;
-        this.postTime = postTime;
+        this.postTime = java.util.Date.from(postTime.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
     }
 
-    public Ad(String title, String description, Date date)
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Ad(String title, String description, LocalDate date)
     {
         this.title = title;
         this.description = description;
-        this.postTime = date;
+        this.postTime = java.util.Date.from(date.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
     }
 
     public Ad(String title, String description, int fkLocationId){

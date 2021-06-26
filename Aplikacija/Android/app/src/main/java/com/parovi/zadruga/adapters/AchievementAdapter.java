@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.AchievementItemBinding;
-import com.parovi.zadruga.items.AchievementItem;
+import com.parovi.zadruga.models.responseModels.RatingResponse;
 
 import java.util.ArrayList;
 
 public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.AchievementViewHolder> {
 
-    private ArrayList<AchievementItem> achievementList;
+    private ArrayList<RatingResponse> ratingList;
 
     private AchievementListener fragment;
 
@@ -25,9 +25,9 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
         this.fragment = fragment;
     }
 
-    public AchievementAdapter(ArrayList<AchievementItem> achievements)
+    public AchievementAdapter(ArrayList<RatingResponse> achievements)
     {
-        this.achievementList = achievements;
+        this.ratingList = achievements;
     }
 
     @NonNull
@@ -40,18 +40,18 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull AchievementAdapter.AchievementViewHolder holder, int position) {
-        holder.bindTo(achievementList.get(position));
+        holder.bindTo(ratingList.get(position));
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.onAchievementSelected(achievementList.get(position));
+                fragment.onAchievementSelected(ratingList.get(position));
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return achievementList.size();
+        return ratingList.size();
     }
 
     public class AchievementViewHolder extends RecyclerView.ViewHolder {
@@ -62,9 +62,9 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
             this.binding = binding;
         }
 
-        public void bindTo(AchievementItem item)
+        public void bindTo(RatingResponse item)
         {
-            binding.txtAdTitle.setText(item.getTitle());
+            binding.txtAdTitle.setText(item.getRater().getFirstName() + item.getRater().getLastName());
             binding.txtViewGrade.setText(item.getRating());
             binding.imgUserGradeVector.setImageResource(R.drawable.ic_users_grade);
             binding.txtViewComment.setText(item.getComment());
@@ -73,6 +73,6 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
     }
 
     public interface AchievementListener {
-        void onAchievementSelected(AchievementItem achievement);
+        void onAchievementSelected(RatingResponse achievement);
     }
 }

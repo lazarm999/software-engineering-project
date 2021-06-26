@@ -57,8 +57,7 @@ public class JobsAdapter extends ListAdapter<AdWithStudentRatingItem, JobsAdapte
         public boolean areContentsTheSame(@NonNull @NotNull AdWithStudentRatingItem oldItem, @NonNull @NotNull AdWithStudentRatingItem newItem) {
             return oldItem.getTitle().equals(newItem.getTitle()) &&
                     oldItem.getDate().equals(newItem.getDate()) &&
-                    oldItem.getIcRating() == newItem.getIcRating() &&
-                    oldItem.getRating() == newItem.getRating();
+                    oldItem.getIcRating() == newItem.getIcRating();
         }
     };
 
@@ -73,7 +72,6 @@ public class JobsAdapter extends ListAdapter<AdWithStudentRatingItem, JobsAdapte
         public void bindTo(AdWithStudentRatingItem job) {
             binding.txtAdTitle.setText(job.getTitle());
             binding.txtAdDate.setText(job.getDate().toString());
-            binding.txtViewGrade.setText(Float.toString(job.getRating()));
             binding.imgUserGradeVector.setImageResource(R.drawable.ic_users_grade);
         }
     }

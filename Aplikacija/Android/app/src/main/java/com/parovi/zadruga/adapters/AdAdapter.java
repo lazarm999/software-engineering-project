@@ -1,16 +1,20 @@
 package com.parovi.zadruga.adapters;
 
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.AdItemBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +50,7 @@ public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
         return new AdViewHolder(binding);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull AdAdapter.AdViewHolder holder, int position) {
         holder.bindTo(adList.get(position));
@@ -71,11 +76,14 @@ public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
             this.binding = binding;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public void bindTo(Ad ad) {
             binding.txtDescForAd.setText(ad.getTitle());
             binding.editTxtDescriptionAd.setText(ad.getDescription());
             binding.imgAdIcon.setImageResource(R.drawable.ad_item);
-            binding.editTxtAdItemDate.setText(ad.getPostTime().toString());
+            LocalDate localDate = ad.getPostTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            //binding.editTxtAdItemDate.setText(localDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
+            binding.editTxtAdItemDate.setText(localDate.toString());
         }
     }
 

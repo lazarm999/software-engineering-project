@@ -47,7 +47,6 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
 
         holder.tvTitle.setText(currJob.getTitle());
         holder.tvDate.setText(currJob.getDate().toString());
-        holder.txtGrade.setText(Float.toString(currJob.getRating()));
         holder.imgRes.setImageResource(R.drawable.ic_users_grade);
     }
 
@@ -59,7 +58,6 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
     public class JobHistoryViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTitle;
         private TextView tvDate;
-        private TextView txtGrade;
         private ImageView imgRes;
 
         public AdInAListItemBinding binding;
@@ -68,13 +66,11 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
             super(itemView);
             tvTitle = itemView.findViewById(R.id.txtAdTitle);
             tvDate = itemView.findViewById(R.id.txtAdDate);
-            txtGrade = itemView.findViewById(R.id.txtViewGrade);
             imgRes = itemView.findViewById(R.id.imgUserGradeVector);
         }
 
         public TextView getTvTitle() {return this.tvTitle;}
         public TextView getTvDate() {return this.tvDate;}
-        public TextView getEtGrade() {return this.txtGrade;}
         public ImageView getImgRes() {return this.imgRes;}
 
     }

@@ -10,6 +10,7 @@ import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.models.entityModels.Location;
+import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.requestModels.PostAdRequest;
 import com.parovi.zadruga.repository.AdRepository;
 import com.parovi.zadruga.repository.LookUpRepository;
@@ -25,7 +26,7 @@ public class NewAdViewModel extends AndroidViewModel {
     private LookUpRepository lookUpRepository;
     private AdRepository adRepository;
     private ArrayList<Location> locs;
-    //private ArrayList<Tag> tag;
+    private ArrayList<Tag> tag;
 
     public NewAdViewModel(@NonNull @NotNull Application application) {
         super(application);
@@ -35,6 +36,9 @@ public class NewAdViewModel extends AndroidViewModel {
         locations = new MutableLiveData<>();
         //tag = new MutableLiveData<>();
         lookUpRepository.getAllLocations(Utility.getAccessToken(App.getAppContext()), locations);
+        tags = new MutableLiveData<>();
+        lookUpRepository.getAllLocations(Utility.getAccessToken(App.getAppContext()), locations);
+        lookUpRepository.getAllTags(Utility.getAccessToken(App.getAppContext()), tags);
     }
 
     public MutableLiveData<CustomResponse<?>> getIsPosted(){
@@ -53,6 +57,9 @@ public class NewAdViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<CustomResponse<?>> getTags(){
+        if(tags == null)
+            tags = new MutableLiveData<CustomResponse<?>>();
+
         return tags;
     }
 
@@ -63,6 +70,12 @@ public class NewAdViewModel extends AndroidViewModel {
     public void getCities(String token)
     {
         lookUpRepository.getAllLocations(token, locations);
+        lookUpRepository.getAllLocations(token, locations);
+    }
+
+    public void getTagNames(String token)
+    {
+        lookUpRepository.getAllTags(token, tags);
     }
 
     public List<String> getAllCities()
@@ -73,6 +86,17 @@ public class NewAdViewModel extends AndroidViewModel {
             return strings;
         for (Location loc : locs)
             strings.add(loc.getCityName());
+        return strings;
+    }
+
+    public List<String> getAllTagNames()
+    {
+        List<Tag> tagNames = (List<Tag>)tags.getValue().getBody();
+        List<String> strings = new ArrayList<String>();
+        if (tagNames == null)
+            return strings;
+        for (Tag tag : tagNames)
+            strings.add(tag.getName());
         return strings;
     }
 }

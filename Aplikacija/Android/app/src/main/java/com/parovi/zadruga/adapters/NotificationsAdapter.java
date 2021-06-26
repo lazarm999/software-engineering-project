@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationViewHolder> {
 
-    private ArrayList<Notification> notificationsList;
+    private ArrayList<Notification> notificationList;
 
     private NotificationListener fragment;
 
@@ -25,14 +25,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     {
         super();
         this.fragment = fragment;
+        notificationList = new ArrayList<>();
     }
 
-    public NotificationsAdapter(ArrayList<Notification> notificationsList){
-        this.notificationsList = notificationsList;
+    public NotificationsAdapter(ArrayList<Notification> notificationList){
+        this.notificationList = notificationList;
     }
 
     public Notification getNotification(int i){
-        return notificationsList.get(i);
+        return notificationList.get(i);
+    }
+
+    public void setNotificationList(ArrayList<Notification> notif)
+    {
+        this.notificationList = notif;
     }
 
     @NonNull
@@ -45,29 +51,31 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public void onBindViewHolder(@NonNull NotificationsAdapter.NotificationViewHolder holder, int position) {
-        Notification currNotification = notificationsList.get(position);
+        Notification currNotification = notificationList.get(position);
 //        if(currNotification.getType().equals(Constants.ACCEPTED)){
 //            holder.binding.ivNotificationIcon.setImageResource(R.drawable.accepted);
-//            holder.binding.tvTitle.setText("Odabrani ste za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-//            holder.binding.tvDesc.setText("brao prifacen si");
+////            holder.binding.tvTitle.setText(currNotification.getTitle());
+////            holder.binding.tvDesc.setText(currNotification.getDesc());
 //        } else if(currNotification.getType().equals(Constants.DECLINED)){
 //            holder.binding.ivNotificationIcon.setImageResource(R.drawable.declined);
-//            holder.binding.tvTitle.setText("Niste odabrani za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-//            holder.binding.tvDesc.setText("vise srece drugi put");
+////            holder.binding.tvTitle.setText("Niste odabrani za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+////            holder.binding.tvDesc.setText("vise srece drugi put");
 //        } else if(currNotification.getType().equals(Constants.COMMENT)){
 //            holder.binding.ivNotificationIcon.setImageResource(R.drawable.comment);
-//            holder.binding.tvTitle.setText("Korisnik taj i taj je komentarisao oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-//            holder.binding.tvDesc.setText("prozivao te tamo nesto po oglasi");
+////            holder.binding.tvTitle.setText("Korisnik taj i taj je komentarisao oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+////            holder.binding.tvDesc.setText("prozivao te tamo nesto po oglasi");
 //        } else if(currNotification.getType().equals(Constants.RATING)){
 //            holder.binding.ivNotificationIcon.setImageResource(R.drawable.rating);
-//            holder.binding.tvTitle.setText("Korisnik taj i taj vas je ocenio" + Integer.toString(currNotification.getFkSenderId()));
-//            holder.binding.tvDesc.setText("dao ti keca");
+////            holder.binding.tvTitle.setText("Korisnik taj i taj vas je ocenio" + Integer.toString(currNotification.getFkSenderId()));
+////            holder.binding.tvDesc.setText("dao ti keca");
 //        }
+//        holder.binding.tvTitle.setText(currNotification.getTitle());
+//        holder.binding.tvDesc.setText(currNotification.getDesc());
     }
 
     @Override
     public int getItemCount() {
-        return notificationsList.size();
+        return notificationList.size();
     }
 
     public static class NotificationViewHolder extends RecyclerView.ViewHolder{

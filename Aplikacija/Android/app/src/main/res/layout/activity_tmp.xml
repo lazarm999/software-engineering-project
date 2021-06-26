@@ -107,28 +107,28 @@
 
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/srlNotifications"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvNotifications"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"/>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/rvComments"-->
+<!--        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--            android:id="@+id/srlNotifications"-->
 <!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:scrollbars="vertical"/>-->
+<!--            android:layout_height="match_parent" >-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/rvNotifications"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:scrollbars="vertical"/>-->
+<!--        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+
+<!--&lt;!&ndash;        <androidx.recyclerview.widget.RecyclerView&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/rvComments"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:scrollbars="vertical"/>&ndash;&gt;-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </LinearLayout>

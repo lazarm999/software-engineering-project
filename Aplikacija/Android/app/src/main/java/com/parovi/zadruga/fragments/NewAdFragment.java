@@ -48,7 +48,8 @@ public class NewAdFragment extends Fragment {
     TextView txtSelectedChoices;
     boolean[] selectedItems;
     ArrayList<Integer> categoryList = new ArrayList<>();
-    String[] categoryArray = {"Hostess", "Promoter", "Kitchen support staff", "Interviewer", "Collection operations", "Waiter", "Lighter physical jobs", "Heavier physical jobs"};
+    String[] newArrayCategory = {};
+    //String[] categoryArray = {"Hostess", "Promoter", "Kitchen support staff", "Interviewer", "Collection operations", "Waiter", "Lighter physical jobs", "Heavier physical jobs"};
     private NewAdViewModel model;
 
     @Override
@@ -73,20 +74,29 @@ public class NewAdFragment extends Fragment {
                 }
                 else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
                 {
-                    makeToast(R.string.badRequestLocation);
+                    Toast.makeText(requireContext(), "You got the locations", Toast.LENGTH_SHORT).show();
                 }
                 else if(customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR)
                 {
-                    makeToast(R.string.serverErrorNewAd);
+                    Toast.makeText(requireContext(), "Error with server", Toast.LENGTH_SHORT).show();
                 }
-
-
-
-
             }
         });
 
-
+        model.getTags().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    newArrayCategory = null;
+                    newArrayCategory = model.getAllTagNames().toArray(new String[0]);
+                    makeToast(R.string.successfulLocation);
+                } else if (customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST) {
+                    makeToast(R.string.badRequestLocation);
+                } else if (customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR) {
+                    makeToast(R.string.serverErrorNewAd);
+                }
+            }
+        });
 
         etNewAdFeeFrom = (EditText) layout.findViewById(R.id.editTxtNewAdFeeFrom);
         etNewAdFeeTo = (EditText) layout.findViewById(R.id.editTxtNewAdFeeTo);
@@ -94,7 +104,7 @@ public class NewAdFragment extends Fragment {
         etNewAdTitle = (EditText) layout.findViewById(R.id.txtNewAdTitle);
         etNewAdPeopleNeeded = (EditText) layout.findViewById(R.id.editTxtNewAdPeopleNeeded);
         txtSelectedChoices = (TextView) layout.findViewById(R.id.txtCategoryList);
-        selectedItems = new boolean[categoryArray.length];
+        selectedItems = new boolean[newArrayCategory.length];
 
         Button btnAdd = (Button) layout.findViewById(R.id.btnNewAdAdd);
         Button btnCancel = (Button) layout.findViewById(R.id.btnNewAdCancle);
@@ -116,7 +126,7 @@ public class NewAdFragment extends Fragment {
 
                 builder.setTitle(R.string.dialogMultipleChoiceTitle);
                 builder.setCancelable(false);
-                builder.setMultiChoiceItems(categoryArray, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setMultiChoiceItems(newArrayCategory, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         if (isChecked) {
@@ -132,7 +142,7 @@ public class NewAdFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         StringBuilder stringBuilder = new StringBuilder();
                         for (int j = 0; j < categoryList.size(); j++) {
-                            stringBuilder.append(categoryArray[categoryList.get(j)]);
+                            stringBuilder.append(newArrayCategory[categoryList.get(j)]);
 
                             if (j != categoryList.size() - 1) {
                                 stringBuilder.append(", ");
@@ -211,6 +221,4 @@ public class NewAdFragment extends Fragment {
         toast.setView(layoutToast);
         toast.show();
     }
-
-
 }

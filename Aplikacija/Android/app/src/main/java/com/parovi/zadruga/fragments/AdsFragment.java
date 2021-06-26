@@ -21,11 +21,12 @@ import com.parovi.zadruga.databinding.FragmentAdsFragmentBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.ui.JobAdActivity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
     FragmentAdsFragmentBinding binding;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +46,9 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
 
         ArrayList<Ad> ads = new ArrayList<>();
 
-        ads.add(new Ad("Title 1", "Description 1", new Date(2020, 3, 12)));
-        ads.add(new Ad("Title 2", "Description 2", new Date(2021, 4, 4)));
+        ads.add(new Ad("Delivery worker", "Looking for students up to 26 years of age for food delivery services.", LocalDate.of(2021, 6, 10)));
+        //ads.add(new Ad("Warehouse worker", "Male students are needed for heavier physical work in a warehouse.", LocalDate.of(2021, 6, 25)));
+        //ads.add(new Ad("Barista", "We are looking for either male or female students with some previous experience in coffee making.", LocalDate.of(2021, 5, 30)));
 
 
         RecyclerView recView = binding.recViewAds;
