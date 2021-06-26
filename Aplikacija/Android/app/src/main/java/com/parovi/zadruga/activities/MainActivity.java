@@ -1,4 +1,5 @@
 package com.parovi.zadruga.activities;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,25 +12,41 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.models.entityModels.User;
 
 import java.util.Locale;
 
 public class MainActivity<AlterDialog> extends AppCompatActivity {
 
     Animation topAnim, bottomAnim, scaleUp, scaleDown;      //variables for animation
-    TextView h1;
+    ImageView h1;
     Button logIn, signUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        User user;
+        if((user = Utility.getLoggedInUser(this)) != null){
+            if(user.isEmployer()) {
+                Intent intent = new Intent(MainActivity.this, MainEmployerActivity.class);
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent = new Intent(MainActivity.this, MainStudentActivity.class);
+                startActivity(intent);
+            }
+        }
+
         loadLocale();
+
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
@@ -56,7 +73,7 @@ public class MainActivity<AlterDialog> extends AppCompatActivity {
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent = new Intent(MainActivity.this, MainEmployerActivity.class);
+               Intent intent = new Intent(MainActivity.this, LogInActivity.class);
                startActivity(intent);
             }
         });

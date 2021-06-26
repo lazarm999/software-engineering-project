@@ -154,4 +154,8 @@
     <string name="questionAd">Postavite pitanje...</string>
     <string name="applicants">Prijavljeni za posao</string>
     <string name="preferences">Izbor preferencija</string>
+    <string name="type">*Tip korisnika</string>
+    <string name="student">Student</string>
+    <string name="employer">Poslodavac</string>
+    <string name="notAllFull">Niste popunili sva polja!</string>
 </resources>

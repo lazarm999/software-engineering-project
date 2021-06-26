@@ -74,14 +74,8 @@ public class EmployersAdsFragment extends Fragment {
 
         ArrayList<AdWithStudentRatingItem> jobs = new ArrayList<>();
 
-        jobs.add(new AdWithStudentRatingItem("Title 1", LocalDate.of(2021, 5, 29), (float) 4.2));
-        jobs.add(new AdWithStudentRatingItem("Title 2", LocalDate.of(2020, 8, 22), (float) 5.0));
-        jobs.add(new AdWithStudentRatingItem("Title 3", LocalDate.of(2021, 10, 30), (float) 4.6));
-        jobs.add(new AdWithStudentRatingItem("Title 4", LocalDate.of(2021, 12, 4), (float) 1.8));
-        jobs.add(new AdWithStudentRatingItem("Title 5", LocalDate.of(2021, 4, 28), (float) 3.6));
-        jobs.add(new AdWithStudentRatingItem("Title 6", LocalDate.of(2021, 1, 15), (float) 2.4));
-        jobs.add(new AdWithStudentRatingItem("Title 7", LocalDate.of(2021, 3, 13), (float) 2.8));
-        jobs.add(new AdWithStudentRatingItem("Title 8", LocalDate.of(2021, 9, 30), (float) 5.0));
+        jobs.add(new AdWithStudentRatingItem("Work in a fabric", LocalDate.of(2021, 6, 11)));
+        jobs.add(new AdWithStudentRatingItem("Helping the elderly", LocalDate.of(2021, 4, 29)));
 
         RecyclerView recView = layout.findViewById(R.id.recyclerViewJobHistory);
         recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

@@ -1,11 +1,16 @@
 package com.parovi.zadruga.models.entityModels;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +61,6 @@ public class Ad {
     private Location location;
 
     public Ad(){
-
     }
 
     public Ad(int adId, String title, String description, int compensationMin, int compensationMax, int numberOfEmployees) {
@@ -68,21 +72,27 @@ public class Ad {
         this.numberOfEmployees = numberOfEmployees;
     }
 
-    public Ad(int adId, String title, String description, int compensationMin, int compensationMax, int numberOfEmployees, Date postTime) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Ad(int adId, String title, String description, int compensationMin, int compensationMax, int numberOfEmployees, LocalDate postTime) {
         this.adId = adId;
         this.title = title;
         this.description = description;
         this.compensationMin = compensationMin;
         this.compensationMax = compensationMax;
         this.numberOfEmployees = numberOfEmployees;
-        this.postTime = postTime;
+        this.postTime = java.util.Date.from(postTime.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
     }
 
-    public Ad(String title, String description, Date date)
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Ad(String title, String description, LocalDate date)
     {
         this.title = title;
         this.description = description;
-        this.postTime = date;
+        this.postTime = java.util.Date.from(date.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
     }
 
     public Ad(String title, String description, int fkLocationId){

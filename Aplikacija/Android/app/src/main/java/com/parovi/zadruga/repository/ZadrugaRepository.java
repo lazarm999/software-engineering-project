@@ -9,22 +9,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.FileUtils;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.room.util.FileUtil;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.parovi.zadruga.App;
@@ -82,7 +76,6 @@ import com.quickblox.chat.QBRestChatService;
 import com.quickblox.chat.listeners.QBChatDialogMessageListener;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
-import com.quickblox.chat.model.QBDialogCustomData;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.chat.request.QBMessageGetBuilder;
 import com.quickblox.core.QBEntityCallback;
@@ -93,9 +86,7 @@ import com.quickblox.users.model.QBUser;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -107,7 +98,6 @@ import java.util.concurrent.Executor;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -1304,7 +1294,7 @@ public class ZadrugaRepository  {
 
             @Override
             public void onFailure(@NotNull Call<List<Location>> call, @NotNull Throwable t) {
-                locations.postValue(new CustomResponse<>(CustomResponse.Status.OK, t.getMessage()));
+                locations.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
             }
         });
     }
@@ -1324,7 +1314,7 @@ public class ZadrugaRepository  {
 
             @Override
             public void onFailure(@NotNull Call<List<Badge>> call, @NotNull Throwable t) {
-                badges.postValue(new CustomResponse<>(CustomResponse.Status.OK, t.getMessage()));
+                badges.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
             }
         });
     }
@@ -1344,7 +1334,7 @@ public class ZadrugaRepository  {
 
             @Override
             public void onFailure(@NotNull Call<List<Tag>> call, @NotNull Throwable t) {
-                tags.postValue(new CustomResponse<>(CustomResponse.Status.OK, t.getMessage()));
+                tags.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
             }
         });
     }
@@ -1398,7 +1388,7 @@ public class ZadrugaRepository  {
 
             @Override
             public void onFailure(@NotNull Call<List<Faculty>> call, @NotNull Throwable t) {
-                faculties.postValue(new CustomResponse<>(CustomResponse.Status.OK, t.getMessage()));
+                faculties.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
             }
         });
     }
@@ -1417,7 +1407,7 @@ public class ZadrugaRepository  {
 
             @Override
             public void onFailure(@NotNull Call<List<University>> call, @NotNull Throwable t) {
-                universities.postValue(new CustomResponse<>(CustomResponse.Status.OK, t.getMessage()));
+                universities.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
             }
         });
     }

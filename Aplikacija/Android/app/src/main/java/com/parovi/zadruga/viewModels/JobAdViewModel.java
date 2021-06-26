@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.models.entityModels.Ad;
-import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 
 public class JobAdViewModel extends AndroidViewModel {

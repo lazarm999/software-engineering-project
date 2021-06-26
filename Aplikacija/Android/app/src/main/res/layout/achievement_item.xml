@@ -32,7 +32,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/roboto_condensed_regular"
-            android:text="Title"
+            android:text="Rater"
             android:textColor="?attr/colorOnSurface"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -70,7 +70,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="240dp"
                     android:fontFamily="@font/roboto_condensed_regular"
-                    android:text="Name Surname"
+                    android:text="Lazar Minic"
                     android:textColor="@color/lila"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -83,7 +83,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="268dp"
                     android:fontFamily="@font/roboto_condensed_regular"
-                    android:text="username"
+                    android:text="laza"
                     android:textColor="@color/lila"
                     android:textSize="12sp"
                     android:textStyle="italic" />
@@ -95,7 +95,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="140dp"
-                    app:srcCompat="@drawable/avatar" />
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/lazar" />
 
                 <Button
                     android:id="@+id/btnAchievements"
@@ -119,23 +120,6 @@
                     app:iconTint="@color/black"
                     app:rippleColor="@color/lila"
                     tools:ignore="NotSibling" />
-
-                <ImageButton
-                    android:id="@+id/imgBtnArrowBack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="205dp"
-                    android:layout_marginRight="205dp"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_left_black_arrow"
-                    android:tint="@color/background" />
 
             </RelativeLayout>
 
@@ -164,32 +148,17 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <TableRow
-                        android:id="@+id/tbRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginRight="250dp">
-
-                        <ImageButton
-                            android:id="@+id/imgBtnBadge1"
-                            android:layout_width="40dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="0dp"
-                            android:layout_marginRight="0dp"
-                            android:layout_marginBottom="0dp"
-                            android:background="@color/background"
-                            app:srcCompat="@drawable/badge1" />
-
-                        <ImageButton
-                            android:id="@+id/imgBtnBadge2"
-                            android:layout_width="40dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/background"
-                            app:srcCompat="@drawable/badge2" />
-                    </TableRow>
+                    <ImageButton
+                        android:id="@+id/imgBtnBadge1"
+                        android:layout_width="92dp"
+                        android:layout_height="90dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:background="@color/background"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/badge" />
 
                 </LinearLayout>
 
@@ -218,7 +187,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="83dp"
                         android:fontFamily="@font/roboto_condensed_regular"
-                        android:text="Faculty"
+                        android:text="Elektronski fakultet"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 
@@ -242,6 +211,13 @@
                         android:textColor="@color/lila"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="160dp"
+                        android:layout_marginRight="160dp"
+                        app:barrierDirection="left" />
 
                     <TextView
                         android:id="@+id/txtNumber"
@@ -275,7 +251,7 @@
                     <TextView
                         android:id="@+id/txtMultilineEditBio"
                         android:layout_width="wrap_content"
-                        android:layout_height="25dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="70dp"
                         android:background="@drawable/border_for_inputs"
                         android:ems="10"
@@ -284,7 +260,7 @@
                         android:inputType="textMultiLine"
                         android:scrollbars="vertical"
                         android:singleLine="false"
-                        android:text="Student's bio"
+                        android:text="Enthusiastic young person who likes to help others"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -297,7 +273,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="600dp"
+                android:layout_marginTop="660dp"
                 android:layout_marginEnd="5dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="@string/ratingStudent"

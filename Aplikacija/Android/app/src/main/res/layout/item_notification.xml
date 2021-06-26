@@ -5,61 +5,68 @@
     android:id="@+id/adInALIstItem"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:padding="5dp">
 
-<androidx.cardview.widget.CardView
-    android:padding="6dp"
-    android:id="@+id/cardViewAdItem"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardElevation="0dp"
-    android:background="@color/background">
-
-    <RelativeLayout
-        android:id="@+id/cardAdItem"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewAdItem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/border_for_notification">
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:padding="6dp"
+        app:cardElevation="0dp">
 
-        <ImageView
-            android:id="@+id/ivNotificationIcon"
-            android:layout_width="75dp"
-            android:layout_height="65dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            tools:srcCompat="@android:drawable/screen_background_light" />
+        <RelativeLayout
+            android:id="@+id/cardAdItem"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/border_for_notification">
 
-        <TextView
-            android:id="@+id/tvDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="90dp"
-            android:fontFamily="@font/roboto_condensed_regular"
-            android:paddingBottom="5dp"
-            android:text="Taj i taj ti je dao ocenu"
-            android:textColor="@color/lila"
-            android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/ivNotificationIcon"
+                android:layout_width="75dp"
+                android:layout_height="65dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="17dp"
+                tools:srcCompat="@android:drawable/screen_background_light" />
 
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="150dp"
-            android:layout_marginTop="15dp"
-            android:fontFamily="@font/roboto_condensed_regular"
-            android:text="Bas si bio dobar radnik"
-            android:textColor="@color/lila"
-            app:layout_constraintStart_toStartOf="@+id/ivNotificationIcon"
-            app:layout_constraintTop_toBottomOf="@+id/ivNotificationIcon" />
+            <TextView
+                android:id="@+id/tvDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTitle"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="3dp"
+                android:layout_toEndOf="@+id/ivNotificationIcon"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:paddingBottom="5dp"
+                android:text="Taj i taj ti je dao ocenu"
+                android:textColor="@color/lila"
+                android:textSize="20sp" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="150dp"
+                android:layout_marginTop="17dp"
+                android:layout_toEndOf="@+id/ivNotificationIcon"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="Bas si bio dobar radnik"
+                android:textColor="@color/lila"
+                app:layout_constraintStart_toStartOf="@+id/ivNotificationIcon"
+                app:layout_constraintTop_toBottomOf="@+id/ivNotificationIcon" />
+
+        </RelativeLayout>
 
 
-</androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 </RelativeLayout>
 

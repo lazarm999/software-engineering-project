@@ -57,7 +57,8 @@
         android:fontFamily="@font/roboto_condensed_regular"
         android:hint="@string/logName"
         android:inputType="textPersonName"
-        android:textColor="@color/lila"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
         android:textSize="20dp" />
 
     <EditText
@@ -72,7 +73,8 @@
         android:fontFamily="@font/roboto_condensed_regular"
         android:hint="@string/logPassword"
         android:inputType="textPassword"
-        android:textColor="@color/lila"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
         android:textSize="20dp" />
 
     <Button
