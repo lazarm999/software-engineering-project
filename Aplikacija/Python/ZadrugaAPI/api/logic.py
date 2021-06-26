@@ -166,7 +166,9 @@ class NotificationLogic:
         }
         NotificationLogic.sendPushNotifications(data, userFcms)
 
-    def sendChatNotification(sender, message, userFcms):
+    def sendChatNotification(sender, message, userQbIds):
+        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user__userQbId__in=userQbIds)]
+        
         NotificationLogic.sendPushNotifications({
             'type': 'chat',
             'sender': sender,
