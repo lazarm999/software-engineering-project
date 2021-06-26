@@ -13,14 +13,17 @@ public class Constants {
     public static final String LOGGED_USER_ID = "loggedUserId";
     public static final String LOGGED_USER_QB_ID = "loggedUserQbId";
     public static final String ACCESS_TOKEN = "accessToken";
-    public static final String FCM_TOKEN_TAG = "fcmTokenTag";
+    public static final String PASSWORD_TOKEN = "password";
+    public static final String FCM_TOKEN_TAG = "fcmToken";
     public static final String IS_CHANNEL_CREATED_TAG = "isChannelCreated";
     public static final String IS_ARCHIVED = "isArchived";
+    public static final String AD_ID = "adId";
     public static final String MESSAGES = "messages";
     //tipovi notifikacija
-    public static final String ACCEPTED = "accepted";
-    public static final String DECLINED = "declined";
-    public static final String COMMENT = "comment";
-    public static final String RATING = "rating";
+    public static final String NOTIF_ACCEPTED = "accepted";
+    public static final String NOTIF_DECLINED = "declined";
+    public static final String NOTIF_RATING = "rating";
+    public static final String NOTIF_TAGGED = "tagged";
+    public static final String NOTIF_AD_COMMENT = "adComment";//tag za owner-a ad-a
     public static final String LOGGED_IN_USER = "loggedInUser";
 }

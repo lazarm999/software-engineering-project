@@ -1,9 +1,7 @@
-package com.parovi.zadruga.retrofit;
+package com.parovi.zadruga.api;
 
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.requestModels.EditAdRequest;
-import com.parovi.zadruga.models.requestModels.FilterAndSortRequest;
-import com.parovi.zadruga.models.responseModels.AdResponse;
 import com.parovi.zadruga.models.requestModels.ChooseApplicantsRequest;
 import com.parovi.zadruga.models.requestModels.PostAdRequest;
 
@@ -19,7 +17,6 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 
 public interface AdApi {
     @GET("ad/{id}/")

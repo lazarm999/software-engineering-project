@@ -16,7 +16,7 @@ import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ActivityChatBinding;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.ChatsViewModel;
 
@@ -26,6 +26,7 @@ public class ChatActivity extends AppCompatActivity{
     private ChatViewModel model;
     private ActivityChatBinding binding;
     MutableLiveData<CustomResponse<?>> isLoggedIn = new MutableLiveData<>();
+    private UserRepository userRepository = new UserRepository();
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -41,7 +42,7 @@ public class ChatActivity extends AppCompatActivity{
 
         model = new ViewModelProvider(this).get(ChatViewModel.class);
 
-        ZadrugaRepository.getInstance(this.getApplication()).loginUser(isLoggedIn, new User("vuk.bibic@gmail.com", "novaaasifraaaa"));
+        userRepository.loginUser(isLoggedIn, "vuk.bibic@gmail.com", "novaaasifraaaa");
         isLoggedIn.observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {

@@ -133,7 +133,6 @@
     <string name="headerJobs">Poslovi koje ste radili do sada</string>
     <string name="headerMyAds">Vaši oglasi</string>
     <string name="recommend">Preporučeno za Vas</string>
-
     <string name="profileStudent">Profil</string>
     <string name="notificationsStudent">Obaveštenja</string>
     <string name="daysAgo">pre %1$d dana</string>
@@ -155,4 +154,9 @@
     <string name="applicants">Prijavljeni za posao</string>
     <string name="preferences">Izbor preferencija</string>
     <string name="companyPlaceholder">Kompanija</string>
+    <string name="accepted">Prihvaćeni ste za posao</string>
+    <string name="declined">Odbijeni ste za posao</string>
+    <string name="tagged">Korisnik %1$s Vas je tagovao</string>
+    <string name="adComment">Korisnik %1$s je ostavio komentar</string>
+    <string name="rating">Korisnik %1$s Vas je oceno</string>
 </resources>

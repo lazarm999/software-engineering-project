@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.adapters.ApplicantResumeAdapter;
 import com.parovi.zadruga.adapters.ApplicantsAdapter;
 import com.parovi.zadruga.databinding.FragmentSelectWorkersBinding;
 import com.parovi.zadruga.models.entityModels.User;

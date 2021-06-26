@@ -1,4 +1,4 @@
-package com.parovi.zadruga.retrofit;
+package com.parovi.zadruga.api;
 
 import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
 import com.parovi.zadruga.models.responseModels.RatingResponse;

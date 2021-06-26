@@ -4,55 +4,52 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.RawQuery;
 import androidx.room.Transaction;
 import androidx.room.Update;
+import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.parovi.zadruga.models.entityModels.Ad;
-import com.parovi.zadruga.models.nonEntityModels.AdEmployerLocation;
+import com.parovi.zadruga.models.entityModels.Location;
+import com.parovi.zadruga.models.entityModels.Tag;
+import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
-import com.parovi.zadruga.models.responseModels.AdResponse;
 
 import java.util.List;
-/*TODO:
-recimo mogu da se naprave razlicite vrste modela namenjene za razlicite activitije
-u zavinosti koje informacije treba da se prikazu,
-to kad tea i uros odluce kako ce da izgledaju aktiviji
-isto vazi i za user-a tj ovo zapravo vazi za sve stvari koje treba da se prikazuju*/
 
 @Dao
-public interface AdDao {
+public abstract class AdDao extends BaseDao<Ad> {
 
     @Transaction
     @Query("SELECT Ad.*, user_table.*, Location.* " +
             "FROM Ad " +
             "INNER JOIN user_table ON user_table.userId = Ad.fkEmployerId " +
             "LEFT JOIN Location ON Location.locId = Ad.fkLocationId")
-    ListenableFuture<List<AdWithTags>> getAds();
+    public abstract ListenableFuture<List<AdWithTags>> getAds();
 
+    @RawQuery(observedEntities = {Ad.class, User.class, Location.class, Tag.class})
+    public abstract List<AdWithTags> getAds(SupportSQLiteQuery query);
+
+    @Transaction
     @Query("SELECT Ad.*, user_table.*, Location.* " +
             "FROM Ad " +
             "INNER JOIN user_table ON user_table.userId = Ad.fkEmployerId " +
             "LEFT JOIN Location ON Location.locId = Ad.fkLocationId " +
             "WHERE Ad.adId = :adId")
-    ListenableFuture<AdWithTags> getAd(int adId);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    ListenableFuture<Long> insertAd(Ad ad);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    ListenableFuture<List<Long>> insertAds(List<Ad> ads);
-
-    @Update
-    ListenableFuture<Integer>updateAd(Ad ad);
+    public abstract ListenableFuture<AdWithTags> getAdWithTagsById(int adId);
 
     @Query("SELECT * FROM Ad WHERE Ad.adId == :id")
-    ListenableFuture<List<Ad>> getAdById(int id);
+    public abstract ListenableFuture<List<Ad>> getAdById(int id);
+
+    @Query("SELECT * FROM Ad WHERE Ad.fkQbChatId LIKE :qbChatId")
+    public abstract Ad getAdByQbChatId(String qbChatId);
 
     @Query("DELETE FROM Ad WHERE Ad.adId = :adId")
-    ListenableFuture<Integer> deleteAdById(int adId);
+    public abstract ListenableFuture<Integer> deleteAdById(int adId);
 
-    /*void getAdsByLocation(List<Integer> locIds);
-    void getAdsByFee(int from, int to);
-    void getAdsByTag(int tagId);*/
+    @Query("UPDATE Ad " +
+            "SET fkQbChatId = :chatId "+
+            "WHERE Ad.adId LIKE :adId")
+    public abstract void updateQbChatId(String chatId, int adId);
 }

@@ -30,7 +30,6 @@ public class Comment {
     private int fkAdId;
     private String comment;
     private Date postTime;
-    private boolean isSynced;
 
     public Comment() {
     }
@@ -93,13 +92,5 @@ public class Comment {
 
     public void setPostTime(Date postTime) {
         this.postTime = postTime;
-    }
-
-    public boolean isSynced() {
-        return isSynced;
-    }
-
-    public void setSynced(boolean synced) {
-        isSynced = synced;
     }
 }

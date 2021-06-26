@@ -20,17 +20,10 @@ import com.parovi.zadruga.models.entityModels.Chat;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Time;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.TimeZone;
-
-import static java.util.TimeZone.getDefault;
 
 public class ChatsAdapter extends ListAdapter<Chat, ChatsAdapter.ChatViewHolder> {
     ChatListListener fragment;
@@ -70,7 +63,7 @@ public class ChatsAdapter extends ListAdapter<Chat, ChatsAdapter.ChatViewHolder>
             Log.d("DEBUG", "areContentsTheSame: entered");
             return oldItem.getChatId().equals(newItem.getChatId()) &&
                     oldItem.getProfileImage() == oldItem.getProfileImage() &&
-                    oldItem.getLastSenderName() == oldItem.getLastSenderName() &&
+                    oldItem.getLastSenderUsername() == oldItem.getLastSenderUsername() &&
                     oldItem.getLastMessage() == newItem.getLastMessage() &&
                     oldItem.getLastMessageDateSent() == oldItem.getLastMessageDateSent() &&
                     oldItem.getProfileImage() == newItem.getProfileImage();
@@ -89,7 +82,7 @@ public class ChatsAdapter extends ListAdapter<Chat, ChatsAdapter.ChatViewHolder>
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void bind(Chat chatResume) {
             binding.tvChatTitle.setText(chatResume.getChatTitle());
-            String subtitle = chatResume.getFkLastSenderId() == Utility.getUserQbId(App.getAppContext()) ? "You" : chatResume.getLastSenderName();
+            String subtitle = chatResume.getLastSenderUsername().equals(Utility.getLoggedInUser(App.getAppContext()).getUsername()) ? "You" : chatResume.getLastSenderUsername();
             subtitle += ": " + chatResume.getLastMessage();
             if (subtitle.length() > SUBTITLE_MAX_LENGTH) {
                 subtitle = subtitle.substring(0, SUBTITLE_MAX_LENGTH);

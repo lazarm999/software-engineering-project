@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Badge {
     @PrimaryKey
-    public int badgeId;
-    public String description;
+    private int badgeId;
+    private String description;
 
     public Badge(String description) {
         this.description = description;

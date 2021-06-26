@@ -1,19 +1,24 @@
 package com.parovi.zadruga;
 
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -23,23 +28,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.parovi.zadruga.adapters.NotificationsAdapter;
 import com.parovi.zadruga.models.entityModels.Notification;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.nonEntityModels.CommentUser;
-import com.parovi.zadruga.models.requestModels.PostAdRequest;
-import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.repository.AdRepository;
+import com.parovi.zadruga.repository.BaseRepository;
+import com.parovi.zadruga.repository.LookUpRepository;
+import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.LoginViewModel;
 import com.parovi.zadruga.viewModels.TmpViewModel;
-import com.quickblox.auth.session.QBSessionManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**/
 public class TmpActivity extends AppCompatActivity {
@@ -68,7 +72,9 @@ public class TmpActivity extends AppCompatActivity {
     private TmpViewModel tmpViewModel;
     private LoginViewModel loginViewModel;
     private ChatViewModel chatViewModel;
-    private ZadrugaRepository rep;
+    private LookUpRepository lookUpRep;
+    private UserRepository userRep;
+    private AdRepository adRep;
 
     private String topic = "svi";
     private ArrayList<Notification> notificationList;
@@ -81,18 +87,19 @@ public class TmpActivity extends AppCompatActivity {
     private ArrayList<CommentUser> commentsList;
 
     private SwipeRefreshLayout srlNotifications;
-    private int tmp;
+    private ActivityResultLauncher<String> getContent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tmp);
-        tmp = 2;
         tmpViewModel = new ViewModelProvider(this).get(TmpViewModel.class);
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
-        rep = ZadrugaRepository.getInstance(getApplication());
-        FirebaseMessaging.getInstance().subscribeToTopic(topic);
-        FirebaseMessaging.getInstance().subscribeToTopic("nekaDrugaTopic");
+        lookUpRep = new LookUpRepository();
+        userRep = new UserRepository();
+        adRep = new AdRepository();
+        /*FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        FirebaseMessaging.getInstance().subscribeToTopic("nekaDrugaTopic");*/
         Button tmpBtn1 = (Button) findViewById(R.id.tmpBtn1);
         Button tmpBtn2 = (Button) findViewById(R.id.tmpBtn2);
         Button tmpBtn3 = (Button) findViewById(R.id.tmpBtn3);
@@ -120,11 +127,19 @@ public class TmpActivity extends AppCompatActivity {
             }
         });*/
 
-        rep.getAllBadges(Utility.getAccessToken(this), new MutableLiveData<>());
-        rep.getAllLocations(Utility.getAccessToken(this), new MutableLiveData<>());
-        rep.getAllTags(Utility.getAccessToken(this), new MutableLiveData<>());
-        rep.getFacultiesAndUniversities(Utility.getAccessToken(this));
-        rep.deleteAd(Utility.getAccessToken(this), new MutableLiveData<>(), 24);
+        lookUpRep.getAllBadges(Utility.getAccessToken(this), new MutableLiveData<>());
+        lookUpRep.getAllLocations(Utility.getAccessToken(this), new MutableLiveData<>());
+        lookUpRep.getAllTags(Utility.getAccessToken(this), new MutableLiveData<>());
+        lookUpRep.getFacultiesAndUniversities(Utility.getAccessToken(this));
+
+        getContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+                new ActivityResultCallback<Uri>() {
+                    @Override
+                    public void onActivityResult(Uri uri) {
+                        if (uri != null)
+                            userRep.postProfilePicture(new MutableLiveData<>(), uri);
+                    }
+                });
 
         MutableLiveData<CustomResponse<?>> chats = new MutableLiveData<>();
         chatViewModel.observeChats().observe(this, new Observer<CustomResponse<?>>() {
@@ -156,13 +171,30 @@ public class TmpActivity extends AppCompatActivity {
                 }
             }
         });
+
+        MutableLiveData<CustomResponse<?>> comments = new MutableLiveData<>();
+        comments.observe(this, new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> response) {
+                if(response != null){
+                    if(response.getStatus() == CustomResponse.Status.OK){
+
+                    } else if (response.getStatus() == CustomResponse.Status.BAD_REQUEST) {
+                    }
+                }
+            }
+        });
+
+
         final int[] i = {0};
+        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+        }*/
         tmpBtn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//etComment.getText().toString())
                 //TODO: za qbUser sifra mora bude duza od 8 karaktera
-                //rep.loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));
-                //rep.loginUser(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "novaaasifraaaa"));
+                //getContent.launch("image/*");
                 /*if(Utility.getUserId(TmpActivity.this) == 1)
                     rep.loginUser(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "sifra123"));
                 else
@@ -186,7 +218,7 @@ public class TmpActivity extends AppCompatActivity {
                 rep.chooseApplicants(new MutableLiveData<>(), 20, us);*/
                 //rep.applyForAd(getAccessToken(), new MutableLiveData<>(), 20, 12);
                 //rep.deleteAd(getAccessToken(), new MutableLiveData<>(), 29);
-                //rep.getComments("getAccessToken()", comments, 4);
+                //adRep.getComments(comments, 4);
                 //rep.postRating(getAccessToken(), new MutableLiveData<>(), new Rating(1, 3, 5, "braooo opasna si"));
                 /*ArrayList<Integer> addList = new ArrayList<>();
                 addList.add(3);
@@ -205,17 +237,20 @@ public class TmpActivity extends AppCompatActivity {
                /* String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
                 rep.getComments(token, comments, 4);*/
                 //rep.getProfilePicture(Utility.getAccessToken(TmpActivity.this), image, 1);
-                //rep.loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));
+                //rep.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
                 //chatViewModel.getChatMembers();
                 //chatViewModel.getAd();
+                //rep.getAdByChatId(new MutableLiveData<>(), "60c1e2cf094ee200482e09f2");
+                userRep.loginUser(new MutableLiveData<>(), "vuk.bibic@gmail.com", "novaaasifraaaa");
             }
         });
         tmpBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //chatViewModel.getMessages();
+                //userRep.loginUser(new MutableLiveData<>(), "vuk.bibic@gmail.com", "novaaasifraaaa");
+                userRep.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
                 //chatViewModel.addOnGlobalMessageReceived();
-                //TODO: za qbUser sifra mora bude duza od 8 karaktera
-                //rep.logOutUser(new MutableLiveData<>());
                 /*rep.registerUser(new MutableLiveData<>(), new User("user124", "fnjkdsnl", "dlkfhaslkjh", "user124@gmail.com",
                         "sifra123"));*/
                 //rep.getUserById(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), 2);
@@ -231,13 +266,11 @@ public class TmpActivity extends AppCompatActivity {
                 //rep.editRating(getAccessToken(), new MutableLiveData<>(), new Rating(getUserId(), 3, 1, "jako slabo uradjeno"));
                 //rep.getRatingByUserId(getAccessToken(), new MutableLiveData<>(), 11);
                 //rep.postProfilePicture(getAccessToken(), new MutableLiveData<>(), 1);
-                Integer[] tagIds = new Integer[2];
-                tagIds[0] = 1;
-                tagIds[1] = 2;
-                rep.getAds(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), null, 0, 2000,
-                        Arrays.asList(1,3), true);
+                /*adRep.getAds(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), null, 4, 150,
+                        Arrays.asList(1,3), true);*/
+                //adRep.getAds(comments);
                 //rep.unApplyForAd(getAccessToken(), new MutableLiveData<>(), 20, 28);
-                //rep.postComment(getAccessToken(), new MutableLiveData<>(), 18, 1, "gaaaaaaaaaaaas");
+                //adRep.postComment(Utility.getAccessToken(TmpActivity.this), comments, 4,  "gaaaaaaaaaaaas");
                 //rep.deleteComment(getAccessToken(), new MutableLiveData<>(), 5);
                 //rep.changePassword(getAccessToken(), new MutableLiveData<>(), 	128330407, "sifra123", "novaaasifraaaa");
                 //rep.deleteRating(getAccessToken(), new MutableLiveData<>(), 1, 3);
@@ -250,19 +283,19 @@ public class TmpActivity extends AppCompatActivity {
                 //rep.connectToChatServer(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar", 128304620));
                 /*List<Chat> tmpChats = (List<Chat>) chats.getValue().getBody();
                 rep.sendMessage(new MutableLiveData<>(), tmpChats.get(0).getQbChat(), new User(), "porukaa novaaaaa");*/
-
             }
         });
         tmpBtn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chatViewModel.connectToChatServer();
+                //userRep.logOutUser(new MutableLiveData<>());
+                //chatViewModel.connectToChatServer();
                 /*ArrayList<Integer> list = new ArrayList<>();
                 list.add(128330407);
                 rep.createChat(new MutableLiveData<>(), list, 28, 1);*/
                 //rep.connectToChatServer(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar", 128304620));
-                //rep.loginUser(new MutableLiveData<>(), new User("vuk.bibic@gmail.com", "novaaasifraaaa"));
-
+                //userRep.logOutUser(new MutableLiveData<>());
             }
         });
         tmpBtn4.setOnClickListener(new View.OnClickListener() {
@@ -272,20 +305,38 @@ public class TmpActivity extends AppCompatActivity {
                 rep.logOutUser(teinToken, new MutableLiveData<>(), 3);*/
                 //rep.sendMessage(new MutableLiveData<>(), );
                 chatViewModel.addOnGlobalMessageReceived();
+                //adRep.getAds(new MutableLiveData<>());
+                //chatViewModel.updateChat();
             }
         });
+
+        /*userRep.loginUser(new MutableLiveData<>(), "vuk.bibic@gmail.com", "novaaasifraaaa");
+        userRep.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
+        chatViewModel.connectToChatServer();
+        * chatViewModel.addOnGlobalMessageReceived();
+        * chatViewModel.getAllChats();
+        * chatViewModel.sendMessage(etComment.getText().toString());*/
         tmpBtn5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                chatViewModel.getAllChats();
+                //rep.getFinishedJobsByUserId(new MutableLiveData<>());
+                //rep.getPostedAdsByUserIdLocal(new MutableLiveData<>());
+                //chatViewModel.getAllChats();
+            }
+        });
+
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i("tokenic", s);
             }
         });
 
         btnPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatViewModel.sendMessage("teina poruka" + i[0]);
-                i[0]++;
+                //chatViewModel.sendMessage(etComment.getText().toString());
+                chatViewModel.sendMessage("Hvala na saradnji!");
             }
         });
         //LOGIKA OKO CHAT-A
@@ -336,8 +387,6 @@ public class TmpActivity extends AppCompatActivity {
             }
         });
         //loginViewModel.logInQBUser(u, "sifra123");*/
-
-
 
         //LOGIKA OKO NOTIFIKACIJA
         /*notificationList = new ArrayList<>();

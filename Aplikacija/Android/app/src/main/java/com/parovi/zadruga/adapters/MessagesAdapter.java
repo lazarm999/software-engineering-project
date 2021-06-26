@@ -25,7 +25,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     public MessagesAdapter() {
         messages = new ArrayList<Message>();
-        this.userId = Utility.getUserQbId(App.getAppContext());
+        this.userId = Utility.getLoggedInUserQbId(App.getAppContext());
     }
 
     public void setMessages(List<Message> messages) {
@@ -39,7 +39,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     @Override
     public int getItemViewType(int position) {
-        return messages.get(position).getFkSenderId() == userId ? MY_MESSAGE : OTHERS_MESSAGE;
+        return messages.get(position).getFkSenderQbId() == userId ? MY_MESSAGE : OTHERS_MESSAGE;
     }
 
     @NonNull

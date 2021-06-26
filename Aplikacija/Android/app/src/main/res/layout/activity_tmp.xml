@@ -90,7 +90,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="10"
             android:ems="10"
-            android:focusable="false"
             android:hint="Leave a comment..."
             android:inputType="textPersonName" />
 

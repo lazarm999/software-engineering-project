@@ -6,11 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.models.entityModels.Ad;
-import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
-import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.repository.AdRepository;
 
 public class AdViewModel extends AndroidViewModel {
     private final int adId = 32; //4
@@ -26,11 +27,11 @@ public class AdViewModel extends AndroidViewModel {
     MutableLiveData<CustomResponse<?>> applicants;
     MutableLiveData<CustomResponse<?>> appliedTo;
 
-    ZadrugaRepository zadrugaRepository;
+    AdRepository adRepository;
 
     public AdViewModel(@NonNull Application app) {
         super(app);
-        zadrugaRepository = ZadrugaRepository.getInstance(app);
+        adRepository = new AdRepository();
         ad = new MutableLiveData<>();
         comments = new MutableLiveData<>();
         isPosted = new MutableLiveData<>();
@@ -82,19 +83,20 @@ public class AdViewModel extends AndroidViewModel {
         return ad.getValue().getStatus() == CustomResponse.Status.OK;
     }
     private void loadAd() {
-        zadrugaRepository.getAd(token, ad, adId);
+        adRepository.getAd(token, ad, adId);
     }
     private void loadComments() {
-        zadrugaRepository.getComments(comments, adId);
+        adRepository.getComments(comments, adId);
     }
-    public void loadApplicants() {zadrugaRepository.getAppliedUsers(token, applicants, adId);}
+    public void loadApplicants() {
+        adRepository.getAppliedUsers(token, applicants, adId);}
     public void postAComment(String comment) {
-        zadrugaRepository.postComment(token, comments, adId, userId, comment);
+        adRepository.postComment(token, comments, adId, comment);
     }
     public void applyForAd() {
-        zadrugaRepository.applyForAd(token, appliedTo, userId, adId);
+        adRepository.applyForAd(token, appliedTo, userId, adId);
     }
     public void withdrawApplication() {
-        zadrugaRepository.unApplyForAd(token, appliedTo, userId, adId);
+        adRepository.unApplyForAd(token, appliedTo, userId, adId);
     }
 }

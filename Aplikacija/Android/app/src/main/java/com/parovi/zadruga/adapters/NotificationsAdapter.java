@@ -46,23 +46,23 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(@NonNull NotificationsAdapter.NotificationViewHolder holder, int position) {
         Notification currNotification = notificationsList.get(position);
-        if(currNotification.getType().equals(Constants.ACCEPTED)){
-            holder.binding.ivNotificationIcon.setImageResource(R.drawable.accepted);
-            holder.binding.tvTitle.setText("Odabrani ste za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-            holder.binding.tvDesc.setText("brao prifacen si");
-        } else if(currNotification.getType().equals(Constants.DECLINED)){
-            holder.binding.ivNotificationIcon.setImageResource(R.drawable.declined);
-            holder.binding.tvTitle.setText("Niste odabrani za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-            holder.binding.tvDesc.setText("vise srece drugi put");
-        } else if(currNotification.getType().equals(Constants.COMMENT)){
-            holder.binding.ivNotificationIcon.setImageResource(R.drawable.comment);
-            holder.binding.tvTitle.setText("Korisnik taj i taj je komentarisao oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-            holder.binding.tvDesc.setText("prozivao te tamo nesto po oglasi");
-        } else if(currNotification.getType().equals(Constants.RATING)){
-            holder.binding.ivNotificationIcon.setImageResource(R.drawable.rating);
-            holder.binding.tvTitle.setText("Korisnik taj i taj vas je ocenio" + Integer.toString(currNotification.getFkSenderId()));
-            holder.binding.tvDesc.setText("dao ti keca");
-        }
+//        if(currNotification.getType().equals(Constants.ACCEPTED)){
+//            holder.binding.ivNotificationIcon.setImageResource(R.drawable.accepted);
+//            holder.binding.tvTitle.setText("Odabrani ste za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+//            holder.binding.tvDesc.setText("brao prifacen si");
+//        } else if(currNotification.getType().equals(Constants.DECLINED)){
+//            holder.binding.ivNotificationIcon.setImageResource(R.drawable.declined);
+//            holder.binding.tvTitle.setText("Niste odabrani za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+//            holder.binding.tvDesc.setText("vise srece drugi put");
+//        } else if(currNotification.getType().equals(Constants.COMMENT)){
+//            holder.binding.ivNotificationIcon.setImageResource(R.drawable.comment);
+//            holder.binding.tvTitle.setText("Korisnik taj i taj je komentarisao oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+//            holder.binding.tvDesc.setText("prozivao te tamo nesto po oglasi");
+//        } else if(currNotification.getType().equals(Constants.RATING)){
+//            holder.binding.ivNotificationIcon.setImageResource(R.drawable.rating);
+//            holder.binding.tvTitle.setText("Korisnik taj i taj vas je ocenio" + Integer.toString(currNotification.getFkSenderId()));
+//            holder.binding.tvDesc.setText("dao ti keca");
+//        }
     }
 
     @Override
@@ -78,10 +78,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             this.binding = binding;
         }
 
-            public void bindTo(Notification notification) {
-                binding.tvTitle.setText(notification.getTitle());
-                binding.tvDesc.setText(notification.getDesc());
-            }
+        public void bindTo(Notification notification) {
+//            binding.tvTitle.setText(notification.getTitle());
+//            binding.tvDesc.setText(notification.getDesc());
+        }
 
         public ImageView getIvNotificationIcon() {
             return binding.ivNotificationIcon;

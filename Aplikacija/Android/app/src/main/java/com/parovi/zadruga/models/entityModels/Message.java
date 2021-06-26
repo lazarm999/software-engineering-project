@@ -8,18 +8,16 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.Exclude;
 import com.quickblox.chat.model.QBChatMessage;
 
 import java.util.Date;
 
 import static androidx.room.ForeignKey.CASCADE;
-import static androidx.room.ForeignKey.SET_NULL;
 
 @Entity(foreignKeys = {@ForeignKey(
                         entity = User.class,
                         parentColumns = "userQbId",
-                        childColumns = "fkSenderId",
+                        childColumns = "fkSenderQbId",
                         onDelete = CASCADE),
                         @ForeignKey(
                         entity = Chat.class,
@@ -30,11 +28,12 @@ public class Message {
     @PrimaryKey
     @NonNull
     private String msgId;
-    private int fkSenderId;
+    private int fkSenderQbId;
     private Date dateSent;
     private String message;
     @ColumnInfo(index = true)
     private String qbChatId;
+    private String senderUsername;
 
     @Ignore
     private QBChatMessage qbChatMessage;
@@ -42,9 +41,10 @@ public class Message {
     public Message() {
     }
 
-    public Message(@NonNull String msgId, int fkSenderId, Date dateSent, String message, String qbChatId, QBChatMessage qbChatMessage) {
+    public Message(@NonNull String msgId, int fkSenderQbId, String senderUsername, Date dateSent, String message, String qbChatId, QBChatMessage qbChatMessage) {
         this.msgId = msgId;
-        this.fkSenderId = fkSenderId;
+        this.fkSenderQbId = fkSenderQbId;
+        this.senderUsername = senderUsername;
         this.dateSent = dateSent;
         this.message = message;
         this.qbChatId = qbChatId;
@@ -71,12 +71,12 @@ public class Message {
         this.message = message;
     }
 
-    public int getFkSenderId() {
-        return fkSenderId;
+    public int getFkSenderQbId() {
+        return fkSenderQbId;
     }
 
-    public void setFkSenderId(int fkSenderId) {
-        this.fkSenderId = fkSenderId;
+    public void setFkSenderQbId(int fkSenderQbId) {
+        this.fkSenderQbId = fkSenderQbId;
     }
 
     public Date getDateSent() {
@@ -101,5 +101,13 @@ public class Message {
 
     public void setQbChatMessage(QBChatMessage qbChatMessage) {
         this.qbChatMessage = qbChatMessage;
+    }
+
+    public String getSenderUsername() {
+        return senderUsername;
+    }
+
+    public void setSenderUsername(String senderUsername) {
+        this.senderUsername = senderUsername;
     }
 }

@@ -6,8 +6,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -15,14 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.activities.MainStudentActivity;
 import com.parovi.zadruga.adapters.UserAdapter;
-import com.parovi.zadruga.adapters.UserResumesAdapter;
 import com.parovi.zadruga.databinding.FragmentChatInfoBinding;
-import com.parovi.zadruga.fragments.EmployerProfileFragment;
-import com.parovi.zadruga.fragments.StudentProfileFragment;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.viewModels.ChatViewModel;

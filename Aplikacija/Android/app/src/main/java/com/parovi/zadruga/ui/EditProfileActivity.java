@@ -11,15 +11,16 @@ import android.os.Bundle;
 
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.viewModels.UserProfileViewModel;
 
 public class EditProfileActivity extends AppCompatActivity {
     private UserProfileViewModel model;
+    private UserRepository userRepository = new UserRepository();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ZadrugaRepository.getInstance(this.getApplication()).loginUser(new MutableLiveData<>(), new User("tea@gmail.com", "sifra123"));
+        userRepository.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
         setContentView(R.layout.activity_edit_profile);
         model = new ViewModelProvider(this).get(UserProfileViewModel.class);
     }

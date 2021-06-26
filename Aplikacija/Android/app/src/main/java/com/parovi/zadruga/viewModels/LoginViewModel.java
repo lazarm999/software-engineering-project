@@ -7,16 +7,14 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.repository.BaseRepository;
 
 public class LoginViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> isLoggedIn;
-    private ZadrugaRepository rep;
+    private BaseRepository rep;
 
     public LoginViewModel(@NonNull Application app) {
         super(app);
-        rep = ZadrugaRepository.getInstance(app);
         isLoggedIn = new MutableLiveData<>();
     }
 

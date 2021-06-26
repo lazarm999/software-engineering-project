@@ -10,20 +10,19 @@ import androidx.lifecycle.MutableLiveData;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.Location;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.repository.BaseRepository;
 
 import java.util.List;
 
 public class TmpViewModel extends AndroidViewModel {
     private MutableLiveData<List<Ad>> ads;
     private LiveData<List<Location>> locations;
-    private ZadrugaRepository rep;
+    private BaseRepository rep;
 
     private MutableLiveData<User> newUser;
 
     public TmpViewModel(@NonNull Application app) {
         super(app);
-        rep = ZadrugaRepository.getInstance(app);
         newUser = new MutableLiveData<>();
     }
 

@@ -2,36 +2,22 @@ package com.parovi.zadruga.ui;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.R;
-import com.parovi.zadruga.adapters.ChatResumesAdapter;
 import com.parovi.zadruga.adapters.ChatsAdapter;
 import com.parovi.zadruga.models.entityModels.Chat;
-import com.parovi.zadruga.data.ChatResume;
 import com.parovi.zadruga.databinding.FragmentChatListBinding;
-import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
-import com.parovi.zadruga.viewModels.ChatsViewModel;
-import com.quickblox.chat.model.QBChatDialog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

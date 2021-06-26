@@ -15,13 +15,15 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;
 
 @Entity(tableName = "user_table",
         foreignKeys = @ForeignKey(entity = Faculty.class,
                             parentColumns = "facultyId",
                             childColumns = "fkFacultyId",
-                            onDelete = SET_NULL),
+                            onDelete = SET_NULL,
+                            onUpdate = CASCADE),
         indices = {@Index(value = {"userQbId"}, unique = true)})
 public class User {
     @PrimaryKey
@@ -40,9 +42,7 @@ public class User {
     @Nullable
     @SerializedName("facultyId")
     private Integer fkFacultyId;
-    private String type; //u Constants su zapamceni tipovi naloga
     private int userQbId;
-    private String password;
 
 
     @Ignore
@@ -73,12 +73,10 @@ public class User {
 
     public User(String email, String password) {
         this.email = email;
-        this.password = password;
     }
 
     public User(String email, String password, int userQbId) {
         this.email = email;
-        this.password = password;
         this.userQbId = userQbId;
     }
 
@@ -87,7 +85,6 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
     }
 
 
@@ -99,14 +96,6 @@ public class User {
     public User(String username, int userQbId){
         this.username = username;
         this.userQbId = userQbId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public boolean isEmployer() {
@@ -199,14 +188,6 @@ public class User {
 
     public void setFkFacultyId(@Nullable Integer fkFacultyId) {
         this.fkFacultyId = fkFacultyId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public void setFcmToken(String fcmToken) {

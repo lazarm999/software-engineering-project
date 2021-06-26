@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import com.parovi.zadruga.models.entityModels.User;
 
 import java.util.Date;
+import java.util.List;
 
 public class CommentResponse {
     private int id;
@@ -13,6 +14,10 @@ public class CommentResponse {
     private Date postTime;
     private User user;
     private Bitmap userImage;
+    private List<Integer> taggedIndices;
+
+    public CommentResponse() {
+    }
 
     public CommentResponse(int id, int ad, String comment, Date postTime, User user) {
         this.id = id;
@@ -68,5 +73,13 @@ public class CommentResponse {
 
     public void setUserImage(Bitmap userImage) {
         this.userImage = userImage;
+    }
+
+    public List<Integer> getTaggedIndices() {
+        return taggedIndices;
+    }
+
+    public void setTaggedIndices(List<Integer> taggedIndices) {
+        this.taggedIndices = taggedIndices;
     }
 }

@@ -1,7 +1,6 @@
 package com.parovi.zadruga.viewModels;
 
 import android.app.Application;
-import android.content.ContentResolver;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,13 +16,11 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
-import com.parovi.zadruga.models.entityModels.Faculty;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.repository.LookUpRepository;
+import com.parovi.zadruga.repository.UserRepository;
 
-import java.io.File;
 import java.io.IOException;
 
 public class UserProfileViewModel extends AndroidViewModel {
@@ -34,11 +31,13 @@ public class UserProfileViewModel extends AndroidViewModel {
     private MutableLiveData<CustomResponse<?>> isProfileImageUpdated;
     private MutableLiveData<CustomResponse<?>> isUserUpdated;
     private MutableLiveData<CustomResponse<?>> faculties;
-    private ZadrugaRepository repository;
+    private UserRepository userRepository;
+    private LookUpRepository lookUpRepository;
 
     public UserProfileViewModel(@NonNull Application app) {
         super(app);
-        repository = ZadrugaRepository.getInstance(app);
+        userRepository = new UserRepository();
+        lookUpRepository = new LookUpRepository();
         userInfo = new MutableLiveData<>();
         profileImage = new MutableLiveData<>();
         isProfileImageUpdated = new MutableLiveData<>();
@@ -75,23 +74,22 @@ public class UserProfileViewModel extends AndroidViewModel {
     }
 
     public void updateUser() {
-        repository.updateUser(Utility.getAccessToken(App.getAppContext()), isUserUpdated, (User)userInfo.getValue().getBody());
+        userRepository.updateUser(Utility.getAccessToken(App.getAppContext()), isUserUpdated, (User)userInfo.getValue().getBody());
     }
     public void updateUserProfilePhoto(Resources res, Uri uri, int reqWidth, int reqHeight) {
-        repository.postProfilePicture(
+        userRepository.postProfilePicture(
                 profileImage,
-                uri,
-                decodeSampledBitmapFromUri(uri, reqWidth, reqHeight, res));
+                uri);
     }
 
     public void loadUserInfo() {
-        repository.getUserById(token, userInfo, id);
+        userRepository.getUserById(token, userInfo, id);
     }
     public void loadUserProfileImage() {
-        repository.getProfilePicture(profileImage, id);
+        userRepository.getProfilePicture(profileImage, id);
     }
     public void loadFaculties() {
-        repository.getAllFaculties(token, faculties);
+        lookUpRepository.getAllFaculties(token, faculties);
     }
     public static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {

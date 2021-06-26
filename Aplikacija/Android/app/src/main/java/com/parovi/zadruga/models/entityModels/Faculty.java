@@ -7,6 +7,8 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.jetbrains.annotations.NotNull;
 
 import static androidx.room.ForeignKey.CASCADE;

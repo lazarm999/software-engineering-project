@@ -6,22 +6,15 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.models.entityModels.Chat;
-import com.parovi.zadruga.models.entityModels.Message;
-import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.repository.ChatRepository;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBChatDialogMessageListener;
-import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ChatViewModel extends AndroidViewModel {
     private Chat activeChat;
@@ -33,13 +26,14 @@ public class ChatViewModel extends AndroidViewModel {
     private MutableLiveData<CustomResponse<?>> chatMembers;
     private MutableLiveData<CustomResponse<?>> ad;
     private int adId = 5;
+    private ChatRepository chatRepository;
     private QBChatDialogMessageListener newMessageListener = new QBChatDialogMessageListener() {
         @Override
         public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
-            if (qbChatMessage.getSenderId() != Utility.getUserQbId(App.getAppContext()) &&
+            if (qbChatMessage.getSenderId() != Utility.getLoggedInUserQbId(App.getAppContext()) &&
                     activeChat != null && activeChat.getQbChat().getDialogId().equals(dialogId))
-                rep.updateMessages(messages, qbChatMessage);
-            rep.updateChat(chats, dialogId);
+                chatRepository.updateMessages(messages, qbChatMessage);
+            chatRepository.updateChat(chats, dialogId);
         }
 
         @Override
@@ -48,11 +42,11 @@ public class ChatViewModel extends AndroidViewModel {
         }
     };
 
-    private ZadrugaRepository rep;
+
 
     public ChatViewModel(@NonNull Application app) {
         super(app);
-        rep = ZadrugaRepository.getInstance(app);
+        chatRepository = new ChatRepository();
         chats = new MutableLiveData<>();
         isConnected = new MutableLiveData<>();
         newMessage = new MutableLiveData<>();
@@ -67,7 +61,7 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void connectToChatServer(){
-        rep.connectToChatServer(isConnected);
+        chatRepository.connectToChatServer(isConnected);
     }
     public void setActiveChat(Chat chat) {
         activeChat = chat;
@@ -86,27 +80,27 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void addOnGlobalMessageReceived(){
-        rep.addOnMessageReceivedGlobal(newMessageListener);
+        chatRepository.addOnMessageReceivedGlobal(newMessageListener);
     }
 
     public void sendMessage(String message){
-        rep.sendMessage(isSent, messages, chats, activeChat.getQbChat(), message);
+        chatRepository.sendMessage(isSent, messages, chats, activeChat.getQbChat(), message);
     }
 
     public void removeGlobalMessageListener(){
-        rep.removeGlobalMessageReceivedListener(newMessageListener);
+        chatRepository.removeGlobalMessageReceivedListener(newMessageListener);
     }
 
     public void loadAllChats(){
-        rep.getAllChats(chats);
+        chatRepository.getAllChats(chats);
     }
 
     public void loadChatMembers(){
-        rep.getChatMembers(chatMembers, activeChat.getQbChat());
+        chatRepository.getChatMembers(chatMembers, activeChat.getQbChat());
     }
 
     public void loadMessages(int offset) {
-        rep.getMessages(messages, activeChat.getQbChat(), offset, false);
+        chatRepository.getMessages(messages, activeChat.getQbChat(), offset, false);
     }
 
     public void leaveChat() {
@@ -115,7 +109,7 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void loadAd(){
-        rep.getAdByChatId(ad, activeChat.getQbChat().getDialogId());
+        chatRepository.getAdByChatId(ad, activeChat.getQbChat().getDialogId());
     }
 
     public int getAdId() {
