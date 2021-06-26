@@ -19,6 +19,7 @@ import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.models.entityModels.Faculty;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 
@@ -32,6 +33,7 @@ public class UserProfileViewModel extends AndroidViewModel {
     private MutableLiveData<CustomResponse<?>> profileImage;
     private MutableLiveData<CustomResponse<?>> isProfileImageUpdated;
     private MutableLiveData<CustomResponse<?>> isUserUpdated;
+    private MutableLiveData<CustomResponse<?>> faculties;
     private ZadrugaRepository repository;
 
     public UserProfileViewModel(@NonNull Application app) {
@@ -41,6 +43,7 @@ public class UserProfileViewModel extends AndroidViewModel {
         profileImage = new MutableLiveData<>();
         isProfileImageUpdated = new MutableLiveData<>();
         isUserUpdated = new MutableLiveData<>();
+        faculties = new MutableLiveData<>();
         loadUserInfo();
         loadUserProfileImage();
     }
@@ -57,6 +60,8 @@ public class UserProfileViewModel extends AndroidViewModel {
         return profileImage;
     }
 
+    public MutableLiveData<CustomResponse<?>> getFaculties() { return faculties; }
+
     public int getId() {
         return id;
     }
@@ -70,7 +75,7 @@ public class UserProfileViewModel extends AndroidViewModel {
     }
 
     public void updateUser() {
-        repository.updateUser(token, isUserUpdated, (User)userInfo.getValue().getBody());
+        repository.updateUser(Utility.getAccessToken(App.getAppContext()), isUserUpdated, (User)userInfo.getValue().getBody());
     }
     public void updateUserProfilePhoto(Resources res, Uri uri, int reqWidth, int reqHeight) {
         repository.postProfilePicture(
@@ -85,7 +90,9 @@ public class UserProfileViewModel extends AndroidViewModel {
     public void loadUserProfileImage() {
         repository.getProfilePicture(profileImage, id);
     }
-
+    public void loadLocations() {
+        repository.getAllFaculties(token, faculties);
+    }
     public static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {
         // Raw height and width of image

@@ -13,7 +13,7 @@ import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
 import com.parovi.zadruga.repository.ZadrugaRepository;
 
 public class AdViewModel extends AndroidViewModel {
-    private final int adId = 4;
+    private final int adId = 32; //4
     private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
     private final int userId = 1;
 
@@ -23,6 +23,7 @@ public class AdViewModel extends AndroidViewModel {
     MutableLiveData<CustomResponse<?>> comments;//List<CommentResponse>
     MutableLiveData<CustomResponse<?>> isPosted;//Boolean
     MutableLiveData<CustomResponse<?>> isDeleted;//Boolean
+    MutableLiveData<CustomResponse<?>> applicants;
     MutableLiveData<CustomResponse<?>> appliedTo;
 
     ZadrugaRepository zadrugaRepository;
@@ -34,6 +35,7 @@ public class AdViewModel extends AndroidViewModel {
         comments = new MutableLiveData<>();
         isPosted = new MutableLiveData<>();
         isDeleted = new MutableLiveData<>();
+        applicants = new MutableLiveData<>();
         appliedTo = new MutableLiveData<>();
         loadAd();
         loadComments();
@@ -67,6 +69,8 @@ public class AdViewModel extends AndroidViewModel {
         return isDeleted;
     }
 
+    public MutableLiveData<CustomResponse<?>> getApplicants() { return applicants; }
+
     public MutableLiveData<CustomResponse<?>> getAppliedTo() {
         return appliedTo;
     }
@@ -83,6 +87,7 @@ public class AdViewModel extends AndroidViewModel {
     private void loadComments() {
         zadrugaRepository.getComments(comments, adId);
     }
+    public void loadApplicants() {zadrugaRepository.getAppliedUsers(token, applicants, adId);}
     public void postAComment(String comment) {
         zadrugaRepository.postComment(token, comments, adId, userId, comment);
     }

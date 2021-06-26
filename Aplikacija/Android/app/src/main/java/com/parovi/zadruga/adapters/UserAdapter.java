@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.UserListItemBinding;
 import com.parovi.zadruga.models.entityModels.User;
 
@@ -27,6 +28,7 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.UserViewHolder> {
         UserListItemBinding binding = UserListItemBinding.inflate(inflater, parent, false);
         return new UserViewHolder(binding);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull UserViewHolder holder, int position) {
@@ -68,7 +70,10 @@ public class UserAdapter extends ListAdapter<User, UserAdapter.UserViewHolder> {
         public void bindTo(User user) {
             binding.tvName.setText(user.getFirstName() + " " + user.getLastName());
             binding.tvUsername.setText(user.getUsername());
-            binding.imageView3.setImageBitmap(user.getProfileImage());
+            if (user.getProfileImage() != null)
+                binding.imageView3.setImageBitmap(user.getProfileImage());
+            else
+                binding.imageView3.setImageResource(R.drawable.avatar);
         }
     }
     public interface UserListListener {

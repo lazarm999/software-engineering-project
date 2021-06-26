@@ -24,7 +24,7 @@
             android:background="@drawable/border_for_ads">
 
             <ImageView
-                android:id="@+id/imgAdItem"
+                android:id="@+id/imgAdIcon"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginStart="285dp"
@@ -36,7 +36,7 @@
                 tools:srcCompat="@drawable/ad_item" />
 
             <TextView
-                android:id="@+id/txtAdItemHeader"
+                android:id="@+id/txtDescForAd"
                 android:layout_width="wrap_content"
                 android:layout_height="28dp"
                 android:layout_marginStart="16dp"

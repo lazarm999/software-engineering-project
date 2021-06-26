@@ -6,7 +6,7 @@ public class AchievementItem {
 
     private String title;
     private LocalDate date;
-    private float rating;
+    private int rating;
     private String comment;
 
     public AchievementItem()
@@ -14,7 +14,7 @@ public class AchievementItem {
 
     }
 
-    public AchievementItem(String title, LocalDate date, float rate, String comment) {
+    public AchievementItem(String title, LocalDate date, int rate, String comment) {
         this.title = title;
         this.date = date;
         this.rating = rate;
@@ -25,8 +25,8 @@ public class AchievementItem {
     public void setTitle(String title) {this.title = title;}
     public LocalDate getDate() {return this.date;}
     public void setDate(LocalDate date) {this.date = date;}
-    public float getRating() {return this.rating;}
-    public void setRating(float rate) {this.rating = rate;}
+    public int getRating() {return this.rating;}
+    public void setRating(int rate) {this.rating = rate;}
     public String getComment() {return this.comment;}
     public void setComment(String comment) {this.comment = comment;}
 }

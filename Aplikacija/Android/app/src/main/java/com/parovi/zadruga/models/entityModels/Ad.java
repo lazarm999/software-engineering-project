@@ -1,7 +1,6 @@
 package com.parovi.zadruga.models.entityModels;
 
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -9,8 +8,6 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;
@@ -79,6 +76,13 @@ public class Ad {
         this.compensationMax = compensationMax;
         this.numberOfEmployees = numberOfEmployees;
         this.postTime = postTime;
+    }
+
+    public Ad(String title, String description, Date date)
+    {
+        this.title = title;
+        this.description = description;
+        this.postTime = date;
     }
 
     public Ad(String title, String description, int fkLocationId){

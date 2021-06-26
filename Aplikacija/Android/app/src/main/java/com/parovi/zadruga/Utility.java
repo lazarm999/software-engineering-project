@@ -46,8 +46,8 @@ public class Utility {
         SharedPreferences.Editor editor = sp.edit();
         /*editor.remove(Constants.LOGGED_USER_ID);
         editor.remove(Constants.LOGGED_USER_QB_ID);
+        editor.remove(Constants.ACCESS_TOKEN);*/
         editor.remove(Constants.ACCESS_TOKEN);
-        editor.remove(Constants.FCM_TOKEN_TAG);*/
         editor.remove(Constants.LOGGED_IN_USER);
         editor.apply();
     }

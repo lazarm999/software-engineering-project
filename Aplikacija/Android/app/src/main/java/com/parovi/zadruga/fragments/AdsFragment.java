@@ -7,10 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.RequiresApi;
@@ -18,16 +15,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.chip.Chip;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.adapters.AdAdapter;
 import com.parovi.zadruga.databinding.FragmentAdsFragmentBinding;
-import com.parovi.zadruga.items.AdItem;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.ui.JobAdActivity;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
     FragmentAdsFragmentBinding binding;
@@ -47,27 +42,24 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLocations.setAdapter(adapterLoc);
 
-        ArrayList<AdItem> ads = new ArrayList<>();
-        ads.add(new AdItem("Title 1", "Description 1", LocalDate.now()));
-        ads.add(new AdItem("Title 2", "Description 2", LocalDate.of(2021, 06, 23)));
-        ads.add(new AdItem("Title 3", "Description 3", LocalDate.of(2020,12,04)));
-        ads.add(new AdItem("Title 4", "Description 4", LocalDate.of(2021, 10, 29)));
-        ads.add(new AdItem("Title 5", "Description 5", LocalDate.of(2020,04,22)));
-        ads.add(new AdItem("Title 1", "Description 1", LocalDate.now()));
-        ads.add(new AdItem("Title 2", "Description 2", LocalDate.of(2021, 06, 23)));
-        ads.add(new AdItem("Title 3", "Description 3", LocalDate.of(2020,12,04)));
-        ads.add(new AdItem("Title 4", "Description 4", LocalDate.of(2021, 10, 29)));
-        ads.add(new AdItem("Title 5", "Description 5", LocalDate.of(2020,04,22)));
+
+        ArrayList<Ad> ads = new ArrayList<>();
+
+        ads.add(new Ad("Title 1", "Description 1", new Date(2020, 3, 12)));
+        ads.add(new Ad("Title 2", "Description 2", new Date(2021, 4, 4)));
+
 
         RecyclerView recView = binding.recViewAds;
         recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         AdAdapter adapter = new AdAdapter(this);
         recView.setAdapter(adapter);
 
+        adapter.setAds(ads);
+
         binding.btnChooseCateg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.relLayoutChips.setVisibility(View.VISIBLE);
+                binding.filterChips.setVisibility(View.VISIBLE);
                 binding.linearCategories.setVisibility(View.GONE);
             }
         });
@@ -75,7 +67,7 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         binding.btnOKFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.relLayoutChips.setVisibility(View.GONE);
+                binding.filterChips.setVisibility(View.GONE);
                 binding.linearCategories.setVisibility(View.VISIBLE);
             }
         });
@@ -106,14 +98,14 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         binding.chipHeavierPhysicalJobs.setOnCheckedChangeListener(checkedChangeListener);
         binding.chipHeavierPhysicalJobs.setOnCheckedChangeListener(checkedChangeListener);
 
-        /*btnSort.setOnClickListener(new View.OnClickListener() {
+        binding.btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //sortByLocation(spinnerLocations.getSelectedItem().toString());
             }
         });
 
-        btnFilter.setOnClickListener(new View.OnClickListener() {
+        binding.btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //filterByLocation(spinnerLocations.getSelectedItem().toString());
@@ -124,9 +116,10 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
                 //});
             }
         });
-*/
+
         return binding.getRoot();
     }
+
 
     @Override
     public void onAdSelected(Ad ad) {

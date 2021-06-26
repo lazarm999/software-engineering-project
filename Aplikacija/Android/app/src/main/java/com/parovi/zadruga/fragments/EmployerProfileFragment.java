@@ -70,7 +70,7 @@ public class EmployerProfileFragment extends Fragment {
 
         Button achievements = (Button) layout.findViewById(R.id.btnAchievements);
         Button edit = (Button) layout.findViewById(R.id.btnEdit);
-        ImageButton back = (ImageButton) layout.findViewById(R.id.btnBack);
+        ImageButton back = (ImageButton) layout.findViewById(R.id.imgBtnArrowBack);
         Button rate = (Button) layout.findViewById(R.id.btnRating);
         TextView fac = (TextView) layout.findViewById(R.id.txtCompany);
         TextView bio = (TextView) layout.findViewById(R.id.txtMultilineEditBio);

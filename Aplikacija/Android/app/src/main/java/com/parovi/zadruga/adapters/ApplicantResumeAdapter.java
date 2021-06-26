@@ -1,19 +1,28 @@
 package com.parovi.zadruga.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.App;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.data.ApplicantResume;
 import com.parovi.zadruga.data.UserInfoResume;
 import com.parovi.zadruga.databinding.ApplicantItemBinding;
+import com.parovi.zadruga.databinding.ChatResumeLayoutBinding;
 import com.parovi.zadruga.databinding.UserListItemBinding;
+import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.models.entityModels.User;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +30,9 @@ import java.util.List;
 public class ApplicantResumeAdapter extends RecyclerView.Adapter<ApplicantResumeAdapter.ApplicantResumeViewHolder> {
     private List<User> applicants;
 
-    public void setUsers(List<User> users) {
+    public void setApplicants(List<User> users) {
         this.applicants = users;
+        notifyDataSetChanged();
     }
 
     public ApplicantResumeAdapter() {
@@ -68,3 +78,4 @@ public class ApplicantResumeAdapter extends RecyclerView.Adapter<ApplicantResume
         }
     }
 }
+

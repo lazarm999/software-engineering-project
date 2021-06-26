@@ -9,6 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/border_for_comments"
         android:paddingTop="1dp"
         android:paddingBottom="1dp">
 
@@ -28,8 +29,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="\@username"
-            android:textColor="@color/teal_200"
+            android:textColor="@color/teal_700"
             app:layout_constraintStart_toEndOf="@+id/civProfileImage"
             app:layout_constraintTop_toTopOf="@+id/civProfileImage" />
 
@@ -47,6 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="10 days ago"
             app:layout_constraintStart_toEndOf="@+id/tvBullet"
             app:layout_constraintTop_toTopOf="@+id/tvUsername" />
@@ -55,6 +58,7 @@
             android:id="@+id/tvComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="Ovo je jedan komentar"
             app:layout_constraintBottom_toBottomOf="@+id/civProfileImage"
             app:layout_constraintStart_toStartOf="@+id/tvUsername"

@@ -13,11 +13,24 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.App;
+import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.databinding.ChatResumeLayoutBinding;
 import com.parovi.zadruga.models.entityModels.Chat;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.sql.Time;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.TimeZone;
+
+import static java.util.TimeZone.getDefault;
 
 public class ChatsAdapter extends ListAdapter<Chat, ChatsAdapter.ChatViewHolder> {
     ChatListListener fragment;
@@ -32,6 +45,7 @@ public class ChatsAdapter extends ListAdapter<Chat, ChatsAdapter.ChatViewHolder>
         return new ChatViewHolder(binding);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ChatsAdapter.ChatViewHolder holder, int position) {
         holder.bind(getItem(position));
@@ -64,20 +78,30 @@ public class ChatsAdapter extends ListAdapter<Chat, ChatsAdapter.ChatViewHolder>
     };
 
     class ChatViewHolder extends RecyclerView.ViewHolder {
-        ChatResumeLayoutBinding binding;
+        private ChatResumeLayoutBinding binding;
+        private final static int SUBTITLE_MAX_LENGTH = 40;
 
         public ChatViewHolder(@NonNull ChatResumeLayoutBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public void bind(Chat chatResume) {
             binding.tvChatTitle.setText(chatResume.getChatTitle());
-            String subtitle = chatResume.getFkLastSenderId() == Utility.getUserId(App.getAppContext()) ? "You" : chatResume.getLastSenderName() + ": ";
-            subtitle += chatResume.getLastMessage();
+            String subtitle = chatResume.getFkLastSenderId() == Utility.getUserQbId(App.getAppContext()) ? "You" : chatResume.getLastSenderName();
+            subtitle += ": " + chatResume.getLastMessage();
+            if (subtitle.length() > SUBTITLE_MAX_LENGTH) {
+                subtitle = subtitle.substring(0, SUBTITLE_MAX_LENGTH);
+                subtitle += "...";
+            }
             binding.tvLastMessage.setText(subtitle);
-            binding.tvTimeOfLastMsg.setText(Long.toString(chatResume.getLastMessageDateSent()));//.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
-            binding.imgChatImage.setImageBitmap(chatResume.getProfileImage());
+            LocalDateTime time = LocalDateTime.ofEpochSecond(chatResume.getLastMessageDateSent(), 0, ZoneOffset.UTC);
+            binding.tvTimeOfLastMsg.setText(time.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
+            if (chatResume.getType() == Utility.ChatType.PRIVATE)
+                binding.imgChatImage.setImageBitmap(chatResume.getProfileImage());
+            else
+                binding.imgChatImage.setImageResource(R.drawable.job);
         }
     }
     public interface ChatListListener {

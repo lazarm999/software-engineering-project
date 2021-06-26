@@ -57,7 +57,7 @@ public class ChatListFragment extends Fragment implements ChatsAdapter.ChatListL
         model = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
 
         ChatsAdapter adapter = new ChatsAdapter(this);
-        //ChatResumesAdapter adapter = new ChatResumesAdapter(this);
+        // ChatResumesAdapter adapter = new ChatResumesAdapter(this);
         model.observeChats().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {

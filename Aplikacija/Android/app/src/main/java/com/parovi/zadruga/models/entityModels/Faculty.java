@@ -1,10 +1,13 @@
 package com.parovi.zadruga.models.entityModels;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import org.jetbrains.annotations.NotNull;
 
 import static androidx.room.ForeignKey.CASCADE;
 
@@ -25,6 +28,13 @@ public class Faculty {
         this.facultyId = facultyId;
         this.name = name;
         this.fkUniversityId = fkUniversityId;
+    }
+
+    @NonNull
+    @NotNull
+    @Override
+    public String toString() {
+        return name + ", " + university.getName();
     }
 
     public int getFacultyId() {

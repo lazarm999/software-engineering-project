@@ -1,8 +1,10 @@
 package com.parovi.zadruga.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,11 +15,15 @@ import android.view.ViewGroup;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.adapters.ApplicantResumeAdapter;
+import com.parovi.zadruga.adapters.ApplicantsAdapter;
 import com.parovi.zadruga.databinding.FragmentSelectWorkersBinding;
+import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.viewModels.AdViewModel;
 
+import java.util.List;
 
-public class SelectWorkersFragment extends Fragment {
+
+public class SelectWorkersFragment extends Fragment implements ApplicantsAdapter.ApplicantListListener {
     private AdViewModel model;
     private FragmentSelectWorkersBinding binding;
     public SelectWorkersFragment() {
@@ -34,13 +40,14 @@ public class SelectWorkersFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentSelectWorkersBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
+        //ApplicantResumeAdapter adapter = new ApplicantResumeAdapter();
+        ApplicantsAdapter adapter = new ApplicantsAdapter(this);
 
-        ApplicantResumeAdapter adapter = new ApplicantResumeAdapter();
-        model.getAd().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+        model.getApplicants().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
-                    // fill the adapter
+                    adapter.submitList((List<User>)customResponse.getBody());
                 }
             }
         });
@@ -48,6 +55,19 @@ public class SelectWorkersFragment extends Fragment {
         binding.rvWorkers.setAdapter(adapter);
         binding.rvWorkers.setLayoutManager(new LinearLayoutManager(container.getContext()));
 
+        model.loadApplicants();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onApplicantSelected(User applicant) {
+        Intent intent = new Intent(requireActivity(), EditProfileActivity.class);
+        intent.putExtra("userId", applicant.getUserId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onApplicantToggled(User applicant) {
+        // model.addToApplicants(user);
     }
 }

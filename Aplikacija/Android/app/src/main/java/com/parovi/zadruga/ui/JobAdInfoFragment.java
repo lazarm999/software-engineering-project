@@ -1,6 +1,10 @@
 package com.parovi.zadruga.ui;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -8,19 +12,19 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.adapters.CommentsAdapter;
 import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.User;
+import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.viewModels.AdViewModel;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -79,7 +83,7 @@ public class JobAdInfoFragment extends Fragment {
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() != CustomResponse.Status.OK)
                     return;
-                appliedStatusChanged((boolean)customResponse.getBody());
+                appliedStatusChanged(Boolean.parseBoolean(String.valueOf(customResponse.getBody())));
             }
         });
         model.getComments().observe(requireActivity(), new Observer<CustomResponse<?>>() {
@@ -95,6 +99,11 @@ public class JobAdInfoFragment extends Fragment {
         return binding.getRoot();
     }
 
+    // samo za uputstvo
+    private void generateComments() {
+        List<CommentResponse> comments = new ArrayList<CommentResponse>();
+        comments.add(new CommentResponse(100, 100, "Da li možete proceniti koliko će nam vremena trebati?", Date.from(Instant.now()), new User()));
+    }
     private void bindAdInfo(JobAdInfo jobAd) {
         binding.tvJobTitle.setText(jobAd.getTitle());
         binding.tvJobDesc.setText(jobAd.getDescription());
@@ -103,7 +112,16 @@ public class JobAdInfoFragment extends Fragment {
         binding.tvPeopleNeeded.setText(Integer.toString(jobAd.getNoApplicantsRequired()));
         String feeRange = Float.valueOf(jobAd.getCompensationFrom()).toString() + " - " + Float.valueOf(jobAd.getCompensationTo()).toString() + " RSD";
         binding.tvFeeRange.setText(feeRange);
-
+        updateMainButton();
+        /*binding.tvJobTitle.setText("Iznošenje nameštaja iz stana");
+        binding.tvJobDesc.setText("Selidba iz stana, potrebna pomoć za iznošenje nameštaja sa 4. sprata zgrade na Dorćolu. Nemamo lift :)");
+        binding.tvLocation.setText("Beograd");
+        binding.dtPosted.setText(jobAd.getTime());
+        binding.tvPeopleNeeded.setText("2");
+        String feeRange = "1000 - 1500 RSD";
+        binding.tvFeeRange.setText(feeRange);*/
+    }
+    private void updateMainButton() {
         if (model.isAdMine()) {
             binding.btnApply.setText("Select workers");
             binding.btnApply.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +134,6 @@ public class JobAdInfoFragment extends Fragment {
         else { // user
             appliedStatusChanged(false);
         }
-
     }
 
     private void appliedStatusChanged(boolean applied) {

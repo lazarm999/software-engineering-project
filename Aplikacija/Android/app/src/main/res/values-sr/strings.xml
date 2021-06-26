@@ -145,4 +145,14 @@
     <string name="serverErrorNewAd">Problem prilikom pristupanja serveru!</string>
     <string name="successfulLocation">Uspešno pribavljanje lokacija!</string>
     <string name="badRequestLocation">Odaberite polje za odabir lokacije!</string>
+    <string name="editName">*Ime</string>
+    <string name="editSurname">*Prezime</string>
+    <string name="editBio">Izmenite biografiju...</string>
+    <string name="people">Osobe</string>
+    <string name="descriptionOfAd">Opišite oglas u par rečenica</string>
+    <string name="adApplyChanges">Izmenite oglas</string>
+    <string name="questionAd">Postavite pitanje...</string>
+    <string name="applicants">Prijavljeni za posao</string>
+    <string name="preferences">Izbor preferencija</string>
+    <string name="companyPlaceholder">Kompanija</string>
 </resources>

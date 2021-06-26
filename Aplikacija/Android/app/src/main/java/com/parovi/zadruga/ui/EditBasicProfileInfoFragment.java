@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -16,14 +17,24 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.R;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.databinding.FragmentEditBasicProfileInfoBinding;
+import com.parovi.zadruga.models.entityModels.Faculty;
+import com.parovi.zadruga.models.entityModels.Location;
 import com.parovi.zadruga.models.entityModels.User;
+import com.parovi.zadruga.repository.ZadrugaRepository;
 import com.parovi.zadruga.viewModels.UserProfileViewModel;
 
 import java.io.FileDescriptor;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditBasicProfileInfoFragment extends Fragment {
     private UserProfileViewModel model;
@@ -45,6 +56,7 @@ public class EditBasicProfileInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentEditBasicProfileInfoBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(UserProfileViewModel.class);
+
         getContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
                 new ActivityResultCallback<Uri>() {
                     @Override
@@ -85,6 +97,23 @@ public class EditBasicProfileInfoFragment extends Fragment {
             }
         });
 
+        model.getFaculties().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    ArrayAdapter<Faculty> adapter = new ArrayAdapter<Faculty>(requireActivity(), android.R.layout.simple_list_item_1, (List<Faculty>)customResponse.getBody());
+                    binding.spinner.setAdapter(adapter);
+                    User user = (User)model.getUserInfo().getValue().getBody();
+                    for (int pos = 0; pos < adapter.getCount(); pos++) {
+                        if (adapter.getItem(pos).getFacultyId() == user.getFaculty().getFacultyId()) {
+                            binding.spinner.setSelection(pos);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
         binding.btnSubmitChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,6 +136,14 @@ public class EditBasicProfileInfoFragment extends Fragment {
                 getContent.launch("image/*");
             }
         });
+
+        if (Utility.getLoggedInUser(App.getAppContext()).isEmployer()) {
+            binding.spinner.setVisibility(View.GONE);
+        }
+        else {
+            binding.etCompany.setVisibility(View.GONE);
+            model.loadLocations();
+        }
         return binding.getRoot();
     }
 
@@ -115,15 +152,23 @@ public class EditBasicProfileInfoFragment extends Fragment {
         binding.etLastName.setText(user.getLastName());
         binding.etPhoneNo.setText(user.getPhoneNumber());
         binding.etBio.setText(user.getBio());
-        binding.etEmail.setText(user.getEmail());
+        if (Utility.getLoggedInUser(App.getAppContext()).isEmployer()) {
+            binding.etCompany.setText(user.getCompanyName());
+            binding.tvEditPrefs.setVisibility(View.GONE);
+        }
     }
 
     private void readViews(User user) {
         user.setFirstName(binding.etFirstName.getText().toString().trim());
         user.setLastName(binding.etLastName.getText().toString().trim());
         user.setBio(binding.etBio.getText().toString().trim());
-        user.setEmail(binding.etEmail.getText().toString().trim());
         user.setPhoneNumber(binding.etPhoneNo.getText().toString().trim());
+        if (Utility.getLoggedInUser(requireContext()).isEmployer())
+            user.setCompanyName(binding.etCompany.getText().toString().trim());
+        else {
+            Faculty faculty = (Faculty)binding.spinner.getSelectedItem();
+            user.setFaculty((Faculty)binding.spinner.getSelectedItem());
+        }
     }
     private void loadProfilePicture(Bitmap pic) {
         binding.ivProfilePhoto.setImageBitmap(pic);

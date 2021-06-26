@@ -20,6 +20,14 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
     private ArrayList<AdWithStudentRatingItem> jobList;
     private AdInAListItemBinding binding;
 
+    private JobHistoryListListener fragment;
+
+    public JobHistoryAdapter(JobHistoryListListener fragment)
+    {
+        super();
+        this.fragment = fragment;
+    }
+
     public JobHistoryAdapter(ArrayList<AdWithStudentRatingItem> jobs)
     {
         this.jobList = jobs;
@@ -54,6 +62,8 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
         private TextView txtGrade;
         private ImageView imgRes;
 
+        public AdInAListItemBinding binding;
+
         public JobHistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.txtAdTitle);
@@ -67,5 +77,9 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
         public TextView getEtGrade() {return this.txtGrade;}
         public ImageView getImgRes() {return this.imgRes;}
 
+    }
+
+    public interface JobHistoryListListener {
+        void onJobSelected(AdWithStudentRatingItem item);
     }
 }

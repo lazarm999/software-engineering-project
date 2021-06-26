@@ -3,14 +3,15 @@ package com.parovi.zadruga.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.App;
-import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.databinding.FragmentChatMessagesBinding;
+import com.parovi.zadruga.databinding.MyMessageLayoutBinding;
+import com.parovi.zadruga.databinding.OthersMessageLayoutBinding;
 import com.parovi.zadruga.models.entityModels.Message;
 
 import java.util.ArrayList;
@@ -45,14 +46,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(viewType == MY_MESSAGE ? R.layout.my_message_layout : R.layout.others_message_layout,
-                parent, false);
-        return new MessageViewHolder(view);
+        if (viewType == MY_MESSAGE) {
+            MyMessageLayoutBinding binding = MyMessageLayoutBinding.inflate(inflater, parent, false);
+            return new MyMessageViewHolder(binding);
+        }
+        else {
+            OthersMessageLayoutBinding binding = OthersMessageLayoutBinding.inflate(inflater, parent, false);
+            return new OthersMessageViewHolder(binding);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        holder.bind(messages.get(position));
+        holder.bindTo(messages.get(position));
     }
 
     @Override
@@ -60,16 +66,37 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         return messages.size();
     }
 
-    class MessageViewHolder extends RecyclerView.ViewHolder {
-        private TextView textView;
-
-        public MessageViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textView = itemView.findViewById(R.id.tvMessageContent);
+    abstract class MessageViewHolder extends RecyclerView.ViewHolder {
+        public MessageViewHolder(@NonNull View view) {
+            super(view);
         }
+        abstract public void bindTo(Message message);
+    }
 
-        public void bind(Message message) {
-            textView.setText(message.getMessage());
+    class MyMessageViewHolder extends MessageViewHolder {
+        private MyMessageLayoutBinding binding;
+        public MyMessageViewHolder(MyMessageLayoutBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+        @Override
+        public void bindTo(Message message) {
+            binding.tvMessageContent.setText(message.getMessage());
+        }
+    }
+
+    class OthersMessageViewHolder extends MessageViewHolder {
+        private OthersMessageLayoutBinding binding;
+
+        public OthersMessageViewHolder(OthersMessageLayoutBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+        @Override
+        public void bindTo(Message message) {
+            //binding.tvUsername.setText("@" + message.getFkSenderId());
+            binding.tvUsername.setText("@teakocic");
+            binding.tvMessageContent.setText(message.getMessage());
         }
     }
 
