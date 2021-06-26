@@ -52,13 +52,13 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="383dp"
-        android:background="@color/cardview_light_background"
+        android:background="@drawable/border_for_inputs"
         android:ems="10"
         android:fontFamily="@font/roboto_condensed_regular"
         android:hint="@string/logName"
         android:inputType="textPersonName"
         android:textColor="@color/lila"
-        android:textSize="16dp" />
+        android:textSize="20dp" />
 
     <EditText
         android:id="@+id/txtPassword"
@@ -67,13 +67,13 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="333dp"
-        android:background="@color/cardview_light_background"
+        android:background="@drawable/border_for_inputs"
         android:ems="10"
         android:fontFamily="@font/roboto_condensed_regular"
         android:hint="@string/logPassword"
         android:inputType="textPassword"
         android:textColor="@color/lila"
-        android:textSize="16dp" />
+        android:textSize="20dp" />
 
     <Button
         android:id="@+id/btnLogIn"
@@ -87,7 +87,7 @@
         android:textColor="@color/background"
         android:textSize="16sp"
         app:backgroundTint="@color/lila"
-        app:cornerRadius="20dp" />
+        app:cornerRadius="24dp" />
 
     <TextView
         android:id="@+id/txtChangePassword"

@@ -1,7 +1,10 @@
 package com.parovi.zadruga.models.entityModels;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 public class Location {
@@ -10,6 +13,13 @@ public class Location {
     private String cityName;
 
     public Location() {
+    }
+
+    @NonNull
+    @NotNull
+    @Override
+    public String toString() {
+        return cityName;
     }
 
     public Location(String cityName) {

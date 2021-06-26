@@ -9,16 +9,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="80dp">
+        android:background="@drawable/border_for_comments"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/civProfileImage"
             android:layout_width="65dp"
             android:layout_height="46dp"
-            android:layout_marginTop="12dp"
             android:src="@drawable/accepted"
             app:civ_border_color="#FF000000"
             app:civ_border_width="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,45 +28,41 @@
             android:id="@+id/tvUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/teal_200"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="\@username"
+            android:textColor="@color/teal_700"
             app:layout_constraintStart_toEndOf="@+id/civProfileImage"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/civProfileImage" />
 
         <TextView
             android:id="@+id/tvBullet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginStart="10dp"
             android:text="•"
-            app:layout_constraintEnd_toStartOf="@+id/tvTimeAgo"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/tvUsername"
-            app:layout_constraintTop_toTopOf="@+id/tvTimeAgo" />
+            app:layout_constraintTop_toTopOf="@+id/tvUsername" />
 
         <TextView
             android:id="@+id/tvTimeAgo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="10 days ago"
-            app:layout_constraintStart_toEndOf="@+id/tvUsername"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/tvBullet"
+            app:layout_constraintTop_toTopOf="@+id/tvUsername" />
 
         <TextView
             android:id="@+id/tvComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="Ovo je jedan komentar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tvUsername" />
+            app:layout_constraintBottom_toBottomOf="@+id/civProfileImage"
+            app:layout_constraintStart_toStartOf="@+id/tvUsername"
+            app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

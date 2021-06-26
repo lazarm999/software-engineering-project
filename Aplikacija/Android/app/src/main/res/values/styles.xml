@@ -19,8 +19,8 @@
     <style name="inputPhoneNumber" parent="inputText">
         <item name="android:hint">@string/mobile</item>
     </style>
-    <style name="inputDateOfBirth" parent="inputText">
-        <item name="android:hint">@string/dateHint</item>
+    <style name="inputEmail" parent="inputText">
+        <item name="android:hint">@string/emailPlaceholder</item>
     </style>
     <style name="button">
         <item name="android:gravity">center_horizontal</item>

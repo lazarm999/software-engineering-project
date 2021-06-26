@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layJobAdvertisement"
@@ -10,7 +10,13 @@
     android:paddingTop="20dp"
     android:paddingRight="20dp"
     android:paddingBottom="20dp"
+    android:background="@color/background"
     tools:context=".ui.JobAdInfoFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -25,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_optimizationLevel="dimensions"
-            app:srcCompat="@drawable/login1"
+            app:srcCompat="@drawable/job"
             tools:src="@drawable/login1" />
 
         <TextView
@@ -33,11 +39,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="Job Ad Title"
+            android:textColor="@color/lila"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="@+id/imgAdOwner"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/jobAdvertisement"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="Belgrade"
             app:layout_constraintBottom_toBottomOf="@+id/iconLoc"
             app:layout_constraintStart_toEndOf="@+id/iconLoc"
@@ -89,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="2 persons"
             app:layout_constraintBottom_toBottomOf="@+id/iconPersons"
             app:layout_constraintStart_toEndOf="@+id/iconPersons"
@@ -110,7 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="1500 - 2000 RSD"
             app:layout_constraintBottom_toBottomOf="@+id/iconMoney"
             app:layout_constraintStart_toEndOf="@+id/iconMoney"
@@ -121,19 +128,27 @@
             android:id="@+id/btnApply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:text="Apply"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/adApply"
+            android:textColor="@color/light_grey"
+            android:textSize="14sp"
+            app:backgroundTint="@color/lila"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_apply"
+            app:iconPadding="6dp"
+            app:iconTint="@color/background"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvJobDesc" />
+            app:layout_constraintTop_toBottomOf="@+id/tvJobDesc"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/tvNoOfApplications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="6 applied"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -149,11 +164,11 @@
             app:layout_constraintTop_toBottomOf="@+id/iconMoney" />
 
         <TextView
-            android:id="@+id/textView11"
+            android:id="@+id/dtPosted"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="Monday, 17. May 2021"
             app:layout_constraintBottom_toBottomOf="@+id/imageView7"
             app:layout_constraintStart_toEndOf="@+id/imageView7"
@@ -173,7 +188,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="3 hours"
             app:layout_constraintBottom_toBottomOf="@+id/imageView8"
             app:layout_constraintStart_toEndOf="@+id/imageView8"
@@ -192,31 +207,37 @@
         android:layout_marginTop="10dp">
 
         <EditText
-            android:id="@+id/editTextTextMultiLine"
+            android:id="@+id/etComment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/border_no_color"
             android:ems="10"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="start|top"
-            android:hint="Ask a question..."
+            android:hint="@string/questionAd"
             android:inputType="textMultiLine"
-            app:layout_constraintEnd_toStartOf="@+id/imageView9"
+            android:padding="5dp"
+            app:layout_constraintEnd_toStartOf="@+id/imgPostComment"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView9"
+            android:id="@+id/imgPostComment"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:src="@drawable/ic_baseline_send_24"
-            app:layout_constraintBottom_toBottomOf="@+id/editTextTextMultiLine"
+            app:layout_constraintBottom_toBottomOf="@+id/etComment"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editTextTextMultiLine" />
+            app:layout_constraintTop_toTopOf="@+id/etComment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvComments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
-</LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="10dp" />
+
+    </LinearLayout>
+</ScrollView>

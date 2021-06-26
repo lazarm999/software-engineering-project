@@ -277,7 +277,7 @@ public class TmpActivity extends AppCompatActivity {
         tmpBtn5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatViewModel.getAllChats();
+//                chatViewModel.getAllChats();
             }
         });
 

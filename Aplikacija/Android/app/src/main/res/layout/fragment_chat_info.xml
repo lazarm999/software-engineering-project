@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:layout_width="match_parent">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:background="@color/background"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.ChatInfoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <View
         android:id="@+id/view"
@@ -20,8 +24,13 @@
         android:id="@+id/tvRelatedJobTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Job title"
-        android:textSize="40sp" />
+        android:fontFamily="@font/roboto_condensed_bold_italic"
+        android:gravity="start
+"
+        android:padding="10dp"
+        android:text="Job Title"
+        android:textColor="@color/teal_200"
+        android:textSize="30sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -31,16 +40,20 @@
             android:id="@+id/imgPeople"
             android:layout_width="@dimen/small_image_size"
             android:layout_height="@dimen/small_image_size"
-            android:src="@drawable/ic_baseline_people_24"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/ic_group"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/teal_700" />
 
         <TextView
             android:id="@+id/tvPeople"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="People"
+            android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/imgPeople"
             app:layout_constraintStart_toEndOf="@+id/imgPeople"
@@ -56,6 +69,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvParticipants"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"
+        android:padding="10dp" />
 
 </LinearLayout>
+
+</ScrollView>

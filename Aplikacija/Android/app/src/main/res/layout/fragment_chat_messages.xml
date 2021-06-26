@@ -6,13 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".ui.ChatMessagesFragment">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/lila"
+            app:menu="@menu/chat_overflow_menu"
+            app:title="Chat"
+            app:titleTextColor="@color/background" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMessages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/background_color_light"
+        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
         app:reverseLayout="false"
         app:stackFromEnd="false"
         tools:layout_editor_absoluteX="0dp">
@@ -23,6 +44,7 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/background"
         android:orientation="horizontal"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -30,14 +52,17 @@
         <EditText
             android:id="@+id/etmlNewMessage"
             android:layout_width="306dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
+            android:background="@drawable/border_for_inputs"
             android:ems="10"
-            android:gravity="start|top"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:gravity="center_vertical"
             android:hint="@string/writeMessageHint"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:paddingLeft="5dp" />
 
         <ImageButton
             android:id="@+id/imgbtnSendMessage"
@@ -45,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@android:color/white"
+            android:background="@color/background_color_light"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_baseline_send_24" />
     </LinearLayout>

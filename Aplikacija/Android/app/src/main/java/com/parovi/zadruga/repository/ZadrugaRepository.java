@@ -2,17 +2,25 @@ package com.parovi.zadruga.repository;
 
 
 import android.app.Application;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.FileUtils;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.room.util.FileUtil;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -90,16 +98,24 @@ import com.quickblox.users.model.QBUser;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -134,7 +150,7 @@ public class ZadrugaRepository  {
     private final NotificationApi notificationApi;
 
     private final Executor executor;
-
+    
     public synchronized static ZadrugaRepository getInstance(Application app) {
         if (instance == null) {
             instance = new ZadrugaRepository(app);
@@ -481,7 +497,7 @@ public class ZadrugaRepository  {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if(response.isSuccessful() && response.body() != null) {
-                    isUnApplied.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                    isUnApplied.postValue(new CustomResponse<>(CustomResponse.Status.OK, false));
                     appliedDao.deleteApplied(new Applied(userId, adId));
                 } else {
                     isUnApplied.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, "Pogresno uneti podaci"));
@@ -1101,6 +1117,89 @@ public class ZadrugaRepository  {
         });*/
     }
 
+    public void postProfilePicture(MutableLiveData<CustomResponse<?>> profileImage, Uri imageUri, Bitmap newProfileImage){
+        String token = Utility.getAccessToken(App.getAppContext());
+        int id = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+        InputStream in;
+        byte[] buff;
+        try {
+            in = App.getAppContext().getContentResolver().openInputStream(imageUri);
+            buff = new byte[in.available()];
+            while (in.read(buff) != -1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            profileImage.postValue(new CustomResponse<>(CustomResponse.Status.EXCEPTION_ERROR, e.getMessage()));
+            return;
+        }
+        RequestBody imageRequest = RequestBody.create(MediaType.parse("application/octet-stream"), buff);
+        userApi.postProfilePicture(token, id, imageRequest).enqueue(new Callback<ResponseBody>() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
+            @Override
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    profileImage.postValue(new CustomResponse<>(CustomResponse.Status.OK, newProfileImage));
+                    if(newProfileImage != null)
+                        saveImageLocally(newProfileImage, Utility.getLoggedInUser(App.getAppContext()).getUserId());
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                profileImage.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+            }
+        });
+    }
+
+    public void postProfilePicture(String token, MutableLiveData<CustomResponse<?>> isPosted, Uri imageUri, Bitmap newProfileImage){
+        int id = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+        ContentResolver contentResolver = App.getAppContext().getContentResolver();
+        /*String readOnly = "r";
+        try {
+            ParcelFileDescriptor pfd = contentResolver.openFileDescriptor(imageUri, readOnly);
+            File file = new File(imageUri.getPath());
+            RequestBody requestBody = RequestBody.create(
+                    MediaType.parse(App.getAppContext().getContentResolver().getType(imageUri)),
+                    file);
+            MultipartBody.Part filePart = MultipartBody.Part.createFormData("profileImage", file.getName(), requestBody);
+            userApi.postProfilePicture(token, id, filePart).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                    if(response.isSuccessful()){
+                        isPosted.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                        saveImageLocally(newProfileImage, Utility.getLoggedInUser(App.getAppContext()).getUserId());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                    isPosted.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                }
+            });
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        /*File file = new File(imageUri.getPath());
+        RequestBody requestBody = RequestBody.create(
+                MediaType.parse(App.getAppContext().getContentResolver().getType(imageUri)),
+                file);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("profileImage", file.getName(), requestBody);*/
+        userApi.postProfilePicture(token, id, newProfileImage).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    isPosted.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                    saveImageLocally(newProfileImage, Utility.getLoggedInUser(App.getAppContext()).getUserId());
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                isPosted.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+            }
+        });
+    }
+
     public void banUser(String token, MutableLiveData<CustomResponse<?>> isBanned, BanRequest b, int id){
         userApi.banUser(token, id, b).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -1591,7 +1690,7 @@ public class ZadrugaRepository  {
                         Utility.ChatType type = qbChat.getType() == QBDialogType.PRIVATE ? Utility.ChatType.PRIVATE : Utility.ChatType.GROUP;
                         Chat chat = qbChatDialogToChat(qbChat);
                         tmpChats.add(chat);
-                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChats));
+
                         if(type == Utility.ChatType.PRIVATE){
                             //id osobe sa kojom chetujes
                             int chatterQbId = qbChat.getOccupants().get(0) == userQbId ? qbChat.getOccupants().get(1) : qbChat.getOccupants().get(0);
@@ -1677,6 +1776,7 @@ public class ZadrugaRepository  {
                             });
                         }
                     }
+                    chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChats));
                 }
                 else
                     chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, new ArrayList<Chat>()));

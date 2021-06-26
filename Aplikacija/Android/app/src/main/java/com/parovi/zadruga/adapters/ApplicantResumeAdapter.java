@@ -1,27 +1,44 @@
 package com.parovi.zadruga.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parovi.zadruga.App;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.data.ApplicantResume;
 import com.parovi.zadruga.data.UserInfoResume;
 import com.parovi.zadruga.databinding.ApplicantItemBinding;
+import com.parovi.zadruga.databinding.ChatResumeLayoutBinding;
 import com.parovi.zadruga.databinding.UserListItemBinding;
+import com.parovi.zadruga.models.entityModels.Chat;
+import com.parovi.zadruga.models.entityModels.User;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicantResumeAdapter extends RecyclerView.Adapter<ApplicantResumeAdapter.ApplicantResumeViewHolder> {
-    private List<ApplicantResume> applicants;
+    private List<User> applicants;
 
-    public void setUsers(List<ApplicantResume> users) {
+    public void setApplicants(List<User> users) {
         this.applicants = users;
+        notifyDataSetChanged();
     }
 
-
+    public ApplicantResumeAdapter() {
+        super();
+        applicants = new ArrayList<>();
+    }
     @NonNull
     @Override
     public ApplicantResumeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,11 +65,17 @@ public class ApplicantResumeAdapter extends RecyclerView.Adapter<ApplicantResume
             this.binding = binding;
         }
 
-        public void bind(ApplicantResume applicant) {
-            binding.tvApplicantName.setText(applicant.getName());
+        public void bind(User applicant) {
+            binding.tvApplicantName.setText(applicant.getFirstName() + " " + applicant.getLastName());
             binding.tvApplicantUsername.setText(applicant.getUsername());
-            binding.cboxSelected.setChecked(applicant.isSelected());
-            binding.cboxSelected.setOnCheckedChangeListener((buttonView, isChecked) -> applicant.setSelected(isChecked));
+            binding.cboxSelected.setChecked(false); //
+            binding.cboxSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                }
+            });
         }
     }
 }
+

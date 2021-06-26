@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.EmployerProfileFragment">
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,34 +28,33 @@
             app:srcCompat="@drawable/profile_background" />
 
         <Button
-            android:id="@+id/BtnEdit"
+            android:id="@+id/btnEdit"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/background"
+            android:background="@drawable/border_for_inputs"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/editProfile"
             android:textColor="@color/lila"
-            android:textSize="10sp"
+            android:textSize="12sp"
             app:backgroundTint="@color/background"
-            app:cornerRadius="20dp"
+            app:cornerRadius="30dp"
             app:icon="@drawable/ic_edit_profile"
-            app:iconTint="@color/lila" />
+            app:iconTint="@color/lila"  />
 
         <ImageView
             android:id="@+id/imgProfileBlank"
             android:layout_width="293dp"
-            android:layout_height="196dp"
+            android:layout_height="166dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="135dp"
-            android:background="@color/white"
-            app:srcCompat="@drawable/common_google_signin_btn_text_light" />
+            android:background="@drawable/border_for_image" />
 
         <TextView
             android:id="@+id/editTextUser"
@@ -213,7 +215,7 @@
             android:textSize="18sp" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/imgBtnArrowBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -224,13 +226,11 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="205dp"
             android:layout_marginRight="205dp"
-            android:layout_toStartOf="@+id/BtnEdit"
-            android:layout_toLeftOf="@+id/BtnEdit"
             android:adjustViewBounds="true"
-            android:background="@color/material_on_surface_disabled"
-            android:tint="@color/background"
-            app:srcCompat="@drawable/ic_left_black_arrow"
-            tools:ignore="VectorDrawableCompat" />
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_left_black_arrow"
+            android:tint="@color/background" />
 
     </RelativeLayout>
 </FrameLayout>
+</ScrollView>

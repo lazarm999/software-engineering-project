@@ -1,5 +1,6 @@
 package com.parovi.zadruga.fragments;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.adapters.AdAdapter;
 import com.parovi.zadruga.items.AdItem;
+import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.ui.JobAdActivity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ import java.util.ArrayList;
  * Use the {@link RecommendationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecommendationFragment extends Fragment {
+public class RecommendationFragment extends Fragment implements AdAdapter.AdListListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,7 +89,7 @@ public class RecommendationFragment extends Fragment {
 
         RecyclerView recView = layout.findViewById(R.id.recViewRecommends);
         recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        AdAdapter adapter = new AdAdapter((ads));
+        AdAdapter adapter = new AdAdapter(this);
         recView.setAdapter(adapter);
 
 
@@ -99,5 +102,12 @@ public class RecommendationFragment extends Fragment {
         });*/
 
         return layout;
+    }
+
+    @Override
+    public void onAdSelected(Ad ad) {
+        Intent intent = new Intent(requireActivity(), JobAdActivity.class);
+        intent.putExtra("AdID", ad.getAdId());
+        startActivity(intent);
     }
 }

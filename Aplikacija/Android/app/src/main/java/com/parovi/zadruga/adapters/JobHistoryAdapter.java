@@ -10,13 +10,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.databinding.AdInAListItemBinding;
 import com.parovi.zadruga.items.AdWithStudentRatingItem;
 
 import java.util.ArrayList;
 
 public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.JobHistoryViewHolder> {
-
+    
     private ArrayList<AdWithStudentRatingItem> jobList;
+    private AdInAListItemBinding binding;
+
+    private JobHistoryListListener fragment;
+
+    public JobHistoryAdapter(JobHistoryListListener fragment)
+    {
+        super();
+        this.fragment = fragment;
+    }
 
     public JobHistoryAdapter(ArrayList<AdWithStudentRatingItem> jobs)
     {
@@ -52,11 +62,13 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
         private TextView txtGrade;
         private ImageView imgRes;
 
+        public AdInAListItemBinding binding;
+
         public JobHistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.txtAdTitle);
             tvDate = itemView.findViewById(R.id.txtAdDate);
-            txtGrade = itemView.findViewById(R.id.editTxtGrade);
+            txtGrade = itemView.findViewById(R.id.txtViewGrade);
             imgRes = itemView.findViewById(R.id.imgUserGradeVector);
         }
 
@@ -65,5 +77,9 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
         public TextView getEtGrade() {return this.txtGrade;}
         public ImageView getImgRes() {return this.imgRes;}
 
+    }
+
+    public interface JobHistoryListListener {
+        void onJobSelected(AdWithStudentRatingItem item);
     }
 }

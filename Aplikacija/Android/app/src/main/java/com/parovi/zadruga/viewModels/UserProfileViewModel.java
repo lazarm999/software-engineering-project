@@ -1,38 +1,140 @@
 package com.parovi.zadruga.viewModels;
 
+import android.app.Application;
+import android.content.ContentResolver;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
+import android.util.Log;
+import android.util.Size;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.parovi.zadruga.data.UserInfo;
+import com.parovi.zadruga.App;
+import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.R;
+import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.models.entityModels.Faculty;
+import com.parovi.zadruga.models.entityModels.User;
+import com.parovi.zadruga.repository.ZadrugaRepository;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
-public class UserProfileViewModel extends ViewModel {
-    private final static long id = 3;
-    private MutableLiveData<UserInfo> userInfo;
+public class UserProfileViewModel extends AndroidViewModel {
+    private final int id = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+    private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
+    private MutableLiveData<CustomResponse<?>> userInfo;
+    private MutableLiveData<CustomResponse<?>> profileImage;
+    private MutableLiveData<CustomResponse<?>> isProfileImageUpdated;
+    private MutableLiveData<CustomResponse<?>> isUserUpdated;
+    private MutableLiveData<CustomResponse<?>> faculties;
+    private ZadrugaRepository repository;
 
-    public MutableLiveData<UserInfo> getUserInfo() {
-        if (userInfo == null) {
-            userInfo = new MutableLiveData<UserInfo>();
-            loadUserInfo();
-        }
+    public UserProfileViewModel(@NonNull Application app) {
+        super(app);
+        repository = ZadrugaRepository.getInstance(app);
+        userInfo = new MutableLiveData<>();
+        profileImage = new MutableLiveData<>();
+        isProfileImageUpdated = new MutableLiveData<>();
+        isUserUpdated = new MutableLiveData<>();
+        faculties = new MutableLiveData<>();
+        loadUserInfo();
+        loadUserProfileImage();
+    }
+
+    public MutableLiveData<CustomResponse<?>> getIsProfileImageUpdated() {
+        return isProfileImageUpdated;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getIsUserUpdated() {
+        return isUserUpdated;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getProfileImage() {
+        return profileImage;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getFaculties() { return faculties; }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getUserInfo() {
         return userInfo;
     }
 
-    private void loadUserInfo() {
-        UserInfo userInfo = new UserInfo(id,"@urosst_" );
-        userInfo.setFirstName("Uros");
-        userInfo.setLastName("Stojkovic");
-        userInfo.setEmail("uros.stojkovich@elfak.rs");
-        userInfo.setPhoneNo("+381349309");
-        List<Long> jobTypes = new LinkedList<Long>();
-        jobTypes.add((long) 2);
-        jobTypes.add((long) 5);
-        userInfo.setJobTypes(jobTypes);
-        this.userInfo.setValue(userInfo);
+    public void updateUser() {
+        repository.updateUser(Utility.getAccessToken(App.getAppContext()), isUserUpdated, (User)userInfo.getValue().getBody());
+    }
+    public void updateUserProfilePhoto(Resources res, Uri uri, int reqWidth, int reqHeight) {
+        repository.postProfilePicture(
+                profileImage,
+                uri,
+                decodeSampledBitmapFromUri(uri, reqWidth, reqHeight, res));
     }
 
+    public void loadUserInfo() {
+        repository.getUserById(token, userInfo, id);
+    }
+    public void loadUserProfileImage() {
+        repository.getProfilePicture(profileImage, id);
+    }
+    public void loadLocations() {
+        repository.getAllFaculties(token, faculties);
+    }
+    public static int calculateInSampleSize(BitmapFactory.Options options,
+                                            int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
 
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static Bitmap decodeSampledBitmapFromUri(Uri uri, int reqWidth, int reqHeight, Resources res) {
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        String path = uri.toString();
+        try {
+            return App.getAppContext().getContentResolver().loadThumbnail(uri, new Size(reqWidth,reqHeight),null);
+        }
+        catch (IOException e) {
+            Log.d("Exception", "decodeSampledBitmapFromUri:");
+            return null;
+        }
+        /*BitmapFactory.decodeFile(path, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, R.drawable.avatar, options);*/
+    }
 }

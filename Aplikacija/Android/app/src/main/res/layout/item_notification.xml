@@ -19,10 +19,11 @@
     <RelativeLayout
         android:id="@+id/cardAdItem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/border_for_notification">
 
         <ImageView
-            android:id="@+id/imgAdItem"
+            android:id="@+id/ivNotificationIcon"
             android:layout_width="75dp"
             android:layout_height="65dp"
             android:layout_marginStart="25dp"
@@ -31,29 +32,29 @@
             tools:srcCompat="@android:drawable/screen_background_light" />
 
         <TextView
-            android:id="@+id/txtAdItemHeader"
+            android:id="@+id/tvDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="90dp"
-            android:paddingBottom="5dp"
             android:fontFamily="@font/roboto_condensed_regular"
+            android:paddingBottom="5dp"
             android:text="Taj i taj ti je dao ocenu"
             android:textColor="@color/lila"
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/txtLocationAd"
+            android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:layout_marginLeft="150dp"
+            android:layout_marginTop="15dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="Bas si bio dobar radnik"
             android:textColor="@color/lila"
-            app:layout_constraintStart_toStartOf="@+id/imgAdItem"
-            app:layout_constraintTop_toBottomOf="@+id/imgAdItem" />
+            app:layout_constraintStart_toStartOf="@+id/ivNotificationIcon"
+            app:layout_constraintTop_toBottomOf="@+id/ivNotificationIcon" />
 
     </RelativeLayout>
 

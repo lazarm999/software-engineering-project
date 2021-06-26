@@ -93,6 +93,7 @@ public class Chat {
     }
 
     @Exclude
+
     public String getChatId() {
         return chatId;
     }

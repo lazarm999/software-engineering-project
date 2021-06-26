@@ -44,6 +44,7 @@ public class User {
     private int userQbId;
     private String password;
 
+
     @Ignore
     private Faculty faculty;
     @Ignore
@@ -234,6 +235,7 @@ public class User {
 
     public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
+        fkFacultyId = faculty.getFacultyId();
     }
 
     public Bitmap getProfileImage() {
