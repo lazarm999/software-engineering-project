@@ -142,6 +142,9 @@
     <string name="rating_intro_format1">We\'ve seen you\'ve collaborated with %1$s.</string>
     <string name="rating_intro_format2">How would you rate your experience with %1$s?</string>
     <string name="submitRating">Submit</string>
-
-
+    <string name="accepted">You are accepted</string>
+    <string name="declined">You are declined</string>
+    <string name="tagged">User %1$s has tagged</string>
+    <string name="adComment">User %1$s left a comment</string>
+    <string name="rating">User %1$s rated you</string>
 </resources>

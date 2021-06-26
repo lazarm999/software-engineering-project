@@ -40,7 +40,7 @@ public class JobAdViewModel extends ViewModel {
         jobAd.setLocation("Nis");
         jobAd.setCompensationFrom(10);
         jobAd.setCompensationTo(20);
-        jobAd.setDate(LocalDate.now());
+        //jobAd.setDate(LocalDate.now());
         jobAd.setDuration(120);
         List<ApplicantResume> applicants = new LinkedList<ApplicantResume>();
         applicants.add(new ApplicantResume(1, "Uros", "@urostt_", true));

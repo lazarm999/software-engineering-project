@@ -1,24 +1,27 @@
-package com.parovi.zadruga.retrofit;
+package com.parovi.zadruga.api;
 
+import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.requestModels.BanRequest;
 import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
 import com.parovi.zadruga.models.requestModels.ChatMembersRequest;
+import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
+import com.parovi.zadruga.models.requestModels.LoginRequest;
 import com.parovi.zadruga.models.responseModels.LoginResponse;
 
 import java.util.List;
 
-import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Multipart;
+import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface UserApi {
@@ -26,7 +29,7 @@ public interface UserApi {
     Call<User> registerUser(@Body User user);
 
     @POST("login/")
-    Call<LoginResponse> loginUser(@Body User user);
+    Call<LoginResponse> loginUser(@Body LoginRequest loginRequest);
 
     @GET("user/{id}/")
     Call<User> getUserById(@Header("Authorization") String token, @Path("id") int id);
@@ -46,9 +49,11 @@ public interface UserApi {
     @PUT("passwordChange/")
     Call<ResponseBody> changePassword(@Header("Authorization") String token, @Body ChangePasswordRequest request);
 
-    @Multipart
+    @Headers({
+            "Content-Disposition: attachment; filename=default.png"
+    })
     @POST("profilePicture/{id}/")
-    Call<ResponseBody> postProfilePicture(@Header("Authorization") String token, @Path("id") int id, @Part MultipartBody.Part image);
+    Call<ResponseBody> postProfilePicture(@Header("Authorization") String token, @Path("id") int id, @Body RequestBody image);
 
     @POST("ban/{id}/")
     Call<ResponseBody> banUser(@Header("Authorization") String token, @Path("id") int id, @Body BanRequest banRequest);
@@ -61,4 +66,13 @@ public interface UserApi {
 
     @POST("chatMembers/")
     Call<List<User>> getChatMembers(@Header("Authorization") String token, @Body ChatMembersRequest userQbIds);
+
+    @GET("userAds/{id}/")
+    Call<List<Ad>> getUserAds(@Header("Authorization") String token, @Path("id") int userId);
+
+    @POST("userFcm/")
+    Call<ResponseBody> postFcmToken(@Header("Authorization") String token, @Body AddFcmTokenRequest request);
+
+    @DELETE("userFcm/{fcmToken}/")
+    Call<ResponseBody> deleteFcmToken(@Header("Authorization") String token, @Path("fcmToken") String fcmToken);
 }

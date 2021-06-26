@@ -133,11 +133,15 @@
     <string name="headerJobs">Poslovi koje ste radili do sada</string>
     <string name="headerMyAds">Vaši oglasi</string>
     <string name="recommend">Preporučeno za Vas</string>
-
     <string name="profileStudent">Profil</string>
     <string name="notificationsStudent">Obaveštenja</string>
     <string name="daysAgo">pre %1$d dana</string>
     <string name="dayAgo">pre %1$d dan</string>
     <string name="hoursAgo">pre %1$d sati</string>
     <string name="lessThen6hourAgo">pre %1$d sata</string>
+    <string name="accepted">Prihvaćeni ste za posao</string>
+    <string name="declined">Odbijeni ste za posao</string>
+    <string name="tagged">Korisnik %1$s Vas je tagovao</string>
+    <string name="adComment">Korisnik %1$s je ostavio komentar</string>
+    <string name="rating">Korisnik %1$s Vas je oceno</string>
 </resources>

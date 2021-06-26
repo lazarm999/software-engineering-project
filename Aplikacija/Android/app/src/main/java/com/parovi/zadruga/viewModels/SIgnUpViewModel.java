@@ -7,19 +7,14 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
-import com.quickblox.chat.model.QBChatDialog;
-
-import java.util.List;
+import com.parovi.zadruga.repository.BaseRepository;
 
 public class SIgnUpViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> isSignedUp;
-    private ZadrugaRepository rep;
+    private BaseRepository rep;
 
     public SIgnUpViewModel(@NonNull Application app) {
         super(app);
-        rep = ZadrugaRepository.getInstance(app);
         isSignedUp = new MutableLiveData<>();
     }
 

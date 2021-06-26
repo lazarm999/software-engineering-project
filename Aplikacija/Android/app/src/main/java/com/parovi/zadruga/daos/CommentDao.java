@@ -13,18 +13,12 @@ import com.parovi.zadruga.models.nonEntityModels.CommentWithUser;
 import java.util.List;
 
 @Dao
-public interface CommentDao {
+public abstract class CommentDao extends BaseDao<Comment> {
     @Query("SELECT user_table.*, Comment.* FROM Comment " +
             "INNER JOIN user_table ON user_table.userId = Comment.fkUserId " +
             "WHERE Comment.fkAdId == :adId")
-    ListenableFuture<List<CommentWithUser>> getCommentsByAdId(int adId);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    ListenableFuture<Long> insertComment(Comment comment);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    ListenableFuture<List<Long>> insertComments(List<Comment> comments);
+    public abstract List<CommentWithUser> getCommentsByAdId(int adId);
 
     @Query("DELETE FROM Comment WHERE Comment.commentId = :commentId")
-    ListenableFuture<Integer> deleteComment(int commentId);
+    public abstract ListenableFuture<Integer> deleteComment(int commentId);
 }

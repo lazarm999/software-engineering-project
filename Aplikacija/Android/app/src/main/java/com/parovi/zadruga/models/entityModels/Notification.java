@@ -24,9 +24,9 @@ public class Notification
     private int fkSenderId;
     @ColumnInfo(index = true)
     private int fkAdId;
-    //TODO: da l ovde da pisem "fk" posto ce chat nece da se cuva u nasoj bazi
-    private int fkChatId;
     private String type;
+    private String comment;
+    private int rating;
 
     public Notification() {
     }
@@ -41,7 +41,6 @@ public class Notification
         this.notifId = notifId;
         this.fkSenderId = fkSenderId;
         this.fkAdId = fkAdId;
-        this.fkChatId = fkChatId;
         this.type = type;
     }
 
@@ -69,19 +68,27 @@ public class Notification
         this.fkAdId = fkAdId;
     }
 
-    public int getFkChatId() {
-        return fkChatId;
-    }
-
-    public void setFkChatId(int fkChatId) {
-        this.fkChatId = fkChatId;
-    }
-
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

@@ -7,6 +7,8 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 import java.util.List;
 
@@ -24,15 +26,11 @@ import static androidx.room.ForeignKey.SET_NULL;
 @Entity(foreignKeys = {@ForeignKey(entity = Location.class,
                         parentColumns = "locId",
                         childColumns = "fkLocationId",
-                        onDelete = SET_NULL),
+                        onDelete = SET_NULL,
+                        onUpdate = CASCADE),
                         @ForeignKey(entity = User.class,
                         parentColumns = "userId",
                         childColumns = "fkEmployerId",
-                        onDelete = SET_NULL,
-                        onUpdate = CASCADE),
-                        @ForeignKey(entity = Chat.class,
-                        parentColumns = "chatId",
-                        childColumns = "fkQbChatId",
                         onDelete = SET_NULL,
                         onUpdate = CASCADE)})
 public class Ad {
@@ -48,7 +46,7 @@ public class Ad {
     private int fkLocationId;
     @ColumnInfo(index = true)
     private int fkEmployerId;
-    @ColumnInfo(index = true)
+    @SerializedName("qbChatId")
     private String fkQbChatId;
 
     @Ignore

@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData;
 import com.parovi.zadruga.models.entityModels.AdWithLocation;
 import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
+import com.parovi.zadruga.repository.BaseRepository;
 
 import java.util.List;
 
@@ -18,10 +18,9 @@ public class TmpUserModel extends AndroidViewModel {
     private LiveData<List<Badge>> badges;
     private LiveData<List<AdWithLocation>> adsWithLocation;
     private LiveData<User> user;
-    private ZadrugaRepository rep;
+    private BaseRepository rep;
 
     public TmpUserModel(@NonNull Application application) {
         super(application);
-        rep = ZadrugaRepository.getInstance(application);
     }
 }

@@ -1,8 +1,6 @@
-package com.parovi.zadruga.retrofit;
+package com.parovi.zadruga.api;
 
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
 import com.parovi.zadruga.models.requestModels.CommentRequest;
-import com.parovi.zadruga.models.requestModels.PostAdRequest;
 import com.parovi.zadruga.models.responseModels.AdResponse;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 

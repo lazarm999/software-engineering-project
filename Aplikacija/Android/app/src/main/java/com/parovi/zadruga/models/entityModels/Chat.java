@@ -23,14 +23,6 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity(foreignKeys = {@ForeignKey(entity = Ad.class,
                         parentColumns = "adId",
                         childColumns = "fkAdId",
-                        onDelete = CASCADE),
-                        /*@ForeignKey(entity = User.class,
-                        parentColumns = "userQbId",
-                        childColumns = "fkCreatorId",
-                        onDelete = CASCADE),*/
-                        @ForeignKey(entity = User.class,
-                        parentColumns = "userQbId",
-                        childColumns = "fkLastSenderId",
                         onDelete = CASCADE)})
 public class Chat {
     @PrimaryKey
@@ -39,19 +31,15 @@ public class Chat {
     @ColumnInfo(index = true)
     @Nullable
     private Integer fkAdId;
-    /*@ColumnInfo(index = true)
-    private int fkCreatorId;*/
+
+    private Integer fkChatterId;
     private Utility.ChatType type;
     private String lastSenderName;
     private int numOfMembers;
     private String lastMessage;
-    @ColumnInfo(index = true)
-    private int fkLastSenderId;
     private long lastMessageDateSent;
     private Date createdAt;
     private boolean isArchived;
-
-    @Ignore
     private String chatTitle;
 
     @Ignore
@@ -59,6 +47,16 @@ public class Chat {
 
     @Ignore
     private Bitmap profileImage;
+
+    public Chat(@NonNull String chatId, Utility.ChatType type, int numOfMembers, String lastMessage, long lastMessageDateSent, Date createdAt, QBChatDialog qbChat) {
+        this.chatId = chatId;
+        this.type = type;
+        this.numOfMembers = numOfMembers;
+        this.lastMessage = lastMessage;
+        this.lastMessageDateSent = lastMessageDateSent;
+        this.createdAt = createdAt;
+        this.qbChat = qbChat;
+    }
 
     public Chat() {
     }
@@ -70,7 +68,6 @@ public class Chat {
         this.lastSenderName = lastSenderName;
         this.numOfMembers = numOfMembers;
         this.lastMessage = lastMessage;
-        this.fkLastSenderId = fkLastSenderId;
         this.lastMessageDateSent = lastMessageDateSent;
         this.createdAt = createdAt;
         this.qbChat = qbChat;
@@ -82,7 +79,6 @@ public class Chat {
         this.lastSenderName = lastSenderName;
         this.numOfMembers = numOfMembers;
         this.lastMessage = lastMessage;
-        this.fkLastSenderId = fkLastSenderId;
         this.lastMessageDateSent = lastMessageDateSent;
         this.createdAt = createdAt;
     }
@@ -149,14 +145,6 @@ public class Chat {
         this.lastMessage = lastMessage;
     }
 
-    public int getFkLastSenderId() {
-        return fkLastSenderId;
-    }
-
-    public void setFkLastSenderId(int fkLastSenderId) {
-        this.fkLastSenderId = fkLastSenderId;
-    }
-
     public long getLastMessageDateSent() {
         return lastMessageDateSent;
     }
@@ -195,6 +183,15 @@ public class Chat {
 
     public void setChatTitle(String chatTitle) {
         this.chatTitle = chatTitle;
+    }
+
+    @Nullable
+    public Integer getFkChatterId() {
+        return fkChatterId;
+    }
+
+    public void setFkChatterId(@Nullable Integer fkChatterId) {
+        this.fkChatterId = fkChatterId;
     }
 
     /*public int getFkCreatorId() {
