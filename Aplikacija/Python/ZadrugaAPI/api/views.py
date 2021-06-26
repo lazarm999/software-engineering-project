@@ -196,6 +196,13 @@ class RateUser(APIView):
         if not (rater.isEmployer != ratee.isEmployer and isinstance(rating, int) \
             and rating > 0 and rating < 6):
             return r400('Invalid parameters')
+
+        employer = rater if rater.isEmployer else ratee
+        employee = rater if rater.isEmployer else rater
+        applied = Applied.objects.filter(chosen=True, user__userId=employee.userId, ad__employer__userId=employer.userId)
+        if len(applied) == 0:
+            return r400('You haven\'t worked with this user')
+
         r = Rating()
         r.rater = rater
         r.ratee = ratee
@@ -318,6 +325,9 @@ class AdList(generics.ListCreateAPIView):
         filterTagIds = request.query_params.getlist('filterTagIds')
         filterTagIds = [int(x) for x in filterTagIds] if filterTagIds else None
 
+        pageSkip = request.query_params.get('pageSkip')
+        pageSize = request.query_params.get('pageSize')
+
         ads = Ad.objects.all()
         if sortLocationLatitude and sortLocationLongitude:
             ads = ads.order_by((F('location__longitude')-sortLocationLongitude)**2
@@ -333,6 +343,8 @@ class AdList(generics.ListCreateAPIView):
             ads = ads.filter(compensationMin__lte=filterCompensationMax)
         if filterTagIds:
             ads = ads.filter(tags__tagId__in=filterTagIds).distinct()
+        if pageSkip and pageSize:
+            ads = ads[int(pageSkip):int(pageSkip)+int(pageSize)]
 
         serialized = AdSerializer(ads, many=True)
         return Response(serialized.data)
@@ -434,6 +446,7 @@ class CommentList(APIView):
 
     def get(self, request, pk, *args, **kwargs):
         comments = Comment.objects.filter(ad_id=pk).order_by('postTime')
+
         serialized = CommentSerializer(comments, many=True)
         return Response(serialized.data)
 
@@ -680,9 +693,16 @@ class NotificationList(APIView):
     def get(self, request, *args, **kwargs):
         userId = request._auth
 
+        pageSkip = request.query_params.get('pageSkip')
+        pageSize = request.query_params.get('pageSize')
+
         notifications = Notification.objects\
             .filter(notifications__user__userId=userId)\
             .order_by('-postTime')
+        
+        if pageSkip and pageSize:
+            notifications = notifications[int(pageSkip):int(pageSkip)+int(pageSize)]
+
         serialized = NotificationSerializer(notifications, many=True)
         return Response(serialized.data)
 
@@ -692,6 +712,8 @@ class Recommender(APIView):
 
     def get(self, request, *args, **kwargs):
         tagIds = request.query_params.getlist('tagId')
+        pageSkip = request.query_params.get('pageSkip')
+        pageSize = request.query_params.get('pageSize')
         tagString = ['(']
         for id in tagIds:
             tagString.append(id)
@@ -700,15 +722,13 @@ class Recommender(APIView):
         rawQuery = f'select a.adId, a.title, a.description, a.numberOfEmployees,\
             a.compensationMin, a.compensationMax, a.location_id, a.postTime, a.isClosed, \
             a.qbChatId, count(*) as matches from api_ad as a join api_relatedto as r \
-            on a.adId  = r.ad_id where r.tag_id in {"".join(tagString)} group by adId order by matches desc;'
+            on a.adId  = r.ad_id where r.tag_id in {"".join(tagString)} group by adId\
+            order by matches desc, postTime desc limit {pageSkip}, {pageSize};'
         querySet = Ad.objects.raw(rawQuery)
         serialized = AdSerializer(querySet, many=True)
         return Response(serialized.data)
 
 
-# TODO: saradjivali za rejting
-# TODO: paginacija svuda
-# TODO: badzevi
+# TODO: badzevi, notifikacija za bedz
 
-# TODO: sql skripta za pocetno punjenje
 # TODO: Docker
