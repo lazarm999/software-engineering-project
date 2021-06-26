@@ -6,7 +6,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 
 from api.models import Notification, User, UserFCM, UserNotification
-from api.responses import r404, r500
+from api.responses import r404
 
 
 class ProfilePictureLogic:
@@ -145,3 +145,31 @@ class NotificationLogic:
         NotificationLogic.sendPushNotifications(data, adOwnerFcm)
         data['type'] = 'tagged'
         NotificationLogic.sendPushNotifications(data, taggedUserFcm)
+
+    def sendRatingNotification(rating):
+        ratingNotification = Notification()
+        ratingNotification.rating = rating
+
+        notif = UserNotification()
+        notif.notification = ratingNotification
+        notif.user = rating.ratee
+
+        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user__username=rating.ratee.username)]
+
+        ratingNotification.save()
+        notif.save()
+
+        data = {
+            'rater': rating.rater.username,
+            'rating': rating.rating,
+            'type': 'rating'
+        }
+        NotificationLogic.sendPushNotifications(data, userFcms)
+
+    def sendChatNotification(sender, message, userFcms):
+        NotificationLogic.sendPushNotifications({
+            'type': 'chat',
+            'sender': sender,
+            'message': message
+        }, userFcms)
+

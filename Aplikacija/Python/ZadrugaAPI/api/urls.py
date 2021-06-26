@@ -28,5 +28,8 @@ urlpatterns = [
     path('adByQbChatId/<str:pk>/', views.AdByQbChatId.as_view()),
     path('userAds/<int:pk>/', views.UserAds.as_view()),
     path('userFcm/', views.UserFCMView.as_view()),
-    path('userFcm/<str:pk>/', views.UserFCMDeleteView.as_view())
+    path('userFcm/<str:pk>/', views.UserFCMDeleteView.as_view()),
+    path('chatNotification/', views.ChatNotification.as_view()),
+    path('notifications/', views.NotificationList.as_view()),
+    path('recommender/', views.Recommender.as_view())
 ]

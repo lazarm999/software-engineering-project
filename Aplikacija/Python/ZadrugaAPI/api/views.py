@@ -203,6 +203,7 @@ class RateUser(APIView):
         r.comment = comment
         try:
             r.save()
+            NotificationLogic.sendRatingNotification(r)
         except:
             return r500('Failed saving rating')
         serialized = RatingSerializer(r)
@@ -661,10 +662,53 @@ class UserFCMDeleteView(APIView):
             return r500('Error deleting FCM token')
         return r204()
 
+class ChatNotification(APIView):
+    permission_classes = [IsLoggedIn]
 
-# TODO: prijavljivanje neprikladnog sadrzaja
+    def post(self, request, *args, **kwargs):
+        sender = request.data.get('sender')
+        message = request.data.get('message')
+        userFcms = request.data.get('userFcms')
+
+        NotificationLogic.sendChatNotification(sender, message, userFcms)
+        return Response()
+
+
+class NotificationList(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def get(self, request, *args, **kwargs):
+        userId = request._auth
+
+        notifications = Notification.objects\
+            .filter(notifications__user__userId=userId)\
+            .order_by('-postTime')
+        serialized = NotificationSerializer(notifications, many=True)
+        return Response(serialized.data)
+
+
+class Recommender(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def get(self, request, *args, **kwargs):
+        tagIds = request.query_params.getlist('tagId')
+        tagString = ['(']
+        for id in tagIds:
+            tagString.append(id)
+            tagString.append(',')
+        tagString[-1] = ')'
+        rawQuery = f'select a.adId, a.title, a.description, a.numberOfEmployees,\
+            a.compensationMin, a.compensationMax, a.location_id, a.postTime, a.isClosed, \
+            a.qbChatId, count(*) as matches from api_ad as a join api_relatedto as r \
+            on a.adId  = r.ad_id where r.tag_id in {"".join(tagString)} group by adId order by matches desc;'
+        querySet = Ad.objects.raw(rawQuery)
+        serialized = AdSerializer(querySet, many=True)
+        return Response(serialized.data)
+
+
+# TODO: saradjivali za rejting
 # TODO: paginacija svuda
-# TODO: badzevi, notifikacije, recommender system
+# TODO: badzevi
 
 # TODO: sql skripta za pocetno punjenje
 # TODO: Docker

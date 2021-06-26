@@ -128,8 +128,9 @@ class Notification(models.Model):
     comment = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True)
     tagged = models.BooleanField(null=True)
     rating = models.ForeignKey('Rating', on_delete=models.CASCADE, null=True)
+    postTime = models.DateTimeField(auto_now_add=True)
 
 
 class UserNotification(models.Model):
-    notification = models.ForeignKey('Notification', on_delete=models.CASCADE)
+    notification = models.ForeignKey('Notification', related_name='notifications' ,on_delete=models.CASCADE)
     user = models.ForeignKey('User', related_name='notifications', on_delete=models.CASCADE)
