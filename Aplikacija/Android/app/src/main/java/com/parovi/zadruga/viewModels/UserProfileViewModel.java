@@ -90,7 +90,7 @@ public class UserProfileViewModel extends AndroidViewModel {
     public void loadUserProfileImage() {
         repository.getProfilePicture(profileImage, id);
     }
-    public void loadLocations() {
+    public void loadFaculties() {
         repository.getAllFaculties(token, faculties);
     }
     public static int calculateInSampleSize(BitmapFactory.Options options,

@@ -9,7 +9,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -17,23 +16,17 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.databinding.FragmentEditBasicProfileInfoBinding;
 import com.parovi.zadruga.models.entityModels.Faculty;
-import com.parovi.zadruga.models.entityModels.Location;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.ZadrugaRepository;
 import com.parovi.zadruga.viewModels.UserProfileViewModel;
 
-import java.io.FileDescriptor;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EditBasicProfileInfoFragment extends Fragment {
@@ -142,7 +135,7 @@ public class EditBasicProfileInfoFragment extends Fragment {
         }
         else {
             binding.etCompany.setVisibility(View.GONE);
-            model.loadLocations();
+            model.loadFaculties();
         }
         return binding.getRoot();
     }
