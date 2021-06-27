@@ -87,7 +87,7 @@ class AdSerializer(serializers.ModelSerializer):
         model = Ad
         fields = ['adId', 'title', 'description', 'numberOfEmployees', 'compensationMin', 
             'compensationMax', 'employer', 'location', 'postTime', 'tags', 'numberOfApplied',
-            'qbChatId']
+            'qbChatId', 'isClosed']
 
 
 class CommentSerializer(serializers.ModelSerializer):

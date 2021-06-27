@@ -1,11 +1,12 @@
+from enum import Enum
 import os
 import requests
-import json
+from datetime import datetime, timedelta
 
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 
-from api.models import Ad, Notification, User, UserFCM, UserNotification
+from api.models import Ad, Applied, Badge, Earned, Notification, User, UserFCM, UserNotification
 from api.responses import r404
 
 
@@ -31,9 +32,17 @@ class ProfilePictureLogic:
                 return r404() 
 
 
-class EarnedBadgeLogic:
-    pass
-
+class Badges:
+    FINISHED10 = 1
+    FINISHED20 = 2
+    FINISHED50 = 3
+    FIRST_WEEK_JOB = 4
+    MULTI_CATEGORY = 5
+    CLOSED10 = 6
+    CLOSED20 = 7
+    CLOSED50 = 8
+    FIRST_10DAYS_5EMPLOYEES = 9
+    POPULAR_AD = 10
 
 class CommentLogic:
 
@@ -183,3 +192,66 @@ class NotificationLogic:
         }
         NotificationLogic.sendPushNotifications(data, userFcms)
 
+    
+    def sendNewBadgeNotification(user, badgeId):
+        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user=user)]
+        data = {
+            'type': 'badge',
+            'badgeId': badgeId
+        }
+        NotificationLogic.sendPushNotifications(data, userFcms)
+
+
+class EarnedBadgeLogic:
+    
+    def saveBadge(user, badgeId):
+        newBadge = Earned()
+        newBadge.user = user
+        newBadge.badge = Badge.objects.get(pk=badgeId)
+        newBadge.save()
+
+        NotificationLogic.sendNewBadgeNotification(user, badgeId)
+
+    def onAdClose(ad, acceptedUsers):
+        employer = ad.employer
+
+        closed_ads = Ad.objects.filter(isClosed=True, employer=employer)
+        if len(closed_ads) == 10:
+            EarnedBadgeLogic.saveBadge(employer, Badges.CLOSED10)
+        if len(closed_ads) == 20:
+            EarnedBadgeLogic.saveBadge(employer, Badges.CLOSED20)
+        if len(closed_ads) == 50:
+            EarnedBadgeLogic.saveBadge(employer, Badges.CLOSED50)
+
+        if datetime.utcnow()-employer.registrationDate.replace(tzinfo=None) < timedelta(days=10):
+            chosen_employees = Applied.objects.filter(chosen=True, ad__employer=employer)
+            if len(chosen_employees) > 5:
+                exists = len(Earned.objects.filter(user=employer, badge__badgeId=Badges.FIRST_10DAYS_5EMPLOYEES)) > 0
+                if not exists:
+                    EarnedBadgeLogic.saveBadge(employer, Badges.FIRST_10DAYS_5EMPLOYEES)
+
+        appliedUsers = Applied.objects.filter(ad=ad)
+        if len(appliedUsers) >= 5*ad.numberOfEmployees:
+            exists = len(Earned.objects.filter(user=employer, badge__badgeId=Badges.POPULAR_AD)) > 0
+            if not exists:
+                EarnedBadgeLogic.saveBadge(employer, Badges.POPULAR_AD)
+
+        for employee in acceptedUsers:
+            jobs = Ad.objects.filter(isClosed=True, applicants__user=employee)
+            if len(jobs) == 10:
+                EarnedBadgeLogic.saveBadge(employee, Badges.FINISHED10)
+            if len(jobs) == 20:
+                EarnedBadgeLogic.saveBadge(employee, Badges.FINISHED20)
+            if len(jobs) == 50:
+                EarnedBadgeLogic.saveBadge(employee, Badges.FINISHED50)
+            if len(jobs) == 1 and datetime.utcnow()-employee.registrationDate.replace(tzinfo=None) < timedelta(weeks=1):
+                EarnedBadgeLogic.saveBadge(employee, Badges.FIRST_WEEK_JOB)
+
+            distinctTags = set()
+            for job in jobs:
+                for tag in job.tags:
+                    distinctTags.add(tag.tagId)
+            if len(distinctTags) >= 4:
+                exists = len(Earned.objects.filter(user=employee, badge__badgeId=Badges.MULTI_CATEGORY)) > 0
+                if not exists:
+                    EarnedBadgeLogic.saveBadge(employee, Badges.MULTI_CATEGORY)

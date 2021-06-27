@@ -1,4 +1,4 @@
-from api.logic import NotificationLogic, ProfilePictureLogic
+from api.logic import EarnedBadgeLogic, NotificationLogic, ProfilePictureLogic
 import os
 import uuid
 
@@ -532,7 +532,9 @@ class Choose(APIView):
                 ad.qbChatId=qbChatId
                 ad.save()
                 NotificationLogic.sendChosenNotifications(ad, userIds)
-        except:
+                EarnedBadgeLogic.onAdClose(ad, users)
+        except Exception as e:
+            print(e)
             return r500('Failed to choose applicants')
         return r204()
         
