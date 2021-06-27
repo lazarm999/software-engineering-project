@@ -28,11 +28,13 @@ insert into api_tag(tagId, name) values(6, 'Konobar') on duplicate key update na
 insert into api_tag(tagId, name) values(7, 'Lakši fizički poslovi') on duplicate key update name=values(name);
 insert into api_tag(tagId, name) values(8, 'Teži fizički poslovi') on duplicate key update name=values(name);
 
-insert into api_badge(badgeId, description) values(1, 'Dobio je tri ocene preko 4') on duplicate key update description=values(description);
-insert into api_badge(badgeId, description) values(2, 'U periodu od nedelju dana od registracije prihvaćen je za prvi posao') on duplicate key update description=values(description);
-insert into api_badge(badgeId, description) values(3, 'Zaradio određenu sumu novca') on duplicate key update description=values(description);
-insert into api_badge(badgeId, description) values(4, 'Obavio je četiri različite kategorije poslova') on duplicate key update description=values(description);
-insert into api_badge(badgeId, description) values(5, 'Zaposlio 5 radnika u periodu od 10 dana od registracije') on duplicate key update description=values(description);
-insert into api_badge(badgeId, description) values(6, 'Dobio je tri ocene 5') on duplicate key update description=values(description);
-insert into api_badge(badgeId, description) values(7, 'Broj objavljenih oglasa je veci od 15') on duplicate key update description=values(description);
-insert into api_badge(badgeId, description) values(8, 'Broj prijava na oglasu je 5 puta veci od broja ljudi potrebnih za obavljanje posla') on duplicate key update description=values(description);
+insert into api_badge(badgeId, description) values(1, 'Završio 10 poslova') on duplicate key update description=values(description);
+insert into api_badge(badgeId, description) values(2, 'Završio 20 poslova') on duplicate key update description=values(description);
+insert into api_badge(badgeId, description) values(3, 'Završio 50 poslova') on duplicate key update description=values(description);
+insert into api_badge(badgeId, description) values(4, 'U periodu od nedelju dana od registracije prihvaćen je za prvi posao') on duplicate key update description=values(description);
+insert into api_badge(badgeId, description) values(5, 'Obavio je četiri različite kategorije poslova') on duplicate key update description=values(description);
+insert into api_badge(badgeId, description) values(6, 'Objavio i zatvorio 10 oglasa') on duplicate key update description=values(description);
+insert into api_badge(badgeId, description) values(7, 'Objavio i zatvorio 20 oglasa') on duplicate key update description=values(description);
+insert into api_badge(badgeId, description) values(8, 'Objavio i zatvorio 50 oglasa') on duplicate key update description=values(description);
+insert into api_badge(badgeId, description) values(9, 'Zaposlio 5 radnika u periodu od 10 dana od registracije') on duplicate key update description=values(description);
+insert into api_badge(badgeId, description) values(10, 'Broj prijava na oglasu je 5 puta veci od broja ljudi potrebnih za obavljanje posla') on duplicate key update description=values(description);
