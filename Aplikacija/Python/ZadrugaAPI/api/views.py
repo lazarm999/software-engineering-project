@@ -533,8 +533,7 @@ class Choose(APIView):
                 ad.save()
                 NotificationLogic.sendChosenNotifications(ad, userIds)
                 EarnedBadgeLogic.onAdClose(ad, users)
-        except Exception as e:
-            print(e)
+        except:
             return r500('Failed to choose applicants')
         return r204()
         
@@ -740,5 +739,4 @@ class IsApplied(APIView):
         ad = Applied.objects.filter(user__userId=request._auth, ad__adId=pk)
         return Response(len(ad) > 0)
 
-# TODO: badzevi, notifikacija za bedz
 # TODO: Docker

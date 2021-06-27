@@ -225,7 +225,7 @@ class EarnedBadgeLogic:
 
         if datetime.utcnow()-employer.registrationDate.replace(tzinfo=None) < timedelta(days=10):
             chosen_employees = Applied.objects.filter(chosen=True, ad__employer=employer)
-            if len(chosen_employees) > 5:
+            if len(chosen_employees) >= 5:
                 exists = len(Earned.objects.filter(user=employer, badge__badgeId=Badges.FIRST_10DAYS_5EMPLOYEES)) > 0
                 if not exists:
                     EarnedBadgeLogic.saveBadge(employer, Badges.FIRST_10DAYS_5EMPLOYEES)
