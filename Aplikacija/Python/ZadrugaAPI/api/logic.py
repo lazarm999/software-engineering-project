@@ -5,7 +5,7 @@ import json
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 
-from api.models import Notification, User, UserFCM, UserNotification
+from api.models import Ad, Notification, User, UserFCM, UserNotification
 from api.responses import r404
 
 
@@ -166,12 +166,20 @@ class NotificationLogic:
         }
         NotificationLogic.sendPushNotifications(data, userFcms)
 
-    def sendChatNotification(sender, message, userQbIds):
+    def sendChatNotification(username, adId, message, userQbIds):
         userFcms = [u.fcmToken for u in UserFCM.objects.filter(user__userQbId__in=userQbIds)]
         
-        NotificationLogic.sendPushNotifications({
+        try:
+            adTitle = Ad.objects.get(pk=adId).title
+        except Ad.DoesNotExist:
+            adTitle = None
+
+        data = {
             'type': 'chat',
-            'sender': sender,
-            'message': message
-        }, userFcms)
+            'username': username,
+            'message': message,
+            'adId': adId,
+            'adTitle': adTitle
+        }
+        NotificationLogic.sendPushNotifications(data, userFcms)
 

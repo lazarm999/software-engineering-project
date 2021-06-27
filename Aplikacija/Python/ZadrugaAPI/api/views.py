@@ -679,11 +679,12 @@ class ChatNotification(APIView):
     permission_classes = [IsLoggedIn]
 
     def post(self, request, *args, **kwargs):
-        sender = request.data.get('sender')
+        username = request.data.get('username')
+        adId = request.data.get('adId')
         message = request.data.get('message')
         userQbIds = request.data.get('userQbIds')
 
-        NotificationLogic.sendChatNotification(sender, message, userQbIds)
+        NotificationLogic.sendChatNotification(username, adId, message, userQbIds)
         return Response()
 
 
@@ -730,5 +731,4 @@ class Recommender(APIView):
 
 
 # TODO: badzevi, notifikacija za bedz
-# TODO: ispravi za idjeve za chat notif
 # TODO: Docker
