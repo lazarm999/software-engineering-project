@@ -9,9 +9,7 @@ import com.parovi.zadruga.models.entityModels.Tag;
 
 import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;
-
-@Entity(primaryKeys = {"fkAdId", "fkTagId"},
-        foreignKeys = {@ForeignKey(entity = Ad.class,
+/*,foreignKeys = {@ForeignKey(entity = Ad.class,
                         parentColumns = "adId",
                         childColumns = "fkAdId",
                         onDelete = SET_NULL,
@@ -20,7 +18,8 @@ import static androidx.room.ForeignKey.SET_NULL;
                         parentColumns = "tagId",
                         childColumns = "fkTagId",
                         onDelete = CASCADE,
-                        onUpdate = CASCADE)})
+                        onUpdate = CASCADE)}*/
+@Entity(primaryKeys = {"fkAdId", "fkTagId"})
 public class AdTag {
     @ColumnInfo(index = true)
     private int fkAdId;

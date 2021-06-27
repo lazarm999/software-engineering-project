@@ -7,6 +7,7 @@ import com.parovi.zadruga.daos.AppliedDao;
 import com.parovi.zadruga.daos.ChatDao;
 import com.parovi.zadruga.daos.CommentDao;
 import com.parovi.zadruga.daos.MessageDao;
+import com.parovi.zadruga.daos.NotificationDao;
 import com.parovi.zadruga.daos.RatingDao;
 import com.parovi.zadruga.daos.TagDao;
 import com.parovi.zadruga.daos.TaggedDao;
@@ -37,6 +38,7 @@ public class DaoFactory {
     private static UniversityDao universityDao;
     private static UserChatDao userChatDao;
     private static TaggedDao taggedDao;
+    private static NotificationDao notificationDao;
 
     /*Retrofit notifications = new Retrofit.Builder()
             .baseUrl(Constants.FCM_BASE_URL)
@@ -161,5 +163,12 @@ public class DaoFactory {
             taggedDao = getLocalDb().taggedDao();
         }
         return taggedDao;
+    }
+
+    public static NotificationDao getNotificationDao() {
+        if(notificationDao == null){
+            notificationDao = getLocalDb().notificationDao();
+        }
+        return notificationDao;
     }
 }

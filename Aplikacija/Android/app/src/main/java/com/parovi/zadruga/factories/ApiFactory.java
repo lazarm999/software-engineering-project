@@ -67,4 +67,11 @@ public class ApiFactory {
         }
         return ratingApi;
     }
+
+    public static NotificationApi getNotificationApi() {
+        if(notificationApi == null){
+            notificationApi = getBackend().create(NotificationApi.class);
+        }
+        return notificationApi;
+    }
 }

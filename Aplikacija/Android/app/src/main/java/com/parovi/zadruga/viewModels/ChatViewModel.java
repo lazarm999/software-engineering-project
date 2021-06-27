@@ -22,15 +22,15 @@ import java.util.List;
 
 public class ChatViewModel extends AndroidViewModel {
     private LiveData<QBChatDialog> chat;
-    private MutableLiveData<CustomResponse<?>> chats;
-    private MutableLiveData<QBChatMessage> newMessage;
-    private MutableLiveData<CustomResponse<?>> isSent;
-    private MutableLiveData<CustomResponse<?>> isConnected;
-    private MutableLiveData<CustomResponse<?>> messages;
-    private MutableLiveData<CustomResponse<?>> chatMembers;
-    private MutableLiveData<CustomResponse<?>> ad;
-    private int adId = 5;
-    private QBChatDialogMessageListener newMessageListener = new QBChatDialogMessageListener() {
+    private final MutableLiveData<CustomResponse<?>> chats;
+    private final MutableLiveData<QBChatMessage> newMessage;
+    private final MutableLiveData<CustomResponse<?>> isSent;
+    private final MutableLiveData<CustomResponse<?>> isConnected;
+    private final MutableLiveData<CustomResponse<?>> messages;
+    private final MutableLiveData<CustomResponse<?>> chatMembers;
+    private final MutableLiveData<CustomResponse<?>> ad;
+    private final int adId = 5;
+    private final QBChatDialogMessageListener newMessageListener = new QBChatDialogMessageListener() {
         @Override
         public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
             if(qbChatMessage.getSenderId() != Utility.getLoggedInUserQbId(App.getAppContext())){
@@ -45,7 +45,7 @@ public class ChatViewModel extends AndroidViewModel {
         }
     };
 
-    private ChatRepository rep;
+    private final ChatRepository rep;
 
     public ChatViewModel(@NonNull Application app) {
         super(app);
@@ -80,7 +80,7 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void sendMessage(String message){
-        rep.sendMessage(isSent, messages, chats, getChatById("60b3e4a2ce5b150048cf9f62"), message);
+        rep.sendMessage(isSent, messages, chats, getChatById("60b3e4a2ce5b150048cf9f62"), message, 3);
     }
 
     public void updateChat(){

@@ -17,13 +17,13 @@ import javax.annotation.Nullable;
 
 import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;
-
-@Entity(tableName = "user_table",
-        foreignKeys = @ForeignKey(entity = Faculty.class,
+/*foreignKeys = @ForeignKey(entity = Faculty.class,
                             parentColumns = "facultyId",
                             childColumns = "fkFacultyId",
                             onDelete = SET_NULL,
-                            onUpdate = CASCADE),
+                            onUpdate = CASCADE),*/
+@Entity(tableName = "user_table",
+
         indices = {@Index(value = {"userQbId"}, unique = true)})
 public class User {
     @PrimaryKey

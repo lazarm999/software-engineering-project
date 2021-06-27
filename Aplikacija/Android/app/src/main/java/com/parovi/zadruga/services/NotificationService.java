@@ -13,6 +13,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.navigation.NavDeepLink;
+import androidx.navigation.NavDeepLinkBuilder;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -23,9 +25,8 @@ import com.parovi.zadruga.R;
 import com.parovi.zadruga.activities.MainEmployerActivity;
 import com.parovi.zadruga.activities.MainStudentActivity;
 import com.parovi.zadruga.factories.ApiFactory;
-import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
-import com.parovi.zadruga.repository.UserRepository;
+import com.parovi.zadruga.ui.ChatActivity;
 import com.parovi.zadruga.ui.JobAdActivity;
 
 import java.io.IOException;
@@ -77,6 +78,8 @@ public class NotificationService extends FirebaseMessagingService {
                 case Constants.NOTIF_ACCEPTED:
                     title = getString(R.string.accepted);
                     body = data.get("adTitle");
+                    intent = new Intent(this, ChatActivity.class);
+                    intent.putExtra("urosevId", data.get("chatQbId"));
                     break;
                 case Constants.NOTIF_DECLINED:
                     title = getString(R.string.declined);
@@ -91,16 +94,28 @@ public class NotificationService extends FirebaseMessagingService {
                     body = data.get("comment");
                     break;
                 case Constants.NOTIF_RATING:
-                    title = getString(R.string.rating, data.get("username"));
+                    title = getString(R.string.notif_rating, data.get("username"));
                     //u bodi ce da ide ocena i komentar
                     if (Utility.getLoggedInUser(App.getAppContext()).isEmployer())
                         intent = new Intent(this, MainEmployerActivity.class);
                     else
                         intent = new Intent(this, MainStudentActivity.class);
                     break;
+                case Constants.NOTIF_CHAT:
+                    title = getString(R.string.notif_chat, data.get("username"));
+                    body = data.get("message");
+                    intent = new Intent(this, ChatActivity.class);
+                    intent.putExtra("urosevId", data.get("chatQbId"));
+                    break;
             }
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        /* p = new NavDeepLinkBuilder(App.getAppContext())
+                .setGraph(R.navigation.chat_nav_graph)
+                .setDestination(R.id.chatMessagesFragment)
+                .setComponentName(ChatActivity.class)
+                .createPendingIntent();*/
         Notification notification = new NotificationCompat.Builder(this, channelId)
                 .setContentTitle(title)
                 .setContentText(body)

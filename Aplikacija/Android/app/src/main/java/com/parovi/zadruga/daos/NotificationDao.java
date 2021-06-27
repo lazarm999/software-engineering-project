@@ -1,24 +1,19 @@
 package com.parovi.zadruga.daos;
 
-
-import androidx.lifecycle.LiveData;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
+import androidx.room.Dao;
 import androidx.room.Query;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.parovi.zadruga.models.entityModels.Notification;
 
 import java.util.List;
 
-public interface NotificationDao {
+@Dao
+public abstract class NotificationDao extends BaseDao<Notification> {
     /*TODO: ovde treba da ide neka dobudzenija/prostija notifikacija*/
-    @Query("SELECT * FROM Notification ")
-    LiveData<List<Notification>> getNotificationsByReceiverId(int receiverId);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    ListenableFuture<Long> insertNotification(Notification notification);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    ListenableFuture<Long> insertNotifications(List<Notification> notifications);
+    @Query("SELECT * FROM Notification " +
+            "LEFT JOIN Ad ON Notification.fkAdId = Ad.adId " +
+            "LEFT JOIN Comment ON Notification.fkCommentId = Comment.commentId " +
+            "LEFT JOIN Rating ON Notification.fkRatingId = Rating.ratingId " +
+            "LIMIT :pageSize OFFSET :pageSkip")
+    public abstract List<Notification> getNotifications(int pageSize, int pageSkip);
 }

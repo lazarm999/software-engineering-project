@@ -39,24 +39,24 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public void onBindViewHolder(@NonNull NotificationsAdapter.NotificationViewHolder holder, int position) {
-        Notification currNotification = notificationsList.get(position);
-        if(currNotification.getType().equals(Constants.NOTIF_ACCEPTED)){
-            holder.ivNotificationIcon.setImageResource(R.drawable.accepted);
-            holder.tvTitle.setText("Odabrani ste za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-            holder.tvDesc.setText("brao prifacen si");
-        } else if(currNotification.getType().equals(Constants.NOTIF_DECLINED)){
-            holder.ivNotificationIcon.setImageResource(R.drawable.declined);
-            holder.tvTitle.setText("Niste odabrani za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-            holder.tvDesc.setText("vise srece drugi put");
-        } else if(currNotification.getType().equals(Constants.NOTIF_TAGGED)){
-            holder.ivNotificationIcon.setImageResource(R.drawable.comment);
-            holder.tvTitle.setText("Korisnik taj i taj je komentarisao oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
-            holder.tvDesc.setText("prozivao te tamo nesto po oglasi");
-        } else if(currNotification.getType().equals(Constants.NOTIF_RATING)){
-            holder.ivNotificationIcon.setImageResource(R.drawable.rating);
-            holder.tvTitle.setText("Korisnik taj i taj vas je ocenio" + Integer.toString(currNotification.getFkSenderId()));
-            holder.tvDesc.setText("dao ti keca");
-        }
+//        Notification currNotification = notificationsList.get(position);
+//        if(currNotification.getType().equals(Constants.NOTIF_ACCEPTED)){
+//            holder.ivNotificationIcon.setImageResource(R.drawable.accepted);
+//            holder.tvTitle.setText("Odabrani ste za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+//            holder.tvDesc.setText("brao prifacen si");
+//        } else if(currNotification.getType().equals(Constants.NOTIF_DECLINED)){
+//            holder.ivNotificationIcon.setImageResource(R.drawable.declined);
+//            holder.tvTitle.setText("Niste odabrani za oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+//            holder.tvDesc.setText("vise srece drugi put");
+//        } else if(currNotification.getType().equals(Constants.NOTIF_TAGGED)){
+//            holder.ivNotificationIcon.setImageResource(R.drawable.comment);
+//            holder.tvTitle.setText("Korisnik taj i taj je komentarisao oglas sa id-em" + Integer.toString(currNotification.getFkAdId()));
+//            holder.tvDesc.setText("prozivao te tamo nesto po oglasi");
+//        } else if(currNotification.getType().equals(Constants.NOTIF_RATING)){
+//            holder.ivNotificationIcon.setImageResource(R.drawable.rating);
+//            holder.tvTitle.setText("Korisnik taj i taj vas je ocenio" + Integer.toString(currNotification.getFkSenderId()));
+//            holder.tvDesc.setText("dao ti keca");
+//        }
     }
 
     @Override

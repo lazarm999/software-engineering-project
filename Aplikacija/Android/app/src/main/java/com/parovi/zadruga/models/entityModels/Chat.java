@@ -19,11 +19,11 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import static androidx.room.ForeignKey.CASCADE;
-
-@Entity(foreignKeys = {@ForeignKey(entity = Ad.class,
+/*(foreignKeys = {@ForeignKey(entity = Ad.class,
                         parentColumns = "adId",
                         childColumns = "fkAdId",
-                        onDelete = CASCADE)})
+                        onDelete = CASCADE)})*/
+@Entity
 public class Chat {
     @PrimaryKey
     @NonNull

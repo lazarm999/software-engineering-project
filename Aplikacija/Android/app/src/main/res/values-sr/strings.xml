@@ -143,5 +143,6 @@
     <string name="declined">Odbijeni ste za posao</string>
     <string name="tagged">Korisnik %1$s Vas je tagovao</string>
     <string name="adComment">Korisnik %1$s je ostavio komentar</string>
-    <string name="rating">Korisnik %1$s Vas je oceno</string>
+    <string name="notif_rating">Korisnik %1$s Vas je oceno</string>
+    <string name="notif_chat">Korisnik %1$s Vam je poslao poruku</string>
 </resources>

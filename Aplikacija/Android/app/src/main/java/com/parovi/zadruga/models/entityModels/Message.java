@@ -13,8 +13,7 @@ import com.quickblox.chat.model.QBChatMessage;
 import java.util.Date;
 
 import static androidx.room.ForeignKey.CASCADE;
-
-@Entity(foreignKeys = {@ForeignKey(
+/*(foreignKeys = {@ForeignKey(
                         entity = User.class,
                         parentColumns = "userQbId",
                         childColumns = "fkSenderQbId",
@@ -23,7 +22,8 @@ import static androidx.room.ForeignKey.CASCADE;
                         entity = Chat.class,
                         parentColumns = "chatId",
                         childColumns = "qbChatId",
-                        onDelete = CASCADE)})
+                        onDelete = CASCADE)})*/
+@Entity
 public class Message {
     @PrimaryKey
     @NonNull

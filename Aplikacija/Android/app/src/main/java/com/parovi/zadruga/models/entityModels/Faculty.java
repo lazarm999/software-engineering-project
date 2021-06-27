@@ -9,11 +9,11 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 import static androidx.room.ForeignKey.CASCADE;
-
-@Entity(foreignKeys = @ForeignKey(entity = University.class,
+/*(foreignKeys = @ForeignKey(entity = University.class,
         parentColumns = "universityId",
         childColumns = "fkUniversityId",
-        onDelete = CASCADE))
+        onDelete = CASCADE))*/
+@Entity
 public class Faculty {
     @PrimaryKey
     private int facultyId;

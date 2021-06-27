@@ -4,23 +4,25 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import com.parovi.zadruga.models.entityModels.User;
 
 import java.util.Date;
 
 import static androidx.room.ForeignKey.CASCADE;
-
-@Entity(primaryKeys = {"fkRaterId", "fkRateeId"},
-        foreignKeys = {@ForeignKey(entity = User.class,
+/*(foreignKeys = {@ForeignKey(entity = User.class,
                         parentColumns = "userId",
                         childColumns = "fkRaterId",
                         onDelete = CASCADE),
                         @ForeignKey(entity = User.class,
                         parentColumns = "userId",
                         childColumns = "fkRateeId",
-                        onDelete = CASCADE)})
+                        onDelete = CASCADE)})*/
+@Entity
 public class Rating {
+    @PrimaryKey
+    private int ratingId;
     @ColumnInfo(index = true)
     private int fkRaterId;
     @ColumnInfo(index = true)
@@ -31,6 +33,15 @@ public class Rating {
     private boolean isSynced;
 
     public Rating() {
+    }
+
+    public Rating(int ratingId, int fkRaterId, int fkRateeId, int rating, String comment, Date postTime) {
+        this.ratingId = ratingId;
+        this.fkRaterId = fkRaterId;
+        this.fkRateeId = fkRateeId;
+        this.rating = rating;
+        this.postTime = postTime;
+        this.comment = comment;
     }
 
     @Ignore
@@ -102,5 +113,13 @@ public class Rating {
 
     public void setPostTime(Date postTime) {
         this.postTime = postTime;
+    }
+
+    public int getRatingId() {
+        return ratingId;
+    }
+
+    public void setRatingId(int ratingId) {
+        this.ratingId = ratingId;
     }
 }

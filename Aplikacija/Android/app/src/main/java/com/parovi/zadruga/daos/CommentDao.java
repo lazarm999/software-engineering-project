@@ -21,4 +21,7 @@ public abstract class CommentDao extends BaseDao<Comment> {
 
     @Query("DELETE FROM Comment WHERE Comment.commentId = :commentId")
     public abstract ListenableFuture<Integer> deleteComment(int commentId);
+
+    @Query("SELECT * FROM Comment WHERE Comment.commentId = :commentId")
+    public abstract Comment getCommentById(int commentId);
 }

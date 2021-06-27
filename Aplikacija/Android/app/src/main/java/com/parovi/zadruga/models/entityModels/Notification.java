@@ -1,94 +1,113 @@
 package com.parovi.zadruga.models.entityModels;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
+import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
+import com.parovi.zadruga.models.responseModels.CommentResponse;
+import com.parovi.zadruga.models.responseModels.RatingResponse;
+
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(foreignKeys = {@ForeignKey(entity = User.class,
-                        parentColumns = "userId",
-                        childColumns = "fkSenderId",
-                        onDelete = CASCADE),
-                        @ForeignKey(entity = Ad.class,
-                        parentColumns = "adId",
-                        childColumns = "fkAdId",
-                        onDelete = CASCADE)})
+@Entity
 public class Notification
 {
-    @PrimaryKey(autoGenerate = true)
-    private int notifId;
+    @PrimaryKey
+    private int notificationId;
     @ColumnInfo(index = true)
-    private int fkSenderId;
+    private Integer fkAdId;
     @ColumnInfo(index = true)
-    private int fkAdId;
-    private String type;
-    private String comment;
-    private int rating;
+    private Integer fkCommentId;
+    @ColumnInfo(index = true)
+    private Integer fkRatingId;
+    private Boolean accepted; //je l to da bude boolean ili Boolean
+    private Boolean tagged; //da li je tagovan ili je on objavio oglas pa je zbog toga dobio notif
+
+    @Ignore
+    private Ad ad;
+    @Ignore
+    private CommentResponse comment;
+    @Ignore
+    private RatingResponse rating;
 
     public Notification() {
     }
 
-    @Ignore
-    public Notification(String type) {
-        this.type = type;
-    }
-
-    @Ignore
-    public Notification(int notifId, int fkSenderId, int fkAdId, int fkChatId, String type) {
-        this.notifId = notifId;
-        this.fkSenderId = fkSenderId;
-        this.fkAdId = fkAdId;
-        this.type = type;
-    }
-
-    public int getNotifId() {
-        return notifId;
-    }
-
-    public void setNotifId(int notifId) {
-        this.notifId = notifId;
-    }
-
-    public int getFkSenderId() {
-        return fkSenderId;
-    }
-
-    public void setFkSenderId(int fkSenderId) {
-        this.fkSenderId = fkSenderId;
-    }
-
-    public int getFkAdId() {
+    public Integer getFkAdId() {
         return fkAdId;
     }
 
-    public void setFkAdId(int fkAdId) {
+    public void setFkAdId(Integer fkAdId) {
         this.fkAdId = fkAdId;
     }
 
-    public String getType() {
-        return type;
+    public Integer getFkCommentId() {
+        return fkCommentId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setFkCommentId(Integer fkCommentId) {
+        this.fkCommentId = fkCommentId;
     }
 
-    public int getRating() {
+    public Boolean getAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
+    }
+
+    public Ad getAd() {
+        return ad;
+    }
+
+    public void setAd(Ad ad) {
+        this.ad = ad;
+    }
+
+    public RatingResponse getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(RatingResponse rating) {
         this.rating = rating;
     }
 
-    public String getComment() {
+    public CommentResponse getComment() {
         return comment;
     }
 
-    public void setComment(String comment) {
+    public void setComment(CommentResponse comment) {
         this.comment = comment;
+    }
+
+    public int getNotificationId() {
+        return notificationId;
+    }
+
+    public void setNotificationId(int notificationId) {
+        this.notificationId = notificationId;
+    }
+
+    public Integer getFkRatingId() {
+        return fkRatingId;
+    }
+
+    public void setFkRatingId(Integer fkRatingId) {
+        this.fkRatingId = fkRatingId;
+    }
+
+    public Boolean getTagged() {
+        return tagged;
+    }
+
+    public void setTagged(Boolean tagged) {
+        this.tagged = tagged;
     }
 }

@@ -23,7 +23,7 @@ import static androidx.room.ForeignKey.SET_NULL;
  @Fts4 - za Support full-text search
 */
 
-@Entity(foreignKeys = {@ForeignKey(entity = Location.class,
+/*(foreignKeys = {@ForeignKey(entity = Location.class,
                         parentColumns = "locId",
                         childColumns = "fkLocationId",
                         onDelete = SET_NULL,
@@ -32,7 +32,8 @@ import static androidx.room.ForeignKey.SET_NULL;
                         parentColumns = "userId",
                         childColumns = "fkEmployerId",
                         onDelete = SET_NULL,
-                        onUpdate = CASCADE)})
+                        onUpdate = CASCADE)})*/
+@Entity
 public class Ad {
     @PrimaryKey
     private int adId;
@@ -48,6 +49,7 @@ public class Ad {
     private int fkEmployerId;
     @SerializedName("qbChatId")
     private String fkQbChatId;
+    //TODO: treba li da pamtim isClosed sta ce radimo sa tim?
 
     @Ignore
     private List<Tag> tags;
