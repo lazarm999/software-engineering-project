@@ -36,7 +36,9 @@ import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.nonEntityModels.CommentUser;
 import com.parovi.zadruga.repository.AdRepository;
 import com.parovi.zadruga.repository.BaseRepository;
+import com.parovi.zadruga.repository.ChatRepository;
 import com.parovi.zadruga.repository.LookUpRepository;
+import com.parovi.zadruga.repository.NotificationRepository;
 import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
 import com.parovi.zadruga.viewModels.LoginViewModel;
@@ -75,6 +77,8 @@ public class TmpActivity extends AppCompatActivity {
     private LookUpRepository lookUpRep;
     private UserRepository userRep;
     private AdRepository adRep;
+    private NotificationRepository notificationRep = new NotificationRepository();
+    private ChatRepository chatRepository = new ChatRepository();
 
     private String topic = "svi";
     private ArrayList<Notification> notificationList;
@@ -241,7 +245,10 @@ public class TmpActivity extends AppCompatActivity {
                 //chatViewModel.getChatMembers();
                 //chatViewModel.getAd();
                 //rep.getAdByChatId(new MutableLiveData<>(), "60c1e2cf094ee200482e09f2");
-                userRep.loginUser(new MutableLiveData<>(), "vuk.bibic@gmail.com", "novaaasifraaaa");
+                //userRep.loginUser(new MutableLiveData<>(), "vuk.bibic@gmail.com", "novaaasifraaaa");
+                //notificationRep.getNotifications(new MutableLiveData<>());
+                //notificationRep.getNotifications(new MutableLiveData<>());
+                adRep.isApplied(new MutableLiveData<>(), 20);
             }
         });
         tmpBtn2.setOnClickListener(new View.OnClickListener() {
@@ -321,7 +328,7 @@ public class TmpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //rep.getFinishedJobsByUserId(new MutableLiveData<>());
                 //rep.getPostedAdsByUserIdLocal(new MutableLiveData<>());
-                //chatViewModel.getAllChats();
+                chatRepository.getChatById(new MutableLiveData<>(), "60c1e2cf094ee200482e09f2");
             }
         });
 

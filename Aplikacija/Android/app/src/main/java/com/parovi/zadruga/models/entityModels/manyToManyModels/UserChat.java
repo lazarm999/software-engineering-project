@@ -9,15 +9,15 @@ import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.models.entityModels.User;
 
 import static androidx.room.ForeignKey.CASCADE;
-
-@Entity(primaryKeys = {"fkChatId", "fkQbUserId"},
+/*(primaryKeys = {"fkChatId", "fkQbUserId"},
         foreignKeys = {@ForeignKey(entity = Chat.class,
                         parentColumns = "chatId",
                         childColumns = "fkChatId",
                         onDelete = CASCADE),
                         @ForeignKey(entity = User.class,
                         parentColumns = "userQbId",
-                        childColumns = "fkQbUserId")})
+                        childColumns = "fkQbUserId")})*/
+@Entity(primaryKeys = {"fkChatId", "fkQbUserId"})
 public class UserChat {
     @ColumnInfo(index = true)
     @NonNull

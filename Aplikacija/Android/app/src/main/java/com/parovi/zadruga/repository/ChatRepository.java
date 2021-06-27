@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.parovi.zadruga.App;
+import com.parovi.zadruga.ChatNotification;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.factories.ApiFactory;
@@ -71,7 +72,7 @@ public class ChatRepository extends BaseRepository {
 
     }
 
-    private Chat qbChatDialogToChat(QBChatDialog qbChat){
+    private Chat basicQbChatDialogToChat(QBChatDialog qbChat){
         //treba ovde api poziv da bih mogaao da izvucem info o korisniku koji je zadnji poslao poruku
         Chat chat;
         Utility.ChatType type;
@@ -119,59 +120,11 @@ public class ChatRepository extends BaseRepository {
                 Utility.getExecutorService().execute(() -> {
                     List<Chat> tmpChats = new ArrayList<>();
                     for (QBChatDialog qbChat : qbChats) {
-                        String qbChatId = qbChat.getDialogId();
-                        Utility.ChatType type = qbChat.getType() == QBDialogType.PRIVATE ? Utility.ChatType.PRIVATE : Utility.ChatType.GROUP;
-                        Chat chat = qbChatDialogToChat(qbChat);
-                        saveChatLocally(qbChatToChat(qbChat));
-                        if (type == Utility.ChatType.PRIVATE) {
-                            int chatterQbId = qbChat.getOccupants().get(0) == userQbId ? qbChat.getOccupants().get(1) : qbChat.getOccupants().get(0);
-                            try {
-                                Response<User> user = ApiFactory.getUserApi().getUserByQbUserId(token, chatterQbId).execute();
-                                Response<ResponseBody> profileImage = ApiFactory.getUserApi().getProfilePictureByUserQbId(token, chatterQbId).execute();
-                                if (user.isSuccessful() && user.body() != null) {
-                                    String chatTitle = user.body().getFirstName() + " " + user.body().getLastName();
-                                    chat.setChatTitle(chatTitle);
-                                } else
-                                    responseNotSuccessful(user.code(), chats);
-                                if (profileImage.isSuccessful() && profileImage.body() != null) {
-                                    Bitmap bmImage = BitmapFactory.decodeStream(profileImage.body().byteStream());
-                                    chat.setProfileImage(bmImage);
-                                    saveImageLocally(bmImage, userId);
-                                } else
-                                    responseNotSuccessful(profileImage.code(), chats);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            try {
-                                Response<Ad> ad = ApiFactory.getAdApi().getAdByQbChatId(Utility.getAccessToken(App.getAppContext()), qbChatId).execute();
-                                if (ad.isSuccessful() && ad.body() != null) {
-                                    String chatTitle = ad.body().getTitle();
-                                    chat.setChatTitle(chatTitle);
-                                    chat.setFkAdId(ad.body().getAdId());
-                                } else
-                                    responseNotSuccessful(ad.code(), chats);
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if (qbChat.getLastMessageUserId() != null) {
-                            try {
-                                Response<User> lastMessageSender = ApiFactory.getUserApi().getUserByQbUserId(token, qbChat.getLastMessageUserId()).execute();
-                                if (lastMessageSender.isSuccessful() && lastMessageSender.body() != null) {
-                                    String lastSenderName = lastMessageSender.body().getUsername();
-                                    chat.setLastSenderUsername(lastSenderName);
-                                } else
-                                    responseNotSuccessful(lastMessageSender.code(), chats);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        Chat chat = fullQbChatToChat(qbChat, chats);
                         tmpChats.add(chat);
-                        //TODO: DaoFactory.getChatDao().insertOrUpdate(chat);
-                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChats));
+                        DaoFactory.getChatDao().insertOrUpdate(chat);
                     }
+                    chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChats));
                 });
             }
             @Override
@@ -180,6 +133,65 @@ public class ChatRepository extends BaseRepository {
                 responseNotSuccessful(e.getHttpStatusCode(), chats);
             }
         });
+    }
+
+    private Chat fullQbChatToChat(QBChatDialog qbChat, MutableLiveData<CustomResponse<?>> res){
+        final String token = Utility.getAccessToken(App.getAppContext());
+        int userId = Utility.getLoggedInUserQbId(App.getAppContext());
+        int userQbId = Utility.getLoggedInUserQbId(App.getAppContext());
+        String qbChatId = qbChat.getDialogId();
+        Utility.ChatType type = qbChat.getType() == QBDialogType.PRIVATE ? Utility.ChatType.PRIVATE : Utility.ChatType.GROUP;
+        Chat chat = basicQbChatDialogToChat(qbChat);
+        saveChatLocally(qbChatToChat(qbChat));
+        if (type == Utility.ChatType.PRIVATE) {
+            int chatterQbId = qbChat.getOccupants().get(0) == userQbId ? qbChat.getOccupants().get(1) : qbChat.getOccupants().get(0);
+            try {
+                Response<User> user = ApiFactory.getUserApi().getUserByQbUserId(token, chatterQbId).execute();
+                Response<ResponseBody> profileImage = ApiFactory.getUserApi().getProfilePictureByUserQbId(token, chatterQbId).execute();
+                if (user.isSuccessful() && user.body() != null) {
+                    String chatTitle = user.body().getFirstName() + " " + user.body().getLastName();
+                    chat.setChatTitle(chatTitle);
+                } else
+                    responseNotSuccessful(user.code(), res);
+                if (profileImage.isSuccessful() && profileImage.body() != null) {
+                    Bitmap bmImage = BitmapFactory.decodeStream(profileImage.body().byteStream());
+                    chat.setProfileImage(bmImage);
+                    saveImageLocally(bmImage, userId);
+                } else
+                    responseNotSuccessful(profileImage.code(), res);
+            } catch (IOException e) {
+                e.printStackTrace();
+                apiCallOnFailure(e.getMessage(), res);
+            }
+        } else {
+            try {
+                Response<Ad> ad = ApiFactory.getAdApi().getAdByQbChatId(Utility.getAccessToken(App.getAppContext()), qbChatId).execute();
+                if (ad.isSuccessful() && ad.body() != null) {
+                    String chatTitle = ad.body().getTitle();
+                    chat.setChatTitle(chatTitle);
+                    chat.setFkAdId(ad.body().getAdId());
+                } else
+                    responseNotSuccessful(ad.code(), res);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                apiCallOnFailure(e.getMessage(), res);
+            }
+        }
+        if (qbChat.getLastMessageUserId() != null) {
+            try {
+                Response<User> lastMessageSender = ApiFactory.getUserApi().getUserByQbUserId(token, qbChat.getLastMessageUserId()).execute();
+                if (lastMessageSender.isSuccessful() && lastMessageSender.body() != null) {
+                    String lastSenderName = lastMessageSender.body().getUsername();
+                    chat.setLastSenderUsername(lastSenderName);
+                } else
+                    responseNotSuccessful(lastMessageSender.code(), res);
+            } catch (IOException e) {
+                e.printStackTrace();
+                apiCallOnFailure(e.getMessage(), res);
+            }
+        }
+        return  chat;
     }
 
     public void getAllChatsLocal(MutableLiveData<CustomResponse<?>> chats, int userId, Boolean[] isSynced){
@@ -235,7 +247,7 @@ public class ChatRepository extends BaseRepository {
                             });
                         }
                         if(!isUpdated){
-                            Chat newChat = qbChatDialogToChat(qbChatDialog);
+                            Chat newChat = basicQbChatDialogToChat(qbChatDialog);
                             tmpChatList.add(tmpChatList.size() - 1, newChat);
                             Utility.getExecutorService().execute(new Runnable() {
                                 @Override
@@ -394,7 +406,7 @@ public class ChatRepository extends BaseRepository {
     }
 
     public void sendMessage(MutableLiveData<CustomResponse<?>> isSent, MutableLiveData<CustomResponse<?>> messages, MutableLiveData<CustomResponse<?>> chats,
-                            QBChatDialog qbChat, String message){
+                            QBChatDialog qbChat, String message, Integer adId){
         User u = Utility.getLoggedInUser(App.getAppContext());
         QBChatMessage qbMessage = new QBChatMessage();
         qbMessage.setBody(message);
@@ -409,7 +421,13 @@ public class ChatRepository extends BaseRepository {
                 isSent.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
                 updateMessages(messages, qbMessage);
                 updateChat(chats, qbChat.getDialogId());
-                //saveMessageLocally(qbMessage);
+                List<Integer> ids = new ArrayList<>();
+                for (Integer id : qbChat.getOccupants()) {
+                    if(id != u.getUserQbId())
+                        ids.add(id);
+                }
+                sendChatNotification(new ChatNotification(u.getUsername(), message, adId, ids, qbChat.getDialogId()));
+                saveMessageLocally(qbMessage);
             }
 
             @Override
@@ -421,7 +439,12 @@ public class ChatRepository extends BaseRepository {
     }
 
     private void saveMessageLocally(QBChatMessage qbMessage) {
-
+        Utility.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                DaoFactory.getMessageDao().insertOrUpdate(qbChatMessageToMessage(qbMessage));
+            }
+        });
     }
 
     //TODO: ovo je samo za testiranje
@@ -496,6 +519,17 @@ public class ChatRepository extends BaseRepository {
         QBChatService.getInstance().getIncomingMessagesManager().removeDialogMessageListrener(newMessageListener);
     }
 
+    public void getChatById(MutableLiveData<CustomResponse<?>> chat, String chatQbId){
+        Utility.getExecutorService().execute(() -> {
+            try {
+                QBChatDialog qbChatDialog = QBRestChatService.getChatDialogById(chatQbId).perform();
+                chat.postValue(new CustomResponse<>(CustomResponse.Status.OK, fullQbChatToChat(qbChatDialog, chat)));
+            } catch (QBResponseException e) {
+                e.printStackTrace();
+                responseNotSuccessful(e.getHttpStatusCode(), chat);
+            }
+        });
+    }
     //TODO: je l cemo da brisemo chatove kad bude gotov posa?
     public void deleteChat(){
 

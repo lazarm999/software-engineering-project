@@ -8,8 +8,7 @@ import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.User;
 
 import static androidx.room.ForeignKey.CASCADE;
-
-@Entity(primaryKeys = {"fkUserId", "fkBadgeId"},
+/*(primaryKeys = {"fkUserId", "fkBadgeId"},
         foreignKeys = {@ForeignKey(entity = User.class,
                         parentColumns = "userId",
                         childColumns = "fkUserId",
@@ -17,7 +16,8 @@ import static androidx.room.ForeignKey.CASCADE;
                         @ForeignKey(entity = Badge.class,
                         parentColumns = "badgeId",
                         childColumns = "fkBadgeId",
-                        onDelete = CASCADE)})
+                        onDelete = CASCADE)})*/
+@Entity(primaryKeys = {"fkUserId", "fkBadgeId"})
 public class UserBadge {
     @ColumnInfo(index = true)
     private int fkUserId;

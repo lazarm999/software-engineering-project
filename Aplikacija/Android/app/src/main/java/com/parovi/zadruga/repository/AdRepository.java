@@ -12,12 +12,14 @@ import androidx.sqlite.db.SimpleSQLiteQuery;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.parovi.zadruga.App;
+import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.GpsTracker;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.factories.ApiFactory;
 import com.parovi.zadruga.factories.DaoFactory;
 import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.Notification;
 import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.entityModels.Tagged;
 import com.parovi.zadruga.models.entityModels.User;
@@ -37,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.transform.OutputKeys;
@@ -45,6 +48,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Path;
 
 public class AdRepository extends BaseRepository {
 
@@ -361,7 +367,8 @@ public class AdRepository extends BaseRepository {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
-                    ApiFactory.getAdApi().chooseApplicants(token, adId, new ChooseApplicantsRequest(userIds, (String)customResponse.getBody())).enqueue(new Callback<ResponseBody>() {
+                    ApiFactory.getAdApi().chooseApplicants(token, adId, new ChooseApplicantsRequest(userIds, (String)customResponse.getBody()))
+                            .enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                             if(response.isSuccessful()){
@@ -502,25 +509,6 @@ public class AdRepository extends BaseRepository {
         });
     }
 
-    private Comment commentResponseToComment(CommentResponse commentResponse){
-        return new Comment(commentResponse.getId(), commentResponse.getUser().getUserId(),
-                commentResponse.getAd(), commentResponse.getComment(), commentResponse.getPostTime());
-    }
-
-    private void saveCommentLocally(CommentResponse commentResponse) {
-        Comment tmpLocalComment = commentResponseToComment(commentResponse);
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                DaoFactory.getUserDao().insertOrUpdate(commentResponse.getUser());
-                //TODO: DaoFactory.getCommentDao().insert(tmpLocalComment);
-                for (Integer index : commentResponse.getTaggedIndices()) {
-                    //TODO: DaoFactory.getTaggedDao().insertOrUpdate(new Tagged(commentResponse.getId(), index));
-                }
-            }
-        });
-    }
-
     public void getComments(MutableLiveData<CustomResponse<?>> comments, int adId){
         final String token = Utility.getAccessToken(App.getAppContext());
         Boolean[] isSynced = {false};
@@ -606,6 +594,71 @@ public class AdRepository extends BaseRepository {
             @Override
             public void onFailure(@NotNull Call<AdResponse> call, @NotNull Throwable t) {
                 isDeleted.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+            }
+        });
+    }
+
+    public void getRecommendedAds(MutableLiveData<CustomResponse<?>> ads){
+        List<Integer> tagIds = Arrays.asList(1,2);
+        String token = Utility.getAccessToken(App.getAppContext());
+        Boolean[] isSynced = {false};
+        int pageSkip = getListSize(ads);
+        getRecommendedAdsLocal(ads, isSynced, pageSkip, tagIds);
+        getAdsLocal(ads, isSynced);
+        Utility.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<List<Ad>> adsResponse = ApiFactory.getAdApi().getRecommendedAds(token, tagIds, Constants.pageSize, pageSkip).execute();
+                    if(adsResponse.isSuccessful()){
+                        if(adsResponse.body() != null){
+                            synchronized (isSynced[0]){
+                                ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, adsResponse));
+                                isSynced[0] = true;
+                            }
+                            saveAdsLocally(adsResponse.body());
+                        }
+                    } else
+                        responseNotSuccessful(adsResponse.code(), ads);
+                    Log.i("ne", "run: ");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void getRecommendedAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, int pageSkip, List<Integer> tagIds) {
+        Utility.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<AdWithTags> localAds = DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip, tagIds);
+                if(localAds != null){
+                    synchronized (isSynced[0]){
+                        if(!isSynced[0])
+                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, localAds));
+                    }
+                }
+            }
+        });
+    }
+
+    public void isApplied(MutableLiveData<CustomResponse<?>> isApplied, int adId){
+        final String token = Utility.getAccessToken(App.getAppContext());
+        Utility.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<Boolean> isAppliedRes = ApiFactory.getAdApi().isApplied(token, adId).execute();
+                    if(isAppliedRes.isSuccessful()){
+                        if(isAppliedRes.body() != null)
+                            isApplied.postValue(new CustomResponse<>(CustomResponse.Status.OK, isAppliedRes.body()));
+                    } else
+                        responseNotSuccessful(isAppliedRes.code(), isApplied);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    apiCallOnFailure(e.getMessage(), isApplied);
+                }
             }
         });
     }

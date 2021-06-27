@@ -84,7 +84,7 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void sendMessage(String message){
-        chatRepository.sendMessage(isSent, messages, chats, activeChat.getQbChat(), message);
+        chatRepository.sendMessage(isSent, messages, chats, activeChat.getQbChat(), message, activeChat.getFkAdId());
     }
 
     public void removeGlobalMessageListener(){

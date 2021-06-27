@@ -7,13 +7,13 @@ import androidx.room.ForeignKey;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
 
 import static androidx.room.ForeignKey.CASCADE;
-
-@Entity(primaryKeys = {"fkCommentId", "tagIndex"},
+/*(primaryKeys = {"fkCommentId", "tagIndex"},
         foreignKeys = {@ForeignKey(entity = Comment.class,
                         parentColumns = "commentId",
                         childColumns = "fkCommentId",
                         onDelete = CASCADE,
-                        onUpdate = CASCADE)})
+                        onUpdate = CASCADE)})*/
+@Entity(primaryKeys = {"fkCommentId", "tagIndex"})
 public class Tagged {
     @ColumnInfo(index = true)
     private int fkCommentId;

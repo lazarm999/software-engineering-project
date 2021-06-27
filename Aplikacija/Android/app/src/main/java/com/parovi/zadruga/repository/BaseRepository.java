@@ -11,6 +11,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.parovi.zadruga.App;
+import com.parovi.zadruga.ChatNotification;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.factories.ApiFactory;
@@ -19,11 +20,16 @@ import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.models.entityModels.Tag;
+import com.parovi.zadruga.models.entityModels.Tagged;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.AdTag;
+import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
+import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.UserBadge;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.UserChat;
 import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
+import com.parovi.zadruga.models.responseModels.CommentResponse;
+import com.parovi.zadruga.models.responseModels.RatingResponse;
 import com.quickblox.chat.QBRestChatService;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBDialogType;
@@ -36,6 +42,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +64,7 @@ public abstract class BaseRepository {
     }
 
     protected void saveAdsLocally(List<Ad> ads){
-        
+        if(ads == null) return;
         Utility.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
@@ -82,6 +89,7 @@ public abstract class BaseRepository {
     }
 
     protected void saveAdLocally(Ad ad){
+        if(ad == null) return;
         Utility.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
@@ -103,6 +111,41 @@ public abstract class BaseRepository {
         });
     }
 
+    protected void saveRatingLocally(RatingResponse r){
+        if(r == null) return;
+        DaoFactory.getUserDao().insertOrUpdate(r.getRater());
+        DaoFactory.getRatingDao().insertOrUpdate(new Rating(r.getRater().getUserId(), r.getRatee(), r.getRating(), r.getComment(), r.getPostTime()));
+    }
+
+    protected int getListSize(MutableLiveData<CustomResponse<?>> list){
+        if(list != null && list.getValue() != null && list.getValue().getBody() != null)
+            return ((CustomResponse<List<?>>)list.getValue().getBody()).getBody().size();
+        else
+            return 0;
+    }
+
+    protected Comment commentResponseToComment(CommentResponse commentResponse){
+        if(commentResponse == null) return null;
+        return new Comment(commentResponse.getId(), commentResponse.getUser().getUserId(),
+                commentResponse.getAd(), commentResponse.getComment(), commentResponse.getPostTime());
+    }
+
+    protected void saveCommentLocally(CommentResponse commentResponse) {
+        if(commentResponse == null) return;
+        Comment tmpLocalComment = commentResponseToComment(commentResponse);
+        Utility.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                DaoFactory.getUserDao().insertOrUpdate(commentResponse.getUser());
+                DaoFactory.getCommentDao().insert(tmpLocalComment);
+                for (Integer index : commentResponse.getTaggedIndices()) {
+                    DaoFactory.getTaggedDao().insertOrUpdate(new Tagged(commentResponse.getId(), index));
+
+                }
+            }
+        });
+    }
+
     protected Ad adWithTagsToAd(AdWithTags adWithTags){
         Ad tmpAd;
         tmpAd = adWithTags.adEmployerLocation.getAd();
@@ -113,32 +156,32 @@ public abstract class BaseRepository {
     }
 
     protected void saveUserLocally(User remoteUser){
-        if(remoteUser != null){
-            Utility.getExecutorService().execute(new Runnable() {
-                @Override
-                public void run() {
-                    if(remoteUser.getFaculty() != null){
-                        remoteUser.setFkFacultyId(remoteUser.getFaculty().getFacultyId());
-                        remoteUser.getFaculty().setFkUniversityId(remoteUser.getFaculty().getUniversity().getUniversityId());
-                        if (remoteUser.getFaculty().getUniversity() != null)
-                            DaoFactory.getUniversityDao().insertOrUpdate(remoteUser.getFaculty().getUniversity());
-                        DaoFactory.getFacultyDao().insertOrUpdate(remoteUser.getFaculty());
-                    }
-                    DaoFactory.getUserDao().insertOrUpdate(remoteUser);
-                    if(remoteUser.getBadges() != null) {
-                        DaoFactory.getBadgeDao().insertOrUpdate(remoteUser.getBadges());
-                        List<UserBadge> tmpUserBadge = new ArrayList<>();
-                        for (Badge b : remoteUser.getBadges()) {
-                            tmpUserBadge.add(new UserBadge(remoteUser.getUserId(), b.getBadgeId()));
-                        }
-                        DaoFactory.getUserBadgeDao().insertOrUpdate(tmpUserBadge);
-                    }
+        if(remoteUser == null) return;
+        Utility.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                if(remoteUser.getFaculty() != null){
+                    remoteUser.setFkFacultyId(remoteUser.getFaculty().getFacultyId());
+                    remoteUser.getFaculty().setFkUniversityId(remoteUser.getFaculty().getUniversity().getUniversityId());
+                    if (remoteUser.getFaculty().getUniversity() != null)
+                        DaoFactory.getUniversityDao().insertOrUpdate(remoteUser.getFaculty().getUniversity());
+                    DaoFactory.getFacultyDao().insertOrUpdate(remoteUser.getFaculty());
                 }
-            });
-        }
+                DaoFactory.getUserDao().insertOrUpdate(remoteUser);
+                if(remoteUser.getBadges() != null) {
+                    DaoFactory.getBadgeDao().insertOrUpdate(remoteUser.getBadges());
+                    List<UserBadge> tmpUserBadge = new ArrayList<>();
+                    for (Badge b : remoteUser.getBadges()) {
+                        tmpUserBadge.add(new UserBadge(remoteUser.getUserId(), b.getBadgeId()));
+                    }
+                    DaoFactory.getUserBadgeDao().insertOrUpdate(tmpUserBadge);
+                }
+            }
+        });
     }
 
     protected void saveUserLocally(List<User> remoteUsers){
+        if(remoteUsers == null) return;
         Utility.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
@@ -216,6 +259,7 @@ public abstract class BaseRepository {
     }
 
     protected void saveChatLocally(Chat chat){
+        if(chat == null) return;
         Utility.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
@@ -350,5 +394,23 @@ public abstract class BaseRepository {
         }
         else
             res.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, message));
+    }
+
+    protected void sendChatNotification(ChatNotification notification){
+        String token = Utility.getAccessToken(App.getAppContext());
+        Utility.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<ResponseBody> res = ApiFactory.getNotificationApi().sendChatNotification(token, notification).execute();
+                    if(res.isSuccessful())
+                        Log.i("sendChatNotification", "success");
+                    else
+                        Log.i("sendChatNotification", res.message());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

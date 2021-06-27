@@ -37,6 +37,10 @@ public interface AdApi {
                           @Query("filterCompensationMax") Integer compensationMax, @Query("filterTagIds") List<Integer> tagIds,
                           @Query("sortLocationLatitude") Double locLatitude, @Query("sortLocationLongitude") Double locLongitude);
 
+    @GET("recommender/")
+    Call<List<Ad>> getRecommendedAds(@Header("Authorization") String token,@Query("tagId") List<Integer> tagIds,
+                          @Query("pageSize") int pageSize, @Query("pageSkip") int pageSkip);
+
     @POST("apply/{id}/")
     Call<ResponseBody> applyForAd(@Header("Authorization") String token, @Path("id") int adId);
 
@@ -52,4 +56,6 @@ public interface AdApi {
     @DELETE("ad/{id}/")
     Call<ResponseBody> deleteAd(@Header("Authorization") String token, @Path("id") int adId);
 
+    @GET("isApplied/{id}/")
+    Call<Boolean> isApplied(@Header("Authorization") String token, @Path("id") int adId);
 }

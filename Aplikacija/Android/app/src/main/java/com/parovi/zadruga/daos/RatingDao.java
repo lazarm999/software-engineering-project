@@ -15,11 +15,14 @@ import java.util.List;
 @Dao
 public abstract class RatingDao extends BaseDao<Rating> {
     /*TODO: ovde treba da ide neki dobudzeniji/prostiji user*/
-    @Query("SELECT user_table.*, Rating.*, Rating.fkRateeId as ratee FROM Rating " +
+    @Query("SELECT user_table.*, Rating.*, Rating.fkRateeId as ratee, Rating.ratingId as id FROM Rating " +
             "INNER JOIN user_table ON Rating.fkRaterId = user_table.userId " +
             "WHERE Rating.fkRateeId == :rateeId")
     public abstract ListenableFuture<List<RatingResponse>> getRatingByRatedId(int rateeId);
 
     @Query("DELETE FROM Rating WHERE Rating.fkRaterId = :raterId AND Rating.fkRateeId = :rateeId")
     public abstract ListenableFuture<Integer> deleteRating(int raterId, int rateeId);
+
+    @Query("SELECT * FROM Rating WHERE Rating.ratingId = :ratingId")
+    public abstract Rating getRatingById(int ratingId);
 }
