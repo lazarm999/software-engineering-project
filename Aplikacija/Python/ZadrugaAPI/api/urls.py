@@ -31,5 +31,6 @@ urlpatterns = [
     path('userFcm/<str:pk>/', views.UserFCMDeleteView.as_view()),
     path('chatNotification/', views.ChatNotification.as_view()),
     path('notifications/', views.NotificationList.as_view()),
-    path('recommender/', views.Recommender.as_view())
+    path('recommender/', views.Recommender.as_view()),
+    path('isApplied/<int:pk>/', views.IsApplied.as_view())
 ]

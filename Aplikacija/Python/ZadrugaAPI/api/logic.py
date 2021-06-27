@@ -1,4 +1,3 @@
-from enum import Enum
 import os
 import requests
 from datetime import datetime, timedelta
@@ -6,7 +5,7 @@ from datetime import datetime, timedelta
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 
-from api.models import Ad, Applied, Badge, Earned, Notification, User, UserFCM, UserNotification
+from api.models import Ad, Applied, Badge, Earned, Notification, Tag, User, UserFCM, UserNotification
 from api.responses import r404
 
 
@@ -108,7 +107,7 @@ class NotificationLogic:
         declinedNotification.save()
         for notif in userNotifs:
             notif.save()
-        NotificationLogic.sendPushNotifications({'type': 'accepted', 'adId': ad.adId, 'adTitle': ad.title}, acceptedUsersFcm)
+        NotificationLogic.sendPushNotifications({'type': 'accepted', 'adId': ad.adId, 'adTitle': ad.title, 'chatQbId': ad.qbChatId}, acceptedUsersFcm)
         NotificationLogic.sendPushNotifications({'type': 'declined', 'adId': ad.adId, 'adTitle': ad.title}, declinedUsersFcm)
 
     def sendCommentNotification(comment):
@@ -175,7 +174,7 @@ class NotificationLogic:
         }
         NotificationLogic.sendPushNotifications(data, userFcms)
 
-    def sendChatNotification(username, adId, message, userQbIds):
+    def sendChatNotification(username, adId, message, userQbIds, chatQbId):
         userFcms = [u.fcmToken for u in UserFCM.objects.filter(user__userQbId__in=userQbIds)]
         
         try:
@@ -188,7 +187,8 @@ class NotificationLogic:
             'username': username,
             'message': message,
             'adId': adId,
-            'adTitle': adTitle
+            'adTitle': adTitle,
+            'chatQbId': chatQbId
         }
         NotificationLogic.sendPushNotifications(data, userFcms)
 
@@ -237,6 +237,7 @@ class EarnedBadgeLogic:
                 EarnedBadgeLogic.saveBadge(employer, Badges.POPULAR_AD)
 
         for employee in acceptedUsers:
+            employee = employee.user
             jobs = Ad.objects.filter(isClosed=True, applicants__user=employee)
             if len(jobs) == 10:
                 EarnedBadgeLogic.saveBadge(employee, Badges.FINISHED10)
@@ -249,7 +250,8 @@ class EarnedBadgeLogic:
 
             distinctTags = set()
             for job in jobs:
-                for tag in job.tags:
+                tags = job.tags.all()
+                for tag in tags:
                     distinctTags.add(tag.tagId)
             if len(distinctTags) >= 4:
                 exists = len(Earned.objects.filter(user=employee, badge__badgeId=Badges.MULTI_CATEGORY)) > 0

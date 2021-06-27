@@ -685,8 +685,9 @@ class ChatNotification(APIView):
         adId = request.data.get('adId')
         message = request.data.get('message')
         userQbIds = request.data.get('userQbIds')
+        chatQbId = request.data.get('chatQbId')
 
-        NotificationLogic.sendChatNotification(username, adId, message, userQbIds)
+        NotificationLogic.sendChatNotification(username, adId, message, userQbIds, chatQbId)
         return Response()
 
 
@@ -731,6 +732,13 @@ class Recommender(APIView):
         serialized = AdSerializer(querySet, many=True)
         return Response(serialized.data)
 
+
+class IsApplied(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def get(self, request, pk, *args, **kwargs):
+        ad = Applied.objects.filter(user__userId=request._auth, ad__adId=pk)
+        return Response(len(ad) > 0)
 
 # TODO: badzevi, notifikacija za bedz
 # TODO: Docker
