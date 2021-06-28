@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -78,6 +79,12 @@ public class StudentProfileFragment extends Fragment {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
                     populateViews((User)customResponse.getBody());
                     u = ((User) customResponse.getBody());
+                    if(u.getBadges() != null){
+                        List<Badge> badges = u.getBadges();
+                        for (int i = 0; i < badges.size(); i++) {
+                            ((ImageView)binding.linearBagdges.getChildAt(0)).setImageResource(R.drawable.badge1);
+                        }
+                    }
                 }
             }
         });
@@ -88,43 +95,6 @@ public class StudentProfileFragment extends Fragment {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
                     loadProfilePicture((Bitmap)customResponse.getBody());
                 }
-            }
-        });
-
-        model.getBadges().observe(requireActivity(), new Observer<CustomResponse<?>>() {
-            @Override
-            public void onChanged(CustomResponse<?> customResponse) {
-                if (customResponse.getStatus() != CustomResponse.Status.OK) {
-                    Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show();
-                } else{
-                    List<Badge> badges = u.getBadges();
-                    List<Integer> badgesInt = model.getBadgeIds(badges);
-
-                    if(badges.size() == 0)
-                    {
-                        return;
-                    }
-                    else {
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(1))) {
-                            binding.imgBadge1.setImageResource(R.drawable.badge1);
-                        } else {
-                            binding.imgBadge1.setImageResource(R.drawable.locker);
-                        }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(2))) {
-                            binding.imgBadge2.setImageResource(R.drawable.badge1);
-                        }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(3))) {
-                            binding.imgBadge3.setImageResource(R.drawable.badge1);
-                        }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(4))) {
-                            binding.imgBadge4.setImageResource(R.drawable.badge1);
-                        }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(5))) {
-                            binding.imgBadge5.setImageResource(R.drawable.badge1);
-                        }
-                    }
-                }
-                descriptions.addAll(model.getBadgeNames());
             }
         });
 

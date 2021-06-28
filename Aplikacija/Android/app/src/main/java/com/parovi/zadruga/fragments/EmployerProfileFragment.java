@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.activities.GradeUserActivity;
+import com.parovi.zadruga.activities.MainActivity;
 import com.parovi.zadruga.activities.UsersAchievementsActivity;
 import com.parovi.zadruga.databinding.FragmentEmployerProfileBinding;
 import com.parovi.zadruga.models.entityModels.Badge;
@@ -74,6 +76,10 @@ public class EmployerProfileFragment extends Fragment {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
                     populateViews((User)customResponse.getBody());
                     u = ((User) customResponse.getBody());
+                    List<Badge> badges = u.getBadges();
+                    for (int i = 0; i < badges.size(); i++) {
+                        ((ImageView)binding.linearBagdges.getChildAt(0)).setImageResource(R.drawable.badge1);
+                    }
                 }
             }
         });
@@ -87,45 +93,22 @@ public class EmployerProfileFragment extends Fragment {
             }
         });
 
-
-        model.getBadges().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+        model.getIsLogedOut().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                if (customResponse.getStatus() != CustomResponse.Status.OK) {
-                    Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show();
-                } else{
-                    List<Badge> badges = u.getBadges();
-                    List<Integer> badgesInt = model.getBadgeIds(badges);
-
-                    if(badges.size() == 0)
-                    {
-                        return;
-                    }
-                    else {
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(6))) {
-                            binding.imgBadge1.setImageResource(R.drawable.badge1);
-                        } else {
-                            binding.imgBadge1.setImageResource(R.drawable.locker);
-                        }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(7))) {
-                            binding.imgBadge2.setImageResource(R.drawable.badge1);
-                        }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(8))) {
-                            binding.imgBadge3.setImageResource(R.drawable.badge1);
-                        }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(9))) {
-                            binding.imgBadge4.setImageResource(R.drawable.badge1);
-                        }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(10))) {
-                            binding.imgBadge5.setImageResource(R.drawable.badge1);
-                        }
-                    }
+                if(customResponse.getStatus() == CustomResponse.Status.OK){
+                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    startActivity(intent);
                 }
-                descriptions.addAll(model.getBadgeNames());
             }
         });
 
-
+        binding.btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                model.logOut();
+            }
+        });
         return binding.getRoot();
     }
 

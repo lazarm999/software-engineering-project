@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.repository.LookUpRepository;
 import com.parovi.zadruga.repository.UserRepository;
@@ -15,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployerProfileViewModel extends AndroidViewModel {
-    private final int userId = 1;
-    private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+    private final int userId = Utility.getLoggedInUserId(App.getAppContext()); //1;
+    private final String token = Utility.getAccessToken(App.getAppContext()); //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
 
     private MutableLiveData<CustomResponse<?>> user;
     private MutableLiveData<CustomResponse<?>> badges;
@@ -72,17 +74,6 @@ public class EmployerProfileViewModel extends AndroidViewModel {
 
     public MutableLiveData<CustomResponse<?>> getUserInfo() {
         return userInfo;
-    }
-
-    public List<String> getBadgeNames()
-    {
-        List<Badge> badge = (List<Badge>)badges.getValue().getBody();
-        List<String> strings = new ArrayList<String>();
-        if (badge == null)
-            return strings;
-        for (Badge b : badge)
-            strings.add(b.getDescription());
-        return strings;
     }
 
     public List<Integer> getBadgeIds(List<Badge> badge)

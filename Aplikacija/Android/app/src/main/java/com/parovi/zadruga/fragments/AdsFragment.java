@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -25,6 +27,7 @@ import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.adapters.AdAdapter;
 import com.parovi.zadruga.databinding.FragmentAdsFragmentBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.ui.ChatActivity;
 import com.parovi.zadruga.ui.JobAdActivity;
 import com.parovi.zadruga.viewModels.FeedViewModel;
 
@@ -170,6 +173,15 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
                 String max = binding.editTxtFeeToFilter.getText().toString();
                 model.filterAds(model.getIdByLocationName(loc), min.equals("") ? null : Integer.parseInt(min),
                         max.equals("") ? null : Integer.parseInt(max), model.selectedTags(selectedChips));
+            }
+        });
+
+        binding.topBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(requireContext(), ChatActivity.class);
+                startActivity(intent);
+                return true;
             }
         });
 

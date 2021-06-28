@@ -74,17 +74,6 @@ public class StudentProfileViewModel extends AndroidViewModel {
         return userInfo;
     }
 
-    public List<String> getBadgeNames()
-    {
-        List<Badge> badge = (List<Badge>)badges.getValue().getBody();
-        List<String> strings = new ArrayList<String>();
-        if (badge == null)
-            return strings;
-        for (Badge b : badge)
-            strings.add(b.getDescription());
-        return strings;
-    }
-
     public List<Integer> getBadgeIds(List<Badge> badge)
     {
         List<Integer> ids = new ArrayList<>();
