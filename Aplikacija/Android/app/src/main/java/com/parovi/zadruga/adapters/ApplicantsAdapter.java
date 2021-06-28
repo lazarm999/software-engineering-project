@@ -1,5 +1,6 @@
 package com.parovi.zadruga.adapters;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,7 @@ public class ApplicantsAdapter extends ListAdapter<User, ApplicantsAdapter.Appli
             return oldItem.getUserId() == newItem.getUserId();
         }
 
+        @SuppressLint("DiffUtilEquals")
         @Override
         public boolean areContentsTheSame(@NonNull @NotNull User oldItem, @NonNull @NotNull User newItem) {
             Log.d("DEBUG", "areContentsTheSame: entered");

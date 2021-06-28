@@ -44,6 +44,8 @@ public class User {
     private Integer fkFacultyId;
     private int userQbId;
 
+    @Ignore
+    private String password;
 
     @Ignore
     private Faculty faculty;
@@ -51,6 +53,17 @@ public class User {
     private List<Badge> badges;
     @Ignore
     private Bitmap profileImage;
+
+    /*(binding.txtUsername.getText().toString(), binding.txtName.getText().toString(),
+                binding.txtSurname.getText().toString(), binding.txtEmail.getText().toString(), binding.txtPass.getText().toString());*/
+
+    public User(String firstName, String lastName, String email, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
 
     public User(int userId, int userQbId) {
         this.userId = userId;
@@ -80,11 +93,13 @@ public class User {
         this.userQbId = userQbId;
     }
 
-    public User(String username, String firstName, String lastName, String email, String password) {
+    public User(String username, String firstName, String lastName, String email, String password, boolean isEmployer) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
+        this.isEmployer = isEmployer;
     }
 
 

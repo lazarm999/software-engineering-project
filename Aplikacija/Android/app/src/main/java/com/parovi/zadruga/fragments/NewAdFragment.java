@@ -22,10 +22,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.requestModels.PostAdRequest;
 import com.parovi.zadruga.viewModels.NewAdViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NewAdFragment extends Fragment {
 
@@ -72,14 +74,14 @@ public class NewAdFragment extends Fragment {
                     adapterLoc.addAll(model.getAllCities());
                    // makeToast(R.string.successfulLocation);
                 }
-                else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
-                {
-                    Toast.makeText(requireContext(), "You got the locations", Toast.LENGTH_SHORT).show();
-                }
-                else if(customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR)
-                {
-                    Toast.makeText(requireContext(), "Error with server", Toast.LENGTH_SHORT).show();
-                }
+//                else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
+//                {
+//                    Toast.makeText(requireContext(), "You got the locations", Toast.LENGTH_SHORT).show();
+//                }
+//                else if(customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR)
+//                {
+//                    Toast.makeText(requireContext(), "Error with server", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
 
@@ -87,10 +89,12 @@ public class NewAdFragment extends Fragment {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
-                    newArrayCategory = null;
-                    newArrayCategory = model.getAllTagNames().toArray(new String[0]);
-                    makeToast(R.string.successfulLocation);
-                } else if (customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST) {
+                    //newArrayCategory = null;
+                    newArrayCategory = new String[((List<Tag>)customResponse.getBody()).size()];
+                    newArrayCategory = model.getAllTagNames().toArray(newArrayCategory);
+                   // makeToast(R.string.successfulLocation);
+                }
+                else if (customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST) {
                     makeToast(R.string.badRequestLocation);
                 } else if (customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR) {
                     makeToast(R.string.serverErrorNewAd);
@@ -196,9 +200,6 @@ public class NewAdFragment extends Fragment {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                    //dijalog da li smo sigurni da zelimo da dodamo oglas
-
                     model.postAd(Utility.getAccessToken(container.getContext()), new PostAdRequest(etNewAdTitle.getText().toString(), etNewAdDescription.getText().toString(), Integer.parseInt(etNewAdFeeFrom.getText().toString()), Integer.parseInt(etNewAdFeeTo.getText().toString()), Integer.parseInt(etNewAdPeopleNeeded.getText().toString()), Integer.parseInt(spinnerLocations.getSelectedItem().toString()), categoryList));
                     FragmentTransaction fr = getFragmentManager().beginTransaction();
                     fr.replace(R.id.bottom_nav_employer, new AdsFragment());

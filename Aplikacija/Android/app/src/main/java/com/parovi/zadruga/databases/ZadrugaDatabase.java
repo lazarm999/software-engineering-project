@@ -25,6 +25,7 @@ import com.parovi.zadruga.daos.TagDao;
 import com.parovi.zadruga.daos.lookupDaos.UniversityDao;
 import com.parovi.zadruga.daos.UserBadgeDao;
 import com.parovi.zadruga.daos.UserDao;
+import com.parovi.zadruga.models.PreferredTag;
 import com.parovi.zadruga.models.converters.Converters;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.Badge;
@@ -46,8 +47,8 @@ import com.parovi.zadruga.models.entityModels.manyToManyModels.UserChat;
 
 @Database(entities = {Ad.class, Location.class, User.class, UserBadge.class, Faculty.class, University.class, Notification.class,
         Tag.class, Badge.class, AdTag.class, Rating.class, Applied.class, Comment.class,
-        Chat.class, Message.class, UserChat.class, Tagged.class},
-        version = 66, exportSchema = false)
+        Chat.class, Message.class, UserChat.class, Tagged.class, PreferredTag.class},
+        version = 64, exportSchema = false)
 @TypeConverters({Converters.class})
 abstract public class ZadrugaDatabase extends RoomDatabase {
     private static ZadrugaDatabase db;

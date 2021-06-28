@@ -22,7 +22,8 @@ public class NotificationsViewModel extends AndroidViewModel {
         super(application);
         notificationRepository = new NotificationRepository();
         isNotified = new MutableLiveData<>();
-        //rep.getAllNotifications(Utility.getAccessToken(App.getAppContext()), isNotified);
+        loadNotifications();
+
     }
 
     public MutableLiveData<CustomResponse<?>> getIsNotified(){
@@ -30,5 +31,9 @@ public class NotificationsViewModel extends AndroidViewModel {
         if(isNotified == null)
             isNotified = new MutableLiveData<CustomResponse<?>>();
         return isNotified;
+    }
+
+    private void loadNotifications() {
+       // notificationRepository.getAllNotifications(token, notifications);
     }
 }

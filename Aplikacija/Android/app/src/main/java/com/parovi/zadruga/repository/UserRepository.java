@@ -28,6 +28,7 @@ import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.Applied;
 import com.parovi.zadruga.models.nonEntityModels.UserWithFaculty;
+import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
 import com.parovi.zadruga.models.requestModels.BanRequest;
 import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
 import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
@@ -80,25 +81,6 @@ public class UserRepository extends BaseRepository {
         });
     }
 
-    public void removeFcmToken(String token, int userId){
-        
-        User user = new User();
-        user.setUserId(userId);
-        user.setFcmToken("");
-        ApiFactory.getUserApi().updateUser(token, userId, user).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if(response.isSuccessful())
-                    Log.i("updateUser", "onResponse: ");
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-
-            }
-        });
-    }
-
     public void registerUser(MutableLiveData<CustomResponse<?>> newUser, User u, String pass){
         //TODO: da l treba da se obestava korisnik sta je tacno problem
         QBUser qbUser = new QBUser();
@@ -117,19 +99,7 @@ public class UserRepository extends BaseRepository {
                         if(response.isSuccessful() && response.body() != null){
                             Log.i("signIn", "braoooo");
                             newUser.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
-                            qbUser.setExternalId(Integer.toString(response.body().getUserId()));
-                            QBUsers.updateUser(qbUser).performAsync(new QBEntityCallback<QBUser>() {
-                                @Override
-                                public void onSuccess(QBUser qbUser, Bundle bundle) {
-                                    Log.i("updateQbUser", "onSuccess: ");
-                                }
-
-                                @Override
-                                public void onError(QBResponseException e) {
-                                    Log.i("sadfa", "onError: ");
-                                }
-                            });
-                            DaoFactory.getUserDao().insertOrUpdate(response.body());
+                            Utility.getExecutorService().execute(() -> DaoFactory.getUserDao().insertOrUpdate(response.body()));
                         }
                         else
                             responseNotSuccessful(response.code(), newUser);
@@ -137,7 +107,7 @@ public class UserRepository extends BaseRepository {
 
                     @Override
                     public void onFailure(@NotNull Call<User> call, @NotNull Throwable t) {
-                        newUser.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                        apiCallOnFailure(t.getMessage(), newUser);
                     }
                 });
             }
@@ -156,9 +126,9 @@ public class UserRepository extends BaseRepository {
         //TODO: kazi mu ne moz se ulogujes
         ApiFactory.getUserApi().loginUser(new LoginRequest(email, pass)).enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> response) {
-                if(response.isSuccessful() && response.body() != null){
-                    User loggedInUser = response.body().getUser();
+            public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> apiResponse) {
+                if(apiResponse.isSuccessful() && apiResponse.body() != null){
+                    User loggedInUser = apiResponse.body().getUser();
                     QBUser qbUser = new QBUser();
                     qbUser.setEmail(email);
                     qbUser.setPassword(pass);
@@ -175,9 +145,9 @@ public class UserRepository extends BaseRepository {
                                         isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, "Fetching FCM registration token failed"));
                                         return;
                                     }
-                                    Utility.saveLoggedUserInfo(App.getAppContext(), response.body().getToken(), response.body().getUser(), pass, task.getResult());
-                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body().getUser().isEmployer()));
-                                    ApiFactory.getUserApi().postFcmToken(response.body().getToken(), new AddFcmTokenRequest(task.getResult()))
+                                    Utility.saveLoggedUserInfo(App.getAppContext(), apiResponse.body().getToken(), apiResponse.body().getUser(), pass, task.getResult());
+                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, apiResponse.body().getUser().isEmployer()));
+                                    ApiFactory.getUserApi().postFcmToken(apiResponse.body().getToken(), new AddFcmTokenRequest(task.getResult()))
                                             .enqueue(new Callback<ResponseBody>() {
                                                 @Override
                                                 public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -187,11 +157,11 @@ public class UserRepository extends BaseRepository {
                                                         Log.i("postFcmToken", String.valueOf(response.code()));
                                                 }
 
-                                                @Override
-                                                public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                                                    Log.i("postFcmToken", t.getMessage());
-                                                }
-                                            });
+                                        @Override
+                                        public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                                            Log.i("postFcmToken", t.getMessage());
+                                        }
+                                    });
                                 }
                             });
                             saveUserLocally(loggedInUser);
@@ -200,18 +170,18 @@ public class UserRepository extends BaseRepository {
                         @Override
                         public void onError(QBResponseException error) {
                             Log.i("logIn", "ne braoooo");
-                            isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, error.getMessage()));
+                            responseNotSuccessful(error.getHttpStatusCode(), isEmployer);
                         }
                     });
                 }
                 else
-                    responseNotSuccessful(response.code(), isEmployer);
+                    responseNotSuccessful(apiResponse.code(), isEmployer);
             }
 
             @Override
             public void onFailure(@NotNull Call<LoginResponse> call, @NotNull Throwable t) {
                 Log.i("logIn", "ne braoooo");
-                isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), isEmployer);
             }
         });
     }
@@ -238,7 +208,7 @@ public class UserRepository extends BaseRepository {
 
                             @Override
                             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                                isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                                apiCallOnFailure(t.getMessage(), isLoggedOut);
                             }
                         });
             }
@@ -246,7 +216,7 @@ public class UserRepository extends BaseRepository {
             @Override
             public void onError(QBResponseException e) {
                 Log.i("logOut", "ne braoooo");
-                isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, e.getMessage()));
+                responseNotSuccessful(e.getHttpStatusCode(), isLoggedOut);
             }
         });
     }
@@ -280,7 +250,7 @@ public class UserRepository extends BaseRepository {
 
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                isChanged.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), isChanged);
             }
         });
     }
@@ -370,7 +340,7 @@ public class UserRepository extends BaseRepository {
             }
             @Override
             public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                isUpdated.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), isUpdated);
             }
         });
     }
@@ -455,7 +425,7 @@ public class UserRepository extends BaseRepository {
 
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                profilePicture.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), profilePicture);
             }
         });
     }
@@ -471,7 +441,7 @@ public class UserRepository extends BaseRepository {
 
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                isBanned.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), isBanned);
             }
         });
     }
@@ -487,7 +457,7 @@ public class UserRepository extends BaseRepository {
 
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                isUnBanned.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), isUnBanned);
             }
         });
     }

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.adapters.JobHistoryAdapter;
 import com.parovi.zadruga.items.AdWithStudentRatingItem;
+import com.parovi.zadruga.models.entityModels.Ad;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  * Use the {@link EmployersAdsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EmployersAdsFragment extends Fragment {
+public class EmployersAdsFragment extends Fragment implements JobHistoryAdapter.JobHistoryListListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,9 +80,14 @@ public class EmployersAdsFragment extends Fragment {
 
         RecyclerView recView = layout.findViewById(R.id.recyclerViewJobHistory);
         recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        JobHistoryAdapter adapter = new JobHistoryAdapter(jobs);
+        JobHistoryAdapter adapter = new JobHistoryAdapter(this);
         recView.setAdapter(adapter);
 
         return layout;
+    }
+
+    @Override
+    public void onJobSelected(Ad ad) {
+        //TODO: navigacija
     }
 }

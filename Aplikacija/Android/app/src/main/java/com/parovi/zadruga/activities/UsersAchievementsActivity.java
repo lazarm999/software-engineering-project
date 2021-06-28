@@ -5,19 +5,21 @@ import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.adapters.AchievementAdapter;
 import com.parovi.zadruga.databinding.ActivityUsersAchievementsBinding;
-import com.parovi.zadruga.items.AchievementItem;
+import com.parovi.zadruga.models.responseModels.RatingResponse;
 import com.parovi.zadruga.viewModels.AchievementViewModel;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class UsersAchievementsActivity extends AppCompatActivity {
+public class UsersAchievementsActivity extends AppCompatActivity implements AchievementAdapter.AchievementListener{
 
     private AchievementViewModel model;
     private ActivityUsersAchievementsBinding binding;
@@ -31,23 +33,29 @@ public class UsersAchievementsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         model = new ViewModelProvider(this).get(AchievementViewModel.class);
 
-        ArrayList<AchievementItem> achievements = new ArrayList<>();
-
-        achievements.add(new AchievementItem("Title 1", LocalDate.of(2021,6,17), 4, "Comment 1"));
-        achievements.add(new AchievementItem("Title 2", LocalDate.of(2021,4,29), 1, "Comment 2"));
+        ArrayList<RatingResponse> achievements = new ArrayList<>();
 
 
         RecyclerView recView = findViewById(R.id.recyclerViewAchievements);
         recView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        //AchievementAdapter adapter = new AchievementAdapter(achievements);
-        //recView.setAdapter(adapter);
 
-        /*CardView cardAd = (CardView) layout.findViewById(R.id.cardAdItem);
-        cardAd.setOnClickListener(new View.OnClickListener() {
+        AchievementAdapter adapter = new AchievementAdapter(achievements);
+        recView.setAdapter(adapter);
+
+        model.getRatings().observe(this, new Observer<CustomResponse<?>>() {
             @Override
-            public void onClick(View v) {
-                //pozovi Urosev activity za oglas (???)
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    adapter.setAchievements((ArrayList<RatingResponse>) customResponse.getBody());
+                }
             }
-        });*/
+        });
+
+        adapter.setAchievements(achievements);
+    }
+
+    @Override
+    public void onAchievementSelected(RatingResponse achievement) {
+
     }
 }

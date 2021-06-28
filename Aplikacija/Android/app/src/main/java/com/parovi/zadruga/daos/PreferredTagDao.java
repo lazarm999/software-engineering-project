@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class PreferredTagDao extends BaseDao<PreferredTag> {
 
     @Query("DELETE FROM PreferredTag WHERE PreferredTag.tagId = :tagId")
-    public abstract List<PreferredTag> deletePreferredTag(int tagId);
+    public abstract Integer deletePreferredTag(int tagId);
 
     @Query("SELECT * FROM PreferredTag")
     public abstract List<PreferredTag> getPreferredTags();

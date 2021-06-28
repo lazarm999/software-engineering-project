@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,8 +17,8 @@ import com.parovi.zadruga.adapters.AdAdapter;
 import com.parovi.zadruga.databinding.FragmentRecommendationFragmentBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.ui.JobAdActivity;
+import com.parovi.zadruga.viewModels.FeedViewModel;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class RecommendationFragment extends Fragment implements AdAdapter.AdListListener {
@@ -25,6 +26,7 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
         // Required empty public constructor
     }
 
+    FeedViewModel model;
     FragmentRecommendationFragmentBinding binding;
 
     @Override
@@ -38,10 +40,10 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentRecommendationFragmentBinding.inflate(inflater, container, false);
+        model = new ViewModelProvider(requireActivity()).get(FeedViewModel.class);
+
 
         ArrayList<Ad> ads = new ArrayList<>();
-
-        ads.add(new Ad("Delivery worker", "Looking for students up to 26 years of age for food delivery services.", LocalDate.of(2021, 6, 10)));
 
         RecyclerView recView = binding.recViewRecommends;
         recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -50,14 +52,14 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
 
         adapter.setAds(ads);
 
-
-        /*CardView cardAd = (CardView) layout.findViewById(R.id.cardAdItem);
-        cardAd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //pozovi Urosev activity za oglas
-            }
-        });*/
+//        model.getRecommendedAds().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+//            @Override
+//            public void onChanged(CustomResponse<?> customResponse) {
+//                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+//                    adapter.setAds((ArrayList<Ad>) customResponse.getBody());
+//                }
+//            }
+//        });
 
         return binding.getRoot();
     }

@@ -57,31 +57,42 @@
             android:layout_marginEnd="59dp"
             android:background="@drawable/border_for_image" />
 
-        <TextView
-            android:id="@+id/editTextUser"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="240dp"
-            android:fontFamily="@font/roboto_condensed_regular"
-            android:text="Vuk Bibic"
-            android:textColor="@color/lila"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="-5dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/editTextUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="268dp"
-            android:fontFamily="@font/roboto_condensed_regular"
-            android:text="vuk"
-            android:textColor="@color/lila"
-            android:textSize="12sp"
-            android:textStyle="italic" />
+            <TextView
+                android:id="@+id/txtFirstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/imgProfileBlank"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="243dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="Lazar"
+                android:textColor="@color/lila"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtLastName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="243dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="Minic"
+                android:textColor="@color/lila"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/imgUser"
@@ -93,31 +104,15 @@
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/vuk_profilna" />
 
-        <Button
-            android:id="@+id/btnAchievements"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/txtBadges"
-            android:layout_below="@+id/editTextUsername"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp"
-            android:fontFamily="@font/roboto_condensed_regular"
-            android:text="@string/achievements"
-            android:textColor="@color/black"
-            android:textSize="10sp"
-            app:backgroundTint="@color/teal_200"
-            app:cornerRadius="20dp"
-            app:icon="@drawable/ic_achievements"
-            app:iconTint="@color/black"
-            app:rippleColor="@color/lila" />
 
         <LinearLayout
+            android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
             android:orientation="horizontal"
             android:paddingBottom="20dp">
 
@@ -125,32 +120,47 @@
                 android:id="@+id/txtBadges"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="550dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="600dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="@string/badges"
                 android:textColor="@color/lila"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/imgBtnBadge1"
-                android:layout_width="92dp"
-                android:layout_height="90dp"
-                android:layout_marginTop="580dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginBottom="0dp"
-                android:background="@color/background"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/badge2" />
+            <LinearLayout
+                android:id="@+id/linearBagdges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="26dp"
+                android:layout_marginTop="640dp"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnAchievements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="175dp"
+                android:layout_marginTop="320dp"
+                android:layout_marginRight="15dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/achievements"
+                android:textColor="@color/black"
+                android:textSize="10sp"
+                app:backgroundTint="@color/teal_200"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_achievements"
+                app:iconTint="@color/black"
+                app:rippleColor="@color/lila"
+                tools:ignore="NotSibling" />
 
         </LinearLayout>
 
-
         <TextView
-            android:id="@+id/txtComp"
+            android:id="@+id/txtUni"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -180,9 +190,10 @@
             android:id="@+id/txtNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="135dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginLeft="60dp"
             android:layout_marginTop="430dp"
+            android:layout_marginEnd="66dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="0653990854"
             android:textColor="@color/black"
@@ -205,15 +216,16 @@
             android:id="@+id/txtMultilineEditBio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="135dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="470dp"
-            android:padding="1dp"
+            android:layout_marginEnd="66dp"
             android:background="@drawable/border_for_inputs"
             android:ems="10"
             android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="start|top"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="1dp"
             android:scrollbars="vertical"
             android:singleLine="false"
             android:text="I am looking for ambitious young people who are ready to work in constructions"
@@ -224,10 +236,10 @@
             android:id="@+id/btnRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="680dp"
-            android:layout_marginLeft="260dp"
-            android:layout_marginStart="260dp"
-            android:layout_marginEnd="10dp"
+            android:layout_below="@+id/profile"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="36dp"
             android:layout_marginRight="10dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/ratingStudent"
@@ -243,9 +255,10 @@
             android:id="@+id/txtCompany"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="135dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginLeft="135dp"
             android:layout_marginTop="390dp"
+            android:layout_marginEnd="66dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="Mladost"
             android:textColor="@color/black"

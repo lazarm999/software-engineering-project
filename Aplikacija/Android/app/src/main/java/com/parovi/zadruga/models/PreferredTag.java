@@ -1,9 +1,11 @@
 package com.parovi.zadruga.models;
 
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 @Entity
 public class PreferredTag {
+    @PrimaryKey
     private int tagId;
 
     public PreferredTag(int tagId) {

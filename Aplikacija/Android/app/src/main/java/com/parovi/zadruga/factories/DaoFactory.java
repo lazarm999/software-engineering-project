@@ -173,7 +173,7 @@ public class DaoFactory {
         }
         return notificationDao;
     }
-
+    //0692244342
     public static PreferredTagDao getPreferredTagDao() {
         if(preferredTagDao == null){
             preferredTagDao = getLocalDb().preferredTagDao();

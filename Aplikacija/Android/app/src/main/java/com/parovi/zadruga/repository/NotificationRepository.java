@@ -29,30 +29,40 @@ public class NotificationRepository extends BaseRepository {
         super();
     }
 
+    public String getNotificationType(Notification notif){
+        if(notif.getAd() != null && notif.getAccepted()) return Constants.NOTIF_ACCEPTED;
+        if(notif.getAd() != null && !notif.getAccepted()) return Constants.NOTIF_DECLINED;
+        if(notif.getComment() != null && notif.getTagged() )return Constants.NOTIF_AD_COMMENT;
+        if(notif.getComment() != null && !notif.getTagged()) return Constants.NOTIF_TAGGED;
+        if(notif.getRating() != null) return Constants.NOTIF_RATING;
+        return "";
+    }
+
     public void getNotifications(MutableLiveData<CustomResponse<?>> notifications){
         String token = Utility.getAccessToken(App.getAppContext());
         Boolean[] isSynced = {false};
         int pageSkip = getListSize(notifications);
         getNotificationsLocal(notifications, isSynced, pageSkip);
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response<List<Notification>> notifResponse = ApiFactory.getNotificationApi().getNotifications(token, Constants.pageSize, pageSkip).execute();
-                    if(notifResponse.isSuccessful()){
-                        if(notifResponse.body() != null){
-                            synchronized (isSynced[0]){
-                                notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, notifResponse));
-                                isSynced[0] = true;
-                            }
-                            saveNotificationsLocally(notifResponse.body());
+        Utility.getExecutorService().execute(() -> {
+            try {
+                Response<List<Notification>> notifResponse = ApiFactory.getNotificationApi().getNotifications(token, Constants.pageSize, pageSkip).execute();
+                if(notifResponse.isSuccessful()){
+                    if(notifResponse.body() != null){
+                        for (Notification notif : notifResponse.body()) {
+                            notif.setType(getNotificationType(notif));
                         }
-                    } else
-                        responseNotSuccessful(notifResponse.code(), notifications);
-                    Log.i("ne", "run: ");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                        synchronized (isSynced[0]){
+                            notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, notifResponse));
+                            isSynced[0] = true;
+                        }
+                        saveNotificationsLocally(notifResponse.body());
+                    }
+                } else
+                    responseNotSuccessful(notifResponse.code(), notifications);
+                Log.i("ne", "run: ");
+            } catch (IOException e) {
+                e.printStackTrace();
+                apiCallOnFailure(e.getMessage(), notifications);
             }
         });
     }
@@ -101,6 +111,7 @@ public class NotificationRepository extends BaseRepository {
                             ratingResponse.setRater(rater);
                             notification.setRating(ratingResponse);
                         }
+                        notification.setType(getNotificationType(notification));
                     }
                     synchronized (isSynced[0]){
                         if(!isSynced[0])
@@ -110,7 +121,6 @@ public class NotificationRepository extends BaseRepository {
             }
         });
     }
-
 
     public CommentResponse commentToCommentResponse(Comment comment){
         if(comment == null) return null;
