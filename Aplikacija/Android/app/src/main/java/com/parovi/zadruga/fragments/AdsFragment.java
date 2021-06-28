@@ -54,8 +54,6 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         spinnerLocations.setAdapter(adapterLoc);
 
 
-        ArrayList<Ad> ads = new ArrayList<>();
-
         RecyclerView recView = binding.recViewAds;
         recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
@@ -71,7 +69,6 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
             }
         });
 
-        adapter.setAds(ads);
 
         model.getLocations().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override

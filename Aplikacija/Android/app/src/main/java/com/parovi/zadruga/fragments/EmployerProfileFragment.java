@@ -102,21 +102,21 @@ public class EmployerProfileFragment extends Fragment {
                         return;
                     }
                     else {
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(1))) {
+                        if (model.gotTheBadge(model.getBadgeIds(badges).get(6))) {
                             binding.imgBadge1.setImageResource(R.drawable.badge1);
                         } else {
                             binding.imgBadge1.setImageResource(R.drawable.locker);
                         }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(2))) {
+                        if (model.gotTheBadge(model.getBadgeIds(badges).get(7))) {
                             binding.imgBadge2.setImageResource(R.drawable.badge1);
                         }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(3))) {
+                        if (model.gotTheBadge(model.getBadgeIds(badges).get(8))) {
                             binding.imgBadge3.setImageResource(R.drawable.badge1);
                         }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(4))) {
+                        if (model.gotTheBadge(model.getBadgeIds(badges).get(9))) {
                             binding.imgBadge4.setImageResource(R.drawable.badge1);
                         }
-                        if (model.gotTheBadge(model.getBadgeIds(badges).get(5))) {
+                        if (model.gotTheBadge(model.getBadgeIds(badges).get(10))) {
                             binding.imgBadge5.setImageResource(R.drawable.badge1);
                         }
                     }

@@ -1,6 +1,5 @@
 package com.parovi.zadruga.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +9,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.parovi.zadruga.App;
 import com.parovi.zadruga.R;
-import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.databinding.AdInAListItemBinding;
-import com.parovi.zadruga.databinding.ChatResumeLayoutBinding;
 import com.parovi.zadruga.items.AdWithStudentRatingItem;
-import com.parovi.zadruga.models.entityModels.Ad;
 
 import org.jetbrains.annotations.NotNull;
-
-import kotlinx.coroutines.Job;
 
 public class JobsAdapter extends ListAdapter<AdWithStudentRatingItem, JobsAdapter.JobViewHolder> {
     JobListListener fragment;
@@ -70,7 +63,7 @@ public class JobsAdapter extends ListAdapter<AdWithStudentRatingItem, JobsAdapte
         }
 
         public void bindTo(AdWithStudentRatingItem job) {
-            binding.txtAdTitle.setText(job.getTitle());
+            binding.tvAdTitle.setText(job.getTitle());
             binding.txtAdDate.setText(job.getDate().toString());
             binding.imgUserGradeVector.setImageResource(R.drawable.ic_users_grade);
         }

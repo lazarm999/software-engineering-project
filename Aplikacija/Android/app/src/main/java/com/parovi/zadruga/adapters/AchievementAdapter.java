@@ -71,10 +71,10 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
         public void bindTo(RatingResponse item)
         {
-            binding.txtAdTitle.setText(item.getRater().getFirstName() + item.getRater().getLastName());
-            binding.txtViewGrade.setText(item.getRating());
-            binding.imgUserGradeVector.setImageResource(R.drawable.ic_users_grade);
-            binding.txtViewComment.setText(item.getComment());
+            binding.tvTitleJob.setText(item.getRater().getFirstName() + item.getRater().getLastName());
+            binding.tvGradeJob.setText(String.valueOf(item.getRating()));
+            binding.imgRatingJob.setImageResource(R.drawable.ic_users_grade);
+            binding.tvCommentJob.setText(item.getComment());
         }
 
     }

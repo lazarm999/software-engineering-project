@@ -1,12 +1,9 @@
 package com.parovi.zadruga.daos;
 
 import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.RawQuery;
 import androidx.room.Transaction;
-import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -56,7 +53,7 @@ public abstract class AdDao extends BaseDao<Ad> {
     @Query("select a.* from Ad as a join AdTag " +
             "on a.adId  = AdTag.fkAdId where AdTag.fkTagId in (:tags) group by a.adId " +
             "order by count(*) desc, postTime desc limit :pageSkip, :pageSize")
-    public abstract List<AdWithTags> getAds(int pageSize, int pageSkip, List<Integer> tags);
+    public abstract List<Ad> getAds(int pageSize, int pageSkip, List<Integer> tags);
 
     @Query("select a.* from Ad as a join AdTag " +
             "on a.adId  = AdTag.fkAdId " +

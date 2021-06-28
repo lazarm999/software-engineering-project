@@ -172,13 +172,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         @Override
         void bindTo(Notification notification) {
             binding.ivNotificationIcon.setImageResource(R.drawable.comment);
+            if (notification.getRating() == null)
+                return;
             binding.tvTitle.setText("User @" + notification.getRating().getRater() + "has rated you");
             if (notification.getRating().getRating() == 5) {
                 binding.tvDesc.setText("You received " + notification.getRating().getRating() + ", bravo!");
             } else
-                binding.tvDesc.setText("You receiverd " + notification.getRating().getRating() + "!");
+                binding.tvDesc.setText("You received " + notification.getRating().getRating() + "!");
         }
-
     }
 
     public class TaggedViewHolder extends NotificationViewHolder {

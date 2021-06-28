@@ -25,71 +25,46 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/txtAdTitle"
+            android:id="@+id/tvTitleJob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="15dp"
+            android:layout_weight="1"
             android:fontFamily="@font/roboto_condensed_regular"
-            android:text="Rater"
-            android:textColor="?attr/colorOnSurface"
+            android:inputType="text"
+            android:text="TextView"
+            android:textColor="@color/black"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/imgUserGradeVector"
+            android:id="@+id/imgRatingJob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtAdDate"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.64"
-            app:srcCompat="@drawable/ic_users_grade"
-            tools:ignore="VectorDrawableCompat" />
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_users_grade" />
 
         <TextView
-            android:id="@+id/txtViewGrade"
-            android:layout_width="35dp"
+            android:id="@+id/tvGradeJob"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_weight="1"
             android:fontFamily="@font/roboto_condensed_regular"
             android:inputType="numberSigned"
-            android:text="3"
+            android:text="TextView"
+            android:textColor="@color/black"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/imgUserGradeVector"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.571" />
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/txtViewComment"
-            android:layout_width="90dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:fontFamily="@font/roboto_condensed_regular"
-            android:inputType="textMultiLine"
-            android:isScrollContainer="true"
-            android:scrollbarSize="4dp"
-            android:scrollbars="vertical"
-            android:text="Comment for this user on ad"
+            android:id="@+id/tvCommentJob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TextView"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
 

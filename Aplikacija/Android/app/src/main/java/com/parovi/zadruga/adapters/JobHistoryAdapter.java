@@ -64,7 +64,7 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
 
         public JobHistoryViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTitle = itemView.findViewById(R.id.txtAdTitle);
+            tvTitle = itemView.findViewById(R.id.tvAdTitle);
             tvDate = itemView.findViewById(R.id.txtAdDate);
             imgRes = itemView.findViewById(R.id.imgUserGradeVector);
         }
