@@ -19,6 +19,7 @@ import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.models.responseModels.RatingResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Response;
@@ -29,9 +30,9 @@ public class NotificationRepository extends BaseRepository {
         super();
     }
 
-    public String getNotificationType(Notification notif){
-        if(notif.getAd() != null && notif.getAccepted()) return Constants.NOTIF_ACCEPTED;
-        if(notif.getAd() != null && !notif.getAccepted()) return Constants.NOTIF_DECLINED;
+    private String getNotificationType(Notification notif){
+        if(notif.getAd() != null && notif.getAccepted()  != null && notif.getAccepted()) return Constants.NOTIF_ACCEPTED;
+        if(notif.getAd() != null && notif.getAccepted()  != null && !notif.getAccepted()) return Constants.NOTIF_DECLINED;
         if(notif.getComment() != null && notif.getTagged() )return Constants.NOTIF_AD_COMMENT;
         if(notif.getComment() != null && !notif.getTagged()) return Constants.NOTIF_TAGGED;
         if(notif.getRating() != null) return Constants.NOTIF_RATING;
@@ -51,8 +52,14 @@ public class NotificationRepository extends BaseRepository {
                         for (Notification notif : notifResponse.body()) {
                             notif.setType(getNotificationType(notif));
                         }
+                        List<Notification> tmpNotificationList;
+                        if(notifications.getValue() != null && notifications.getValue().getBody() != null)
+                            tmpNotificationList = (List<Notification>) notifications.getValue().getBody();
+                        else
+                            tmpNotificationList = new ArrayList<>();
+                        tmpNotificationList.addAll(notifResponse.body());
                         synchronized (isSynced[0]){
-                            notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, notifResponse));
+                            notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpNotificationList));
                             isSynced[0] = true;
                         }
                         saveNotificationsLocally(notifResponse.body());
@@ -113,9 +120,15 @@ public class NotificationRepository extends BaseRepository {
                         }
                         notification.setType(getNotificationType(notification));
                     }
+                    List<Notification> tmpNotificationList;
+                    if(notifications.getValue() != null && notifications.getValue().getBody() != null)
+                        tmpNotificationList = (List<Notification>) notifications.getValue().getBody();
+                    else
+                        tmpNotificationList = new ArrayList<>();
+                    tmpNotificationList.addAll(localNotifications);
                     synchronized (isSynced[0]){
                         if(!isSynced[0])
-                            notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, localNotifications));
+                            notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpNotificationList));
                     }
                 }
             }

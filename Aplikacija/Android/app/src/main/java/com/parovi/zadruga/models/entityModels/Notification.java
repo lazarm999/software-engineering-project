@@ -1,15 +1,10 @@
 package com.parovi.zadruga.models.entityModels;
 
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.google.gson.annotations.SerializedName;
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.models.responseModels.RatingResponse;
 
@@ -24,9 +19,8 @@ public class Notification
     private Integer fkCommentId;
     @ColumnInfo(index = true)
     private Integer fkRatingId;
-    private Boolean accepted; //je l to da bude boolean ili Boolean
+    private Boolean accepted;
     private Boolean tagged; //da li je tagovan ili je on objavio oglas pa je zbog toga dobio notif
-
 
     @Ignore
     private String type;

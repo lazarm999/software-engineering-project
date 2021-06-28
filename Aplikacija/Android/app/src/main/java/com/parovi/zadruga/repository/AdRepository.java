@@ -19,7 +19,6 @@ import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.factories.ApiFactory;
 import com.parovi.zadruga.factories.DaoFactory;
 import com.parovi.zadruga.models.entityModels.Ad;
-import com.parovi.zadruga.models.entityModels.Notification;
 import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.AdTag;
@@ -45,9 +44,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Path;
 
 public class AdRepository extends BaseRepository {
 
@@ -598,7 +594,6 @@ public class AdRepository extends BaseRepository {
         Boolean[] isSynced = {false};
         int pageSkip = getListSize(ads);
         getRecommendedAdsLocal(ads, isSynced, pageSkip, tagIds);
-        getAdsLocal(ads, isSynced);
         Utility.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
@@ -607,7 +602,7 @@ public class AdRepository extends BaseRepository {
                     if(adsResponse.isSuccessful()){
                         if(adsResponse.body() != null){
                             synchronized (isSynced[0]){
-                                ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, adsResponse));
+                                ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, adsResponse.body()));
                                 isSynced[0] = true;
                             }
                             saveAdsLocally(adsResponse.body());
@@ -627,7 +622,7 @@ public class AdRepository extends BaseRepository {
         Utility.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
-                List<AdWithTags> localAds = DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip, tagIds);
+                List<Ad> localAds = DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip, tagIds);
                 if(localAds != null){
                     synchronized (isSynced[0]){
                         if(!isSynced[0])
