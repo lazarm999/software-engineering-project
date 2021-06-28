@@ -166,4 +166,5 @@
     <string name="questionAd">Ask a question...</string>
     <string name="applicants">Applicants</string>
     <string name="preferences">Choose preferences</string>
+    <string name="AdNotFound">Error! Ad Not Found!</string>
 </resources>

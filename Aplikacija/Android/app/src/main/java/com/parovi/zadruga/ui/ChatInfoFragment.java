@@ -70,7 +70,7 @@ public class ChatInfoFragment extends Fragment implements UserAdapter.UserListLi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(requireActivity(), JobAdActivity.class);
-                    intent.putExtra("adID", model.getAdId());
+                    intent.putExtra(JobAdActivity.AD_ID, model.getAdId());
                     startActivity(intent);
                 }
             });
@@ -81,6 +81,7 @@ public class ChatInfoFragment extends Fragment implements UserAdapter.UserListLi
     @Override
     public void onUserSelected(User user) {
         Intent intent = new Intent(requireActivity(), MainStudentActivity.class);
+        intent.putExtra(MainStudentActivity.FRAGMENT_SELECTION, MainStudentActivity.PROFILE);
         intent.putExtra("userID", user.getUserId());
         startActivity(intent);
     }

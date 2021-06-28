@@ -95,7 +95,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         @Override
         public void bindTo(Message message) {
             //binding.tvUsername.setText("@" + message.getFkSenderId());
-            binding.tvUsername.setText("@teakocic");
+            binding.tvUsername.setText(message.getSenderUsername());
             binding.tvMessageContent.setText(message.getMessage());
         }
     }

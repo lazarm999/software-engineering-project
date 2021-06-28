@@ -1,67 +1,62 @@
 package com.parovi.zadruga.adapters;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.parovi.zadruga.R;
-import com.parovi.zadruga.data.JobType;
 import com.parovi.zadruga.databinding.ItemJobtypePreferenceBinding;
+import com.parovi.zadruga.models.entityModels.Tag;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class PreferencesAdapter extends RecyclerView.Adapter<PreferencesAdapter.JobTypeViewHolder> {
-    private List<Long> jobTypes;
+public class PreferencesAdapter extends RecyclerView.Adapter<PreferencesAdapter.JobTagViewHolder> {
+    private List<Tag> tags;
 
     public PreferencesAdapter() {
-
+        tags = new ArrayList<Tag>();
     }
-    public void setPreferences(List<Long> jobTypes) {
-        this.jobTypes = jobTypes;
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+        notifyDataSetChanged();
     }
     @NonNull
     @Override
-    public JobTypeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public JobTagViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemJobtypePreferenceBinding binding = ItemJobtypePreferenceBinding.inflate(inflater, parent, false);
-        return new JobTypeViewHolder(binding);
+        return new JobTagViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull JobTypeViewHolder holder, int position) {
-        JobType jobType = JobType.getJobTypes().get(position);
-        holder.bind(jobType, jobTypes.contains(jobType.getId()));
+    public void onBindViewHolder(@NonNull JobTagViewHolder holder, int position) {
+        holder.bindTo(tags.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return JobType.getJobTypes().size();
+        return tags.size();
     }
 
-    class JobTypeViewHolder extends RecyclerView.ViewHolder {
+    class JobTagViewHolder extends RecyclerView.ViewHolder {
         private ItemJobtypePreferenceBinding binding;
 
-        public JobTypeViewHolder(@NonNull ItemJobtypePreferenceBinding binding) {
+        public JobTagViewHolder(@NonNull ItemJobtypePreferenceBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        public void bind(JobType jobType, boolean selected) {
-            binding.switchJobType.setText(jobType.getTitle());
-            binding.switchJobType.setChecked(jobTypes.contains(jobType.getId()));
+        public void bindTo(Tag tag) {
+            binding.switchJobType.setText(tag.getName());
+            binding.switchJobType.setChecked(false);
             binding.switchJobType.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
-                    jobTypes.add(jobType.getId());
+                    // TODO:
                 }
                 else {
-                    jobTypes.remove(jobType.getId());
+                    // TODO:
                 }
             });
         }

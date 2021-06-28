@@ -330,7 +330,7 @@ public class AdRepository extends BaseRepository {
                     Utility.getExecutorService().execute(new Runnable() {
                         @Override
                         public void run() {
-                            DaoFactory.getAppliedDao().insertOrUpdate(new Applied(userId, adId, false));
+                            //DaoFactory.getAppliedDao().insertOrUpdate(new Applied(userId, adId, false));
                         }
                     });
                 }else {
@@ -470,7 +470,7 @@ public class AdRepository extends BaseRepository {
         });
     }
 
-    public void postComment(String token, MutableLiveData<CustomResponse<?>> newComment, int adId, String comment){
+    public void postComment(String token, MutableLiveData<CustomResponse<?>> comments, int adId, String comment){
         int userId = Utility.getLoggedInUserId(App.getAppContext());
         CommentRequest c = new CommentRequest(comment);
         Utility.getExecutorService().execute(new Runnable() {
@@ -479,21 +479,25 @@ public class AdRepository extends BaseRepository {
                 try {
                     Response<CommentResponse> commentResponse = ApiFactory.getCommentApi().postComment(token, adId, c).execute();
                     if (commentResponse.isSuccessful() && commentResponse.body() != null) {
+                        ArrayList<CommentResponse> tmpCommentList = new ArrayList<>();
+                        if(comments.getValue() != null && comments.getValue().getBody() != null)
+                            tmpCommentList = (ArrayList<CommentResponse>) comments.getValue().getBody();
                         int userId = commentResponse.body().getUser().getUserId();
                         Bitmap localImage = getProfilePictureLocal(userId);
-                        if(localImage != null){
-                            commentResponse.body().setUserImage(localImage);
-                            newComment.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentResponse.body()));
-                        }
+//                        if(localImage != null){
+//                            commentResponse.body().setUserImage(localImage);
+//                            comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentResponse.body()));
+//                        }
                         Response<ResponseBody> responseImage = ApiFactory.getUserApi().getProfileImage(token, userId).execute();
                         if(responseImage.isSuccessful() && responseImage.body() != null) {
                             Bitmap bmImage = BitmapFactory.decodeStream(responseImage.body().byteStream());
                             commentResponse.body().setUserImage(bmImage);
-                            newComment.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentResponse.body()));
                             saveImageLocally(bmImage, userId);
                         }
+                        tmpCommentList.add(commentResponse.body());
+                        comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpCommentList));
                     } else
-                        responseNotSuccessful(commentResponse.code(), newComment);
+                        responseNotSuccessful(commentResponse.code(), comments);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

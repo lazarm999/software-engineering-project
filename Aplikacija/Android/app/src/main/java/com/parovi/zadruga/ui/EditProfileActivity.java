@@ -5,24 +5,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 
 import com.parovi.zadruga.R;
-import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.UserRepository;
-import com.parovi.zadruga.viewModels.UserProfileViewModel;
+import com.parovi.zadruga.viewModels.EditProfileViewModel;
 
 public class EditProfileActivity extends AppCompatActivity {
-    private UserProfileViewModel model;
+    private EditProfileViewModel model;
     private UserRepository userRepository = new UserRepository();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userRepository.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
         setContentView(R.layout.activity_edit_profile);
-        model = new ViewModelProvider(this).get(UserProfileViewModel.class);
+        model = new ViewModelProvider(this).get(EditProfileViewModel.class);
     }
     @Override
     protected void onStart() {

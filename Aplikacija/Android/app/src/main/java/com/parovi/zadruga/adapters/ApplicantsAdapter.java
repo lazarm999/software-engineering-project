@@ -80,7 +80,7 @@ public class ApplicantsAdapter extends ListAdapter<User, ApplicantsAdapter.Appli
             binding.cboxSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    fragment.onApplicantToggled(applicant);
+                    fragment.onApplicantToggled(applicant, isChecked);
                 }
             });
         }
@@ -89,6 +89,6 @@ public class ApplicantsAdapter extends ListAdapter<User, ApplicantsAdapter.Appli
     public interface ApplicantListListener {
         void onApplicantSelected(User applicant);
 
-        void onApplicantToggled(User applicant);
+        void onApplicantToggled(User applicant, boolean isChecked);
     }
 }

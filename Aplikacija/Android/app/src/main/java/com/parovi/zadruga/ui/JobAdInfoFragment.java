@@ -17,14 +17,10 @@ import com.parovi.zadruga.adapters.CommentsAdapter;
 import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
-import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.viewModels.AdViewModel;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
+import java.text.DateFormat;
 import java.util.List;
 
 
@@ -37,20 +33,22 @@ public class JobAdInfoFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentJobAdvertisementBinding.inflate(inflater, container, false);
-        model = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
+        // make Ad dependent parts invisible until data arrives
+        binding.clAdInfo.setVisibility(View.INVISIBLE);
+        binding.clPostComment.setVisibility(View.INVISIBLE);
+        binding.rvComments.setVisibility(View.INVISIBLE);
 
+        // obtain the viewModel
+        model = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
+        // create adapter and bind it to recycler view
         CommentsAdapter adapter = new CommentsAdapter();
         binding.rvComments.setAdapter(adapter);
         binding.rvComments.setLayoutManager(new LinearLayoutManager(requireContext()));
+        // implement posting a comment
         binding.imgPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +56,7 @@ public class JobAdInfoFragment extends Fragment {
                 binding.etComment.setText("");
             }
         });
-
+        // observe LiveData
         model.getIsPosted().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
@@ -75,7 +73,9 @@ public class JobAdInfoFragment extends Fragment {
                     Toast.makeText(requireContext() , "Greska", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                bindAdInfo(new JobAdInfo((Ad)customResponse.getBody()));
+                bindAdInfo((Ad)customResponse.getBody());
+                binding.tvAdNotFound.setVisibility(View.GONE);
+                binding.clAdInfo.setVisibility(View.VISIBLE);
             }
         });
         model.getAppliedTo().observe(requireActivity(), new Observer<CustomResponse<?>>() {
@@ -83,7 +83,7 @@ public class JobAdInfoFragment extends Fragment {
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() != CustomResponse.Status.OK)
                     return;
-                appliedStatusChanged(Boolean.parseBoolean(String.valueOf(customResponse.getBody())));
+                appliedStatusChanged((Boolean)customResponse.getBody());
             }
         });
         model.getComments().observe(requireActivity(), new Observer<CustomResponse<?>>() {
@@ -93,36 +93,31 @@ public class JobAdInfoFragment extends Fragment {
                     return;
                 }
                 adapter.setCommentsList((List<CommentResponse>)customResponse.getBody());
+                binding.rvComments.setVisibility(View.VISIBLE);
+                binding.clPostComment.setVisibility(View.VISIBLE);
             }
         });
-
+        // return root view
         return binding.getRoot();
     }
 
-    // samo za uputstvo
-    private void generateComments() {
-        List<CommentResponse> comments = new ArrayList<CommentResponse>();
-        comments.add(new CommentResponse(100, 100, "Da li možete proceniti koliko će nam vremena trebati?", Date.from(Instant.now()), new User()));
-    }
-    private void bindAdInfo(JobAdInfo jobAd) {
-        binding.tvJobTitle.setText(jobAd.getTitle());
-        binding.tvJobDesc.setText(jobAd.getDescription());
-        binding.tvLocation.setText(jobAd.getLocation());
-        binding.dtPosted.setText(jobAd.getTime());
-        binding.tvPeopleNeeded.setText(Integer.toString(jobAd.getNoApplicantsRequired()));
-        String feeRange = Float.valueOf(jobAd.getCompensationFrom()).toString() + " - " + Float.valueOf(jobAd.getCompensationTo()).toString() + " RSD";
+    private void bindAdInfo(Ad ad) {
+        binding.tvJobTitle.setText(ad.getTitle());
+        binding.tvJobDesc.setText(ad.getDescription());
+        binding.tvLocation.setText(ad.getLocation().getCityName());
+        binding.dtPosted.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(ad.getPostTime()));
+        binding.tvPeopleNeeded.setText(Integer.toString(ad.getNumberOfEmployees()));
+        String feeRange = Float.valueOf(ad.getCompensationMin()).toString() + " - " + Float.valueOf(ad.getCompensationMax()).toString() + " RSD";
         binding.tvFeeRange.setText(feeRange);
+        binding.tvNoOfApplications.setText(ad.getNumberOfApplied() + " applied");
         updateMainButton();
-        /*binding.tvJobTitle.setText("Iznošenje nameštaja iz stana");
-        binding.tvJobDesc.setText("Selidba iz stana, potrebna pomoć za iznošenje nameštaja sa 4. sprata zgrade na Dorćolu. Nemamo lift :)");
-        binding.tvLocation.setText("Beograd");
-        binding.dtPosted.setText(jobAd.getTime());
-        binding.tvPeopleNeeded.setText("2");
-        String feeRange = "1000 - 1500 RSD";
-        binding.tvFeeRange.setText(feeRange);*/
     }
     private void updateMainButton() {
-        if (model.isAdMine()) {
+        if (model.isAdClosed()) {
+            binding.btnApply.setText("Closed");
+            binding.btnApply.setEnabled(false);
+        }
+        else if (model.isAdMine()) {
             binding.btnApply.setText("Select workers");
             binding.btnApply.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -131,11 +126,10 @@ public class JobAdInfoFragment extends Fragment {
                 }
             });
         }
-        else { // user
-            appliedStatusChanged(false);
-        }
+        //else { // user
+        //    appliedStatusChanged(model.isUserAppliedToAd());
+        //}
     }
-
     private void appliedStatusChanged(boolean applied) {
         if (applied){
             binding.btnApply.setText("Unapply");

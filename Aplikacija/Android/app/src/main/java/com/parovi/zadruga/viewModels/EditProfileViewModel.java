@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.CpuUsageInfo;
 import android.util.Log;
 import android.util.Size;
 
@@ -23,18 +24,20 @@ import com.parovi.zadruga.repository.UserRepository;
 
 import java.io.IOException;
 
-public class UserProfileViewModel extends AndroidViewModel {
-    private final int id = Utility.getLoggedInUser(App.getAppContext()).getUserId();
-    private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
+public class EditProfileViewModel extends AndroidViewModel {
+    private final int USER_ID = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+    private final String TOKEN = Utility.getAccessToken(App.getAppContext()); // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
+
     private MutableLiveData<CustomResponse<?>> userInfo;
     private MutableLiveData<CustomResponse<?>> profileImage;
     private MutableLiveData<CustomResponse<?>> isProfileImageUpdated;
     private MutableLiveData<CustomResponse<?>> isUserUpdated;
     private MutableLiveData<CustomResponse<?>> faculties;
+    private MutableLiveData<CustomResponse<?>> tags;
     private UserRepository userRepository;
     private LookUpRepository lookUpRepository;
 
-    public UserProfileViewModel(@NonNull Application app) {
+    public EditProfileViewModel(@NonNull Application app) {
         super(app);
         userRepository = new UserRepository();
         lookUpRepository = new LookUpRepository();
@@ -43,12 +46,17 @@ public class UserProfileViewModel extends AndroidViewModel {
         isProfileImageUpdated = new MutableLiveData<>();
         isUserUpdated = new MutableLiveData<>();
         faculties = new MutableLiveData<>();
+        tags = new MutableLiveData<>();
         loadUserInfo();
         loadUserProfileImage();
     }
 
     public MutableLiveData<CustomResponse<?>> getIsProfileImageUpdated() {
         return isProfileImageUpdated;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getTags() {
+        return tags;
     }
 
     public MutableLiveData<CustomResponse<?>> getIsUserUpdated() {
@@ -62,11 +70,11 @@ public class UserProfileViewModel extends AndroidViewModel {
     public MutableLiveData<CustomResponse<?>> getFaculties() { return faculties; }
 
     public int getId() {
-        return id;
+        return USER_ID;
     }
 
     public String getToken() {
-        return token;
+        return TOKEN;
     }
 
     public MutableLiveData<CustomResponse<?>> getUserInfo() {
@@ -83,13 +91,16 @@ public class UserProfileViewModel extends AndroidViewModel {
     }
 
     public void loadUserInfo() {
-        userRepository.getUserById(token, userInfo, id);
+        userRepository.getUserById(TOKEN, userInfo, USER_ID);
     }
     public void loadUserProfileImage() {
-        userRepository.getProfilePicture(profileImage, id);
+        userRepository.getProfilePicture(profileImage, USER_ID);
     }
     public void loadFaculties() {
-        lookUpRepository.getAllFaculties(token, faculties);
+        lookUpRepository.getAllFaculties(TOKEN, faculties);
+    }
+    public void loadTags() {
+        lookUpRepository.getAllTags(TOKEN, tags);
     }
     public static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {

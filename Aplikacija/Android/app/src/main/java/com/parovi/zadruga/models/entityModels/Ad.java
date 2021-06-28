@@ -48,6 +48,7 @@ public class Ad {
     private int compensationMin;
     private int compensationMax;
     private int numberOfEmployees;
+    private int numberOfApplied;
     private Date postTime;
     @ColumnInfo(index = true)
     private int fkLocationId;
@@ -56,6 +57,7 @@ public class Ad {
     @SerializedName("qbChatId")
     private String fkQbChatId;
 
+    private boolean isClosed;
     @Ignore
     private List<Tag> tags;
     @Ignore
@@ -104,6 +106,22 @@ public class Ad {
         this.description = description;
         this.fkLocationId = fkLocationId;
         this.fkEmployerId = 1;
+    }
+
+    public int getNumberOfApplied() {
+        return numberOfApplied;
+    }
+
+    public void setNumberOfApplied(int numberofApplied) {
+        this.numberOfApplied = numberofApplied;
+    }
+
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(boolean closed) {
+        isClosed = closed;
     }
 
     public int getAdId() {

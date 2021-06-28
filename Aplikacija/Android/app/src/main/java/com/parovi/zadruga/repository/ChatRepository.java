@@ -170,8 +170,9 @@ public class ChatRepository extends BaseRepository {
                         }
                         tmpChats.add(chat);
                         //TODO: DaoFactory.getChatDao().insertOrUpdate(chat);
-                        chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChats));
+
                     }
+                    chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpChats));
                 });
             }
             @Override
@@ -275,15 +276,13 @@ public class ChatRepository extends BaseRepository {
             @Override
             public void run() {
                 for (User u: chatMembers) {
-                    DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(dialogId, u.getUserQbId()));
+                    //DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(dialogId, u.getUserQbId()));
                 }
             }
         });
     }
 
     public void getChatMembers(MutableLiveData<CustomResponse<?>> chatMembers, QBChatDialog chat) {
-        chat.setDialogId("60c1e2cf094ee200482e09f2");
-        chat.setOccupantsIds(Arrays.asList(128330407,128586493));
         final String token = Utility.getAccessToken(App.getAppContext());
         ChatMembersRequest req = new ChatMembersRequest(chat.getOccupants());
         Boolean[] isSynced = new Boolean[]{false};
@@ -464,7 +463,7 @@ public class ChatRepository extends BaseRepository {
                 Utility.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
-                        DaoFactory.getMessageDao().insertOrUpdate(tmpMsgList);
+                        //DaoFactory.getMessageDao().insertOrUpdate(tmpMsgList);
                     }
                 });
             }

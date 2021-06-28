@@ -25,12 +25,12 @@ import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.databinding.FragmentEditBasicProfileInfoBinding;
 import com.parovi.zadruga.models.entityModels.Faculty;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.viewModels.UserProfileViewModel;
+import com.parovi.zadruga.viewModels.EditProfileViewModel;
 
 import java.util.List;
 
 public class EditBasicProfileInfoFragment extends Fragment {
-    private UserProfileViewModel model;
+    private EditProfileViewModel model;
     private FragmentEditBasicProfileInfoBinding binding;
     private ActivityResultLauncher<String> getContent;
 
@@ -48,7 +48,7 @@ public class EditBasicProfileInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentEditBasicProfileInfoBinding.inflate(inflater, container, false);
-        model = new ViewModelProvider(requireActivity()).get(UserProfileViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(EditProfileViewModel.class);
 
         getContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
                 new ActivityResultCallback<Uri>() {
@@ -86,7 +86,7 @@ public class EditBasicProfileInfoFragment extends Fragment {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK)
-                    Toast.makeText(requireContext(), "Changes commited!", Toast.LENGTH_SHORT).show();
+                    requireActivity().finish();
             }
         });
 

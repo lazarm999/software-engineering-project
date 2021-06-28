@@ -15,6 +15,7 @@ import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.activities.GradeUserActivity;
 import com.parovi.zadruga.activities.UsersAchievementsActivity;
 import com.parovi.zadruga.databinding.FragmentStudentProfileFragmentBinding;
+import com.parovi.zadruga.ui.EditProfileActivity;
 import com.parovi.zadruga.viewModels.StudentProfileViewModel;
 
 import java.util.ArrayList;
@@ -40,7 +41,8 @@ public class StudentProfileFragment extends Fragment {
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ;
+                Intent intent = new Intent(getContext(), EditProfileActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -60,13 +62,14 @@ public class StudentProfileFragment extends Fragment {
             }
         });
 
+        // cemu ovo sluzi?
         model.getThisUser().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK)
-                    Toast.makeText(requireContext(), "You got the user", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "You got the user", Toast.LENGTH_SHORT).show(); // TODO: popuni polja dobijenim informacijama
                 else
-                    Toast.makeText(requireContext(), "Error occurred while getting this user.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Error occurred while getting this user.", Toast.LENGTH_SHORT).show(); // TODO: prikazi ekran sa slikom poruke ili sl
             }
         });
 
@@ -74,7 +77,7 @@ public class StudentProfileFragment extends Fragment {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK)
-                    Toast.makeText(requireContext(), "Profile picture success!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Profile picture success!", Toast.LENGTH_SHORT).show(); // TODO: prikazi dobijenu sliku
                 else
                     Toast.makeText(requireContext(), "Error occurred while getting profile picture.", Toast.LENGTH_SHORT).show();
             }
@@ -92,5 +95,7 @@ public class StudentProfileFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+
 
 }

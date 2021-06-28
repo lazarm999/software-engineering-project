@@ -15,6 +15,7 @@ import com.parovi.zadruga.databinding.ItemCommentBinding;
 import com.parovi.zadruga.models.nonEntityModels.CommentUser;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             if (currComment.getUserImage() != null)
                 binding.civProfileImage.setImageBitmap(currComment.getUserImage());
             binding.tvUsername.setText(currComment.getUser().getUsername());
-            binding.tvTimeAgo.setText("50 hours ago");
+            binding.tvTimeAgo.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(currComment.getPostTime()));
             binding.tvComment.setText(currComment.getComment());
         }
     }

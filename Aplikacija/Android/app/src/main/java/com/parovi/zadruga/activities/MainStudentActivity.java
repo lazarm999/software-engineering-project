@@ -1,5 +1,6 @@
 package com.parovi.zadruga.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -20,6 +21,8 @@ import com.parovi.zadruga.fragments.StudentProfileFragment;
 
 
 public class MainStudentActivity extends AppCompatActivity {
+    public static final String FRAGMENT_SELECTION = "FragSel";
+    public static final int FEED = 1, NOTIFICATIONS = 2, JOB_HISTORY = 3, RECOMMENDED = 4, PROFILE = 5;
 
     BottomNavigationView bottom_nav;
     FrameLayout frame;
@@ -30,7 +33,8 @@ public class MainStudentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_student);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
-        loadFragment(new AdsFragment());
+        int fragCode = getIntent().getIntExtra(FRAGMENT_SELECTION, FEED);
+        loadFragment(getFragmentToRun(fragCode));
 
         /*if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 *  && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -46,25 +50,21 @@ public class MainStudentActivity extends AppCompatActivity {
                 switch(item.getItemId()) {
                     case R.id.studentFeed:
                         fragment = new AdsFragment();
-                        loadFragment(fragment);
                         break;
                     case R.id.studentNotifications:
                         fragment = new NotificationsFragment();
-                        loadFragment(fragment);
                         break;
                     case R.id.jobHistory:
                         fragment = new StudentJobsFragment();
-                        loadFragment(fragment);
                         break;
                     case R.id.studentRecommendations:
                         fragment = new RecommendationFragment();
-                        loadFragment(fragment);
                         break;
-                    case R.id.studentProfile:
+                    default:
                         fragment = new StudentProfileFragment();
-                        loadFragment(fragment);
                         break;
                 }
+                loadFragment(fragment);
                 return true;
             }
         });
@@ -75,5 +75,29 @@ public class MainStudentActivity extends AppCompatActivity {
         transaction.replace(R.id.frame_student_layout, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+    private Fragment getFragmentToRun(int fragCode) {
+        Fragment fragment;
+        switch (fragCode) {
+            case FEED:
+                fragment = new AdsFragment();
+                break;
+            case NOTIFICATIONS:
+                fragment = new NotificationsFragment();
+                break;
+            case JOB_HISTORY:
+                fragment = new StudentJobsFragment();
+                break;
+            case RECOMMENDED:
+                fragment = new RecommendationFragment();
+                break;
+            case PROFILE:
+                fragment = new StudentProfileFragment();
+                break;
+            default:
+                fragment = new AdsFragment();
+                break;
+        }
+        return fragment;
     }
 }

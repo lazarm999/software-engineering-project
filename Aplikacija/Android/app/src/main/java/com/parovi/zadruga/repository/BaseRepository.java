@@ -124,7 +124,7 @@ public abstract class BaseRepository {
                             DaoFactory.getUniversityDao().insertOrUpdate(remoteUser.getFaculty().getUniversity());
                         DaoFactory.getFacultyDao().insertOrUpdate(remoteUser.getFaculty());
                     }
-                    DaoFactory.getUserDao().insertOrUpdate(remoteUser);
+                    //DaoFactory.getUserDao().insertOrUpdate(remoteUser);
                     if(remoteUser.getBadges() != null) {
                         DaoFactory.getBadgeDao().insertOrUpdate(remoteUser.getBadges());
                         List<UserBadge> tmpUserBadge = new ArrayList<>();
@@ -221,7 +221,7 @@ public abstract class BaseRepository {
             public void run() {
 
                 DaoFactory.getChatDao().insertOrUpdate(chat);
-                DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(chat.getChatId(), Utility.getLoggedInUserQbId(App.getAppContext())));
+                //DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(chat.getChatId(), Utility.getLoggedInUserQbId(App.getAppContext())));
                 /*for (Integer id: qbChat.getOccupants()) {
                     DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(qbChat.getDialogId(), id));
                 }*/

@@ -82,8 +82,13 @@ public class ChatsAdapter extends ListAdapter<Chat, ChatsAdapter.ChatViewHolder>
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void bind(Chat chatResume) {
             binding.tvChatTitle.setText(chatResume.getChatTitle());
-            String subtitle = chatResume.getLastSenderUsername().equals(Utility.getLoggedInUser(App.getAppContext()).getUsername()) ? "You" : chatResume.getLastSenderUsername();
-            subtitle += ": " + chatResume.getLastMessage();
+            String subtitle;
+            if (chatResume.getLastSenderUsername() == null)
+                subtitle = chatResume.getLastMessage();
+            else {
+                subtitle = chatResume.getLastSenderUsername().equals(Utility.getLoggedInUser(App.getAppContext()).getUsername()) ? "You" : chatResume.getLastSenderUsername();
+                subtitle += ": " + chatResume.getLastMessage();
+            }
             if (subtitle.length() > SUBTITLE_MAX_LENGTH) {
                 subtitle = subtitle.substring(0, SUBTITLE_MAX_LENGTH);
                 subtitle += "...";

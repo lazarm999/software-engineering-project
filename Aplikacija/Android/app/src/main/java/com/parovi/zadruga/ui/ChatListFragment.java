@@ -47,8 +47,10 @@ public class ChatListFragment extends Fragment implements ChatsAdapter.ChatListL
         model.observeChats().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                if (customResponse.getStatus() == CustomResponse.Status.OK)
-                    adapter.submitList((List<Chat>)customResponse.getBody());
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    adapter.submitList((List<Chat>) customResponse.getBody());
+                    //adapter.notifyDataSetChanged();
+                }
             }
         });
         binding.rvChatList.setAdapter(adapter);
@@ -62,6 +64,7 @@ public class ChatListFragment extends Fragment implements ChatsAdapter.ChatListL
     @Override
     public void onChatResumeSelected(Chat chat) {
         model.setActiveChat(chat);
+        model.setActiveQbChat(chat.getQbChat());
         Navigation.findNavController(binding.getRoot()).navigate(ChatListFragmentDirections.actionChatListFragmentToChatMessagesFragment());
     }
 }

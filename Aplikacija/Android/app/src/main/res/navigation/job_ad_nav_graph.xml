@@ -18,5 +18,10 @@
         android:id="@+id/selectWorkersFragment"
         android:name="com.parovi.zadruga.ui.SelectWorkersFragment"
         android:label="fragment_select_workers"
-        tools:layout="@layout/fragment_select_workers" />
+        tools:layout="@layout/fragment_select_workers" >
+        <action
+            android:id="@+id/action_selectWorkersFragment_to_jobAdFragment"
+            app:destination="@id/jobAdFragment"
+            app:popUpTo="@id/jobAdFragment" />
+    </fragment>
 </navigation>

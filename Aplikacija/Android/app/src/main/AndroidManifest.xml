@@ -24,22 +24,23 @@
         <activity android:name=".activities.GradeUserActivity">
         </activity>
         <activity android:name=".activities.MainEmployerActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity">
 
         </activity>
         <activity android:name=".ui.RateUserActivity"/>
         <activity android:name=".ui.JobAdActivity">
+
         </activity>
         <activity android:name=".ui.ChatActivity">
 
         </activity>
 
         <activity android:name=".ui.EditProfileActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".TmpActivity">
@@ -52,10 +53,7 @@
         </service>
 
         <activity android:name=".activities.MainStudentActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity android:name=".activities.PasswordResetActivity" />
         <activity android:name=".activities.SignUpActivity" >

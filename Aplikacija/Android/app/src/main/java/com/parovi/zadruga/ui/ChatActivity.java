@@ -1,28 +1,25 @@
 package com.parovi.zadruga.ui;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavActionBuilder;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDeepLinkBuilder;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
+import android.app.PendingIntent;
 import android.os.Bundle;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ActivityChatBinding;
-import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
-import com.parovi.zadruga.viewModels.ChatsViewModel;
-
-import java.util.zip.Inflater;
 
 public class ChatActivity extends AppCompatActivity{
+
     private ChatViewModel model;
     private ActivityChatBinding binding;
     MutableLiveData<CustomResponse<?>> isLoggedIn = new MutableLiveData<>();
@@ -39,10 +36,10 @@ public class ChatActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         model = new ViewModelProvider(this).get(ChatViewModel.class);
 
-        userRepository.loginUser(isLoggedIn, "vuk.bibic@gmail.com", "novaaasifraaaa");
+        //userRepository.loginUser(isLoggedIn, "vuk.bibic@gmail.com", "novaaasifraaaa");
+        userRepository.loginUser(isLoggedIn, "tea@gmail.com", "sifra123");
         isLoggedIn.observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
@@ -61,6 +58,9 @@ public class ChatActivity extends AppCompatActivity{
             }
         });
 
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.chat_nav_host_fragment, ChatMessagesFragment.class, null)
+                .addToBackStack(null).commit();
         //ActionBar actionBar = getSupportActionBar();
         //actionBar.setTitle("Chats");
 
@@ -75,7 +75,7 @@ public class ChatActivity extends AppCompatActivity{
     @Override
     protected void onStart() {
         super.onStart();
-        NavController navController = Navigation.findNavController(this, R.id.chat_nav_host_fragment);
+        //NavController navController = Navigation.findNavController(this, R.id.chat_nav_host_fragment);
         //NavigationUI.setupActionBarWithNavController(this, navController);
     }
 }

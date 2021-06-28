@@ -163,4 +163,5 @@
     <string name="student">Student</string>
     <string name="employer">Poslodavac</string>
     <string name="notAllFull">Niste popunili sva polja!</string>
+    <string name="AdNotFound">Greška! Oglas za posao nije pronađen.</string>
 </resources>

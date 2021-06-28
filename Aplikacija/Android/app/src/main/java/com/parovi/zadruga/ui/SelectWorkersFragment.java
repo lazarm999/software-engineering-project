@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -53,6 +54,13 @@ public class SelectWorkersFragment extends Fragment implements ApplicantsAdapter
         binding.rvWorkers.setAdapter(adapter);
         binding.rvWorkers.setLayoutManager(new LinearLayoutManager(container.getContext()));
 
+        binding.btnConfirmSelection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                model.selectWorkers();
+                Navigation.findNavController(binding.getRoot()).navigate(SelectWorkersFragmentDirections.actionSelectWorkersFragmentToJobAdFragment());
+            }
+        });
         model.loadApplicants();
         return binding.getRoot();
     }
@@ -65,7 +73,11 @@ public class SelectWorkersFragment extends Fragment implements ApplicantsAdapter
     }
 
     @Override
-    public void onApplicantToggled(User applicant) {
-        // model.addToApplicants(user);
+    public void onApplicantToggled(User applicant, boolean isChecked) {
+        if (isChecked) {
+            model.addUserToSelected(applicant);
+        }
+        else
+            model.removeUserFromSelected(applicant);
     }
 }
