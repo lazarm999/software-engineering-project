@@ -23,6 +23,8 @@ import com.parovi.zadruga.repository.LookUpRepository;
 import com.parovi.zadruga.repository.UserRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditProfileViewModel extends AndroidViewModel {
     private final int USER_ID = Utility.getLoggedInUser(App.getAppContext()).getUserId();
@@ -37,10 +39,13 @@ public class EditProfileViewModel extends AndroidViewModel {
     private UserRepository userRepository;
     private LookUpRepository lookUpRepository;
 
+    private List<Integer> selectedTags;
+
     public EditProfileViewModel(@NonNull Application app) {
         super(app);
         userRepository = new UserRepository();
         lookUpRepository = new LookUpRepository();
+        selectedTags = new ArrayList<Integer>();
         userInfo = new MutableLiveData<>();
         profileImage = new MutableLiveData<>();
         isProfileImageUpdated = new MutableLiveData<>();
@@ -49,6 +54,10 @@ public class EditProfileViewModel extends AndroidViewModel {
         tags = new MutableLiveData<>();
         loadUserInfo();
         loadUserProfileImage();
+    }
+
+    public List<Integer> getSelectedTags() {
+        return selectedTags;
     }
 
     public MutableLiveData<CustomResponse<?>> getIsProfileImageUpdated() {

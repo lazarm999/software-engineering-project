@@ -23,9 +23,7 @@ public class ChatViewModel extends ViewModel {
     private static final String QB_CHAT_ID = "QbChatId";
 
     private SavedStateHandle state;
-    private Chat activeChat;
-    private String activeQbChatId;
-    private QBChatDialog activeQbChat;
+    private Chat activeChat;;
     private MutableLiveData<CustomResponse<?>> chats;
     private MutableLiveData<QBChatMessage> newMessage; // TODO: Lazar da pojasni
     private MutableLiveData<CustomResponse<?>> isSent;
@@ -39,7 +37,7 @@ public class ChatViewModel extends ViewModel {
         @Override
         public void processMessage(String dialogId, QBChatMessage qbChatMessage, Integer senderId) {
             if (qbChatMessage.getSenderId() != Utility.getLoggedInUserQbId(App.getAppContext()) &&
-                    activeQbChat != null && activeQbChat.getDialogId().equals(dialogId))
+                    activeChat.getQbChat() != null && activeChat.getQbChat().getDialogId().equals(dialogId))
                 chatRepository.updateMessages(messages, qbChatMessage);
             chatRepository.updateChat(chats, dialogId);
         }
@@ -75,13 +73,6 @@ public class ChatViewModel extends ViewModel {
         activeChat = chat;
     }
 
-    public void setActiveQbChat(QBChatDialog chat) {
-        activeQbChat = chat;
-        activeQbChatId = chat.getDialogId();
-        // save active chat
-        state.set(QB_CHAT_ID, activeQbChatId);
-    }
-
     public MutableLiveData<CustomResponse<?>> observeChats(){
         return chats;
     }
@@ -106,7 +97,6 @@ public class ChatViewModel extends ViewModel {
     }
 
     private void loadSavedState() {
-        activeQbChatId = state.get(QB_CHAT_ID);
         // TODO: dovuci aktivni QbDialog
     }
 
@@ -115,11 +105,11 @@ public class ChatViewModel extends ViewModel {
     }
 
     public void loadChatMembers(){
-        chatRepository.getChatMembers(chatMembers, activeQbChat);
+        chatRepository.getChatMembers(chatMembers, activeChat.getQbChat());
     }
 
     public void loadMessages(int offset) {
-        chatRepository.getMessages(messages, activeQbChat, offset, false);
+        chatRepository.getMessages(messages, activeChat.getQbChat(), offset, false);
     }
 
     public void leaveChat() {
@@ -128,7 +118,7 @@ public class ChatViewModel extends ViewModel {
     }
 
     public void loadAd(){
-        chatRepository.getAdByChatId(ad, activeQbChat.getDialogId());
+        chatRepository.getAdByChatId(ad, activeChat.getQbChat().getDialogId());
     }
 
     public int getAdId() {

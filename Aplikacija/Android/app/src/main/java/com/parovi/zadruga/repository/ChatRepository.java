@@ -294,8 +294,6 @@ public class ChatRepository extends BaseRepository {
     }
 
     public void getChatMembers(MutableLiveData<CustomResponse<?>> chatMembers, QBChatDialog chat) {
-        chat.setDialogId("60c1e2cf094ee200482e09f2");
-        chat.setOccupantsIds(Arrays.asList(128330407,128586493));
         final String token = Utility.getAccessToken(App.getAppContext());
         ChatMembersRequest req = new ChatMembersRequest(chat.getOccupants());
         Boolean[] isSynced = new Boolean[]{false};

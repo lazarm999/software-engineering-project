@@ -13,8 +13,8 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.adapters.CommentsAdapter;
-import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
@@ -38,6 +38,7 @@ public class JobAdInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentJobAdvertisementBinding.inflate(inflater, container, false);
         // make Ad dependent parts invisible until data arrives
+        binding.tvAdNotFound.setVisibility(View.INVISIBLE);
         binding.clAdInfo.setVisibility(View.INVISIBLE);
         binding.clPostComment.setVisibility(View.INVISIBLE);
         binding.rvComments.setVisibility(View.INVISIBLE);
@@ -57,7 +58,7 @@ public class JobAdInfoFragment extends Fragment {
             }
         });
         // observe LiveData
-        model.getIsPosted().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+        model.getIsPosted().observe(requireActivity(), new Observer<CustomResponse<?>>() { // nicemu ne sluzi
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK)
@@ -70,12 +71,13 @@ public class JobAdInfoFragment extends Fragment {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() != CustomResponse.Status.OK) {
-                    Toast.makeText(requireContext() , "Greska", Toast.LENGTH_SHORT).show();
+                    binding.tvAdNotFound.setVisibility(View.VISIBLE);
                     return;
                 }
-                bindAdInfo((Ad)customResponse.getBody());
                 binding.tvAdNotFound.setVisibility(View.GONE);
                 binding.clAdInfo.setVisibility(View.VISIBLE);
+                binding.clPostComment.setVisibility(View.VISIBLE);
+                bindAndUpdateScreen((Ad)customResponse.getBody());
             }
         });
         model.getAppliedTo().observe(requireActivity(), new Observer<CustomResponse<?>>() {
@@ -94,14 +96,13 @@ public class JobAdInfoFragment extends Fragment {
                 }
                 adapter.setCommentsList((List<CommentResponse>)customResponse.getBody());
                 binding.rvComments.setVisibility(View.VISIBLE);
-                binding.clPostComment.setVisibility(View.VISIBLE);
             }
         });
         // return root view
         return binding.getRoot();
     }
 
-    private void bindAdInfo(Ad ad) {
+    private void bindAndUpdateScreen(Ad ad) {
         binding.tvJobTitle.setText(ad.getTitle());
         binding.tvJobDesc.setText(ad.getDescription());
         binding.tvLocation.setText(ad.getLocation().getCityName());
@@ -110,45 +111,54 @@ public class JobAdInfoFragment extends Fragment {
         String feeRange = Float.valueOf(ad.getCompensationMin()).toString() + " - " + Float.valueOf(ad.getCompensationMax()).toString() + " RSD";
         binding.tvFeeRange.setText(feeRange);
         binding.tvNoOfApplications.setText(ad.getNumberOfApplied() + " applied");
-        updateMainButton();
+
+        if (model.isAdClosed())
+            updateViewAdClosed();
+        else if (Utility.getLoggedInUser(requireContext()).isEmployer())
+            updateViewAdMine(model.isAdMine());
     }
-    private void updateMainButton() {
-        if (model.isAdClosed()) {
-            binding.btnApply.setText("Closed");
-            binding.btnApply.setEnabled(false);
-        }
-        else if (model.isAdMine()) {
+
+    private void updateViewAdClosed() {
+        binding.btnApply.setText("Closed");
+        binding.btnApply.setEnabled(false);
+        binding.clPostComment.setVisibility(View.GONE);
+    }
+    private void updateViewAdMine(boolean isMine) {
+        if (isMine) {
             binding.btnApply.setText("Select workers");
-            binding.btnApply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Navigation.findNavController(binding.getRoot()).navigate(JobAdInfoFragmentDirections.actionJobAdFragmentToSelectWorkersFragment());
-                }
-            });
+            binding.btnApply.setOnClickListener(selectWorkersClick);
         }
-        //else { // user
-        //    appliedStatusChanged(model.isUserAppliedToAd());
-        //}
+        else {
+            binding.btnApply.setVisibility(View.GONE);
+            binding.clPostComment.setVisibility(View.GONE);
+        }
     }
     private void appliedStatusChanged(boolean applied) {
         if (applied){
-            binding.btnApply.setText("Unapply");
-            binding.btnApply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    model.withdrawApplication();
-                }
-            });
+            binding.btnApply.setText("Unapply"); // TODO: koristi String resources
+            binding.btnApply.setOnClickListener(unapplyClick);
         }
         else {
             binding.btnApply.setText("Apply");
-            binding.btnApply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    model.applyForAd();
-                }
-            });
+            binding.btnApply.setOnClickListener(applyClick);
         }
     }
+    View.OnClickListener applyClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            model.applyForAd();
+        }
+    }, unapplyClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            model.withdrawApplication();
+        }
+    }, selectWorkersClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Navigation.findNavController(binding.getRoot()).navigate(JobAdInfoFragmentDirections.actionJobAdFragmentToSelectWorkersFragment());
+        }
+    };
+
 
 }

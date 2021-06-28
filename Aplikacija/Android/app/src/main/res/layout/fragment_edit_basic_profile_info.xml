@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -126,19 +126,17 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/changePass" />
 
-        <Button
-            android:id="@+id/btnSubmitChanges"
-            style="@style/finalButton"
-            android:layout_width="258dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/roboto_condensed_regular"
-            android:text="@string/submitChanges"
-            android:textColor="@color/background"
-            android:textSize="16sp"
-            app:backgroundTint="@color/lila"
-            app:cornerRadius="20dp" />
-
     </LinearLayout>
-</ScrollView>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/btnSubmitChanges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/done"
+        android:textColor="@color/black"
+        app:icon="@drawable/ic_done"
+        app:iconGravity="start"
+        app:iconTint="@color/black" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

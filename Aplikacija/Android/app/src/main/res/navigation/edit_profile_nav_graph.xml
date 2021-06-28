@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/editBasicProfileInfoFragment"
         android:name="com.parovi.zadruga.ui.EditBasicProfileInfoFragment"
-        android:label="EditBasicProfileInfoFragment">
+        android:label="edit_basic_profile_info_fragment">
         <action
             android:id="@+id/action_editBasicProfileInfoFragment_to_selectPreferencesFragment"
             app:destination="@id/selectPreferencesFragment" />
@@ -16,12 +16,5 @@
     <fragment
         android:id="@+id/selectPreferencesFragment"
         android:name="com.parovi.zadruga.ui.SelectPreferencesFragment"
-        android:label="fragment_select_preferences"
-        tools:layout="@layout/fragment_select_preferences" >
-        <action
-            android:id="@+id/action_selectPreferencesFragment_to_editBasicProfileInfoFragment"
-            app:destination="@id/editBasicProfileInfoFragment"
-            app:popUpTo="@id/editBasicProfileInfoFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
+        android:label="fragment_select_preferences"/>
 </navigation>

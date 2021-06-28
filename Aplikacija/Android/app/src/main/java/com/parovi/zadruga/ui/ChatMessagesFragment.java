@@ -51,14 +51,16 @@ public class ChatMessagesFragment extends Fragment {
         model.observeMessages().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                if (customResponse.getStatus() == CustomResponse.Status.OK && customResponse.getBody() != null)
-                    adapter.setMessages((List<Message>)customResponse.getBody());
+                if (customResponse.getStatus() == CustomResponse.Status.OK && customResponse.getBody() != null) {
+                    List<Message> messages = (List<Message>) customResponse.getBody();
+                    adapter.setMessages(messages);
+                }
             }
         });
         binding.rvMessages.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(container.getContext());
         layoutManager.setStackFromEnd(true);
-        //layoutManager.setReverseLayout(true);
+        //layoutManager.setReverseLayout(false);
         binding.rvMessages.setLayoutManager(layoutManager);
 
         binding.imgbtnSendMessage.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +93,7 @@ public class ChatMessagesFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        model.leaveChat();
+        //model.leaveChat();
         super.onDestroy();
     }
 

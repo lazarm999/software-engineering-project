@@ -39,6 +39,7 @@ public class SelectWorkersFragment extends Fragment implements ApplicantsAdapter
                              Bundle savedInstanceState) {
         binding = FragmentSelectWorkersBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
+        model.clearSelectedUsersList();
         //ApplicantResumeAdapter adapter = new ApplicantResumeAdapter();
         ApplicantsAdapter adapter = new ApplicantsAdapter(this);
 

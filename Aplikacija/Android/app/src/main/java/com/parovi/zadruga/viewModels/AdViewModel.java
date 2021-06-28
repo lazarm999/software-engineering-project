@@ -62,13 +62,20 @@ public class AdViewModel extends AndroidViewModel {
     public boolean isUserAppliedToAd() {
         return (boolean)getAppliedTo().getValue().getBody();
     }
+    public int getNoOfApplicants() {
+        return ((Ad)ad.getValue().getBody()).getNumberOfApplied();
+    }
 
     public int getAdId() {
-        return ((Ad)ad.getValue().getBody()).getAdId();
+        return adId;
     }
 
     public int getUserId() {
         return userId;
+    }
+
+    public void clearSelectedUsersList() {
+        selectedUsers.clear();
     }
 
     public MutableLiveData<CustomResponse<?>> getAd() {
@@ -99,19 +106,28 @@ public class AdViewModel extends AndroidViewModel {
     public boolean adResponseOK() {
         return ad.getValue().getStatus() == CustomResponse.Status.OK;
     }
+
     public void load(int adId) {
         this.adId = adId;
         loadAd();
         loadComments();
+        if (!Utility.getLoggedInUser(App.getAppContext()).isEmployer())
+            loadIsApplied();
     }
+
     private void loadAd() {
         adRepository.getAd(token, ad, adId);
     }
+
+    private void loadIsApplied() { adRepository.isApplied(appliedTo, adId);}
+
     private void loadComments() {
         adRepository.getComments(comments, adId);
     }
+
     public void loadApplicants() {
         adRepository.getAppliedUsers(token, applicants, adId);}
+
     public void postAComment(String comment) {
         if (comment != null && !comment.isEmpty())
             adRepository.postComment(token, comments, adId, comment);
@@ -119,16 +135,18 @@ public class AdViewModel extends AndroidViewModel {
     public void applyForAd() {
         adRepository.applyForAd(token, appliedTo, userId, adId);
     }
+
     public void withdrawApplication() {
         adRepository.unApplyForAd(token, appliedTo, userId, adId);
     }
 
     public void selectWorkers() {
-        adRepository.chooseApplicants(applicantsSelected, getAdId(), selectedUsers);
+        adRepository.chooseApplicants(applicantsSelected, adId, selectedUsers);
     }
     public void addUserToSelected(User user) {
         selectedUsers.add(user);
     }
+
     public boolean removeUserFromSelected(User user) {
         return selectedUsers.remove(user);
     }

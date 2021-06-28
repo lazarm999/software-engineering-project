@@ -27,6 +27,9 @@ import com.parovi.zadruga.models.entityModels.Faculty;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.viewModels.EditProfileViewModel;
 
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
 public class EditBasicProfileInfoFragment extends Fragment {
@@ -46,6 +49,8 @@ public class EditBasicProfileInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
         binding = FragmentEditBasicProfileInfoBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(EditProfileViewModel.class);

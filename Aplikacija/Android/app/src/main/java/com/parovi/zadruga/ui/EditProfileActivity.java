@@ -8,6 +8,7 @@ import androidx.navigation.Navigation;
 
 import android.os.Bundle;
 
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.viewModels.EditProfileViewModel;
@@ -15,6 +16,7 @@ import com.parovi.zadruga.viewModels.EditProfileViewModel;
 public class EditProfileActivity extends AppCompatActivity {
     private EditProfileViewModel model;
     private UserRepository userRepository = new UserRepository();
+    private MutableLiveData<CustomResponse<?>> isLoggedIn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +27,7 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //NavController navController = Navigation.findNavController(this, R.id.edit_profile_nav_host_frag);
+        NavController navController = Navigation.findNavController(this, R.id.edit_profile_nav_host_frag);
         //NavigationUI.setupActionBarWithNavController(this, navController);
     }
     @Override

@@ -25,6 +25,7 @@ import com.parovi.zadruga.R;
 import com.parovi.zadruga.activities.MainEmployerActivity;
 import com.parovi.zadruga.activities.MainStudentActivity;
 import com.parovi.zadruga.factories.ApiFactory;
+import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
 import com.parovi.zadruga.ui.ChatActivity;
 import com.parovi.zadruga.ui.JobAdActivity;
@@ -61,8 +62,8 @@ public class NotificationService extends FirebaseMessagingService {
         }
         ^ za ovo prethodno je samo 'type': 'tagged' za kad tagujes nekog
         ovo 'adComment' je za ownera*/
-        Intent intent = new Intent(this, JobAdActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent = new Intent();
+
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         boolean isChannelCreated = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE).getBoolean(Constants.IS_CHANNEL_CREATED_TAG, false);
         if(!isChannelCreated){
@@ -71,27 +72,28 @@ public class NotificationService extends FirebaseMessagingService {
         String title = "", body = "";
         Map<String, String> data = message.getData();
         String type = data.get("type");
-        if(data.get("adId") != null)
-            intent.putExtra(Constants.AD_ID, data.get("adId"));
         if(type != null){
             switch (type) {
                 case Constants.NOTIF_ACCEPTED:
                     title = getString(R.string.accepted);
                     body = data.get("adTitle");
                     intent = new Intent(this, ChatActivity.class);
-                    intent.putExtra("urosevId", data.get("chatQbId"));
+                    intent.putExtra(ChatActivity.CHAT_QB_ID, data.get("chatQbId"));
                     break;
                 case Constants.NOTIF_DECLINED:
                     title = getString(R.string.declined);
                     body = data.get("adTitle");
+                    intent = new Intent(this, JobAdActivity.class);
                     break;
                 case Constants.NOTIF_TAGGED:
                     title = getString(R.string.tagged, "@" + data.get("username"));
                     body = data.get("comment");
+                    intent = new Intent(this, JobAdActivity.class);
                     break;
                 case Constants.NOTIF_AD_COMMENT:
                     title = getString(R.string.adComment, data.get("username"));
                     body = data.get("comment");
+                    intent = new Intent(this, JobAdActivity.class);
                     break;
                 case Constants.NOTIF_RATING:
                     title = getString(R.string.notif_rating, data.get("username"));
@@ -105,10 +107,13 @@ public class NotificationService extends FirebaseMessagingService {
                     title = getString(R.string.notif_chat, data.get("username"));
                     body = data.get("message");
                     intent = new Intent(this, ChatActivity.class);
-                    intent.putExtra("urosevId", data.get("chatQbId"));
+                    intent.putExtra(ChatActivity.CHAT_QB_ID, data.get("chatQbId"));
                     break;
             }
         }
+        if(data.get("adId") != null)
+            intent.putExtra(JobAdActivity.AD_ID, Integer.valueOf(data.get("adId")));
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         /* p = new NavDeepLinkBuilder(App.getAppContext())

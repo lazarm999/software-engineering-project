@@ -64,7 +64,6 @@ public class ChatListFragment extends Fragment implements ChatsAdapter.ChatListL
     @Override
     public void onChatResumeSelected(Chat chat) {
         model.setActiveChat(chat);
-        model.setActiveQbChat(chat.getQbChat());
         Navigation.findNavController(binding.getRoot()).navigate(ChatListFragmentDirections.actionChatListFragmentToChatMessagesFragment());
     }
 }

@@ -167,7 +167,6 @@ public class UserRepository extends BaseRepository {
                         @Override
                         public void onSuccess(QBUser user, Bundle args) {
                             Log.i("logIn", "braoooo");
-                            isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body().getUser().isEmployer()));
                             FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
                                 @Override
                                 public void onComplete(@NonNull Task<String> task) {
@@ -177,6 +176,7 @@ public class UserRepository extends BaseRepository {
                                         return;
                                     }
                                     Utility.saveLoggedUserInfo(App.getAppContext(), response.body().getToken(), response.body().getUser(), pass, task.getResult());
+                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body().getUser().isEmployer()));
                                     ApiFactory.getUserApi().postFcmToken(response.body().getToken(), new AddFcmTokenRequest(task.getResult()))
                                             .enqueue(new Callback<ResponseBody>() {
                                                 @Override

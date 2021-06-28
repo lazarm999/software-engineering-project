@@ -8,6 +8,7 @@ import androidx.navigation.NavActionBuilder;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDeepLinkBuilder;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.app.PendingIntent;
 import android.os.Bundle;
@@ -15,10 +16,13 @@ import android.os.Bundle;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ActivityChatBinding;
+import com.parovi.zadruga.models.entityModels.Chat;
+import com.parovi.zadruga.repository.ChatRepository;
 import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
 
 public class ChatActivity extends AppCompatActivity{
+    public static final String CHAT_QB_ID = "chatQbId";
 
     private ChatViewModel model;
     private ActivityChatBinding binding;
@@ -38,7 +42,7 @@ public class ChatActivity extends AppCompatActivity{
         setContentView(binding.getRoot());
         model = new ViewModelProvider(this).get(ChatViewModel.class);
 
-        //userRepository.loginUser(isLoggedIn, "vuk.bibic@gmail.com", "novaaasifraaaa");
+        //userRepository.loginUser(isLoggedIn, "vuk.bibic@gmail.com", "sifra123");
         userRepository.loginUser(isLoggedIn, "tea@gmail.com", "sifra123");
         isLoggedIn.observe(this, new Observer<CustomResponse<?>>() {
             @Override
@@ -53,14 +57,16 @@ public class ChatActivity extends AppCompatActivity{
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     model.addOnGlobalMessageReceived();
-                    model.loadAllChats();
+                    receiveIntent();
                 }
             }
         });
 
-        getSupportFragmentManager().beginTransaction()
+
+
+        /*getSupportFragmentManager().beginTransaction()
                 .replace(R.id.chat_nav_host_fragment, ChatMessagesFragment.class, null)
-                .addToBackStack(null).commit();
+                .addToBackStack(null).commit();/*
         //ActionBar actionBar = getSupportActionBar();
         //actionBar.setTitle("Chats");
 
@@ -70,6 +76,24 @@ public class ChatActivity extends AppCompatActivity{
                     .setReorderingAllowed(true)
                     .commit();
         }*/
+    }
+
+    private void receiveIntent() {
+        String qbChatId = getIntent().getStringExtra(CHAT_QB_ID);
+        if (qbChatId != null) {
+            MutableLiveData<CustomResponse<?>> chatToOpen = new MutableLiveData<>();
+            chatToOpen.observe(this, new Observer<CustomResponse<?>>() {
+                @Override
+                public void onChanged(CustomResponse<?> customResponse) {
+                    if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                        model.setActiveChat((Chat)customResponse.getBody());
+                        Navigation.findNavController(binding.chatNavHostFragment).navigate(ChatListFragmentDirections.actionChatListFragmentToChatMessagesFragment());
+                    }
+                }
+            });
+            new ChatRepository().getChatById(chatToOpen, qbChatId);
+        }
+        model.loadAllChats();
     }
 
     @Override

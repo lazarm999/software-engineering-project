@@ -403,7 +403,7 @@ public class AdRepository extends BaseRepository {
         ApiFactory.getAdApi().unApplyForAd(token, adId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                if(response.isSuccessful() && response.body() != null) {
+                if(response.isSuccessful()) {
                     isUnApplied.postValue(new CustomResponse<>(CustomResponse.Status.OK, false));
                     DaoFactory.getAppliedDao().deleteApplied(new Applied(userId, adId));
                 } else

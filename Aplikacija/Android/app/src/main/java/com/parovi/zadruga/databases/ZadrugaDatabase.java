@@ -11,6 +11,7 @@ import com.parovi.zadruga.daos.AdDao;
 import com.parovi.zadruga.daos.AdTagDao;
 import com.parovi.zadruga.daos.AppliedDao;
 import com.parovi.zadruga.daos.NotificationDao;
+import com.parovi.zadruga.daos.PreferredTagDao;
 import com.parovi.zadruga.daos.TaggedDao;
 import com.parovi.zadruga.daos.UserChatDao;
 import com.parovi.zadruga.daos.lookupDaos.BadgeDao;
@@ -46,7 +47,7 @@ import com.parovi.zadruga.models.entityModels.manyToManyModels.UserChat;
 @Database(entities = {Ad.class, Location.class, User.class, UserBadge.class, Faculty.class, University.class, Notification.class,
         Tag.class, Badge.class, AdTag.class, Rating.class, Applied.class, Comment.class,
         Chat.class, Message.class, UserChat.class, Tagged.class},
-        version = 64, exportSchema = false)
+        version = 66, exportSchema = false)
 @TypeConverters({Converters.class})
 abstract public class ZadrugaDatabase extends RoomDatabase {
     private static ZadrugaDatabase db;
@@ -67,6 +68,7 @@ abstract public class ZadrugaDatabase extends RoomDatabase {
     public abstract UniversityDao universityDao();
     public abstract TaggedDao taggedDao();
     public abstract NotificationDao notificationDao();
+    public abstract PreferredTagDao preferredTagDao();
 
     public static synchronized ZadrugaDatabase getInstance(Context context){
         if(db == null){

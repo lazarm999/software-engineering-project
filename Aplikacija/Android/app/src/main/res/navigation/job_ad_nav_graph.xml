@@ -22,6 +22,7 @@
         <action
             android:id="@+id/action_selectWorkersFragment_to_jobAdFragment"
             app:destination="@id/jobAdFragment"
-            app:popUpTo="@id/jobAdFragment" />
+            app:popUpTo="@id/jobAdFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
