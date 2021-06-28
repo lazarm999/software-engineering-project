@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.activities.GradeUserActivity;
+import com.parovi.zadruga.activities.MainActivity;
 import com.parovi.zadruga.databinding.FragmentStudentProfileFragmentBinding;
 import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.User;
@@ -74,15 +75,19 @@ public class StudentProfileFragment extends Fragment {
         model.getUserInfo().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                populateViews((User)customResponse.getBody());
-                u = ((User) customResponse.getBody());
+                if(customResponse.getStatus() == CustomResponse.Status.OK){
+                    populateViews((User)customResponse.getBody());
+                    u = ((User) customResponse.getBody());
+                }
             }
         });
 
         model.getProfilePicture().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                loadProfilePicture((Bitmap)customResponse.getBody());
+                if(customResponse.getStatus() == CustomResponse.Status.OK){
+                    loadProfilePicture((Bitmap)customResponse.getBody());
+                }
             }
         });
 
@@ -123,6 +128,23 @@ public class StudentProfileFragment extends Fragment {
             }
         });
 
+        model.getIsLogedOut().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if(customResponse.getStatus() == CustomResponse.Status.OK){
+                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        binding.btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                model.logOut();
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -134,7 +156,7 @@ public class StudentProfileFragment extends Fragment {
         binding.txtFirstName.setText(user.getFirstName());
         binding.txtLastName.setText(user.getLastName());
         binding.txtNumber.setText(user.getPhoneNumber());
-        binding.txtUniversity.setText(user.getFaculty().toString());
+        binding.txtUniversity.setText(user.getFaculty() == null ? "" : user.getFaculty().toString());
         binding.editTextUsername.setText(user.getUsername());
         binding.txtMultilineEditBio.setText(user.getBio());
     }
