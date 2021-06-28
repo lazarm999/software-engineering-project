@@ -28,6 +28,7 @@ import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.Applied;
 import com.parovi.zadruga.models.nonEntityModels.UserWithFaculty;
+import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
 import com.parovi.zadruga.models.requestModels.BanRequest;
 import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
 import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
@@ -125,9 +126,9 @@ public class UserRepository extends BaseRepository {
         //TODO: kazi mu ne moz se ulogujes
         ApiFactory.getUserApi().loginUser(new LoginRequest(email, pass)).enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> response) {
-                if(response.isSuccessful() && response.body() != null){
-                    User loggedInUser = response.body().getUser();
+            public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> apiResponse) {
+                if(apiResponse.isSuccessful() && apiResponse.body() != null){
+                    User loggedInUser = apiResponse.body().getUser();
                     QBUser qbUser = new QBUser();
                     qbUser.setEmail(email);
                     qbUser.setPassword(pass);
@@ -136,7 +137,6 @@ public class UserRepository extends BaseRepository {
                         @Override
                         public void onSuccess(QBUser user, Bundle args) {
                             Log.i("logIn", "braoooo");
-                            isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body().getUser().isEmployer()));
                             FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
                                 @Override
                                 public void onComplete(@NonNull Task<String> task) {
@@ -145,16 +145,17 @@ public class UserRepository extends BaseRepository {
                                         isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, "Fetching FCM registration token failed"));
                                         return;
                                     }
-                                    Utility.saveLoggedUserInfo(App.getAppContext(), response.body().getToken(), response.body().getUser(), pass, task.getResult());
-                                    ApiFactory.getUserApi().postFcmToken(response.body().getToken(), new AddFcmTokenRequest(task.getResult()))
+                                    Utility.saveLoggedUserInfo(App.getAppContext(), apiResponse.body().getToken(), apiResponse.body().getUser(), pass, task.getResult());
+                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, apiResponse.body().getUser().isEmployer()));
+                                    ApiFactory.getUserApi().postFcmToken(apiResponse.body().getToken(), new AddFcmTokenRequest(task.getResult()))
                                             .enqueue(new Callback<ResponseBody>() {
-                                        @Override
-                                        public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                                            if(response.isSuccessful())
-                                                Log.i("postFcmToken", "OK");
-                                            else
-                                                Log.i("postFcmToken", String.valueOf(response.code()));
-                                        }
+                                                @Override
+                                                public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                                                    if(response.isSuccessful())
+                                                        Log.i("postFcmToken", "OK");
+                                                    else
+                                                        Log.i("postFcmToken", String.valueOf(response.code()));
+                                                }
 
                                         @Override
                                         public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
@@ -169,12 +170,12 @@ public class UserRepository extends BaseRepository {
                         @Override
                         public void onError(QBResponseException error) {
                             Log.i("logIn", "ne braoooo");
-                            isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, error.getMessage()));
+                            responseNotSuccessful(error.getHttpStatusCode(), isEmployer);
                         }
                     });
                 }
                 else
-                    responseNotSuccessful(response.code(), isEmployer);
+                    responseNotSuccessful(apiResponse.code(), isEmployer);
             }
 
             @Override

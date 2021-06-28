@@ -12,22 +12,29 @@ import com.parovi.zadruga.databinding.AchievementItemBinding;
 import com.parovi.zadruga.models.responseModels.RatingResponse;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.AchievementViewHolder> {
 
-    private ArrayList<RatingResponse> ratingList;
+    private List<RatingResponse> ratingList;
 
     private AchievementListener fragment;
+    public  AchievementAdapter(ArrayList<RatingResponse> achievements)
+    {
+
+    }
 
     public AchievementAdapter(AchievementListener fragment)
     {
         super();
+        ratingList = new ArrayList<RatingResponse>();
         this.fragment = fragment;
     }
 
-    public AchievementAdapter(ArrayList<RatingResponse> achievements)
+    public void setAchievements(ArrayList<RatingResponse> ratings)
     {
-        this.ratingList = achievements;
+        this.ratingList = ratings;
+        notifyDataSetChanged();
     }
 
     @NonNull

@@ -54,6 +54,17 @@ public class User {
     @Ignore
     private Bitmap profileImage;
 
+    /*(binding.txtUsername.getText().toString(), binding.txtName.getText().toString(),
+                binding.txtSurname.getText().toString(), binding.txtEmail.getText().toString(), binding.txtPass.getText().toString());*/
+
+    public User(String firstName, String lastName, String email, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
+
     public User(int userId, int userQbId) {
         this.userId = userId;
         this.userQbId = userQbId;

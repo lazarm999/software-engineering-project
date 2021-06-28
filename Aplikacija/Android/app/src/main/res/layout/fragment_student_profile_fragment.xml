@@ -8,273 +8,298 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/profileFrame">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background">
 
-            <RelativeLayout
-                android:id="@+id/relativeProfile"
+            <ImageView
+                android:id="@+id/imgProfileBackground"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="275dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="-10dp"
+                app:srcCompat="@drawable/profile_background" />
 
-                <ImageView
-                    android:id="@+id/imgProfileBackground"
-                    android:layout_width="match_parent"
-                    android:layout_height="275dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginTop="-10dp"
-                    android:background="@drawable/border_for_notification"
-                    app:srcCompat="@drawable/profile_background" />
+            <Button
+                android:id="@+id/btnEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/border_for_inputs"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/editProfile"
+                android:textColor="@color/lila"
+                android:textSize="12sp"
+                app:backgroundTint="@color/background"
+                app:cornerRadius="30dp"
+                app:icon="@drawable/ic_edit_profile"
+                app:iconTint="@color/lila"  />
 
-                <Button
-                    android:id="@+id/btnEdit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/border_for_inputs"
-                    android:fontFamily="@font/roboto_condensed_regular"
-                    android:text="@string/editProfile"
-                    android:textColor="@color/lila"
-                    android:textSize="12sp"
-                    app:backgroundTint="@color/background"
-                    app:cornerRadius="30dp"
-                    app:icon="@drawable/ic_edit_profile"
-                    app:iconTint="@color/lila" />
+            <ImageView
+                android:id="@+id/imgProfileBlank"
+                android:layout_width="293dp"
+                android:layout_height="166dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="131dp"
+                android:layout_marginEnd="59dp"
+                android:background="@drawable/border_for_image" />
 
-                <ImageView
-                    android:id="@+id/imgProfileBlank"
-                    android:layout_width="293dp"
-                    android:layout_height="166dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="135dp"
-                    android:background="@drawable/border_for_image"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="-5dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/editTextUser"
+                    android:id="@+id/txtFirstName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/imgProfileBlank"
                     android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="240dp"
+                    android:layout_marginTop="243dp"
                     android:fontFamily="@font/roboto_condensed_regular"
-                    android:text="Lazar Minic"
+                    android:text="Lazar"
                     android:textColor="@color/lila"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/editTextUsername"
+                    android:id="@+id/txtLastName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="268dp"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="243dp"
                     android:fontFamily="@font/roboto_condensed_regular"
-                    android:text="laza"
+                    android:text="Minic"
                     android:textColor="@color/lila"
-                    android:textSize="12sp"
-                    android:textStyle="italic" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/imgUser"
-                    android:layout_width="95dp"
-                    android:layout_height="85dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="140dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/lazar" />
+            </LinearLayout>
 
-                <Button
-                    android:id="@+id/btnAchievements"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/txtBadges"
-                    android:layout_below="@+id/editTextUsername"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/roboto_condensed_regular"
-                    android:text="@string/achievements"
-                    android:textColor="@color/black"
-                    android:textSize="10sp"
-                    app:backgroundTint="@color/teal_200"
-                    app:cornerRadius="20dp"
-                    app:icon="@drawable/ic_achievements"
-                    app:iconTint="@color/black"
-                    app:rippleColor="@color/lila"
-                    tools:ignore="NotSibling" />
+            <ImageView
+                android:id="@+id/imgUser"
+                android:layout_width="95dp"
+                android:layout_height="85dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="140dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/vuk_profilna" />
 
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/editTextUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/imgProfileBlank"
+                android:layout_marginStart="140dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="260dp"
+                android:fontFamily="@font/roboto_condensed_bold_italic"
+                android:text="laza"
+                android:textColor="@color/lila"
+                android:textSize="12dp"
+                android:textStyle="bold" />
 
             <LinearLayout
+                android:id="@+id/profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/relativeProfile"
-                android:orientation="vertical"
-                android:padding="5dp">
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:orientation="horizontal"
+                android:paddingBottom="20dp">
+
+                <TextView
+                    android:id="@+id/txtBadges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="600dp"
+                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:text="@string/badges"
+                    android:textColor="@color/lila"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/linearBagdges"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingBottom="20dp">
+                    android:layout_marginLeft="26dp"
+                    android:layout_marginTop="640dp"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/txtBadges"
+                    <ImageView
+                        android:id="@+id/imgBadge1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:scaleType="center"
+                        android:src="@drawable/locker"
+                        app:srcCompat="@drawable/locker" />
+
+                    <ImageView
+                        android:id="@+id/imgBadge2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:scaleType="center"
+                        android:src="@drawable/locker" />
+
+                    <ImageView
+                        android:id="@+id/imgBadge3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginLeft="15dp"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:text="@string/badges"
-                        android:textColor="@color/lila"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:scaleType="center"
+                        android:src="@drawable/locker" />
 
-                    <ImageButton
-                        android:id="@+id/imgBtnBadge1"
-                        android:layout_width="92dp"
-                        android:layout_height="90dp"
-                        android:layout_marginTop="30dp"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginRight="0dp"
-                        android:layout_marginBottom="0dp"
-                        android:background="@color/background"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/badge" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearUni"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:id="@+id/txtFaculty"
+                    <ImageView
+                        android:id="@+id/imgBadge4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginLeft="15dp"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:text="@string/facultyStudent"
-                        android:textColor="@color/lila"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:src="@drawable/locker" />
 
-                    <TextView
-                        android:id="@+id/txtUniversity"
-                        android:layout_width="153dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="83dp"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:text="Elektronski fakultet"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearPhone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:id="@+id/txtPhoneNum"
+                    <ImageView
+                        android:id="@+id/imgBadge5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:text="@string/phoneStudent"
-                        android:textColor="@color/lila"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <androidx.constraintlayout.widget.Barrier
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="160dp"
-                        android:layout_marginRight="160dp"
-                        app:barrierDirection="left" />
-
-                    <TextView
-                        android:id="@+id/txtNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="108dp"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:text="064119359"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:id="@+id/txtInfoStudent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginLeft="15dp"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:text="@string/infoStudent"
-                        android:textColor="@color/lila"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/txtMultilineEditBio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="70dp"
-                        android:background="@drawable/border_for_inputs"
-                        android:ems="10"
-                        android:fontFamily="@font/roboto_condensed_regular"
-                        android:gravity="start|top"
-                        android:inputType="textMultiLine"
-                        android:scrollbars="vertical"
-                        android:singleLine="false"
-                        android:text="Enthusiastic young person who likes to help others"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:src="@drawable/locker" />
                 </LinearLayout>
 
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/txtUni"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="390dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/facultyStudent"
+                android:textColor="@color/lila"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnAchievements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imgProfileBlank"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="145dp"
+                android:layout_marginTop="23dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginRight="15dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/achievements"
+                android:textColor="@color/black"
+                android:textSize="10sp"
+                app:backgroundTint="@color/teal_200"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_achievements"
+                app:iconTint="@color/black"
+                app:rippleColor="@color/lila"
+                tools:ignore="NotSibling" />
+
+            <TextView
+                android:id="@+id/txtPhoneNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="430dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/phoneStudent"
+                android:textColor="@color/lila"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="430dp"
+                android:layout_marginEnd="45dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="0653990854"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/txtInfoStudent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="470dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/infoStudent"
+                android:textColor="@color/lila"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtMultilineEditBio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="470dp"
+                android:layout_marginEnd="45dp"
+                android:background="@drawable/border_for_inputs"
+                android:ems="10"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:gravity="start|top"
+                android:inputType="textMultiLine|textNoSuggestions"
+                android:padding="1dp"
+                android:scrollbars="vertical"
+                android:singleLine="false"
+                android:text="I am looking for ambitious young people who are ready to work in constructions"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
             <Button
                 android:id="@+id/btnRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/profile"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="660dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="36dp"
+                android:layout_marginRight="10dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="@string/ratingStudent"
                 android:textColor="@color/black"
@@ -283,8 +308,20 @@
                 app:cornerRadius="20dp"
                 app:icon="@drawable/ic_rate_user"
                 app:iconTint="@color/black"
-                app:rippleColor="@color/teal_200" />
+                app:rippleColor="@color/lila" />
 
+            <TextView
+                android:id="@+id/txtUniversity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="135dp"
+                android:layout_marginTop="390dp"
+                android:layout_marginEnd="45dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="Elektronski fakultet"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
         </RelativeLayout>
     </FrameLayout>

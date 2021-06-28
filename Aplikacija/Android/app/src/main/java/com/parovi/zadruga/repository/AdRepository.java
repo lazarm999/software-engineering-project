@@ -21,7 +21,6 @@ import com.parovi.zadruga.factories.DaoFactory;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.Notification;
 import com.parovi.zadruga.models.entityModels.Tag;
-import com.parovi.zadruga.models.entityModels.Tagged;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.AdTag;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.Applied;
@@ -41,8 +40,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.xml.transform.OutputKeys;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -181,11 +178,6 @@ public class AdRepository extends BaseRepository {
             responseNotSuccessful(400, ads);
             return;
         }
-        /*TODO: ovo treba da ide u neki aktiviti
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-         && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
-                }*/
         final Boolean[] isSynced = {false};
         if(sortByLocation){
             GpsTracker gpsTracker = new GpsTracker(App.getAppContext());
@@ -198,8 +190,8 @@ public class AdRepository extends BaseRepository {
                     if(customResponse.getStatus() == CustomResponse.Status.OK && customResponse.getBody() != null){
                         latitude = ((android.location.Location) customResponse.getBody()).getLatitude();
                         longitude = ((android.location.Location) customResponse.getBody()).getLongitude();
-                        Log.i("location", "Location fetched");//&filterTagIds=3&filterCompensationMin=0&filterCompensationMax=2000
-                    }//&filterTagIds=1&filterTagIds=3
+                        Log.i("location", "Location fetched");
+                    }
                     getAdsLocal(ads, isSynced, locId, compensationMin, compensationMax, tagIds, latitude, longitude);
                     ApiFactory.getAdApi().getAds(token, locId, compensationMin, compensationMax, tagIds, latitude, longitude).enqueue(new Callback<List<Ad>>() {
                         @Override
@@ -306,17 +298,19 @@ public class AdRepository extends BaseRepository {
                 if(adWithTagsList != null){
                     for (AdWithTags adWithTags: adWithTagsList) {
                         shouldRemove = true;
-                        for (Tag tag: adWithTags.tags) {
-                            for (Integer tagId: tagIds) {
-                                if(tag.getTagId() == tagId){
-                                    shouldRemove = false;
-                                    break;
+                        if(adWithTags.tags != null && tagIds != null){
+                            for (Tag tag: adWithTags.tags) {
+                                for (Integer tagId: tagIds) {
+                                    if(tag.getTagId() == tagId){
+                                        shouldRemove = false;
+                                        break;
+                                    }
+                                    if(!shouldRemove) break;
                                 }
-                                if(!shouldRemove) break;
                             }
+                            if(!shouldRemove)
+                                finalList.add(adWithTagsToAd(adWithTags));
                         }
-                        if(!shouldRemove)
-                            finalList.add(adWithTagsToAd(adWithTags));
                     }
                     synchronized (isSynced[0]){
                         if(!isSynced[0])

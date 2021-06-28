@@ -14,7 +14,6 @@ import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.requestModels.PostAdRequest;
 import com.parovi.zadruga.repository.AdRepository;
 import com.parovi.zadruga.repository.LookUpRepository;
-import com.parovi.zadruga.repository.UserRepository;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewAdViewModel extends AndroidViewModel {
+    private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+
     private MutableLiveData<CustomResponse<?>> isPosted, locations, tags;
     private LookUpRepository lookUpRepository;
     private AdRepository adRepository;
@@ -34,11 +35,10 @@ public class NewAdViewModel extends AndroidViewModel {
         adRepository = new AdRepository();
         isPosted = new MutableLiveData<>();
         locations = new MutableLiveData<>();
-        //tag = new MutableLiveData<>();
         lookUpRepository.getAllLocations(Utility.getAccessToken(App.getAppContext()), locations);
         tags = new MutableLiveData<>();
-        lookUpRepository.getAllLocations(Utility.getAccessToken(App.getAppContext()), locations);
-        lookUpRepository.getAllTags(Utility.getAccessToken(App.getAppContext()), tags);
+        lookUpRepository.getAllLocations(token, locations);
+        lookUpRepository.getAllTags(token, tags);
     }
 
     public MutableLiveData<CustomResponse<?>> getIsPosted(){
@@ -69,7 +69,6 @@ public class NewAdViewModel extends AndroidViewModel {
 
     public void getCities(String token)
     {
-        lookUpRepository.getAllLocations(token, locations);
         lookUpRepository.getAllLocations(token, locations);
     }
 

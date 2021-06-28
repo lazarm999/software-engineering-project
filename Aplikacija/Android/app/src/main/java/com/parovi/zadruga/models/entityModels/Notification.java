@@ -13,8 +13,6 @@ import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.models.responseModels.RatingResponse;
 
-import static androidx.room.ForeignKey.CASCADE;
-
 @Entity
 public class Notification
 {
@@ -29,6 +27,9 @@ public class Notification
     private Boolean accepted; //je l to da bude boolean ili Boolean
     private Boolean tagged; //da li je tagovan ili je on objavio oglas pa je zbog toga dobio notif
 
+
+    @Ignore
+    private String type;
     @Ignore
     private Ad ad;
     @Ignore
@@ -109,5 +110,13 @@ public class Notification
 
     public void setTagged(Boolean tagged) {
         this.tagged = tagged;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -1,30 +1,24 @@
 package com.parovi.zadruga.ui;
 
-import androidx.appcompat.app.ActionBar;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-
-import android.os.Bundle;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ActivityChatBinding;
-import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.viewModels.ChatViewModel;
-import com.parovi.zadruga.viewModels.ChatsViewModel;
-
-import java.util.zip.Inflater;
 
 public class ChatActivity extends AppCompatActivity{
     private ChatViewModel model;
     private ActivityChatBinding binding;
+
     MutableLiveData<CustomResponse<?>> isLoggedIn = new MutableLiveData<>();
     private UserRepository userRepository = new UserRepository();
 

@@ -6,9 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.repository.AdRepository;
@@ -38,6 +36,7 @@ public class AdViewModel extends AndroidViewModel {
         isDeleted = new MutableLiveData<>();
         applicants = new MutableLiveData<>();
         appliedTo = new MutableLiveData<>();
+
         loadAd();
         loadComments();
     }
