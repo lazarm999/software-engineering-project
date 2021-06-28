@@ -61,7 +61,7 @@ public class JobHistoryAdapter extends RecyclerView.Adapter<JobHistoryAdapter.Jo
             this.binding = binding;
         }
         public void bindTo(Ad ad) {
-            binding.txtAdTitle.setText(ad.getTitle());
+            binding.tvAdTitle.setText(ad.getTitle());
             binding.txtAdDate.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(ad.getPostTime()));
             binding.imgUserGradeVector.setImageResource(R.drawable.ic_users_grade);
             binding.getRoot().setOnClickListener(new View.OnClickListener() {

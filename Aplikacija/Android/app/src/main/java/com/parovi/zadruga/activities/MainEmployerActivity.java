@@ -15,6 +15,7 @@ import com.parovi.zadruga.R;
 import com.parovi.zadruga.fragments.AdsFragment;
 import com.parovi.zadruga.fragments.EmployerProfileFragment;
 import com.parovi.zadruga.fragments.EmployersAdsFragment;
+import com.parovi.zadruga.fragments.JobHistoryFragment;
 import com.parovi.zadruga.fragments.NewAdFragment;
 import com.parovi.zadruga.fragments.NotificationsFragment;
 
@@ -52,7 +53,7 @@ public class MainEmployerActivity extends AppCompatActivity {
                         loadFragment(fragment);
                         break;
                     case R.id.employersAds:
-                        fragment = new EmployersAdsFragment();
+                        fragment = new JobHistoryFragment();
                         loadFragment(fragment);
                         break;
                     case R.id.employerProfile:

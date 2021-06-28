@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.activities.UsersAchievementsActivity;
 import com.parovi.zadruga.adapters.NotificationsAdapter;
 import com.parovi.zadruga.databinding.FragmentNotificationsFragmentBinding;
@@ -44,7 +46,6 @@ public class NotificationsFragment extends Fragment implements  NotificationsAda
         binding = FragmentNotificationsFragmentBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(NotificationsViewModel.class);
 
-
         RecyclerView rvNotifications = binding.rvNotifications;
         rvNotifications.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         NotificationsAdapter adapter = new NotificationsAdapter((NotificationsAdapter.NotificationListener) this);
@@ -56,14 +57,14 @@ public class NotificationsFragment extends Fragment implements  NotificationsAda
 
         rvNotifications.setHasFixedSize(true);
 
-//        model.getNotifications().observe(requireActivity(), new Observer<CustomResponse<?>>() {
-//            @Override
-//            public void onChanged(CustomResponse<?> customResponse) {
-//                if (customResponse.getStatus() == CustomResponse.Status.OK) {
-//                    adapter.setNotificationList((ArrayList<Notification>) customResponse.getBody());
-//                }
-//            }
-//        });
+        model.getNotifications().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    adapter.setNotificationList((ArrayList<Notification>) customResponse.getBody());
+                }
+            }
+        });
 
         return binding.getRoot();
     }
@@ -73,7 +74,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsAda
         if(notification.getType().equals(NOTIF_ACCEPTED))
         {
             Intent intent = new Intent(requireActivity(), JobAdActivity.class);
-            intent.putExtra("AdNotifID", notification.getFkAdId());
+            intent.putExtra(JobAdActivity.AD_ID, notification.getFkAdId());
             startActivity(intent);
         }
         else if(notification.getType().equals((NOTIF_RATING)))

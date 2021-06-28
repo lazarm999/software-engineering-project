@@ -1,6 +1,5 @@
 package com.parovi.zadruga.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -16,7 +15,7 @@ import com.parovi.zadruga.R;
 import com.parovi.zadruga.fragments.AdsFragment;
 import com.parovi.zadruga.fragments.NotificationsFragment;
 import com.parovi.zadruga.fragments.RecommendationFragment;
-import com.parovi.zadruga.fragments.StudentJobsFragment;
+import com.parovi.zadruga.fragments.JobHistoryFragment;
 import com.parovi.zadruga.fragments.StudentProfileFragment;
 
 
@@ -55,7 +54,7 @@ public class MainStudentActivity extends AppCompatActivity {
                         fragment = new NotificationsFragment();
                         break;
                     case R.id.jobHistory:
-                        fragment = new StudentJobsFragment();
+                        fragment = new JobHistoryFragment();
                         break;
                     case R.id.studentRecommendations:
                         fragment = new RecommendationFragment();
@@ -86,7 +85,7 @@ public class MainStudentActivity extends AppCompatActivity {
                 fragment = new NotificationsFragment();
                 break;
             case JOB_HISTORY:
-                fragment = new StudentJobsFragment();
+                fragment = new JobHistoryFragment();
                 break;
             case RECOMMENDED:
                 fragment = new RecommendationFragment();

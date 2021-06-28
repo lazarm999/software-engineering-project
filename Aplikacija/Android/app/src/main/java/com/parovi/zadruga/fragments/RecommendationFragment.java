@@ -9,24 +9,27 @@ import android.view.ViewGroup;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.adapters.AdAdapter;
 import com.parovi.zadruga.databinding.FragmentRecommendationFragmentBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.ui.JobAdActivity;
-import com.parovi.zadruga.viewModels.FeedViewModel;
+import com.parovi.zadruga.viewModels.RecommendViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecommendationFragment extends Fragment implements AdAdapter.AdListListener {
     public RecommendationFragment() {
         // Required empty public constructor
     }
 
-    FeedViewModel model;
+    RecommendViewModel model;
     FragmentRecommendationFragmentBinding binding;
 
     @Override
@@ -40,7 +43,7 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentRecommendationFragmentBinding.inflate(inflater, container, false);
-        model = new ViewModelProvider(requireActivity()).get(FeedViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(RecommendViewModel.class);
 
 
         ArrayList<Ad> ads = new ArrayList<>();
@@ -52,15 +55,16 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
 
         adapter.setAds(ads);
 
-//        model.getRecommendedAds().observe(requireActivity(), new Observer<CustomResponse<?>>() {
-//            @Override
-//            public void onChanged(CustomResponse<?> customResponse) {
-//                if (customResponse.getStatus() == CustomResponse.Status.OK) {
-//                    adapter.setAds((ArrayList<Ad>) customResponse.getBody());
-//                }
-//            }
-//        });
+        model.getAds().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    adapter.setAds((List<Ad>) customResponse.getBody());
+                }
+            }
+        });
 
+        model.loadRecommended();
         return binding.getRoot();
     }
 

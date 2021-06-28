@@ -22,6 +22,7 @@ public class StudentProfileViewModel extends AndroidViewModel {
     private MutableLiveData<CustomResponse<?>> badges;
     private MutableLiveData<CustomResponse<?>> userInfo;
     private MutableLiveData<CustomResponse<?>> profilePicture;
+    private MutableLiveData<CustomResponse<?>> isLogedOut;
     private UserRepository userRepository;
     private LookUpRepository lookUpRepository;
 
@@ -30,6 +31,7 @@ public class StudentProfileViewModel extends AndroidViewModel {
         userRepository = new UserRepository();
         lookUpRepository = new LookUpRepository();
         userInfo = new MutableLiveData<>();
+        isLogedOut = new MutableLiveData<>();
         user = new MutableLiveData<>();
         badges = new MutableLiveData<>();
         profilePicture = new MutableLiveData<>();
@@ -49,6 +51,12 @@ public class StudentProfileViewModel extends AndroidViewModel {
     public MutableLiveData<CustomResponse<?>> getThisUser() {
         return user;
     }
+
+    public MutableLiveData<CustomResponse<?>> getIsLogedOut() {
+        return isLogedOut;
+    }
+
+    public void logOut() { userRepository.logOutUser(isLogedOut); }
 
     private void loadBadges() {
         lookUpRepository.getAllBadges(token, badges);

@@ -21,6 +21,7 @@ public class EmployerProfileViewModel extends AndroidViewModel {
     private MutableLiveData<CustomResponse<?>> user;
     private MutableLiveData<CustomResponse<?>> badges;
     private MutableLiveData<CustomResponse<?>> userInfo;
+    private MutableLiveData<CustomResponse<?>> isLogedOut;
     private MutableLiveData<CustomResponse<?>> profilePicture;
     private UserRepository userRepository;
     private LookUpRepository lookUpRepository;
@@ -30,6 +31,7 @@ public class EmployerProfileViewModel extends AndroidViewModel {
         userRepository = new UserRepository();
         lookUpRepository = new LookUpRepository();
         userInfo = new MutableLiveData<>();
+        isLogedOut = new MutableLiveData<>();
         user = new MutableLiveData<>();
         badges = new MutableLiveData<>();
         profilePicture = new MutableLiveData<>();
@@ -49,6 +51,12 @@ public class EmployerProfileViewModel extends AndroidViewModel {
     public MutableLiveData<CustomResponse<?>> getThisUser() {
         return user;
     }
+
+    public MutableLiveData<CustomResponse<?>> getIsLogedOut() {
+        return isLogedOut;
+    }
+
+    public void logOut() { userRepository.logOutUser(isLogedOut); }
 
     private void loadBadges() {
         lookUpRepository.getAllBadges(token, badges);
@@ -75,6 +83,32 @@ public class EmployerProfileViewModel extends AndroidViewModel {
         for (Badge b : badge)
             strings.add(b.getDescription());
         return strings;
+    }
+
+    public List<Integer> getBadgeIds(List<Badge> badge)
+    {
+        List<Integer> ids = new ArrayList<>();
+        if (badge == null)
+            return ids;
+        for (Badge b : badge)
+            ids.add(b.getBadgeId());
+        return ids;
+    }
+
+    public boolean gotTheBadge(int id)
+    {
+        boolean bool = false;
+        List<Badge> badge = (List<Badge>)badges.getValue().getBody();
+
+        if(badge == null)
+            return bool;
+        for(Badge b : badge)
+        {
+            if(b.getBadgeId() == id)
+                bool = true;
+        }
+
+        return bool;
     }
 
 }

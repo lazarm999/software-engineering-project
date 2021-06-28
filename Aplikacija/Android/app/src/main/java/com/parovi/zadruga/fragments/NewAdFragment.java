@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.models.entityModels.Location;
 import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.requestModels.PostAdRequest;
 import com.parovi.zadruga.viewModels.NewAdViewModel;
@@ -50,8 +51,8 @@ public class NewAdFragment extends Fragment {
     TextView txtSelectedChoices;
     boolean[] selectedItems;
     ArrayList<Integer> categoryList = new ArrayList<>();
-    String[] newArrayCategory = {};
-    //String[] categoryArray = {"Hostess", "Promoter", "Kitchen support staff", "Interviewer", "Collection operations", "Waiter", "Lighter physical jobs", "Heavier physical jobs"};
+    //String[] newArrayCategory = {};
+    String[] categoryArray = {"Hostess", "Promoter", "Kitchen support staff", "Interviewer", "Collection operations", "Waiter", "Lighter physical jobs", "Heavier physical jobs"};
     private NewAdViewModel model;
 
     @Override
@@ -60,7 +61,7 @@ public class NewAdFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_new_ad, container, false);
         Spinner spinnerLocations = (Spinner) layout.findViewById(R.id.spinnerLocation);
-        ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_list_item_1, new ArrayList<String>());
+        ArrayAdapter<Location> adapterLoc = new ArrayAdapter<Location>(container.getContext(), android.R.layout.simple_list_item_1, new ArrayList<Location>());
         adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLocations.setAdapter(adapterLoc);
         model = new ViewModelProvider(requireActivity()).get(NewAdViewModel.class);
@@ -90,8 +91,8 @@ public class NewAdFragment extends Fragment {
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     //newArrayCategory = null;
-                    newArrayCategory = new String[((List<Tag>)customResponse.getBody()).size()];
-                    newArrayCategory = model.getAllTagNames().toArray(newArrayCategory);
+                    categoryArray = new String[((List<Tag>)customResponse.getBody()).size()];
+                    categoryArray = model.getAllTagNames().toArray(categoryArray);
                    // makeToast(R.string.successfulLocation);
                 }
                 else if (customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST) {
@@ -108,7 +109,7 @@ public class NewAdFragment extends Fragment {
         etNewAdTitle = (EditText) layout.findViewById(R.id.txtNewAdTitle);
         etNewAdPeopleNeeded = (EditText) layout.findViewById(R.id.editTxtNewAdPeopleNeeded);
         txtSelectedChoices = (TextView) layout.findViewById(R.id.txtCategoryList);
-        selectedItems = new boolean[newArrayCategory.length];
+        selectedItems = new boolean[categoryArray.length];
 
         Button btnAdd = (Button) layout.findViewById(R.id.btnNewAdAdd);
         Button btnCancel = (Button) layout.findViewById(R.id.btnNewAdCancle);
@@ -130,7 +131,7 @@ public class NewAdFragment extends Fragment {
 
                 builder.setTitle(R.string.dialogMultipleChoiceTitle);
                 builder.setCancelable(false);
-                builder.setMultiChoiceItems(newArrayCategory, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setMultiChoiceItems(categoryArray, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         if (isChecked) {
@@ -146,7 +147,7 @@ public class NewAdFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         StringBuilder stringBuilder = new StringBuilder();
                         for (int j = 0; j < categoryList.size(); j++) {
-                            stringBuilder.append(newArrayCategory[categoryList.get(j)]);
+                            stringBuilder.append(categoryArray[categoryList.get(j)]);
 
                             if (j != categoryList.size() - 1) {
                                 stringBuilder.append(", ");
@@ -188,11 +189,11 @@ public class NewAdFragment extends Fragment {
                 }
                 else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
                 {
-                    makeToast(R.string.badRequestNewAd);
+                    //makeToast(R.string.badRequestNewAd);
                 }
                 else if(customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR)
                 {
-                    makeToast(R.string.serverErrorNewAd);
+                    //makeToast(R.string.serverErrorNewAd);
                 }
             }
         });
@@ -200,9 +201,15 @@ public class NewAdFragment extends Fragment {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    model.postAd(Utility.getAccessToken(container.getContext()), new PostAdRequest(etNewAdTitle.getText().toString(), etNewAdDescription.getText().toString(), Integer.parseInt(etNewAdFeeFrom.getText().toString()), Integer.parseInt(etNewAdFeeTo.getText().toString()), Integer.parseInt(etNewAdPeopleNeeded.getText().toString()), Integer.parseInt(spinnerLocations.getSelectedItem().toString()), categoryList));
-                    FragmentTransaction fr = getFragmentManager().beginTransaction();
-                    fr.replace(R.id.bottom_nav_employer, new AdsFragment());
+                    model.postAd(Utility.getAccessToken(container.getContext()),
+                            new PostAdRequest(etNewAdTitle.getText().toString(),
+                                    etNewAdDescription.getText().toString(),
+                                    Integer.parseInt(etNewAdFeeFrom.getText().toString().equals("") ? "0" : etNewAdFeeTo.getText().toString()),
+                                    Integer.parseInt(etNewAdFeeTo.getText().toString().equals("") ? "0" : etNewAdFeeTo.getText().toString()),
+                                    Integer.parseInt(etNewAdPeopleNeeded.getText().toString()),
+                                    ((Location)spinnerLocations.getSelectedItem()).getLocId(), categoryList));
+                    FragmentTransaction fr = requireActivity().getSupportFragmentManager().beginTransaction();
+                    fr.replace(R.id.frame_employer_layout, new AdsFragment());
                     fr.commit();
             }
         });

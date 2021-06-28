@@ -77,15 +77,10 @@ public class NewAdViewModel extends AndroidViewModel {
         lookUpRepository.getAllTags(token, tags);
     }
 
-    public List<String> getAllCities()
+    public List<Location> getAllCities()
     {
         List<Location> locs = (List<Location>)locations.getValue().getBody();
-        List<String> strings = new ArrayList<String >();
-        if (locs == null)
-            return strings;
-        for (Location loc : locs)
-            strings.add(loc.getCityName());
-        return strings;
+        return locs;
     }
 
     public List<String> getAllTagNames()

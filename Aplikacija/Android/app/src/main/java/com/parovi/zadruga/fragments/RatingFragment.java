@@ -1,5 +1,6 @@
 package com.parovi.zadruga.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.adapters.AchievementAdapter;
 import com.parovi.zadruga.databinding.FragmentRatingBinding;
 import com.parovi.zadruga.models.responseModels.RatingResponse;
+import com.parovi.zadruga.ui.JobAdActivity;
 import com.parovi.zadruga.viewModels.AchievementViewModel;
 
 import java.util.ArrayList;
@@ -62,6 +64,6 @@ public class RatingFragment extends Fragment implements AchievementAdapter.Achie
 
     @Override
     public void onAchievementSelected(RatingResponse achievement) {
-
+        ;
     }
 }

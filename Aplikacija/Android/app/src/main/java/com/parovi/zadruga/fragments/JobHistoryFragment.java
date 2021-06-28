@@ -18,7 +18,7 @@ import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.adapters.JobHistoryAdapter;
 import com.parovi.zadruga.databinding.FragmentChatMessagesBinding;
-import com.parovi.zadruga.databinding.FragmentStudentJobsFragmentBinding;
+import com.parovi.zadruga.databinding.FragmentJobHistoryBinding;
 import com.parovi.zadruga.items.AdWithStudentRatingItem;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.ui.JobAdActivity;
@@ -28,11 +28,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentJobsFragment extends Fragment implements JobHistoryAdapter.JobHistoryListListener {
-    private FragmentStudentJobsFragmentBinding binding;
+public class JobHistoryFragment extends Fragment implements JobHistoryAdapter.JobHistoryListListener {
+    private FragmentJobHistoryBinding binding;
     private JobHistoryViewModel model;
 
-    public StudentJobsFragment() {
+    public JobHistoryFragment() {
         // Required empty public constructor
     }
 
@@ -46,7 +46,7 @@ public class StudentJobsFragment extends Fragment implements JobHistoryAdapter.J
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentStudentJobsFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentJobHistoryBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(JobHistoryViewModel.class);
         JobHistoryAdapter adapter = new JobHistoryAdapter(this);
         binding.recyclerViewJobHistory.setAdapter(adapter);
