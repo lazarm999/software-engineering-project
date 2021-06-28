@@ -44,6 +44,8 @@ public class User {
     private Integer fkFacultyId;
     private int userQbId;
 
+    @Ignore
+    private String password;
 
     @Ignore
     private Faculty faculty;
@@ -80,11 +82,13 @@ public class User {
         this.userQbId = userQbId;
     }
 
-    public User(String username, String firstName, String lastName, String email, String password) {
+    public User(String username, String firstName, String lastName, String email, String password, boolean isEmployer) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
+        this.isEmployer = isEmployer;
     }
 
 

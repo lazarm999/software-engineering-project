@@ -256,10 +256,10 @@ public class TmpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //chatViewModel.getMessages();
                 //userRep.loginUser(new MutableLiveData<>(), "vuk.bibic@gmail.com", "novaaasifraaaa");
-                userRep.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
+                //userRep.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
                 //chatViewModel.addOnGlobalMessageReceived();
-                /*rep.registerUser(new MutableLiveData<>(), new User("user124", "fnjkdsnl", "dlkfhaslkjh", "user124@gmail.com",
-                        "sifra123"));*/
+                userRep.registerUser(new MutableLiveData<>(), new User("stefan72", "Stefan", "Petrović", "stefan72@gmail.com",
+                                "sifra123", true),"sifra123");
                 //rep.getUserById(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), 2);
                 /*User u = new User();
                 u.setBio("ovo je novi bio");

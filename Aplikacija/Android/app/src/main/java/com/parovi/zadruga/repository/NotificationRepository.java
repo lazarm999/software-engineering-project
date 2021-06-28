@@ -52,6 +52,7 @@ public class NotificationRepository extends BaseRepository {
                     Log.i("ne", "run: ");
                 } catch (IOException e) {
                     e.printStackTrace();
+                    apiCallOnFailure(e.getMessage(), notifications);
                 }
             }
         });
@@ -110,7 +111,6 @@ public class NotificationRepository extends BaseRepository {
             }
         });
     }
-
 
     public CommentResponse commentToCommentResponse(Comment comment){
         if(comment == null) return null;

@@ -71,7 +71,7 @@ public class AdRepository extends BaseRepository {
 
             @Override
             public void onFailure(@NotNull Call<Ad> call, @NotNull Throwable t) {
-                isPosted.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), isPosted);
             }
         });
     }
@@ -221,7 +221,7 @@ public class AdRepository extends BaseRepository {
 
                         @Override
                         public void onFailure(@NotNull Call<List<Ad>> call, @NotNull Throwable t) {
-                            ads.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                            apiCallOnFailure(t.getMessage(), ads);
                         }
                     });
                 }
@@ -250,7 +250,7 @@ public class AdRepository extends BaseRepository {
 
                 @Override
                 public void onFailure(@NotNull Call<List<Ad>> call, @NotNull Throwable t) {
-                    ads.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                    apiCallOnFailure(t.getMessage(), ads);
                 }
             });
         }
@@ -346,7 +346,7 @@ public class AdRepository extends BaseRepository {
 
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                isApplied.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), isApplied);
             }
         });
     }
@@ -388,7 +388,7 @@ public class AdRepository extends BaseRepository {
 
                         @Override
                         public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                            isSucc.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                            apiCallOnFailure(t.getMessage(), isSucc);
                         }
                     });
                 }
@@ -412,7 +412,7 @@ public class AdRepository extends BaseRepository {
 
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                isUnApplied.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), isUnApplied);
             }
         });
     }
@@ -472,7 +472,7 @@ public class AdRepository extends BaseRepository {
 
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                isSucc.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), isSucc);
             }
         });
     }
@@ -593,7 +593,7 @@ public class AdRepository extends BaseRepository {
 
             @Override
             public void onFailure(@NotNull Call<AdResponse> call, @NotNull Throwable t) {
-                isDeleted.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, t.getMessage()));
+                apiCallOnFailure(t.getMessage(), isDeleted);
             }
         });
     }
@@ -623,6 +623,7 @@ public class AdRepository extends BaseRepository {
                     Log.i("ne", "run: ");
                 } catch (IOException e) {
                     e.printStackTrace();
+                    apiCallOnFailure(e.getMessage(), ads);
                 }
             }
         });
