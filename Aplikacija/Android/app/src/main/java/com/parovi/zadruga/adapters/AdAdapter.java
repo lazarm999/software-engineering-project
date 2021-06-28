@@ -18,8 +18,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.measite.minidns.record.A;
-
 public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
 
     private List<Ad> adList;
@@ -40,6 +38,7 @@ public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
     public void setAds(ArrayList<Ad> ads)
     {
         this.adList = ads;
+        notifyDataSetChanged();
     }
 
     @NonNull

@@ -1,48 +1,54 @@
-package com.parovi.zadruga.activities;
+package com.parovi.zadruga.fragments;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.R;
 import com.parovi.zadruga.adapters.AchievementAdapter;
-import com.parovi.zadruga.databinding.ActivityUsersAchievementsBinding;
+import com.parovi.zadruga.databinding.FragmentAchievementFragmentBinding;
 import com.parovi.zadruga.models.responseModels.RatingResponse;
 import com.parovi.zadruga.viewModels.AchievementViewModel;
 
 import java.util.ArrayList;
 
-public class UsersAchievementsActivity extends AppCompatActivity implements AchievementAdapter.AchievementListener{
+public class AchievementFragment extends Fragment implements AchievementAdapter.AchievementListener {
 
     private AchievementViewModel model;
-    private ActivityUsersAchievementsBinding binding;
+    private FragmentAchievementFragmentBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        binding = ActivityUsersAchievementsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        binding = FragmentAchievementFragmentBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(this).get(AchievementViewModel.class);
 
         ArrayList<RatingResponse> achievements = new ArrayList<>();
 
 
-        RecyclerView recView = findViewById(R.id.recyclerViewAchievements);
-        recView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        RecyclerView recView = binding.recyclerViewAchievements;
+        recView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         AchievementAdapter adapter = new AchievementAdapter(achievements);
         recView.setAdapter(adapter);
 
-        model.getRatings().observe(this, new Observer<CustomResponse<?>>() {
+        model.getRatings().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
@@ -52,8 +58,9 @@ public class UsersAchievementsActivity extends AppCompatActivity implements Achi
         });
 
         adapter.setAchievements(achievements);
-    }
 
+        return binding.getRoot();
+    }
     @Override
     public void onAchievementSelected(RatingResponse achievement) {
 

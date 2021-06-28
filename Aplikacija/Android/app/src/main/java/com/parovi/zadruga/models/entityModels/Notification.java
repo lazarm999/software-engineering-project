@@ -2,15 +2,11 @@ package com.parovi.zadruga.models.entityModels;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.google.gson.annotations.SerializedName;
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
-
-import static androidx.room.ForeignKey.CASCADE;
+import com.parovi.zadruga.models.responseModels.CommentResponse;
+import com.parovi.zadruga.models.responseModels.RatingResponse;
 
 @Entity
 public class Notification
@@ -26,17 +22,29 @@ public class Notification
     private boolean accepted;
     private boolean tagged; //da li je tagovan ili je on objavio oglas pa je zbog toga dobio notif
 
+
+    @Ignore
+    private String type;
     @Ignore
     private Ad ad;
     @Ignore
-    private Comment comment;
+    private CommentResponse comment;
     @Ignore
-    private Rating rating;
+    private RatingResponse rating;
 
     public Notification() {
     }
 
-    public Notification(int notificationId, int fkAdId, int fkCommentId, int fkRatingId, boolean accepted, boolean tagged, Ad ad, Comment comment, Rating rating) {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Notification(int notificationId, int fkAdId, int fkCommentId, int fkRatingId, boolean accepted, boolean tagged, Ad ad, CommentResponse comment,
+                        RatingResponse rating) {
         this.notificationId = notificationId;
         this.fkAdId = fkAdId;
         this.fkCommentId = fkCommentId;
@@ -104,19 +112,19 @@ public class Notification
         this.ad = ad;
     }
 
-    public Comment getComment() {
+    public CommentResponse getComment() {
         return comment;
     }
 
-    public void setComment(Comment comment) {
+    public void setComment(CommentResponse comment) {
         this.comment = comment;
     }
 
-    public Rating getRating() {
+    public RatingResponse getRating() {
         return rating;
     }
 
-    public void setRating(Rating rating) {
+    public void setRating(RatingResponse rating) {
         this.rating = rating;
     }
 }

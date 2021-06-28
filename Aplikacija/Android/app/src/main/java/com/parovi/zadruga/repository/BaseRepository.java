@@ -58,27 +58,27 @@ public abstract class BaseRepository {
 
     protected void saveAdsLocally(List<Ad> ads){
         
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (Ad a: ads) {
-                    if(a.getLocation() != null)
-                        a.setFkLocationId(a.getLocation().getLocId());
-                    a.setFkEmployerId(a.getEmployer().getUserId());
-                    
-                    DaoFactory.getLocationDao().insertOrUpdate(a.getLocation());
-                    DaoFactory.getTagDao().insertOrUpdate(a.getTags());
-
-                    DaoFactory.getUserDao().insertOrUpdate(a.getEmployer());
-                    DaoFactory.getAdDao().insertOrUpdate(a);
-                    if(a.getTags() != null) {
-                        for (Tag tag : a.getTags()) {
-                            DaoFactory.getAdTagDao().insertOrUpdate(new AdTag(a.getAdId(), tag.getTagId()));
-                        }
-                    }
-                }
-            }
-        });
+//        Utility.getExecutorService().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                for (Ad a: ads) {
+//                    if(a.getLocation() != null)
+//                        a.setFkLocationId(a.getLocation().getLocId());
+//                    a.setFkEmployerId(a.getEmployer().getUserId());
+//
+//                    DaoFactory.getLocationDao().insertOrUpdate(a.getLocation());
+//                    DaoFactory.getTagDao().insertOrUpdate(a.getTags());
+//
+//                    DaoFactory.getUserDao().insertOrUpdate(a.getEmployer());
+//                    DaoFactory.getAdDao().insertOrUpdate(a);
+//                    if(a.getTags() != null) {
+//                        for (Tag tag : a.getTags()) {
+//                            DaoFactory.getAdTagDao().insertOrUpdate(new AdTag(a.getAdId(), tag.getTagId()));
+//                        }
+//                    }
+//                }
+//            }
+//        });
     }
 
     protected void saveAdLocally(Ad ad){

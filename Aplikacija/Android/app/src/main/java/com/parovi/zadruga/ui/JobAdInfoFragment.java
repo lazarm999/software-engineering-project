@@ -1,11 +1,13 @@
 package com.parovi.zadruga.ui;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,7 +20,6 @@ import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.viewModels.AdViewModel;
 
@@ -100,6 +101,7 @@ public class JobAdInfoFragment extends Fragment {
     }
 
     // samo za uputstvo
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void generateComments() {
         List<CommentResponse> comments = new ArrayList<CommentResponse>();
         comments.add(new CommentResponse(100, 100, "Da li možete proceniti koliko će nam vremena trebati?", Date.from(Instant.now()), new User()));
