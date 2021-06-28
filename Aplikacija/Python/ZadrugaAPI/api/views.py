@@ -738,5 +738,3 @@ class IsApplied(APIView):
     def get(self, request, pk, *args, **kwargs):
         ad = Applied.objects.filter(user__userId=request._auth, ad__adId=pk)
         return Response(len(ad) > 0)
-
-# TODO: Docker
