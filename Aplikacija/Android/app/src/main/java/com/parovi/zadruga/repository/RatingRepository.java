@@ -86,8 +86,7 @@ public class RatingRepository extends BaseRepository {
                             @Override
                             public void run() {
                                 for (RatingResponse r: response.body()) {
-                                    DaoFactory.getUserDao().insertOrUpdate(r.getRater());
-                                    DaoFactory.getRatingDao().insertOrUpdate(new Rating(r.getRater().getUserId(), r.getRatee(), r.getRating(), r.getComment(), r.getPostTime()));
+                                    saveRatingLocally(r);
                                 }
                             }
                         });

@@ -150,8 +150,6 @@
     <string name="accepted">You are accepted</string>
     <string name="declined">You are declined</string>
     <string name="tagged">User %1$s has tagged</string>
-    <string name="adComment">User %1$s left a comment</string>
-    <string name="rating">User %1$s rated you</string>
     <string name="successfulNewAd">You created new ad successfully!</string>
     <string name="badRequestNewAd">Please fill in all the required fields!</string>
     <string name="serverErrorNewAd">There was a problem with server connection!</string>
@@ -167,4 +165,7 @@
     <string name="applicants">Applicants</string>
     <string name="preferences">Choose preferences</string>
     <string name="AdNotFound">Error! Ad Not Found!</string>
+    <string name="adComment">User %1$s has left a comment</string>
+    <string name="notif_rating">User %1$s rated you</string>
+    <string name="notif_chat">User %1$s has sent you a message</string>
 </resources>

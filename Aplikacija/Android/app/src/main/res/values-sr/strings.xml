@@ -158,10 +158,11 @@
     <string name="declined">Odbijeni ste za posao</string>
     <string name="tagged">Korisnik %1$s Vas je tagovao</string>
     <string name="adComment">Korisnik %1$s je ostavio komentar</string>
-    <string name="rating">Korisnik %1$s Vas je oceno</string>
     <string name="type">*Tip korisnika</string>
     <string name="student">Student</string>
     <string name="employer">Poslodavac</string>
     <string name="notAllFull">Niste popunili sva polja!</string>
     <string name="AdNotFound">Greška! Oglas za posao nije pronađen.</string>
+    <string name="notif_rating">Korisnik %1$s Vas je oceno</string>
+    <string name="notif_chat">Korisnik %1$s Vam je poslao poruku</string>
 </resources>

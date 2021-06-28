@@ -19,6 +19,12 @@ public class CommentResponse {
     public CommentResponse() {
     }
 
+    public CommentResponse(int id, int ad, String comment, Date postTime){
+        this.ad = ad;
+        this.comment = comment;
+        this.postTime = postTime;
+    }
+
     public CommentResponse(int id, int ad, String comment, Date postTime, User user) {
         this.id = id;
         this.ad = ad;

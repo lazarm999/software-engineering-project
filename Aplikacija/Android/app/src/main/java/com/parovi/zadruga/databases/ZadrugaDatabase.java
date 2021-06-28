@@ -10,6 +10,7 @@ import androidx.room.TypeConverters;
 import com.parovi.zadruga.daos.AdDao;
 import com.parovi.zadruga.daos.AdTagDao;
 import com.parovi.zadruga.daos.AppliedDao;
+import com.parovi.zadruga.daos.NotificationDao;
 import com.parovi.zadruga.daos.TaggedDao;
 import com.parovi.zadruga.daos.UserChatDao;
 import com.parovi.zadruga.daos.lookupDaos.BadgeDao;
@@ -65,6 +66,7 @@ abstract public class ZadrugaDatabase extends RoomDatabase {
     public abstract UserChatDao userChatDao();
     public abstract UniversityDao universityDao();
     public abstract TaggedDao taggedDao();
+    public abstract NotificationDao notificationDao();
 
     public static synchronized ZadrugaDatabase getInstance(Context context){
         if(db == null){

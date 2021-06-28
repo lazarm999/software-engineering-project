@@ -40,7 +40,7 @@ public abstract class AdDao extends BaseDao<Ad> {
     public abstract ListenableFuture<AdWithTags> getAdWithTagsById(int adId);
 
     @Query("SELECT * FROM Ad WHERE Ad.adId == :id")
-    public abstract ListenableFuture<List<Ad>> getAdById(int id);
+    public abstract Ad getAdById(int id);
 
     @Query("SELECT * FROM Ad WHERE Ad.fkQbChatId LIKE :qbChatId")
     public abstract Ad getAdByQbChatId(String qbChatId);
@@ -52,4 +52,18 @@ public abstract class AdDao extends BaseDao<Ad> {
             "SET fkQbChatId = :chatId "+
             "WHERE Ad.adId LIKE :adId")
     public abstract void updateQbChatId(String chatId, int adId);
+
+    @Query("select a.* from Ad as a join AdTag " +
+            "on a.adId  = AdTag.fkAdId where AdTag.fkTagId in (:tags) group by a.adId " +
+            "order by count(*) desc, postTime desc limit :pageSkip, :pageSize")
+    public abstract List<AdWithTags> getAds(int pageSize, int pageSkip, List<Integer> tags);
+
+    @Query("select a.* from Ad as a join AdTag " +
+            "on a.adId  = AdTag.fkAdId " +
+            "limit :pageSkip, :pageSize")
+    public abstract List<Ad> getAds(int pageSize, int pageSkip);
+
+    /*@Query("select a.* from Ad as a join AdTag " +
+            "on a.adId  = AdTag.fkAdId")
+    public abstract List<Ad> getAds(int pageSize, int pageSkip, List<Integer> tags);*/
 }

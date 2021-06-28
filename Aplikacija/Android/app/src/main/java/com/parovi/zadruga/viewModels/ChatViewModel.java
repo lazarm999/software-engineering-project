@@ -99,8 +99,7 @@ public class ChatViewModel extends ViewModel {
     }
 
     public void sendMessage(String message){
-        chatRepository.sendMessage(isSent, messages, chats, activeQbChat, message);
-    }
+        chatRepository.sendMessage(isSent, messages, chats, activeChat.getQbChat(), message, activeChat.getFkAdId()); }
 
     public void removeGlobalMessageListener(){
         chatRepository.removeGlobalMessageReceivedListener(newMessageListener);
