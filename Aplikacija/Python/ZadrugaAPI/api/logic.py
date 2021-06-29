@@ -170,9 +170,24 @@ class NotificationLogic:
         data = {
             'rater': rating.rater.username,
             'rating': rating.rating,
+            'comment': rating.comment,
             'type': 'rating'
         }
         NotificationLogic.sendPushNotifications(data, userFcms)
+
+
+    def sendAppliedNotification(applied):
+        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user=applied.ad.employer)]
+
+        data = {
+            'type': 'applied',
+            'adId': applied.ad.adId,
+            'title': applied.ad.title,
+            'username': applied.user.username
+        }
+
+        NotificationLogic.sendPushNotifications(data, userFcms)
+
 
     def sendChatNotification(username, adId, message, userQbIds, chatQbId):
         userFcms = [u.fcmToken for u in UserFCM.objects.filter(user__userQbId__in=userQbIds)]

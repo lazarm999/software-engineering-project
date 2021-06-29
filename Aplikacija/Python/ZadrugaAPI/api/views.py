@@ -492,6 +492,7 @@ class Apply(APIView):
         a.ad = ad
         try:
             a.save()
+            NotificationLogic.sendAppliedNotification(a)
         except:
             return r500('Failed to apply for job')
         serialized = AppliedSerializer(a)
