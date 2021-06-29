@@ -91,7 +91,7 @@ public class EditProfileViewModel extends AndroidViewModel {
     }
 
     public void updateUser() {
-        userRepository.updateUser(Utility.getAccessToken(App.getAppContext()), isUserUpdated, (User)userInfo.getValue().getBody());
+        userRepository.updateUser(Utility.getAccessToken(App.getAppContext()), isUserUpdated, (User)userInfo.getValue().getBody(), null, null);
     }
     public void updateUserProfilePhoto(Resources res, Uri uri, int reqWidth, int reqHeight) {
         userRepository.postProfilePicture(

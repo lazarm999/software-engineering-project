@@ -13,14 +13,6 @@ import java.util.Date;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-/*(foreignKeys = {@ForeignKey(entity = User.class,
-                        parentColumns = "userId",
-                        childColumns = "fkUserId",
-                            onDelete = CASCADE),
-                        @ForeignKey(entity = Ad.class,
-                        parentColumns = "adId",
-                        childColumns = "fkAdId",
-                        onDelete = CASCADE)})*/
 @Entity
 public class Comment {
     @PrimaryKey
@@ -31,8 +23,6 @@ public class Comment {
     private int fkAdId;
     private String comment;
     private Date postTime;
-
-
 
     public Comment() {
     }

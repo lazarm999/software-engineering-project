@@ -19,6 +19,8 @@ public class Constants {
     public static final String IS_ARCHIVED = "isArchived";
     public static final String AD_ID = "adId";
     public static final String MESSAGES = "messages";
+    public static final String AD_REPORT = "adReport";
+    public static final String COMMENT_REPORT = "commentReport";
     //tipovi notifikacija
     public static final String NOTIF_ACCEPTED = "accepted";
     public static final String NOTIF_DECLINED = "declined";
@@ -28,4 +30,8 @@ public class Constants {
     public static final String NOTIF_AD_COMMENT = "adComment";//tag za owner-a ad-a
     public static final String LOGGED_IN_USER = "loggedInUser";
     public static final int pageSize = 20;
+
+    public static final String EMPLOYEE = "employee";
+    public static final String EMPLOYER = "employer";
+    public static final String ADMIN = "admin";
 }

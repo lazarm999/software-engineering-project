@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.parovi.zadruga.App;
+import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.viewModels.LoginViewModel;
@@ -39,17 +40,17 @@ public class LogInActivity extends AppCompatActivity {
         btnLogIn = findViewById(R.id.btnLogIn);
 
 
-        model.getIsEmployer().observe(this, new Observer<CustomResponse<?>>() {
-            @Override
-            public void onChanged(CustomResponse<?> customResponse) {
-                if(customResponse.getStatus() == CustomResponse.Status.OK){
-                    Intent intent;
-                    if((Boolean) customResponse.getBody())
-                        intent = new Intent(LogInActivity.this, MainEmployerActivity.class);
-                    else
-                        intent = new Intent(LogInActivity.this, MainStudentActivity.class);
-                    startActivity(intent);
-                }
+        model.getUserType().observe(this, customResponse -> {
+            if(customResponse.getStatus() == CustomResponse.Status.OK){
+                Intent intent;
+                String type = (String) customResponse.getBody();
+                if(type.equals(Constants.ADMIN))
+                    intent = new Intent(LogInActivity.this, AdminActivity.class);
+                else if (type.equals(Constants.EMPLOYER))
+                    intent = new Intent(LogInActivity.this, MainEmployerActivity.class);
+                else
+                    intent = new Intent(LogInActivity.this, MainStudentActivity.class);
+                startActivity(intent);
             }
         });
 

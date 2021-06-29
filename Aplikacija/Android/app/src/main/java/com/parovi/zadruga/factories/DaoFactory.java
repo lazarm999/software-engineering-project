@@ -10,6 +10,7 @@ import com.parovi.zadruga.daos.MessageDao;
 import com.parovi.zadruga.daos.NotificationDao;
 import com.parovi.zadruga.daos.PreferredTagDao;
 import com.parovi.zadruga.daos.RatingDao;
+import com.parovi.zadruga.daos.ReportDao;
 import com.parovi.zadruga.daos.TagDao;
 import com.parovi.zadruga.daos.TaggedDao;
 import com.parovi.zadruga.daos.UserBadgeDao;
@@ -41,6 +42,7 @@ public class DaoFactory {
     private static TaggedDao taggedDao;
     private static NotificationDao notificationDao;
     private static PreferredTagDao preferredTagDao;
+    private static ReportDao reportDao;
 
     /*Retrofit notifications = new Retrofit.Builder()
             .baseUrl(Constants.FCM_BASE_URL)
@@ -173,11 +175,18 @@ public class DaoFactory {
         }
         return notificationDao;
     }
-    //0692244342
+
     public static PreferredTagDao getPreferredTagDao() {
         if(preferredTagDao == null){
             preferredTagDao = getLocalDb().preferredTagDao();
         }
         return preferredTagDao;
+    }
+
+    public static ReportDao getReportDao() {
+        if(reportDao == null){
+            reportDao = getLocalDb().reportDao();
+        }
+        return reportDao;
     }
 }

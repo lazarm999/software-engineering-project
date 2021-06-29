@@ -275,6 +275,7 @@
                         android:fontFamily="@font/roboto_condensed_regular"
                         android:hint="@string/filterFeeFrom"
                         android:inputType="numberSigned"
+                        android:paddingLeft="5dp"
                         android:textColorHighlight="@color/grey"
                         android:textColorLink="@color/black"
                         android:textCursorDrawable="@color/grey"
@@ -290,6 +291,7 @@
                         android:fontFamily="@font/roboto_condensed_regular"
                         android:hint="@string/filterFeeTo"
                         android:inputType="numberSigned"
+                        android:paddingLeft="5dp"
                         android:textCursorDrawable="@color/grey"
                         android:textSize="16dp" />
                 </LinearLayout>

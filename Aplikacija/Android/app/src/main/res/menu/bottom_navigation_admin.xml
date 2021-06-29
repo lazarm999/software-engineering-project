@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/adminFeed"
+        android:title="@string/feed"
+        android:icon="@drawable/ic_ads"/>
+    <item
+        android:id="@+id/adminReports"
+        android:icon="@drawable/report"
+        android:title="@string/reports" />
+</menu>

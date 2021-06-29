@@ -7,6 +7,7 @@ import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
 import com.parovi.zadruga.models.requestModels.ChatMembersRequest;
 import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
 import com.parovi.zadruga.models.requestModels.LoginRequest;
+import com.parovi.zadruga.models.requestModels.ReportRequest;
 import com.parovi.zadruga.models.responseModels.LoginResponse;
 
 import java.util.List;
@@ -75,4 +76,7 @@ public interface UserApi {
 
     @DELETE("userFcm/{fcmToken}/")
     Call<ResponseBody> deleteFcmToken(@Header("Authorization") String token, @Path("fcmToken") String fcmToken);
+
+    @POST("report/")
+    Call<ResponseBody> postReport(@Header("Authorization") String token, @Body ReportRequest request);
 }

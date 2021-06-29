@@ -96,8 +96,8 @@ public class NotificationService extends FirebaseMessagingService {
                     intent = new Intent(this, JobAdActivity.class);
                     break;
                 case Constants.NOTIF_RATING:
-                    title = getString(R.string.notif_rating, data.get("username"));
-                    //u bodi ce da ide ocena i komentar
+                    title = getString(R.string.notif_rating, data.get("rater"));
+                    body = getString(R.string.rating, data.get("rating")) + " " + data.get("comment");
                     if (Utility.getLoggedInUser(App.getAppContext()).isEmployer())
                         intent = new Intent(this, MainEmployerActivity.class);
                     else

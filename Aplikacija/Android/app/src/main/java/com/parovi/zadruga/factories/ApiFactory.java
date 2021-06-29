@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.api.AdApi;
+import com.parovi.zadruga.api.AdminApi;
 import com.parovi.zadruga.api.CommentApi;
 import com.parovi.zadruga.api.LookupApi;
 import com.parovi.zadruga.api.NotificationApi;
@@ -21,6 +22,7 @@ public class ApiFactory {
     private static CommentApi commentApi;
     private static RatingApi ratingApi;
     private static NotificationApi notificationApi;
+    public static AdminApi adminApi;
 
     private static Retrofit getBackend(){
         if(backend == null){
@@ -73,5 +75,12 @@ public class ApiFactory {
             notificationApi = getBackend().create(NotificationApi.class);
         }
         return notificationApi;
+    }
+
+    public static AdminApi getAdminApi() {
+        if(adminApi == null){
+            adminApi = getBackend().create(AdminApi.class);
+        }
+        return adminApi;
     }
 }

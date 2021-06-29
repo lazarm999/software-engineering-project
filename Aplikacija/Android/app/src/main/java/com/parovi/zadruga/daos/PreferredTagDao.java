@@ -3,7 +3,7 @@ package com.parovi.zadruga.daos;
 import androidx.room.Dao;
 import androidx.room.Query;
 
-import com.parovi.zadruga.models.PreferredTag;
+import com.parovi.zadruga.models.entityModels.PreferredTag;
 
 import java.util.List;
 

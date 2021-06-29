@@ -165,4 +165,9 @@
     <string name="AdNotFound">Greška! Oglas za posao nije pronađen.</string>
     <string name="notif_rating">Korisnik %1$s Vas je oceno</string>
     <string name="notif_chat">Korisnik %1$s Vam je poslao poruku</string>
+    <string name="reportedHeading">Prijavljeni korisnici</string>
+    <string name="deleteReport">Obriši prijavu</string>
+    <string name="reportTitle">Korisnik %1$s je prijavio korisnika %2$s</string>
+    <string name="rating">Ocena %1$s:</string>
+    <string name="reports">Prijave</string>
 </resources>

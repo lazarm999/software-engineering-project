@@ -34,17 +34,15 @@ public class MainActivity<AlterDialog> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         User user;
         if((user = Utility.getLoggedInUser(this)) != null){
-            if(user.isEmployer()) {
-                Intent intent = new Intent(MainActivity.this, MainEmployerActivity.class);
-                startActivity(intent);
-            }
+            Intent intent;
+            if(user.isAdmin())
+                intent = new Intent(MainActivity.this, AdminActivity.class);
+            else if(user.isEmployer())
+                intent = new Intent(MainActivity.this, MainEmployerActivity.class);
             else
-            {
-                Intent intent = new Intent(MainActivity.this, MainStudentActivity.class);
-                startActivity(intent);
-            }
+                intent = new Intent(MainActivity.this, MainStudentActivity.class);
+            startActivity(intent);
         }
-
         loadLocale();
 
 

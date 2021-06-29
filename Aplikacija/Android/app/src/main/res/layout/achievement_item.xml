@@ -33,8 +33,7 @@
             android:inputType="text"
             android:text="TextView"
             android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/imgRatingJob"
@@ -52,18 +51,17 @@
             android:inputType="numberSigned"
             android:text="TextView"
             android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvCommentJob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="TextView"
             android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

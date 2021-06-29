@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="5dp"
     android:background="@color/background"
     tools:context=".activities.SignUpActivity">
 
@@ -11,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imgSignUp"
-        android:layout_width="237dp"
-        android:layout_height="143dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp"
-        app:srcCompat="@drawable/signup" />
+        <ImageView
+            android:id="@+id/imgSignUp"
+            android:layout_width="237dp"
+            android:layout_height="143dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="29dp"
+            app:srcCompat="@drawable/signup" />
 
         <TextView
             android:id="@+id/lblName"
@@ -39,11 +40,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="104dp"
-            android:layout_marginTop="225dp"
+            android:layout_marginTop="231dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/border_for_inputs"
             android:fontFamily="@font/roboto_condensed_regular"
+            android:gravity="center_vertical"
             android:hint="@string/signNamePlaceholder"
             android:inputType="textPersonName"
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
             android:textColor="@color/black"
             android:textSize="16dp" />
 
@@ -53,8 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="104dp"
-            android:layout_marginTop="255dp"
+            android:layout_marginLeft="105dp"
+            android:layout_marginTop="266dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/signSurname"
             android:textColor="@color/lila"
@@ -66,11 +72,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="104dp"
-            android:layout_marginTop="285dp"
+            android:layout_marginTop="294dp"
             android:background="@drawable/border_for_inputs"
             android:fontFamily="@font/roboto_condensed_regular"
             android:hint="@string/signSurnamePlaceholder"
             android:inputType="textPersonName"
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
             android:textColor="@color/black"
             android:textSize="16dp" />
 
@@ -110,8 +119,10 @@
             android:layout_width="85dp"
             android:layout_height="24dp"
             android:layout_alignParentRight="true"
+            android:layout_marginStart="-6dp"
             android:layout_marginTop="355dp"
-            android:layout_marginRight="64dp"
+            android:layout_marginRight="-15dp"
+            android:layout_toEndOf="@+id/checkBoxM"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/genderF"
             android:textSize="12dp"
@@ -142,6 +153,9 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:hint="@string/usernamePlaceholder"
             android:inputType="textPersonName"
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
             android:textColor="@color/black"
             android:textSize="16dp" />
 
@@ -169,6 +183,9 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:hint="@string/emailPlaceholder"
             android:inputType="textPersonName"
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
             android:textColor="@color/black"
             android:textSize="16dp" />
 
@@ -196,6 +213,9 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:hint="@string/mobilePlaceholder"
             android:inputType="textPersonName"
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
             android:textColor="@color/black"
             android:textSize="16dp" />
 
@@ -224,6 +244,9 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:hint="@string/signPasswordPlaceholder"
             android:inputType="textPersonName"
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
             android:textColor="@color/black"
             android:textSize="16dp" />
 
@@ -263,8 +286,8 @@
             android:layout_width="85dp"
             android:layout_height="24dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="76dp"
             android:layout_marginTop="655dp"
+            android:layout_marginRight="76dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/employer"
             android:textSize="12dp"
@@ -295,6 +318,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="80dp"
             android:layout_marginTop="720dp"
+            android:layout_marginBottom="40dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:foregroundGravity="center"
             android:gravity="center"

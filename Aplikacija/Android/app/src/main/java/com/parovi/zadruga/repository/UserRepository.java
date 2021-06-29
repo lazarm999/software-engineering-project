@@ -19,12 +19,14 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.parovi.zadruga.App;
+import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.factories.ApiFactory;
 import com.parovi.zadruga.factories.DaoFactory;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.Badge;
+import com.parovi.zadruga.models.entityModels.PreferredTag;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.Applied;
 import com.parovi.zadruga.models.nonEntityModels.UserWithFaculty;
@@ -33,6 +35,7 @@ import com.parovi.zadruga.models.requestModels.BanRequest;
 import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
 import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
 import com.parovi.zadruga.models.requestModels.LoginRequest;
+import com.parovi.zadruga.models.requestModels.ReportRequest;
 import com.parovi.zadruga.models.responseModels.LoginResponse;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.core.QBEntityCallback;
@@ -122,8 +125,6 @@ public class UserRepository extends BaseRepository {
     }
 
     public void loginUser(MutableLiveData<CustomResponse<?>> isEmployer, String email, String pass){
-        //TODO: ovde treba da vuku posaljes fcmToken, kako bi znao kome da salje notif
-        //TODO: kazi mu ne moz se ulogujes
         ApiFactory.getUserApi().loginUser(new LoginRequest(email, pass)).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> apiResponse) {
@@ -146,7 +147,14 @@ public class UserRepository extends BaseRepository {
                                         return;
                                     }
                                     Utility.saveLoggedUserInfo(App.getAppContext(), apiResponse.body().getToken(), apiResponse.body().getUser(), pass, task.getResult());
-                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, apiResponse.body().getUser().isEmployer()));
+                                    String type;
+                                    if(apiResponse.body().getUser().isAdmin())
+                                        type = Constants.ADMIN;
+                                    else if(apiResponse.body().getUser().isEmployer())
+                                        type = Constants.EMPLOYER;
+                                    else
+                                        type = Constants.EMPLOYEE;
+                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, type, ""));
                                     ApiFactory.getUserApi().postFcmToken(apiResponse.body().getToken(), new AddFcmTokenRequest(task.getResult()))
                                             .enqueue(new Callback<ResponseBody>() {
                                                 @Override
@@ -323,17 +331,26 @@ public class UserRepository extends BaseRepository {
     }
 
     //kad mi saljes user-a nek on bude popunjen i novim podacima koje hoces da menjas, a i ostalim podacima koje nisi menjala/o
-    public void updateUser(String token, MutableLiveData<CustomResponse<?>> isUpdated, User user){
+    public void updateUser(String token, MutableLiveData<CustomResponse<?>> isUpdated, User user, List<Integer> newPreferredTags, List<Integer> oldPreferredTags){
         ApiFactory.getUserApi().updateUser(token, user.getUserId(), user).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
                 if(response.isSuccessful()){
-                    isUpdated.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
                     Utility.getExecutorService().execute(new Runnable() {
                         @Override
                         public void run() {
-                            //User tmpUser = DaoFactory.getUserDao().getUserById(user.getUserId());
                             DaoFactory.getUserDao().insertOrUpdate(user);
+                            if(oldPreferredTags != null){
+                                for (Integer tagId : oldPreferredTags) {
+                                    DaoFactory.getPreferredTagDao().deletePreferredTag(tagId);
+                                }
+                            }
+                            if(newPreferredTags != null){
+                                for (Integer tagId : newPreferredTags) {
+                                    DaoFactory.getPreferredTagDao().insertOrUpdate(new PreferredTag(tagId));
+                                }
+                            }
+                            isUpdated.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
                         }
                     });
                 }
@@ -550,6 +567,31 @@ public class UserRepository extends BaseRepository {
                             postedAds.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpList));
                     }
                 }
+            }
+        });
+    }
+
+    public void postReport(MutableLiveData<CustomResponse<?>> isReported, Integer adId, Integer commentId, String elaboration){
+        final String token = Utility.getAccessToken(App.getAppContext());
+        ReportRequest reportRequest;
+        if(adId != null && commentId == null)
+            reportRequest = new ReportRequest(adId, elaboration);
+        else if (commentId != null && adId == null)
+            reportRequest = new ReportRequest(elaboration, commentId);
+        else{
+            responseNotSuccessful(400, isReported);
+            return;
+        }
+        Utility.getExecutorService().execute(() -> {
+            try {
+                Response<ResponseBody> res = ApiFactory.getUserApi().postReport(token, reportRequest).execute();
+                if(res.isSuccessful()){
+                    isReported.postValue(new CustomResponse<>(CustomResponse.Status.OK, isReported));
+                } else
+                    responseNotSuccessful(res.code(), isReported);
+            } catch (IOException e) {
+                e.printStackTrace();
+                apiCallOnFailure(e.getMessage(), isReported);
             }
         });
     }

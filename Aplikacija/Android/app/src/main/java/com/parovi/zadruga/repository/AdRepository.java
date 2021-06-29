@@ -19,6 +19,7 @@ import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.factories.ApiFactory;
 import com.parovi.zadruga.factories.DaoFactory;
 import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.PreferredTag;
 import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.AdTag;
@@ -593,45 +594,49 @@ public class AdRepository extends BaseRepository {
     }
 
     public void getRecommendedAds(MutableLiveData<CustomResponse<?>> ads){
-        List<Integer> tagIds = Arrays.asList(1,2);
-        String token = Utility.getAccessToken(App.getAppContext());
-        Boolean[] isSynced = {false};
-        int pageSkip = getListSize(ads);
-        getRecommendedAdsLocal(ads, isSynced, pageSkip, tagIds);
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response<List<Ad>> adsResponse = ApiFactory.getAdApi().getRecommendedAds(token, tagIds, Constants.pageSize, pageSkip).execute();
-                    if(adsResponse.isSuccessful()){
-                        if(adsResponse.body() != null){
-                            synchronized (isSynced[0]){
-                                ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, adsResponse.body()));
-                                isSynced[0] = true;
-                            }
-                            saveAdsLocally(adsResponse.body());
+        Utility.getExecutorService().execute(() -> {
+            try {
+                List<PreferredTag> preferredTags = DaoFactory.getPreferredTagDao().getPreferredTags();
+                List<Integer> tagIds = preferredTagsToListInteger(preferredTags);
+                String token = Utility.getAccessToken(App.getAppContext());
+                Boolean[] isSynced = {false};
+                int pageSkip = getListSize(ads);
+                getRecommendedAdsLocal(ads, isSynced, pageSkip, tagIds);
+                Response<List<Ad>> adsResponse = ApiFactory.getAdApi().getRecommendedAds(token, tagIds,
+                        Constants.pageSize, pageSkip).execute();
+                if(adsResponse.isSuccessful()){
+                    if(adsResponse.body() != null){
+                        synchronized (isSynced[0]){
+                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, adsResponse.body()));
+                            isSynced[0] = true;
                         }
-                    } else
-                        responseNotSuccessful(adsResponse.code(), ads);
-                    Log.i("ne", "run: ");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    apiCallOnFailure(e.getMessage(), ads);
-                }
+                        saveAdsLocally(adsResponse.body());
+                    }
+                } else
+                    responseNotSuccessful(adsResponse.code(), ads);
+                Log.i("ne", "run: ");
+            } catch (IOException e) {
+                e.printStackTrace();
+                apiCallOnFailure(e.getMessage(), ads);
             }
         });
     }
 
+    private List<Integer> preferredTagsToListInteger(List<PreferredTag> preferredTags) {
+        if(preferredTags == null) return null;
+        List<Integer> tagIds = new ArrayList<>();
+        for (PreferredTag preferredTag : preferredTags)
+            tagIds.add(preferredTag.getTagId());
+        return tagIds;
+    }
+
     private void getRecommendedAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, int pageSkip, List<Integer> tagIds) {
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Ad> localAds = DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip, tagIds);
-                if(localAds != null){
-                    synchronized (isSynced[0]){
-                        if(!isSynced[0])
-                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, localAds));
-                    }
+        Utility.getExecutorService().execute(() -> {
+            List<Ad> localAds = DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip, tagIds);
+            if(localAds != null){
+                synchronized (isSynced[0]){
+                    if(!isSynced[0])
+                        ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, localAds));
                 }
             }
         });

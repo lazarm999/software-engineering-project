@@ -57,6 +57,7 @@
         android:fontFamily="@font/roboto_condensed_regular"
         android:hint="@string/logName"
         android:inputType="textPersonName"
+        android:text="admin@gmail.com"
         android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="20dp" />
@@ -73,6 +74,7 @@
         android:fontFamily="@font/roboto_condensed_regular"
         android:hint="@string/logPassword"
         android:inputType="textPassword"
+        android:text="sifra123"
         android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="20dp" />

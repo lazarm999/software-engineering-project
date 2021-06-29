@@ -126,6 +126,7 @@
     <string name="profileStudent">Profile</string>
     <string name="notificationsStudent">Notifications</string>
     <string name="daysAgo">%1d days ago</string>
+    <string name="reports">Reports</string>
     <string name="dayAgo">%1d day ago</string>
     <string name="hoursAgo">%1d hours ago</string>
     <string name="lessThen6hourAgo">%1d hour ago</string>
@@ -149,7 +150,7 @@
     <string name="submitRating">Submit</string>
     <string name="accepted">You are accepted</string>
     <string name="declined">You are declined</string>
-    <string name="tagged">User %1$s has tagged</string>
+    <string name="tagged">User %1$s has tagged you</string>
     <string name="successfulNewAd">You created new ad successfully!</string>
     <string name="badRequestNewAd">Please fill in all the required fields!</string>
     <string name="serverErrorNewAd">There was a problem with server connection!</string>
@@ -168,4 +169,8 @@
     <string name="adComment">User %1$s has left a comment</string>
     <string name="notif_rating">User %1$s rated you</string>
     <string name="notif_chat">User %1$s has sent you a message</string>
+    <string name="reportedHeading">Reported users</string>
+    <string name="deleteReport">Delete report</string>
+    <string name="reportTitle">User %1$s has reported user %2$s</string>
+    <string name="rating">Rating %1$s:</string>
 </resources>

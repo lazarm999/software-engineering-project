@@ -4,6 +4,7 @@ import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.requestModels.EditAdRequest;
 import com.parovi.zadruga.models.requestModels.ChooseApplicantsRequest;
 import com.parovi.zadruga.models.requestModels.PostAdRequest;
+import com.parovi.zadruga.models.requestModels.ReportRequest;
 
 import java.util.List;
 
