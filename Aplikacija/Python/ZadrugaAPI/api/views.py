@@ -35,6 +35,7 @@ class Register(generics.GenericAPIView, mixins.CreateModelMixin):
     def perform_create(self, serializer):
         inst = serializer.save()
         inst.password = make_password(inst.password)
+        inst.isAdmin = False
         inst.save()
 
 
@@ -328,7 +329,7 @@ class AdList(generics.ListCreateAPIView):
         pageSkip = request.query_params.get('pageSkip')
         pageSize = request.query_params.get('pageSize')
 
-        ads = Ad.objects.all()
+        ads = Ad.objects.filter(isClosed=False)
         if sortLocationLatitude and sortLocationLongitude:
             ads = ads.order_by((F('location__longitude')-sortLocationLongitude)**2
                 + (F('location__latitude')-sortLocationLatitude)**2 ,'-postTime')
@@ -360,7 +361,8 @@ class AdDetail(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Update
 
     def delete(self, request, pk, *args, **kwargs):
         ad = get_object_or_404(Ad, pk=pk)
-        if ad.employer.userId != request._auth:
+        user = get_object_or_404(User, pk=request._auth)
+        if ad.employer.userId != request._auth and not user.isAdmin:
             return r401('Unauthorized')
         try:
             ad.delete()
@@ -456,7 +458,8 @@ class CommentDetail(APIView):
 
     def delete(self, request, pk, *args, **kwargs):
         comment = get_object_or_404(Comment, pk=pk)
-        if comment.user.userId != request._auth:
+        user = get_object_or_404(User, pk=request._auth)
+        if comment.user.userId != request._auth and not user.isAdmin:
             return r401('Unauthorized')
         try:
             comment.delete()
@@ -715,6 +718,10 @@ class Recommender(APIView):
 
     def get(self, request, *args, **kwargs):
         tagIds = request.query_params.getlist('tagId')
+
+        if len(tagIds) == 0:
+            return Response([])
+
         pageSkip = request.query_params.get('pageSkip')
         pageSize = request.query_params.get('pageSize')
         tagString = ['(']
@@ -722,11 +729,12 @@ class Recommender(APIView):
             tagString.append(id)
             tagString.append(',')
         tagString[-1] = ')'
+        print("".join(tagString))
         rawQuery = f'select a.adId, a.title, a.description, a.numberOfEmployees,\
             a.compensationMin, a.compensationMax, a.location_id, a.postTime, a.isClosed, \
             a.qbChatId, count(*) as matches from api_ad as a join api_relatedto as r \
-            on a.adId  = r.ad_id where r.tag_id in {"".join(tagString)} group by adId\
-            order by matches desc, postTime desc limit {pageSkip}, {pageSize};'
+            on a.adId  = r.ad_id where r.tag_id in {"".join(tagString)} and not a.isClosed\
+            group by adId order by matches desc, postTime desc limit {pageSkip}, {pageSize};'
         querySet = Ad.objects.raw(rawQuery)
         serialized = AdSerializer(querySet, many=True)
         return Response(serialized.data)
@@ -738,3 +746,57 @@ class IsApplied(APIView):
     def get(self, request, pk, *args, **kwargs):
         ad = Applied.objects.filter(user__userId=request._auth, ad__adId=pk)
         return Response(len(ad) > 0)
+
+
+class ReportedList(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def post(self, request, *args, **kwargs):
+        reporterId = request._auth
+        commentId = request.data.get('commentId')
+        adId = request.data.get('adId')
+        elaboration = request.data.get('elaboration')
+
+        reported = Reported()
+        reported.reporter = get_object_or_404(User, pk=reporterId)
+        reported.elaboration = elaboration
+
+        if not commentId and not adId:
+            return r400('Please report something')
+
+        if commentId:
+            reported.comment = get_object_or_404(Comment, pk=commentId)
+        if adId:
+            reported.ad = get_object_or_404(Ad, pk=adId)
+
+        try:
+            reported.save()
+        except:
+            return r500('Failed saving report')
+        serialized = ReportedSerializer(reported)
+        return r201(serialized.data)
+
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(User, pk=request._auth)
+        if not user.isAdmin:
+            return r401('Unauthorized')
+
+        reported = Reported.objects.all()
+        serialized = ReportedSerializer(reported, many=True)
+        return Response(serialized.data)
+
+
+class ReportedDetail(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def delete(self, request, pk, *args, **kwargs):
+        user = get_object_or_404(User, pk=request._auth)
+        if not user.isAdmin:
+            return r401('Unauthorized')
+
+        reported = get_object_or_404(Reported, pk=pk)
+        try:
+            reported.delete()
+        except:
+            return r500('Failed deleting report')
+        return r204()

@@ -125,3 +125,12 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = ['notificationId', 'ad', 'accepted', 'comment', 'rating', 'tagged']
+
+
+class ReportedSerializer(serializers.ModelSerializer):
+    reporter = UserSerializer()
+    reported = UserSerializer()
+
+    class Meta:
+        model = Reported
+        fields = ['reportId', 'elaboration', 'adTitle', 'commentText', 'adId', 'reported', 'reporter']
