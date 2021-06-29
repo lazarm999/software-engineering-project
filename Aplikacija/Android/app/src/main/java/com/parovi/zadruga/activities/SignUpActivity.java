@@ -7,9 +7,11 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.parovi.zadruga.App;
+import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ActivitySignUpBinding;
 import com.parovi.zadruga.models.entityModels.User;
@@ -31,13 +33,14 @@ public class SignUpActivity extends AppCompatActivity {
 
         model = new ViewModelProvider(this).get(SIgnUpViewModel.class);
 
-        user = new User(binding.txtUsername.getText().toString(), binding.txtName.getText().toString(),
-                binding.txtSurname.getText().toString(), binding.txtEmail.getText().toString(), binding.txtPass.getText().toString());
+
 
         binding.checkBoxE.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 binding.checkBoxS.setEnabled(false);
+                if(!binding.checkBoxE.isChecked())
+                    binding.checkBoxS.setEnabled(true);
             }
         });
 
@@ -45,6 +48,8 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 binding.checkBoxE.setEnabled(false);
+                if(!binding.checkBoxS.isChecked())
+                    binding.checkBoxE.setEnabled(true);
             }
         });
 
@@ -60,6 +65,8 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 binding.checkBoxF.setEnabled(false);
+                if(!binding.checkBoxM.isChecked())
+                    binding.checkBoxF.setEnabled(true);
             }
         });
 
@@ -67,6 +74,20 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 binding.checkBoxM.setEnabled(false);
+                if(!binding.checkBoxF.isChecked())
+                    binding.checkBoxM.setEnabled(true);
+
+            }
+        });
+
+        model.getIsSignedUp().observe(this, new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if(customResponse.getStatus() == CustomResponse.Status.OK){
+                    Intent intent;
+                    intent = new Intent(SignUpActivity.this, LogInActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -76,15 +97,15 @@ public class SignUpActivity extends AppCompatActivity {
                 if(binding.txtUsername.getText().toString().equals("") || binding.txtName.getText().toString().equals("") || binding.txtSurname.getText().toString().equals("") || binding.txtEmail.getText().toString().equals("") || binding.txtPass.getText().toString().equals("") || (!binding.checkBoxE.isChecked() && !binding.checkBoxS.isChecked()))
                     Toast.makeText(App.getAppContext(), R.string.notAllFull, Toast.LENGTH_SHORT).show();
                 else {
+                    user = new User(binding.txtUsername.getText().toString(), binding.txtName.getText().toString(),
+                            binding.txtSurname.getText().toString(), binding.txtEmail.getText().toString(), binding.txtPass.getText().toString(), binding.checkBoxE.isChecked(), binding.txtMobile.getText().toString() == null ? null : binding.txtMobile.getText().toString());
                     model.signUp(user, binding.txtPass.getText().toString());
-                    Intent intent;
-
-                    if (binding.checkBoxE.isChecked()) {
-                        intent = new Intent(SignUpActivity.this, MainEmployerActivity.class);
-                    } else {
-                        intent = new Intent(SignUpActivity.this, MainStudentActivity.class);
-                    }
-                    startActivity(intent);
+                    Toast.makeText(App.getAppContext(), "Success sign up", Toast.LENGTH_SHORT).show();
+//                    Intent intent;
+//
+//                    intent = new Intent(SignUpActivity.this, LogInActivity.class);
+//
+//                    startActivity(intent);
                 }
             }
         });

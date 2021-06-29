@@ -1,6 +1,7 @@
 package com.parovi.zadruga.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -62,6 +63,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(@NonNull NotificationsAdapter.NotificationViewHolder holder, int position) {
         holder.bindTo(notificationList.get(position));
+        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.onNotificationSelected(notificationList.get(position));
+            }
+        });
     }
 
     @Override

@@ -23,7 +23,9 @@ import com.parovi.zadruga.viewModels.NotificationsViewModel;
 import java.util.ArrayList;
 
 import static com.parovi.zadruga.Constants.NOTIF_ACCEPTED;
+import static com.parovi.zadruga.Constants.NOTIF_AD_COMMENT;
 import static com.parovi.zadruga.Constants.NOTIF_RATING;
+import static com.parovi.zadruga.Constants.NOTIF_TAGGED;
 
 public class NotificationsFragment extends Fragment implements  NotificationsAdapter.NotificationListener{
     NotificationsViewModel model;
@@ -81,6 +83,12 @@ public class NotificationsFragment extends Fragment implements  NotificationsAda
         {
             Intent intent = new Intent(requireActivity(), UsersAchievementsActivity.class);
             intent.putExtra("UserAchID", notification.getFkRatingId());
+            startActivity(intent);
+        }
+        else if(notification.getType().equals((NOTIF_AD_COMMENT)) || notification.getType().equals((NOTIF_TAGGED)))
+        {
+            Intent intent = new Intent(requireActivity(), JobAdActivity.class);
+            intent.putExtra(JobAdActivity.AD_ID, notification.getComment().getAd());
             startActivity(intent);
         }
     }

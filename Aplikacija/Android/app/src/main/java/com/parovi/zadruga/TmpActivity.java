@@ -1,23 +1,8 @@
 package com.parovi.zadruga;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -28,14 +13,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.parovi.zadruga.adapters.NotificationsAdapter;
 import com.parovi.zadruga.models.entityModels.Notification;
-import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.nonEntityModels.CommentUser;
 import com.parovi.zadruga.repository.AdRepository;
-import com.parovi.zadruga.repository.BaseRepository;
 import com.parovi.zadruga.repository.ChatRepository;
 import com.parovi.zadruga.repository.LookUpRepository;
 import com.parovi.zadruga.repository.NotificationRepository;
@@ -45,7 +39,6 @@ import com.parovi.zadruga.viewModels.LoginViewModel;
 import com.parovi.zadruga.viewModels.TmpViewModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**/
 public class TmpActivity extends AppCompatActivity {
@@ -258,8 +251,8 @@ public class TmpActivity extends AppCompatActivity {
                 //userRep.loginUser(new MutableLiveData<>(), "vuk.bibic@gmail.com", "novaaasifraaaa");
                 //userRep.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
                 //chatViewModel.addOnGlobalMessageReceived();
-                userRep.registerUser(new MutableLiveData<>(), new User("stefan72", "Stefan", "Petrović", "stefan72@gmail.com",
-                                "sifra123", true),"sifra123");
+//                userRep.registerUser(new MutableLiveData<>(), new User("stefan72", "Stefan", "Petrović", "stefan72@gmail.com",
+//                                "sifra123", true),"sifra123");
                 //rep.getUserById(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), 2);
                 /*User u = new User();
                 u.setBio("ovo je novi bio");

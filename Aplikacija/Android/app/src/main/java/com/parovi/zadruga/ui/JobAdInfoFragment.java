@@ -1,9 +1,14 @@
 package com.parovi.zadruga.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -13,9 +18,11 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.adapters.CommentsAdapter;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
+import com.parovi.zadruga.fragments.StudentProfileFragment;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.viewModels.AdViewModel;
@@ -24,7 +31,7 @@ import java.text.DateFormat;
 import java.util.List;
 
 
-public class JobAdInfoFragment extends Fragment {
+public class JobAdInfoFragment extends Fragment implements CommentsAdapter.CommentListListener{
     private AdViewModel model;
     private FragmentJobAdvertisementBinding binding;
 
@@ -96,8 +103,61 @@ public class JobAdInfoFragment extends Fragment {
                 }
                 adapter.setCommentsList((List<CommentResponse>)customResponse.getBody());
                 binding.rvComments.setVisibility(View.VISIBLE);
+
             }
         });
+
+        //TODO valjda ovde treba da ide za report
+        model.getIsReported().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() != CustomResponse.Status.OK) {
+                    return;
+                }
+
+                binding.imgBtnReportAd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                        dialog.setTitle(R.string.dialogAd);
+
+                        final EditText etReportText = new EditText(requireActivity());
+                        etReportText.setInputType(InputType.TYPE_CLASS_TEXT);
+                        etReportText.setTextSize(16);
+                        dialog.setView(etReportText);
+
+                        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String myText = etReportText.getText().toString();
+                                model.reportAd(myText);
+                            }
+                        });
+
+                        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        dialog.show();
+                    }
+
+                });
+            }
+        });
+
+        model.getIsReportedComment().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() != CustomResponse.Status.OK) {
+                    return;
+                }
+
+
+            }
+        });
+
         // return root view
         return binding.getRoot();
     }
@@ -161,4 +221,37 @@ public class JobAdInfoFragment extends Fragment {
     };
 
 
+    @Override
+    public void onCommentSelected(CommentResponse comment) {
+        Intent intent = new Intent(requireActivity(), EditBasicProfileInfoFragment.class);
+        intent.putExtra(StudentProfileFragment.USER_ID, comment.getUser().getUserId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onReport(CommentResponse comment) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+        dialog.setTitle(R.string.dialogAd);
+
+        final EditText etReportText = new EditText(requireActivity());
+        etReportText.setInputType(InputType.TYPE_CLASS_TEXT);
+        etReportText.setTextSize(16);
+        dialog.setView(etReportText);
+
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String myText = etReportText.getText().toString();
+                model.reportAd(myText);
+            }
+        });
+
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
 }

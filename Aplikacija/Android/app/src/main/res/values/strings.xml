@@ -13,6 +13,10 @@
     <string name="question">Do not have an account?</string>
     <string name="signup">SIGN UP</string>
     <string name="language">Change language</string>
+    <string name="DialogAdMess">Why do you want to report this ad?</string>
+    <string name="DialogCommentMess">Why do you want to report this comment?</string>
+    <string name="dialogAd">Report an ad</string>
+    <string name="dialogComment">Report a comment</string>
     <string name="logName">Username</string>
     <string name="logPassword">Password</string>
     <string name="restorePassword">Change your password</string>

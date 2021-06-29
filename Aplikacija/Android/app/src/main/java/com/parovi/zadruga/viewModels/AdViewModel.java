@@ -13,6 +13,7 @@ import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.AdRepository;
+import com.parovi.zadruga.repository.UserRepository;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,21 +29,27 @@ public class AdViewModel extends AndroidViewModel {
     MutableLiveData<CustomResponse<?>> comments;//List<CommentResponse>
     MutableLiveData<CustomResponse<?>> isPosted;//Boolean
     MutableLiveData<CustomResponse<?>> isDeleted;//Boolean
+    MutableLiveData<CustomResponse<?>> isReported;//Report for ads
+    MutableLiveData<CustomResponse<?>> isReportedComment;//Report for comment
     MutableLiveData<CustomResponse<?>> applicants;
     MutableLiveData<CustomResponse<?>> appliedTo;
     MutableLiveData<CustomResponse<?>> applicantsSelected;
 
     private List<User> selectedUsers;
     AdRepository adRepository;
+    UserRepository userRepository;
 
     public AdViewModel(@NonNull Application app) {
         super(app);
         adRepository = new AdRepository();
+        userRepository = new UserRepository();
         selectedUsers = new LinkedList<User>();
         ad = new MutableLiveData<>();
         comments = new MutableLiveData<>();
         isPosted = new MutableLiveData<>();
         isDeleted = new MutableLiveData<>();
+        isReported = new MutableLiveData<>();
+        isReportedComment = new MutableLiveData<>();
         applicants = new MutableLiveData<>();
         appliedTo = new MutableLiveData<>();
         applicantsSelected = new MutableLiveData<>();
@@ -53,15 +60,17 @@ public class AdViewModel extends AndroidViewModel {
         token = Utility.getAccessToken(App.getAppContext());
     }
 
+
+
     public boolean isAdClosed() {
         return ((Ad)ad.getValue().getBody()).isClosed();
     }
     public boolean isAdMine() {
         return ((Ad)ad.getValue().getBody()).getEmployer().getUserId() == userId;
     }
-    public boolean isUserAppliedToAd() {
-        return (boolean)getAppliedTo().getValue().getBody();
-    }
+//    public boolean isUserAppliedToAd() {
+//        return (boolean)getAppliedTo().getValue().getBody();
+//    }
     public int getNoOfApplicants() {
         return ((Ad)ad.getValue().getBody()).getNumberOfApplied();
     }
@@ -93,6 +102,10 @@ public class AdViewModel extends AndroidViewModel {
     public MutableLiveData<CustomResponse<?>> getIsDeleted() {
         return isDeleted;
     }
+
+    public MutableLiveData<CustomResponse<?>> getIsReported() { return isReported; }
+
+    public MutableLiveData<CustomResponse<?>> getIsReportedComment() { return isReportedComment; }
 
     public MutableLiveData<CustomResponse<?>> getApplicants() { return applicants; }
 
@@ -149,5 +162,11 @@ public class AdViewModel extends AndroidViewModel {
 
     public boolean removeUserFromSelected(User user) {
         return selectedUsers.remove(user);
+    }
+
+    public void reportAd(String elaboration) { //adRepository.reportUser(elaboration, isReported, adId, null);
+    }
+
+    public void reportComment(String elaboration) { //adRepository.reportUser(elaboration, isReportedComment, null, commentId);
     }
 }

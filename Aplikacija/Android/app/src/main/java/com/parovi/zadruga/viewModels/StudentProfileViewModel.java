@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.repository.LookUpRepository;
 import com.parovi.zadruga.repository.UserRepository;
@@ -15,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentProfileViewModel extends AndroidViewModel {
-    private final int userId = 3;
-    private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";;
+    private int userId = 3;
+    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
 
     private MutableLiveData<CustomResponse<?>> user;
     private MutableLiveData<CustomResponse<?>> badges;
@@ -98,6 +100,16 @@ public class StudentProfileViewModel extends AndroidViewModel {
         }
 
         return bool;
+    }
+
+    public void load(int userId) {
+        this.userId = userId;
+        loadUserInfo();
+    }
+
+    public void loadCredentials() {
+        userId = Utility.getLoggedInUserId(App.getAppContext());
+        token = Utility.getAccessToken(App.getAppContext());
     }
 
 }

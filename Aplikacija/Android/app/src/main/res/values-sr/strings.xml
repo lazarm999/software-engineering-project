@@ -170,4 +170,8 @@
     <string name="reportTitle">Korisnik %1$s je prijavio korisnika %2$s</string>
     <string name="rating">Ocena %1$s:</string>
     <string name="reports">Prijave</string>
+    <string name="DialogAdMess">Zbog čega želite da prijavite odabrani oglas?</string>
+    <string name="DialogCommentMess">Zbog čega želite da prijavite odabrani komentar?</string>
+    <string name="dialogAd">Prijavite oglas</string>
+    <string name="dialogComment">Prijavite komentar</string>
 </resources>
