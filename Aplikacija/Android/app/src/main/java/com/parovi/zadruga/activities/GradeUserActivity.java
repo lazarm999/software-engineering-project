@@ -4,9 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -22,9 +21,6 @@ public class GradeUserActivity extends AppCompatActivity {
 
     AchievementViewModel model;
     ActivityGradeUserBinding binding;
-
-    TextView gradeTxt;
-    ImageView gradeImg;
 
     Animation imageAnim, txtAnim;
     int rating = 0;
@@ -98,21 +94,25 @@ public class GradeUserActivity extends AppCompatActivity {
             }
         });
 
-        binding.btnRating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Rating currRate = new Rating(rating, binding.txtComment.getText().toString());
-                model.rateUser(currRate);
-            }
-        });
         model.getIsRated().observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() != CustomResponse.Status.OK)
                 {
-                     //
+                    //
                 }
             }
         });
+
+        binding.btnRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Rating currRate = new Rating(rating, binding.txtComment.getText().toString());
+                model.rateUser(currRate);
+                Toast.makeText(getApplicationContext(), "Successfull grading", Toast.LENGTH_SHORT);
+            }
+        });
+
+
     }
 }

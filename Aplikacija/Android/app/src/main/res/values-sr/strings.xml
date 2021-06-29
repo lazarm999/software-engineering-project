@@ -165,4 +165,10 @@
     <string name="AdNotFound">Greška! Oglas za posao nije pronađen.</string>
     <string name="notif_rating">Korisnik %1$s Vas je oceno</string>
     <string name="notif_chat">Korisnik %1$s Vam je poslao poruku</string>
+    <string name="titleDialogAd">Zbog čega želite da prijavite odabrani oglas?</string>
+    <string name="titleDialogComment">Zbog ćega želite da prijavite odabrani komentar?</string>
+    <string name="DialogAdMess">Zbog čega želite da prijavite odabrani oglas?</string>
+    <string name="DialogCommentMess">Zbog čega želite da prijavite odabrani komentar?</string>
+    <string name="dialogAd">Prijavite oglas</string>
+    <string name="dialogComment">Prijavite komentar</string>
 </resources>

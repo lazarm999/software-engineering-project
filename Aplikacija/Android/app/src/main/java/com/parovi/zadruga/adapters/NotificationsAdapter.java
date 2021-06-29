@@ -1,6 +1,7 @@
 package com.parovi.zadruga.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     public void setNotificationList(ArrayList<Notification> notif) {
         this.notificationList = notif;
+        notifyDataSetChanged();
     }
 
 
@@ -60,34 +62,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public void onBindViewHolder(@NonNull NotificationsAdapter.NotificationViewHolder holder, int position) {
-//        Notification currNotification = notificationList.get(position);
-//        if(currNotification.getType().equals(Constants.NOTIF_ACCEPTED)){
-//            holder.binding.ivNotificationIcon.setImageResource(R.drawable.accepted);
-//            holder.binding.tvTitle.setText("You have been accepted for a job");
-//            holder.binding.tvDesc.setText(currNotification.getAd().getTitle());
-//        } else if(currNotification.getType().equals(Constants.NOTIF_DECLINED)){
-//            holder.binding.ivNotificationIcon.setImageResource(R.drawable.declined);
-//            holder.binding.tvTitle.setText("Your application for a job has been declined");
-//            holder.binding.tvDesc.setText(currNotification.getAd().getTitle());
-//        } else if(currNotification.getType().equals(Constants.NOTIF_TAGGED)){
-//            holder.binding.ivNotificationIcon.setImageResource(R.drawable.comment);
-//            holder.binding.tvTitle.setText("User @" + currNotification.getComment().getUser().getUsername() + "has mentioned you in a comment");
-//            holder.binding.tvDesc.setText(currNotification.getComment().getComment());
-//        } else if(currNotification.getType().equals(Constants.NOTIF_RATING)){
-//            holder.binding.ivNotificationIcon.setImageResource(R.drawable.rating);
-//            holder.binding.tvTitle.setText("User @" + currNotification.getComment().getUser() + "has mentioned you in a comment");
-//            holder.binding.tvDesc.setText(currNotification.getComment().getComment());
-//        } else if(currNotification.getType().equals(Constants.NOTIF_AD_COMMENT)){
-//            holder.binding.ivNotificationIcon.setImageResource(R.drawable.comment);
-//            holder.binding.tvTitle.setText("User @" + currNotification.getRating().getRater() + "has rated you");
-//            if(currNotification.getRating().getRating() == 5) {
-//                holder.binding.tvDesc.setText("You received " + currNotification.getRating().getRating() + ", bravo!");
-//            }
-//            else
-//                holder.binding.tvDesc.setText("You receiverd " + currNotification.getRating().getRating() + "!");
-//        }
-
         holder.bindTo(notificationList.get(position));
+        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.onNotificationSelected(notificationList.get(position));
+            }
+        });
     }
 
     @Override

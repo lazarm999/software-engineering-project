@@ -322,6 +322,27 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
 
+        <Button
+            android:id="@+id/btnAchiev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgProfileBlank"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="145dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="15dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/achievements"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            app:backgroundTint="@color/teal_200"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_achievements"
+            app:iconTint="@color/black"
+            app:rippleColor="@color/lila"
+            tools:ignore="DuplicateIds,NotSibling" />
+
     </RelativeLayout>
 </FrameLayout>
 </ScrollView>

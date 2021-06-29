@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
@@ -14,9 +13,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import javax.annotation.Nullable;
-
-import static androidx.room.ForeignKey.CASCADE;
-import static androidx.room.ForeignKey.SET_NULL;
 /*foreignKeys = @ForeignKey(entity = Faculty.class,
                             parentColumns = "facultyId",
                             childColumns = "fkFacultyId",
@@ -93,13 +89,14 @@ public class User {
         this.userQbId = userQbId;
     }
 
-    public User(String username, String firstName, String lastName, String email, String password, boolean isEmployer) {
+    public User(String username, String firstName, String lastName, String email, String password, boolean isEmployer, String phoneNumber) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.isEmployer = isEmployer;
+        this.phoneNumber = phoneNumber;
     }
 
 

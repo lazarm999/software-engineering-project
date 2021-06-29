@@ -3,16 +3,11 @@ package com.parovi.zadruga.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.parovi.zadruga.R;
-import com.parovi.zadruga.databinding.ChatResumeLayoutBinding;
 import com.parovi.zadruga.databinding.ItemCommentBinding;
-import com.parovi.zadruga.models.nonEntityModels.CommentUser;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 
 import java.text.DateFormat;
@@ -21,6 +16,8 @@ import java.util.List;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentViewHolder> {
     private List<CommentResponse> commentsList;
+
+    private CommentListListener fragment;
 
     public CommentsAdapter() {
         commentsList = new ArrayList<>();
@@ -40,6 +37,19 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     @Override
     public void onBindViewHolder(@NonNull CommentsAdapter.CommentViewHolder holder, int position) {
         holder.bind(commentsList.get(position));
+        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.onCommentSelected(commentsList.get(position));
+            }
+        });
+
+        holder.binding.imgBtnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.onReport(commentsList.get(position));
+            }
+        });
     }
 
     @Override
@@ -63,5 +73,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             binding.tvTimeAgo.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(currComment.getPostTime()));
             binding.tvComment.setText(currComment.getComment());
         }
+    }
+
+    public interface CommentListListener {
+        void onCommentSelected(CommentResponse comment);
+        void onReport(CommentResponse comment);
     }
 }

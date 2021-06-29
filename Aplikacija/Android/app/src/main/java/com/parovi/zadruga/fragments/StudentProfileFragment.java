@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,12 +22,15 @@ import com.parovi.zadruga.databinding.FragmentStudentProfileFragmentBinding;
 import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.UserRepository;
+import com.parovi.zadruga.ui.EditBasicProfileInfoFragment;
 import com.parovi.zadruga.viewModels.StudentProfileViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentProfileFragment extends Fragment {
+
+    public static final String USER_ID = "UserId";
 
     private StudentProfileViewModel model;
     private FragmentStudentProfileFragmentBinding binding;
@@ -48,10 +50,17 @@ public class StudentProfileFragment extends Fragment {
         //userRepository.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
         model = new ViewModelProvider(requireActivity()).get(StudentProfileViewModel.class);
 
+        model.loadCredentials();
+        model.load(extractUserId());
+
+        binding.btnRating.setEnabled(false);
+
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ;
+                Intent intent = new Intent(requireActivity(), EditBasicProfileInfoFragment.class);
+                intent.putExtra(StudentProfileFragment.USER_ID, u.getUserId());
+                startActivity(intent);
             }
         });
 
@@ -129,5 +138,9 @@ public class StudentProfileFragment extends Fragment {
         binding.txtUniversity.setText(user.getFaculty() == null ? "" : user.getFaculty().toString());
         binding.editTextUsername.setText(user.getUsername());
         binding.txtMultilineEditBio.setText(user.getBio());
+    }
+
+    private int extractUserId() {
+        return requireActivity().getIntent().getIntExtra(USER_ID, 3);
     }
 }

@@ -7,10 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -44,7 +42,7 @@ public class EmployerProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentEmployerProfileBinding.inflate(inflater, container, false);
-        userRepository.loginUser(new MutableLiveData<>(), "vuk@gmail.com", "novasifra");
+        //userRepository.loginUser(new MutableLiveData<>(), "vuk@gmail.com", "novasifra");
         model = new ViewModelProvider(requireActivity()).get(EmployerProfileViewModel.class);
 
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +60,7 @@ public class EmployerProfileFragment extends Fragment {
             }
         });
 
-        binding.btnAchievements.setOnClickListener(new View.OnClickListener() {
+        binding.btnAchiev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), UsersAchievementsActivity.class);
