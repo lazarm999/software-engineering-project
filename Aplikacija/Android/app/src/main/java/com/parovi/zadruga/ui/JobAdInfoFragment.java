@@ -17,8 +17,6 @@ import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.adapters.CommentsAdapter;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
-import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.models.entityModels.manyToManyModels.Comment;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.viewModels.AdViewModel;
 
