@@ -766,7 +766,7 @@ class ReportedList(APIView):
 
         if commentId:
             reported.comment = get_object_or_404(Comment, pk=commentId)
-        if adId:
+        elif adId:
             reported.ad = get_object_or_404(Ad, pk=adId)
 
         try:
