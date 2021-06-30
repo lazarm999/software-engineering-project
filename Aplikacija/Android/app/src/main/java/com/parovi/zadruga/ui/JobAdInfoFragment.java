@@ -220,7 +220,6 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
         }
     };
 
-
     @Override
     public void onCommentSelected(CommentResponse comment) {
         Intent intent = new Intent(requireActivity(), EditBasicProfileInfoFragment.class);

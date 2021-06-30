@@ -160,6 +160,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportedVi
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, reportList.size());
     }
+
     public interface ReportListener {
         void onReportSelected(Report report);
         void onDelete(Report report, int pos);

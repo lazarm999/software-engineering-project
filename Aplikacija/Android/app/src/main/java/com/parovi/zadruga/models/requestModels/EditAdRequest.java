@@ -12,11 +12,6 @@ public class EditAdRequest {
     private int locationId;
     private List<Integer> addTags;
     private List<Integer> removeTags;
-    private String qbChatId;
-
-    public EditAdRequest(String qbChatId) {
-        this.qbChatId = qbChatId;
-    }
 
     public EditAdRequest() {
     }

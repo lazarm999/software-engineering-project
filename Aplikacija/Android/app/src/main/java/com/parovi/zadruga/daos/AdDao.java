@@ -22,8 +22,8 @@ public abstract class AdDao extends BaseDao<Ad> {
     @Query("SELECT Ad.*, user_table.*, Location.* " +
             "FROM Ad " +
             "INNER JOIN user_table ON user_table.userId = Ad.fkEmployerId " +
-            "LEFT JOIN Location ON Location.locId = Ad.fkLocationId")
-    public abstract ListenableFuture<List<AdWithTags>> getAds();
+            "LEFT JOIN Location ON Location.locId = Ad.fkLocationId limit :pageSkip, :pageSize")
+    public abstract ListenableFuture<List<AdWithTags>> getAds(int pageSize, int pageSkip);
 
     @RawQuery(observedEntities = {Ad.class, User.class, Location.class, Tag.class})
     public abstract List<AdWithTags> getAds(SupportSQLiteQuery query);
@@ -54,13 +54,4 @@ public abstract class AdDao extends BaseDao<Ad> {
             "on a.adId  = AdTag.fkAdId where AdTag.fkTagId in (:tags) group by a.adId " +
             "order by count(*) desc, postTime desc limit :pageSkip, :pageSize")
     public abstract List<Ad> getAds(int pageSize, int pageSkip, List<Integer> tags);
-
-    @Query("select a.* from Ad as a join AdTag " +
-            "on a.adId  = AdTag.fkAdId " +
-            "limit :pageSkip, :pageSize")
-    public abstract List<Ad> getAds(int pageSize, int pageSkip);
-
-    /*@Query("select a.* from Ad as a join AdTag " +
-            "on a.adId  = AdTag.fkAdId")
-    public abstract List<Ad> getAds(int pageSize, int pageSkip, List<Integer> tags);*/
 }

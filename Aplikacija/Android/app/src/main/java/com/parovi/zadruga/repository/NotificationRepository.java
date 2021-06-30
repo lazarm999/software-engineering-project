@@ -94,42 +94,39 @@ public class NotificationRepository extends BaseRepository {
     }
 
     public void getNotificationsLocal(MutableLiveData<CustomResponse<?>> notifications, Boolean[] isSynced, int pageSkip) {
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Notification> localNotifications = DaoFactory.getNotificationDao().getNotifications(Constants.pageSize, pageSkip);
-                if(localNotifications != null){
-                    for (Notification notification : localNotifications) {
-                        if(notification.getFkAdId() != null){
-                            Ad ad = DaoFactory.getAdDao().getAdById(notification.getFkAdId());
-                            notification.setAd(ad);
-                        }
-                        if(notification.getFkCommentId() != null){
-                            Comment comment = DaoFactory.getCommentDao().getCommentById(notification.getFkCommentId());
-                            User u = DaoFactory.getUserDao().getUserById(comment.getFkUserId());
-                            CommentResponse commentResponse = commentToCommentResponse(comment);
-                            commentResponse.setUser(u);
-                            notification.setComment(commentResponse);
-                        }
-                        if(notification.getFkRatingId() != null){
-                            Rating rating = DaoFactory.getRatingDao().getRatingById(notification.getFkRatingId());
-                            User rater = DaoFactory.getUserDao().getUserById(rating.getFkRaterId());
-                            RatingResponse ratingResponse = ratingToRatingResponse(rating);
-                            ratingResponse.setRater(rater);
-                            notification.setRating(ratingResponse);
-                        }
-                        notification.setType(getNotificationType(notification));
+        Utility.getExecutorService().execute(() -> {
+            List<Notification> localNotifications = DaoFactory.getNotificationDao().getNotifications(Constants.pageSize, pageSkip);
+            if(localNotifications != null){
+                for (Notification notification : localNotifications) {
+                    if(notification.getFkAdId() != null){
+                        Ad ad = DaoFactory.getAdDao().getAdById(notification.getFkAdId());
+                        notification.setAd(ad);
                     }
-                    List<Notification> tmpNotificationList;
-                    if(notifications.getValue() != null && notifications.getValue().getBody() != null)
-                        tmpNotificationList = (List<Notification>) notifications.getValue().getBody();
-                    else
-                        tmpNotificationList = new ArrayList<>();
-                    tmpNotificationList.addAll(localNotifications);
-                    synchronized (isSynced[0]){
-                        if(!isSynced[0])
-                            notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpNotificationList));
+                    if(notification.getFkCommentId() != null){
+                        Comment comment = DaoFactory.getCommentDao().getCommentById(notification.getFkCommentId());
+                        User u = DaoFactory.getUserDao().getUserById(comment.getFkUserId());
+                        CommentResponse commentResponse = commentToCommentResponse(comment);
+                        commentResponse.setUser(u);
+                        notification.setComment(commentResponse);
                     }
+                    if(notification.getFkRatingId() != null){
+                        Rating rating = DaoFactory.getRatingDao().getRatingById(notification.getFkRatingId());
+                        User rater = DaoFactory.getUserDao().getUserById(rating.getFkRaterId());
+                        RatingResponse ratingResponse = ratingToRatingResponse(rating);
+                        ratingResponse.setRater(rater);
+                        notification.setRating(ratingResponse);
+                    }
+                    notification.setType(getNotificationType(notification));
+                }
+                List<Notification> tmpNotificationList;
+                if(notifications.getValue() != null && notifications.getValue().getBody() != null)
+                    tmpNotificationList = (List<Notification>) notifications.getValue().getBody();
+                else
+                    tmpNotificationList = new ArrayList<>();
+                tmpNotificationList.addAll(localNotifications);
+                synchronized (isSynced[0]){
+                    if(!isSynced[0])
+                        notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpNotificationList));
                 }
             }
         });

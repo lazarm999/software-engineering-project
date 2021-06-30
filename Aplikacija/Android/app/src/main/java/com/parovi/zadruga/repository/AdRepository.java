@@ -118,8 +118,9 @@ public class AdRepository extends BaseRepository {
     public void getAds(MutableLiveData<CustomResponse<?>> ads) {
         String token = Utility.getAccessToken(App.getAppContext());
         final Boolean[] isSynced = {false};
-        getAdsLocal(ads, isSynced);
-        ApiFactory.getAdApi().getAds(token).enqueue(new Callback<List<Ad>>() {
+        int pageSkip = getListSize(ads);
+        getAdsLocal(ads, isSynced, pageSkip);
+        ApiFactory.getAdApi().getAds(token, Constants.pageSize, pageSkip).enqueue(new Callback<List<Ad>>() {
             @Override
             public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
                 if(response.isSuccessful() && response.body() != null) {
@@ -144,8 +145,8 @@ public class AdRepository extends BaseRepository {
         });
     }
 
-    public void getAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced){
-        Futures.addCallback(DaoFactory.getAdDao().getAds(), new FutureCallback<List<AdWithTags>>() {
+    public void getAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, int pageSkip){
+        Futures.addCallback(DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip), new FutureCallback<List<AdWithTags>>() {
             @Override
             public void onSuccess(@Nullable List<AdWithTags> result) {
                 if(result != null){
@@ -176,6 +177,7 @@ public class AdRepository extends BaseRepository {
             return;
         }
         final Boolean[] isSynced = {false};
+        int pageSkip = getListSize(ads);
         if(sortByLocation){
             GpsTracker gpsTracker = new GpsTracker(App.getAppContext());
             MutableLiveData<CustomResponse<?>> location = new MutableLiveData<>();
@@ -189,8 +191,8 @@ public class AdRepository extends BaseRepository {
                         longitude = ((android.location.Location) customResponse.getBody()).getLongitude();
                         Log.i("location", "Location fetched");
                     }
-                    getAdsLocal(ads, isSynced, locId, compensationMin, compensationMax, tagIds, latitude, longitude);
-                    ApiFactory.getAdApi().getAds(token, locId, compensationMin, compensationMax, tagIds, latitude, longitude).enqueue(new Callback<List<Ad>>() {
+                    getAdsLocal(ads, isSynced, locId, compensationMin, compensationMax, tagIds, latitude, longitude, pageSkip);
+                    ApiFactory.getAdApi().getAds(token, locId, compensationMin, compensationMax, tagIds, latitude, longitude, Constants.pageSize, pageSkip).enqueue(new Callback<List<Ad>>() {
                         @Override
                         public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
                             if(response.isSuccessful() && response.body() != null) {
@@ -213,13 +215,14 @@ public class AdRepository extends BaseRepository {
                             apiCallOnFailure(t.getMessage(), ads);
                         }
                     });
+                    location.removeObserver(this);
                 }
             };
             location.observeForever(observer);
             gpsTracker.getLocation(location);
         } else {
-            getAdsLocal(ads, isSynced, locId, compensationMin, compensationMax, tagIds, null, null);
-            ApiFactory.getAdApi().getAds(token, locId, compensationMin, compensationMax, tagIds, null, null).enqueue(new Callback<List<Ad>>() {
+            getAdsLocal(ads, isSynced, locId, compensationMin, compensationMax, tagIds, null, null, pageSkip);
+            ApiFactory.getAdApi().getAds(token, locId, compensationMin, compensationMax, tagIds, null, null, Constants.pageSize, pageSkip).enqueue(new Callback<List<Ad>>() {
                 @Override
                 public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
                     if(response.isSuccessful() && response.body() != null) {
@@ -246,73 +249,70 @@ public class AdRepository extends BaseRepository {
     }
 
     public void getAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, Integer locId, Integer compensationMin, Integer compensationMax, List<Integer> tagIds,
-                            Double latitude, Double longitude){
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                String queryString = "";
-                List<Object> args = new ArrayList<>();
-                boolean isSorting = false, filterByLoc = false;
-                if(latitude != null && longitude != null){
-                    queryString += "SELECT Ad.*, user_table.*, Location.*, " +
-                            "(Location.latitude - ?)*(Location.latitude - ?) + (Location.longitude - ?)*(Location.longitude - ?) AS distance " +
-                            "FROM Ad " +
-                            "INNER JOIN user_table ON user_table.userId = Ad.fkEmployerId " +
-                            "LEFT JOIN Location ON Location.locId = Ad.fkLocationId";
-                    args.add(latitude);
-                    args.add(latitude);
-                    args.add(longitude);
-                    args.add(longitude);
-                    isSorting = true;
-                } else {
-                    queryString += "SELECT Ad.*, user_table.*, Location.* " +
-                            "FROM Ad " +
-                            "INNER JOIN user_table ON user_table.userId = Ad.fkEmployerId " +
-                            "LEFT JOIN Location ON Location.locId = Ad.fkLocationId";
-                }
-                if(locId != null || compensationMin != null || compensationMax != null)
-                    queryString += " WHERE";
-                if(locId != null){
-                    queryString += " Ad.fkLocationId = ?";
-                    args.add(locId);
-                    filterByLoc = true;
-                }
-                if(compensationMin != null && compensationMax != null){
-                    if (filterByLoc) {
-                        queryString += " AND";
-                    }
-
-                    queryString += " Ad.compensationMin >= ? AND Ad.compensationMax <= ?";
-                    args.add(compensationMin);
-                    args.add(compensationMax);
+                            Double latitude, Double longitude, int pageSkip){
+        Utility.getExecutorService().execute(() -> {
+            String queryString = "";
+            List<Object> args = new ArrayList<>();
+            boolean isSorting = false, filterByLoc = false;
+            if(latitude != null && longitude != null){
+                queryString += "SELECT Ad.*, user_table.*, Location.*, " +
+                        "(Location.latitude - ?)*(Location.latitude - ?) + (Location.longitude - ?)*(Location.longitude - ?) AS distance " +
+                        "FROM Ad " +
+                        "INNER JOIN user_table ON user_table.userId = Ad.fkEmployerId " +
+                        "LEFT JOIN Location ON Location.locId = Ad.fkLocationId";
+                args.add(latitude);
+                args.add(latitude);
+                args.add(longitude);
+                args.add(longitude);
+                isSorting = true;
+            } else {
+                queryString += "SELECT Ad.*, user_table.*, Location.* " +
+                        "FROM Ad " +
+                        "INNER JOIN user_table ON user_table.userId = Ad.fkEmployerId " +
+                        "LEFT JOIN Location ON Location.locId = Ad.fkLocationId";
+            }
+            if(locId != null || compensationMin != null || compensationMax != null)
+                queryString += " WHERE";
+            if(locId != null){
+                queryString += " Ad.fkLocationId = ?";
+                args.add(locId);
+                filterByLoc = true;
+            }
+            if(compensationMin != null && compensationMax != null){
+                if (filterByLoc) {
+                    queryString += " AND";
                 }
 
-                if(isSorting) queryString += " ORDER BY distance ASC";
-                queryString += ";";
-                List<AdWithTags> adWithTagsList = DaoFactory.getAdDao().getAds(new SimpleSQLiteQuery(queryString, args.toArray()));
-                List<Ad> finalList = new ArrayList<>();
-                boolean shouldRemove;
-                if(adWithTagsList != null){
-                    for (AdWithTags adWithTags: adWithTagsList) {
-                        shouldRemove = true;
-                        if(adWithTags.tags != null && tagIds != null){
-                            for (Tag tag: adWithTags.tags) {
-                                for (Integer tagId: tagIds) {
-                                    if(tag.getTagId() == tagId){
-                                        shouldRemove = false;
-                                        break;
-                                    }
-                                    if(!shouldRemove) break;
+                queryString += " Ad.compensationMin >= ? AND Ad.compensationMax <= ?";
+                args.add(compensationMin);
+                args.add(compensationMax);
+            }
+
+            if(isSorting) queryString += " ORDER BY distance ASC";
+            queryString += "limit " + pageSkip + ", " + Constants.pageSize + ";";
+            List<AdWithTags> adWithTagsList = DaoFactory.getAdDao().getAds(new SimpleSQLiteQuery(queryString, args.toArray()));
+            List<Ad> finalList = new ArrayList<>();
+            boolean shouldRemove;
+            if(adWithTagsList != null){
+                for (AdWithTags adWithTags: adWithTagsList) {
+                    shouldRemove = true;
+                    if(adWithTags.tags != null && tagIds != null){
+                        for (Tag tag: adWithTags.tags) {
+                            for (Integer tagId: tagIds) {
+                                if(tag.getTagId() == tagId){
+                                    shouldRemove = false;
+                                    break;
                                 }
+                                if(!shouldRemove) break;
                             }
-                            if(!shouldRemove)
-                                finalList.add(adWithTagsToAd(adWithTags));
                         }
+                        if(!shouldRemove)
+                            finalList.add(adWithTagsToAd(adWithTags));
                     }
-                    synchronized (isSynced[0]){
-                        if(!isSynced[0])
-                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, finalList));
-                    }
+                }
+                synchronized (isSynced[0]){
+                    if(!isSynced[0])
+                        ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, finalList));
                 }
             }
         });
@@ -324,11 +324,8 @@ public class AdRepository extends BaseRepository {
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if(response.isSuccessful() && response.body() != null) {
                     isApplied.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
-                    Utility.getExecutorService().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            //DaoFactory.getAppliedDao().insertOrUpdate(new Applied(userId, adId, false));
-                        }
+                    Utility.getExecutorService().execute(() -> {
+                        //DaoFactory.getAppliedDao().insertOrUpdate(new Applied(userId, adId, false));
                     });
                 }else {
                     isApplied.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, "Pogresno uneti podaci"));
@@ -364,14 +361,11 @@ public class AdRepository extends BaseRepository {
                         public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                             if(response.isSuccessful()){
                                 isSucc.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
-                                Utility.getExecutorService().execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        for (Integer i: userIds) {
-                                            DaoFactory.getAppliedDao().insertOrUpdate(new Applied(i, adId, false));
-                                        }
-                                        DaoFactory.getAdDao().updateQbChatId((String)customResponse.getBody(), adId);
+                                Utility.getExecutorService().execute(() -> {
+                                    for (Integer i: userIds) {
+                                        DaoFactory.getAppliedDao().insertOrUpdate(new Applied(i, adId, false));
                                     }
+                                    DaoFactory.getAdDao().updateQbChatId((String)customResponse.getBody(), adId);
                                 });
                             } else
                                 responseNotSuccessful(response.code(), isSucc);
@@ -408,7 +402,8 @@ public class AdRepository extends BaseRepository {
         });
     }
 
-    public void editAd(String token, MutableLiveData<CustomResponse<?>> isSucc, int adId, EditAdRequest ad){
+    public void editAd(MutableLiveData<CustomResponse<?>> isSucc, int adId, EditAdRequest ad){
+        String token = Utility.getAccessToken(App.getAppContext());
         ApiFactory.getAdApi().editAd(token, adId, ad).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -428,23 +423,20 @@ public class AdRepository extends BaseRepository {
     }
 
     private void editAdLocal(EditAdRequest ad, int adId){
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                Ad tmpLocalAd = new Ad(adId, ad.getTitle(), ad.getDescription(),
-                        ad.getCompensationMin(),
-                        ad.getCompensationMax(),
-                        ad.getNumberOfEmployees());
-                DaoFactory.getAdDao().insertOrUpdate(tmpLocalAd);
-                if(ad.getRemoveTags() != null){
-                    for (Integer i: ad.getRemoveTags()) {
-                        DaoFactory.getAdTagDao().deleteAdTag(i, adId);
-                    }
+        Utility.getExecutorService().execute(() -> {
+            Ad tmpLocalAd = new Ad(adId, ad.getTitle(), ad.getDescription(),
+                    ad.getCompensationMin(),
+                    ad.getCompensationMax(),
+                    ad.getNumberOfEmployees());
+            DaoFactory.getAdDao().insertOrUpdate(tmpLocalAd);
+            if(ad.getRemoveTags() != null){
+                for (Integer i: ad.getRemoveTags()) {
+                    DaoFactory.getAdTagDao().deleteAdTag(i, adId);
                 }
-                if(ad.getAddTags() != null){
-                    for (Integer i: ad.getAddTags()) {
-                        DaoFactory.getAdTagDao().insertOrUpdate(new AdTag(adId, i));
-                    }
+            }
+            if(ad.getAddTags() != null){
+                for (Integer i: ad.getAddTags()) {
+                    DaoFactory.getAdTagDao().insertOrUpdate(new AdTag(adId, i));
                 }
             }
         });
@@ -471,36 +463,33 @@ public class AdRepository extends BaseRepository {
     public void postComment(String token, MutableLiveData<CustomResponse<?>> comments, int adId, String comment){
         int userId = Utility.getLoggedInUserId(App.getAppContext());
         CommentRequest c = new CommentRequest(comment);
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response<CommentResponse> commentResponse = ApiFactory.getCommentApi().postComment(token, adId, c).execute();
-                    if (commentResponse.isSuccessful() && commentResponse.body() != null) {
-                        ArrayList<CommentResponse> tmpCommentList = new ArrayList<>();
-                        if(comments.getValue() != null && comments.getValue().getBody() != null)
-                            tmpCommentList = (ArrayList<CommentResponse>) comments.getValue().getBody();
-                        int userId = commentResponse.body().getUser().getUserId();
-                        Bitmap localImage = getProfilePictureLocal(userId);
+        Utility.getExecutorService().execute(() -> {
+            try {
+                Response<CommentResponse> commentResponse = ApiFactory.getCommentApi().postComment(token, adId, c).execute();
+                if (commentResponse.isSuccessful() && commentResponse.body() != null) {
+                    ArrayList<CommentResponse> tmpCommentList = new ArrayList<>();
+                    if(comments.getValue() != null && comments.getValue().getBody() != null)
+                        tmpCommentList = (ArrayList<CommentResponse>) comments.getValue().getBody();
+                    int userId1 = commentResponse.body().getUser().getUserId();
+                    Bitmap localImage = getProfilePictureLocal(userId1);
 //                        if(localImage != null){
 //                            commentResponse.body().setUserImage(localImage);
 //                            comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentResponse.body()));
 //                        }
-                        Response<ResponseBody> responseImage = ApiFactory.getUserApi().getProfileImage(token, userId).execute();
-                        if(responseImage.isSuccessful() && responseImage.body() != null) {
-                            Bitmap bmImage = BitmapFactory.decodeStream(responseImage.body().byteStream());
-                            commentResponse.body().setUserImage(bmImage);
-                            saveImageLocally(bmImage, userId);
-                        }
-                        tmpCommentList.add(commentResponse.body());
-                        comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpCommentList));
-                    } else
-                        responseNotSuccessful(commentResponse.code(), comments);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+                    Response<ResponseBody> responseImage = ApiFactory.getUserApi().getProfileImage(token, userId1).execute();
+                    if(responseImage.isSuccessful() && responseImage.body() != null) {
+                        Bitmap bmImage = BitmapFactory.decodeStream(responseImage.body().byteStream());
+                        commentResponse.body().setUserImage(bmImage);
+                        saveImageLocally(bmImage, userId1);
+                    }
+                    tmpCommentList.add(commentResponse.body());
+                    comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpCommentList));
+                } else
+                    responseNotSuccessful(commentResponse.code(), comments);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
         });
     }
 
@@ -550,37 +539,34 @@ public class AdRepository extends BaseRepository {
     }
 
     private void getCommentsLocal(MutableLiveData<CustomResponse<?>> comments, int adId, Boolean[] isSynced){
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                List<CommentWithUser> localComments = DaoFactory.getCommentDao().getCommentsByAdId(adId);
-                List<CommentResponse> commentResponseList = new ArrayList<>();
-                CommentResponse commentResponse = new CommentResponse();
-                if(localComments != null){
-                    for (CommentWithUser commentWithUser : localComments) {
-                        commentResponse = commentWithUserToCommentResponse(commentWithUser);
-                        Bitmap profileImage = getProfilePictureLocal(commentWithUser.getUser().getUserId());
-                        commentResponse.setUserImage(profileImage);
-                        List<Integer> taggedIndices = DaoFactory.getTaggedDao().getTaggedByCommentId(commentWithUser.getComment().getCommentId());
-                        commentResponse.setTaggedIndices(taggedIndices);
-                        commentResponseList.add(commentResponse);
-                    }
-                    synchronized (isSynced[0]){
-                        if(!isSynced[0])
-                            comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentResponseList));
-                    }
+        Utility.getExecutorService().execute(() -> {
+            List<CommentWithUser> localComments = DaoFactory.getCommentDao().getCommentsByAdId(adId);
+            List<CommentResponse> commentResponseList = new ArrayList<>();
+            CommentResponse commentResponse = new CommentResponse();
+            if(localComments != null){
+                for (CommentWithUser commentWithUser : localComments) {
+                    commentResponse = commentWithUserToCommentResponse(commentWithUser);
+                    Bitmap profileImage = getProfilePictureLocal(commentWithUser.getUser().getUserId());
+                    commentResponse.setUserImage(profileImage);
+                    List<Integer> taggedIndices = DaoFactory.getTaggedDao().getTaggedByCommentId(commentWithUser.getComment().getCommentId());
+                    commentResponse.setTaggedIndices(taggedIndices);
+                    commentResponseList.add(commentResponse);
+                }
+                synchronized (isSynced[0]){
+                    if(!isSynced[0])
+                        comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentResponseList));
                 }
             }
         });
     }
 
-    public void deleteComment(String token, MutableLiveData<CustomResponse<?>> isDeleted, int commentId){
+    public void deleteComment(String token, MutableLiveData<CustomResponse<?>> isDeleted, int commentId, int pos){
         ApiFactory.getCommentApi().deleteComment(token, commentId).enqueue(new Callback<AdResponse>() {
             @Override
             public void onResponse(@NotNull Call<AdResponse> call, @NotNull Response<AdResponse> response) {
                 if(response.isSuccessful()){
                     DaoFactory.getCommentDao().deleteComment(commentId);
-                    isDeleted.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                    isDeleted.postValue(new CustomResponse<>(CustomResponse.Status.OK, pos));
                 }
                 else
                     responseNotSuccessful(response.code(), isDeleted);
@@ -644,20 +630,17 @@ public class AdRepository extends BaseRepository {
 
     public void isApplied(MutableLiveData<CustomResponse<?>> isApplied, int adId){
         final String token = Utility.getAccessToken(App.getAppContext());
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response<Boolean> isAppliedRes = ApiFactory.getAdApi().isApplied(token, adId).execute();
-                    if(isAppliedRes.isSuccessful()){
-                        if(isAppliedRes.body() != null)
-                            isApplied.postValue(new CustomResponse<>(CustomResponse.Status.OK, isAppliedRes.body()));
-                    } else
-                        responseNotSuccessful(isAppliedRes.code(), isApplied);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    apiCallOnFailure(e.getMessage(), isApplied);
-                }
+        Utility.getExecutorService().execute(() -> {
+            try {
+                Response<Boolean> isAppliedRes = ApiFactory.getAdApi().isApplied(token, adId).execute();
+                if(isAppliedRes.isSuccessful()){
+                    if(isAppliedRes.body() != null)
+                        isApplied.postValue(new CustomResponse<>(CustomResponse.Status.OK, isAppliedRes.body()));
+                } else
+                    responseNotSuccessful(isAppliedRes.code(), isApplied);
+            } catch (IOException e) {
+                e.printStackTrace();
+                apiCallOnFailure(e.getMessage(), isApplied);
             }
         });
     }
@@ -671,13 +654,10 @@ public class AdRepository extends BaseRepository {
                 if(response.isSuccessful()){
                     if(response.body() != null){
                         applied.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
-                        Utility.getExecutorService().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                DaoFactory.getUserDao().insertOrUpdate(response.body());
-                                for (User u : response.body()) {
-                                    DaoFactory.getAppliedDao().insertOrUpdate(new Applied(u.getUserId(), adId));
-                                }
+                        Utility.getExecutorService().execute(() -> {
+                            DaoFactory.getUserDao().insertOrUpdate(response.body());
+                            for (User u : response.body()) {
+                                DaoFactory.getAppliedDao().insertOrUpdate(new Applied(u.getUserId(), adId));
                             }
                         });
 

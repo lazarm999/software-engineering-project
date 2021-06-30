@@ -133,39 +133,36 @@ public class UserRepository extends BaseRepository {
                         @Override
                         public void onSuccess(QBUser user, Bundle args) {
                             Log.i("logIn", "braoooo");
-                            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-                                @Override
-                                public void onComplete(@NonNull Task<String> task) {
-                                    if (!task.isSuccessful()) {
-                                        Log.w("FETCH_FCM_TOKEN_FAILED", "Fetching FCM registration token failed", task.getException());
-                                        isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, "Fetching FCM registration token failed"));
-                                        return;
-                                    }
-                                    Utility.saveLoggedUserInfo(App.getAppContext(), apiResponse.body().getToken(), apiResponse.body().getUser(), pass, task.getResult());
-                                    String type;
-                                    if(apiResponse.body().getUser().isAdmin())
-                                        type = Constants.ADMIN;
-                                    else if(apiResponse.body().getUser().isEmployer())
-                                        type = Constants.EMPLOYER;
-                                    else
-                                        type = Constants.EMPLOYEE;
-                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, type, ""));
-                                    ApiFactory.getUserApi().postFcmToken(apiResponse.body().getToken(), new AddFcmTokenRequest(task.getResult()))
-                                            .enqueue(new Callback<ResponseBody>() {
-                                                @Override
-                                                public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                                                    if(response.isSuccessful())
-                                                        Log.i("postFcmToken", "OK");
-                                                    else
-                                                        Log.i("postFcmToken", String.valueOf(response.code()));
-                                                }
-
-                                        @Override
-                                        public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                                            Log.i("postFcmToken", t.getMessage());
-                                        }
-                                    });
+                            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                                if (!task.isSuccessful()) {
+                                    Log.w("FETCH_FCM_TOKEN_FAILED", "Fetching FCM registration token failed", task.getException());
+                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, "Fetching FCM registration token failed"));
+                                    return;
                                 }
+                                Utility.saveLoggedUserInfo(App.getAppContext(), apiResponse.body().getToken(), apiResponse.body().getUser(), pass, task.getResult());
+                                String type;
+                                if(apiResponse.body().getUser().isAdmin())
+                                    type = Constants.ADMIN;
+                                else if(apiResponse.body().getUser().isEmployer())
+                                    type = Constants.EMPLOYER;
+                                else
+                                    type = Constants.EMPLOYEE;
+                                isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, type, ""));
+                                ApiFactory.getUserApi().postFcmToken(apiResponse.body().getToken(), new AddFcmTokenRequest(task.getResult()))
+                                        .enqueue(new Callback<ResponseBody>() {
+                                            @Override
+                                            public void onResponse(@NotNull Call<ResponseBody> call1, @NotNull Response<ResponseBody> response) {
+                                                if(response.isSuccessful())
+                                                    Log.i("postFcmToken", "OK");
+                                                else
+                                                    Log.i("postFcmToken", String.valueOf(response.code()));
+                                            }
+
+                                    @Override
+                                    public void onFailure(@NotNull Call<ResponseBody> call1, @NotNull Throwable t) {
+                                        Log.i("postFcmToken", t.getMessage());
+                                    }
+                                });
                             });
                             saveUserLocally(loggedInUser);
                         }
@@ -185,41 +182,6 @@ public class UserRepository extends BaseRepository {
             public void onFailure(@NotNull Call<LoginResponse> call, @NotNull Throwable t) {
                 Log.i("logIn", "ne braoooo");
                 apiCallOnFailure(t.getMessage(), isEmployer);
-            }
-        });
-    }
-
-    public void logOutUser(MutableLiveData<CustomResponse<?>> isLoggedOut){
-        /*if (QBSessionManager.getInstance().getSessionParameters() == null) {
-            return;
-        }*/
-        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
-            @Override
-            public void onSuccess(Void aVoid, Bundle bundle) {
-                Log.i("logOut", "braoooo");
-                ApiFactory.getUserApi().deleteFcmToken(Utility.getAccessToken(App.getAppContext()), Utility.getFcmToken(App.getAppContext()))
-                        .enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                                if(response.isSuccessful()){
-                                    isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
-                                    Utility.removeLoggedUserInfo(App.getAppContext());
-                                } else
-                                    responseNotSuccessful(response.code(), isLoggedOut);
-
-                            }
-
-                            @Override
-                            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                                apiCallOnFailure(t.getMessage(), isLoggedOut);
-                            }
-                        });
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                Log.i("logOut", "ne braoooo");
-                responseNotSuccessful(e.getHttpStatusCode(), isLoggedOut);
             }
         });
     }
@@ -270,12 +232,7 @@ public class UserRepository extends BaseRepository {
                         user.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
                         isSynced[0] = true;
                     }
-                    Utility.getExecutorService().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            saveUserLocally(tmpUser);
-                        }
-                    });
+                    Utility.getExecutorService().execute(() -> saveUserLocally(tmpUser));
                 } else
                     responseNotSuccessful(response.code(), user);
             }
@@ -331,22 +288,19 @@ public class UserRepository extends BaseRepository {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
                 if(response.isSuccessful()){
-                    Utility.getExecutorService().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            DaoFactory.getUserDao().insertOrUpdate(user);
-                            if(oldPreferredTags != null){
-                                for (Integer tagId : oldPreferredTags) {
-                                    DaoFactory.getPreferredTagDao().deletePreferredTag(tagId);
-                                }
+                    Utility.getExecutorService().execute(() -> {
+                        DaoFactory.getUserDao().insertOrUpdate(user);
+                        if(oldPreferredTags != null){
+                            for (Integer tagId : oldPreferredTags) {
+                                DaoFactory.getPreferredTagDao().deletePreferredTag(tagId);
                             }
-                            if(newPreferredTags != null){
-                                for (Integer tagId : newPreferredTags) {
-                                    DaoFactory.getPreferredTagDao().insertOrUpdate(new PreferredTag(tagId));
-                                }
-                            }
-                            isUpdated.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
                         }
+                        if(newPreferredTags != null){
+                            for (Integer tagId : newPreferredTags) {
+                                DaoFactory.getPreferredTagDao().insertOrUpdate(new PreferredTag(tagId));
+                            }
+                        }
+                        isUpdated.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
                     });
                 }
             }
@@ -384,6 +338,10 @@ public class UserRepository extends BaseRepository {
                 apiCallOnFailure(t.getMessage(), profilePicture);
             }
         });
+    }
+
+    public void logOutUser(MutableLiveData<CustomResponse<?>> isLoggedOut){
+        super.logOutUser(isLoggedOut);
     }
 
     public void getProfilePictureLocal(MutableLiveData<CustomResponse<?>> profilePicture, int userId, Boolean[] isSynced){
@@ -442,7 +400,8 @@ public class UserRepository extends BaseRepository {
         });
     }
 
-    public void banUser(String token, MutableLiveData<CustomResponse<?>> isBanned, BanRequest b, int id){
+    public void banUser(MutableLiveData<CustomResponse<?>> isBanned, BanRequest b, int id){
+        String token = Utility.getAccessToken(App.getAppContext());
         ApiFactory.getUserApi().banUser(token, id, b).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -458,7 +417,8 @@ public class UserRepository extends BaseRepository {
         });
     }
 
-    public void unBanUser(String token, MutableLiveData<CustomResponse<?>> isUnBanned, int id){
+    public void unBanUser(MutableLiveData<CustomResponse<?>> isUnBanned, int id){
+        String token = Utility.getAccessToken(App.getAppContext());
         ApiFactory.getUserApi().unBanUser(token, id).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -475,13 +435,10 @@ public class UserRepository extends BaseRepository {
     }
 
     private void updateApplied(List<Ad> finishedJobs){
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                int id = Utility.getLoggedInUserId(App.getAppContext());
-                for (Ad ad : finishedJobs){
-                    DaoFactory.getAppliedDao().insertOrUpdate(new Applied(id, ad.getAdId(), true));
-                }
+        Utility.getExecutorService().execute(() -> {
+            int id = Utility.getLoggedInUserId(App.getAppContext());
+            for (Ad ad : finishedJobs){
+                DaoFactory.getAppliedDao().insertOrUpdate(new Applied(id, ad.getAdId(), true));
             }
         });
     }
@@ -513,15 +470,12 @@ public class UserRepository extends BaseRepository {
     }
 
     private void getFinishedJobsByUserIdLocal(MutableLiveData<CustomResponse<?>> finishedJobs, Boolean[] isSynced){
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Ad> tmpList;
-                if((tmpList = DaoFactory.getUserDao().getFinishedJobsByUserId(Utility.getLoggedInUserId(App.getAppContext()))) != null){
-                    synchronized (isSynced){
-                        if(!isSynced[0])
-                            finishedJobs.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpList));
-                    }
+        Utility.getExecutorService().execute(() -> {
+            List<Ad> tmpList;
+            if((tmpList = DaoFactory.getUserDao().getFinishedJobsByUserId(Utility.getLoggedInUserId(App.getAppContext()))) != null){
+                synchronized (isSynced){
+                    if(!isSynced[0])
+                        finishedJobs.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpList));
                 }
             }
         });
@@ -552,15 +506,12 @@ public class UserRepository extends BaseRepository {
     }
 
     private void getPostedAdsByUserIdLocal(MutableLiveData<CustomResponse<?>> postedAds, Boolean[] isSynced){
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Ad> tmpList;
-                if((tmpList = DaoFactory.getUserDao().getPostedAdsByUserId(Utility.getLoggedInUserId(App.getAppContext()))) != null){
-                    synchronized (isSynced){
-                        if(!isSynced[0])
-                            postedAds.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpList));
-                    }
+        Utility.getExecutorService().execute(() -> {
+            List<Ad> tmpList;
+            if((tmpList = DaoFactory.getUserDao().getPostedAdsByUserId(Utility.getLoggedInUserId(App.getAppContext()))) != null){
+                synchronized (isSynced){
+                    if(!isSynced[0])
+                        postedAds.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpList));
                 }
             }
         });

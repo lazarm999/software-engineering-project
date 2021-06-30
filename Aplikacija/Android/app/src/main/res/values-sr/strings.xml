@@ -163,8 +163,8 @@
     <string name="employer">Poslodavac</string>
     <string name="notAllFull">Niste popunili sva polja!</string>
     <string name="AdNotFound">Greška! Oglas za posao nije pronađen.</string>
-    <string name="notif_rating">Korisnik %1$s Vas je oceno</string>
-    <string name="notif_chat">Korisnik %1$s Vam je poslao poruku</string>
+    <string name="notifRating">Korisnik %1$s Vas je oceno</string>
+    <string name="notifChat">Korisnik %1$s Vam je poslao poruku</string>
     <string name="reportedHeading">Prijavljeni korisnici</string>
     <string name="deleteReport">Obriši prijavu</string>
     <string name="reportTitle">Korisnik %1$s je prijavio korisnika %2$s</string>
@@ -174,4 +174,5 @@
     <string name="DialogCommentMess">Zbog čega želite da prijavite odabrani komentar?</string>
     <string name="dialogAd">Prijavite oglas</string>
     <string name="dialogComment">Prijavite komentar</string>
+    <string name="notifApplied">Korisnik %1$s se prijavio za oglas</string>
 </resources>

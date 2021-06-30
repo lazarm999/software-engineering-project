@@ -19,7 +19,8 @@ import java.util.List;
 
 public class FeedViewModel extends AndroidViewModel{
     private final int adId = 32; //4
-    //private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
+    //private final String
+    // token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
     //private String token =Utility.getAccessToken(App.getAppContext());
     //private final int userId = 1;
 
