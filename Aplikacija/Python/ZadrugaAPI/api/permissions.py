@@ -4,6 +4,9 @@ from rest_framework import permissions
 import os
 import jwt
 
+class BannedException(Exception):
+    pass
+
 class IsLoggedIn(permissions.BasePermission):
     def has_permission(self, request, view):
         token = request.headers.get('Authorization')
@@ -12,9 +15,13 @@ class IsLoggedIn(permissions.BasePermission):
         try:
             obj = jwt.decode(token, os.environ.get('SECRET_KEY'), algorithms=["HS256"])
             request._auth = obj['id']
-            return User.objects.get(pk=obj['id']).banAdmin is None
         except:
             return False
+
+        if User.objects.get(pk=obj['id']).banAdmin is not None:
+            raise BannedException
+        return True
+
 
 class IsOwner(permissions.BasePermission):
     def has_permission(self, request, view):

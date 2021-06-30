@@ -730,7 +730,6 @@ class Recommender(APIView):
             tagString.append(id)
             tagString.append(',')
         tagString[-1] = ')'
-        print("".join(tagString))
         rawQuery = f'select a.adId, a.title, a.description, a.numberOfEmployees,\
             a.compensationMin, a.compensationMax, a.location_id, a.postTime, a.isClosed, \
             a.qbChatId, count(*) as matches from api_ad as a join api_relatedto as r \

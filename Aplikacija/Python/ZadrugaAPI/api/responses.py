@@ -19,3 +19,6 @@ def r400(obj=None):
 
 def r404(obj=None):
     return Response(obj, status=HTTP_404_NOT_FOUND)
+
+def r408(obj=None):
+    return Response(obj, status=HTTP_408_REQUEST_TIMEOUT)
