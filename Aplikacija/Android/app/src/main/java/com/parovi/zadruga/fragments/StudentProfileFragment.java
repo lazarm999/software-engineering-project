@@ -1,13 +1,17 @@
 package com.parovi.zadruga.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -37,6 +41,7 @@ public class StudentProfileFragment extends Fragment {
     private List<String> descriptions = new ArrayList<>();
     private UserRepository userRepository = new UserRepository();
     private User u;
+    private int id;
 
     public StudentProfileFragment() {
 
@@ -47,13 +52,34 @@ public class StudentProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentStudentProfileFragmentBinding.inflate(inflater, container, false);
+
+        binding.btnRating.setVisibility(View.INVISIBLE);
+
         //userRepository.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
         model = new ViewModelProvider(requireActivity()).get(StudentProfileViewModel.class);
-
-        model.loadCredentials();
-        model.load(extractUserId());
-
         binding.btnRating.setEnabled(false);
+
+        model.getIsBanned().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if(customResponse.getStatus() != CustomResponse.Status.OK){
+                    return;
+                }
+            }
+        });
+
+        if(model.isProfileAdmin())
+        {
+            binding.btnLogOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    model.banUser();
+                }
+            });
+        }
+
+
+
 
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,13 +114,113 @@ public class StudentProfileFragment extends Fragment {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
                     populateViews((User)customResponse.getBody());
                     u = ((User) customResponse.getBody());
+                    id = u.getUserId();
+                    int[] arrayLock = new int[]{R.drawable.b1, R.drawable.b2, R.drawable.b3, R.drawable.b4, R.drawable.b5};
+
                     if(u.getBadges() != null){
                         List<Badge> badges = u.getBadges();
                         for (int i = 0; i < badges.size(); i++) {
-                            ((ImageView)binding.linearBagdges.getChildAt(0)).setImageResource(R.drawable.badge1);
+                            ((ImageView)binding.linearBagdges.getChildAt((badges.get(i).getBadgeId()-1)%5)).setImageResource(arrayLock[(badges.get(i).getBadgeId()-1)%5]);
                         }
                     }
                 }
+            }
+        });
+
+        binding.imgBadge1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                final TextView etText = new TextView(requireActivity());
+                etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                etText.setTextSize(16);
+                etText.setText(model.getBadgeDesc(1));
+                dialog.setTitle(etText.getText().toString());
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        binding.imgBadge2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                final TextView etText = new TextView(requireActivity());
+                etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                etText.setTextSize(16);
+                etText.setText(model.getBadgeDesc(1));
+                dialog.setTitle(etText.getText().toString());
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
+        binding.imgBadge3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                final TextView etText = new TextView(requireActivity());
+                etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                etText.setTextSize(16);
+                etText.setText(model.getBadgeDesc(2));
+                dialog.setTitle(etText.getText().toString());
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
+        binding.imgBadge4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                final TextView etText = new TextView(requireActivity());
+                etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                etText.setTextSize(16);
+                etText.setText(model.getBadgeDesc(3));
+                dialog.setTitle(etText.getText().toString());
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
+        binding.imgBadge5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                final TextView etText = new TextView(requireActivity());
+                etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                etText.setTextSize(16);
+                etText.setText(model.getBadgeDesc(4));
+                dialog.setTitle(etText.getText().toString());
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -107,7 +233,7 @@ public class StudentProfileFragment extends Fragment {
             }
         });
 
-        model.getIsLogedOut().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+        model.getIsLoggedOut().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
@@ -138,9 +264,27 @@ public class StudentProfileFragment extends Fragment {
         binding.txtUniversity.setText(user.getFaculty() == null ? "" : user.getFaculty().toString());
         binding.editTextUsername.setText(user.getUsername());
         binding.txtMultilineEditBio.setText(user.getBio());
+
+        if (model.isProfileEmployer())
+            updateViewEmployer();
+
+        if(model.isProfileAdmin())
+            updateViewAdmin();
     }
 
-    private int extractUserId() {
-        return requireActivity().getIntent().getIntExtra(USER_ID, 3);
+    private void updateViewEmployer()
+    {
+        binding.btnRating.setVisibility(View.VISIBLE);
+        binding.btnEdit.setVisibility(View.GONE);
+        binding.btnLogOut.setVisibility(View.GONE);
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private void updateViewAdmin()
+    {
+        binding.btnRating.setVisibility(View.VISIBLE);
+        binding.btnEdit.setVisibility(View.GONE);
+        binding.btnLogOut.setText(R.string.ban);
+        binding.btnLogOut.setBackgroundColor(R.color.red);
     }
 }

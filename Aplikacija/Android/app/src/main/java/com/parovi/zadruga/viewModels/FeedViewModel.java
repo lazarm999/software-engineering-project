@@ -44,8 +44,8 @@ public class FeedViewModel extends AndroidViewModel{
         lookUpRepository.getAllLocations(Utility.getAccessToken(App.getAppContext()), locations);
         lookUpRepository.getAllTags(Utility.getAccessToken(App.getAppContext()), tags);
 
-        loadAdsDefault();
-       // loadRecommended();
+        //loadAdsDefault();
+        loadRecommended();
     }
 
     public MutableLiveData<CustomResponse<?>> getAds() {  return ads; }
@@ -65,7 +65,7 @@ public class FeedViewModel extends AndroidViewModel{
         return tags;
     }
 
-    private void loadAdsDefault() { adRepository.getAds(ads);}
+    public void loadAdsDefault() { adRepository.getAds(ads);}
 
     public void loadRecommended() { adRepository.getRecommendedAds(ads); }
 

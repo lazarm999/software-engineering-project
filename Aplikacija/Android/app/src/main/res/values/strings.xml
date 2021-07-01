@@ -177,4 +177,6 @@
     <string name="deleteReport">Delete report</string>
     <string name="reportTitle">User %1$s has reported user %2$s</string>
     <string name="rating">Rating %1$s:</string>
+    <string name="badgeDialog">More about this badge</string>
+    <string name="ban">Ban user</string>
 </resources>

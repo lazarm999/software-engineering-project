@@ -19,14 +19,16 @@
             android:id="@+id/btnLogOut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="173dp"
             android:layout_toStartOf="@+id/btnEdit"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="Log out"
-            android:textColor="@color/black"
-            android:textSize="10sp"
-            app:backgroundTint="@color/teal_200"
+            android:textColor="@color/lila"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            app:backgroundTint="@color/background"
             app:cornerRadius="20dp"
             app:iconTint="@color/black"
             app:rippleColor="@color/lila" />
@@ -159,8 +161,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:scaleType="center"
-                    android:src="@drawable/locker"
-                    app:srcCompat="@drawable/locker" />
+                    app:srcCompat="@drawable/l1" />
 
                 <ImageView
                     android:id="@+id/imgBadge2"
@@ -168,7 +169,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:scaleType="center"
-                    android:src="@drawable/locker" />
+                    app:srcCompat="@drawable/l2" />
 
                 <ImageView
                     android:id="@+id/imgBadge3"
@@ -177,7 +178,7 @@
                     android:layout_weight="1"
                     android:padding="10dp"
                     android:scaleType="center"
-                    android:src="@drawable/locker" />
+                    app:srcCompat="@drawable/l3"/>
 
                 <ImageView
                     android:id="@+id/imgBadge4"
@@ -185,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="10dp"
-                    android:src="@drawable/locker" />
+                    app:srcCompat="@drawable/l4" />
 
                 <ImageView
                     android:id="@+id/imgBadge5"
@@ -193,7 +194,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="10dp"
-                    android:src="@drawable/locker" />
+                    app:srcCompat="@drawable/l5" />
 
             </LinearLayout>
 

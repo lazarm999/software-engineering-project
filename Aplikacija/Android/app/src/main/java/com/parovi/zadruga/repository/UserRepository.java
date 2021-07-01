@@ -29,7 +29,6 @@ import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.Applied;
 import com.parovi.zadruga.models.nonEntityModels.UserWithFaculty;
 import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
-import com.parovi.zadruga.models.requestModels.BanRequest;
 import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
 import com.parovi.zadruga.models.requestModels.LoginRequest;
 import com.parovi.zadruga.models.requestModels.ReportRequest;
@@ -442,8 +441,8 @@ public class UserRepository extends BaseRepository {
         });
     }
 
-    public void banUser(String token, MutableLiveData<CustomResponse<?>> isBanned, BanRequest b, int id){
-        ApiFactory.getUserApi().banUser(token, id, b).enqueue(new Callback<ResponseBody>() {
+    public void banUser(String token, MutableLiveData<CustomResponse<?>> isBanned, int id){
+        ApiFactory.getUserApi().banUser(token, id).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if(response.isSuccessful()){
@@ -581,7 +580,7 @@ public class UserRepository extends BaseRepository {
             try {
                 Response<ResponseBody> res = ApiFactory.getUserApi().postReport(token, reportRequest).execute();
                 if(res.isSuccessful()){
-                    isReported.postValue(new CustomResponse<>(CustomResponse.Status.OK, isReported));
+                    isReported.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
                 } else
                     responseNotSuccessful(res.code(), isReported);
             } catch (IOException e) {

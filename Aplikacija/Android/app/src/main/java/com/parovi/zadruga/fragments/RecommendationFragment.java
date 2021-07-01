@@ -64,7 +64,6 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
             }
         });
 
-        model.loadRecommended();
         return binding.getRoot();
     }
 

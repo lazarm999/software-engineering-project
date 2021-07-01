@@ -25,9 +25,9 @@
             android:fontFamily="@font/roboto_condensed_bold_italic"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/reportedHeading"
+            android:text="@string/recommendationsStudent"
             android:textColor="@color/lila"
-            android:textSize="30sp"  />
+            android:textSize="30sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recViewRecommends"

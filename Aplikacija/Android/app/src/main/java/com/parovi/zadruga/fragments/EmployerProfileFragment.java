@@ -1,12 +1,17 @@
 package com.parovi.zadruga.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -45,6 +50,8 @@ public class EmployerProfileFragment extends Fragment {
         //userRepository.loginUser(new MutableLiveData<>(), "vuk@gmail.com", "novasifra");
         model = new ViewModelProvider(requireActivity()).get(EmployerProfileViewModel.class);
 
+        binding.btnRating.setVisibility(View.GONE);
+
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,17 +75,113 @@ public class EmployerProfileFragment extends Fragment {
             }
         });
 
-        model.getUserInfo().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+        model.getUser().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
                     populateViews((User)customResponse.getBody());
                     u = ((User) customResponse.getBody());
-                    List<Badge> badges = u.getBadges();
-                    for (int i = 0; i < badges.size(); i++) {
-                        ((ImageView)binding.linearBagdges.getChildAt(0)).setImageResource(R.drawable.badge1);
+                    int[] arrayLock = new int[]{R.drawable.b1, R.drawable.b2, R.drawable.b3, R.drawable.b6, R.drawable.b7};
+
+                    if(u.getBadges() != null){
+                        List<Badge> badges = u.getBadges();
+                        for (int i = 0; i < badges.size(); i++) {
+                            ((ImageView)binding.linearBagdges.getChildAt((badges.get(i).getBadgeId()-1)%5)).setImageResource(arrayLock[(badges.get(i).getBadgeId()-1)%5]);
+                        }
                     }
                 }
+            }
+        });
+
+        binding.imgBadge1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                final TextView etText = new TextView(requireActivity());
+                etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                etText.setTextSize(16);
+                etText.setText(model.getBadgeDesc(5));
+                dialog.setTitle(etText.getText().toString());
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        binding.imgBadge2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                final TextView etText = new TextView(requireActivity());
+                etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                etText.setTextSize(16);
+                etText.setText(model.getBadgeDesc(6));
+                dialog.setTitle(etText.getText().toString());
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        binding.imgBadge3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                final TextView etText = new TextView(requireActivity());
+                etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                etText.setTextSize(16);
+                etText.setText(model.getBadgeDesc(7));
+                dialog.setTitle(etText.getText().toString());
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        binding.imgBadge4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                dialog.setTitle(model.getBadgeDesc(8));
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        binding.imgBadge5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                dialog.setTitle(model.getBadgeDesc(9));
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -120,5 +223,27 @@ public class EmployerProfileFragment extends Fragment {
         binding.txtNumber.setText(user.getPhoneNumber());
         binding.txtCompany.setText(user.getCompanyName());
         binding.txtMultilineEditBio.setText(user.getBio());
+
+        if (model.isProfileStudent())
+            updateViewStudent();
+
+        if(model.isProfileAdmin())
+            updateViewAdmin();
+    }
+
+    private void updateViewStudent()
+    {
+        binding.btnRating.setVisibility(View.VISIBLE);
+        binding.btnEdit.setVisibility(View.GONE);
+        binding.btnLogOut.setVisibility(View.GONE);
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private void updateViewAdmin()
+    {
+        binding.btnRating.setVisibility(View.VISIBLE);
+        binding.btnEdit.setVisibility(View.GONE);
+        binding.btnLogOut.setText(R.string.ban);
+        binding.btnLogOut.setBackgroundColor(R.color.red);
     }
 }

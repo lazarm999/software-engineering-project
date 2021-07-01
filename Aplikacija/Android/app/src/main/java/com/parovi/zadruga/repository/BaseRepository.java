@@ -118,8 +118,8 @@ public abstract class BaseRepository {
     }
 
     protected int getListSize(MutableLiveData<CustomResponse<?>> list){
-        if(list != null && list.getValue() != null && list.getValue().getBody() != null)
-            return ((CustomResponse<List<?>>)list.getValue().getBody()).getBody().size();
+        if(list != null && list.getValue() != null && list.getValue().getBody() != null && list.getValue().getBody() instanceof List)
+            return ((List<?>)list.getValue().getBody()).size();
         else
             return 0;
     }

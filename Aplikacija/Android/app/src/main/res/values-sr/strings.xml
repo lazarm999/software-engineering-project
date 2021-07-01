@@ -174,4 +174,6 @@
     <string name="DialogCommentMess">Zbog čega želite da prijavite odabrani komentar?</string>
     <string name="dialogAd">Prijavite oglas</string>
     <string name="dialogComment">Prijavite komentar</string>
+    <string name="badgeDialog">Detalji o bedžu</string>
+    <string name="ban">Banujte korisnika</string>
 </resources>

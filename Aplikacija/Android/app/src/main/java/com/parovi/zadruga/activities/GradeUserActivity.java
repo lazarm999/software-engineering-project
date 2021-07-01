@@ -99,7 +99,7 @@ public class GradeUserActivity extends AppCompatActivity {
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() != CustomResponse.Status.OK)
                 {
-                    //
+                    return;
                 }
             }
         });

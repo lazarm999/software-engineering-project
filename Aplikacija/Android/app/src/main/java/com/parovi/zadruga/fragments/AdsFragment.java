@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -37,6 +38,7 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
 
     FragmentAdsFragmentBinding binding;
     FeedViewModel model;
+    int count = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,14 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         AdAdapter adapter = new AdAdapter(this);
         recView.setAdapter(adapter);
 
+//        binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                binding.recViewAds.notifyAll();
+//                binding.swipeRefresh.isRefreshing();
+//            }
+//        });
+
         model.getAds().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
@@ -72,6 +82,20 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
             }
         });
 
+        binding.nested.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                    count++;
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    if (count < 10) {
+                        model.loadRecommended();
+                        count = 0;
+                    }
+                }
+            }
+        });
 
         model.getLocations().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
@@ -80,16 +104,7 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
                 {
                     adapterLoc.clear();
                     adapterLoc.addAll(model.getAllCities());
-                    // makeToast(R.string.successfulLocation);
                 }
-//                else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
-//                {
-//                    Toast.makeText(requireContext(), "You got the locations", Toast.LENGTH_SHORT).show();
-//                }
-//                else if(customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR)
-//                {
-//                    Toast.makeText(requireContext(), "Error with server", Toast.LENGTH_SHORT).show();
-//                }
             }
         });
 
@@ -195,17 +210,4 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         intent.putExtra(JobAdActivity.AD_ID, ad.getAdId());
         startActivity(intent);
     }
-
-   /* private void showToast() {
-        LayoutInflater inflaterToast = getLayoutInflater();
-        View layoutToast = inflaterToast.inflate(R.layout.toast_layout, (ViewGroup) layout.findViewById(R.id.toast));
-        Toast toast = new Toast(getContext());
-        TextView txtToast = (TextView) layoutToast.findViewById(R.id.txtToast);
-        txtToast.setText("");
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(layoutToast);
-    }*/
-
-
 }
