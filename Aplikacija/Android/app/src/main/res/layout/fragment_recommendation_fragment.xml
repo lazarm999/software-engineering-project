@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/nestedRecommend"
     tools:context=".fragments.RecommendationFragment">
 
     <FrameLayout
@@ -36,6 +37,11 @@
             android:layout_height="wrap_content"
             android:padding="1dp" />
 
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBarRecommend"/>
+
     </LinearLayout>
     </FrameLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

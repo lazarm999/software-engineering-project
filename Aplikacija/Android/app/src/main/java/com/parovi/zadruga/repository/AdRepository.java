@@ -38,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -124,7 +123,6 @@ public class AdRepository extends BaseRepository {
         ((List<?>)oldList.getValue().getBody()).addAll(tmpList);*/
     }
 
-    //TODO: kad da dodajem ove podatke iz lookup tebela u lokalnu bazu?
     public void getAds(MutableLiveData<CustomResponse<?>> ads) {
         String token = Utility.getAccessToken(App.getAppContext());
         final Boolean[] isSynced = {false};
@@ -133,22 +131,30 @@ public class AdRepository extends BaseRepository {
         ApiFactory.getAdApi().getAds(token, Constants.pageSize, pageSkip).enqueue(new Callback<List<Ad>>() {
             @Override
             public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
-                if(response.isSuccessful() && response.body() != null) {
-                    /*List<Ad> tmpAdList;
-                    if(pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null)
-                        tmpAdList = (List) ads.getValue().getBody();
-                    else
-                        tmpAdList = new ArrayList<>();
-                    tmpAdList.addAll(response.body());*/
-                    synchronized (isSynced[0]) {
-                        if(pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null)
-                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, ((List) ads.getValue().getBody()).addAll(response.body())));
-                        else
-                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
-                        isSynced[0] = true;
+                if(response.isSuccessful()) {
+                    if(response.body() != null){
+                        if(response.body().size() == 0){
+                            if(ads.getValue() != null)
+                                ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                        ads.getValue().getBody()));
+                            else
+                                ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                        new ArrayList<>()));
+                            return;
+                        }
+                        synchronized (isSynced[0]) {
+                            if(pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null){
+                                List<Ad> tmpAds = (List) ads.getValue().getBody();
+                                tmpAds.addAll(response.body());
+                                ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAds));
+                            } else
+                                ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
+                            isSynced[0] = true;
+                        }
+                        saveAdsLocally(response.body());
                     }
-                    saveAdsLocally(response.body());
-                }
+                } else
+                    responseNotSuccessful(response.code(), ads);
             }
 
             @Override
@@ -159,7 +165,9 @@ public class AdRepository extends BaseRepository {
     }
 
     public void getAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, int pageSkip){
-        Futures.addCallback(DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip), new FutureCallback<List<AdWithTags>>() {
+        if(getListSize(ads) > 0) return;
+        Futures.addCallback(DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip),
+                new FutureCallback<List<AdWithTags>>() {
             @Override
             public void onSuccess(@Nullable List<AdWithTags> result) {
                 if(result != null){
@@ -209,17 +217,16 @@ public class AdRepository extends BaseRepository {
                         @Override
                         public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
                             if(response.isSuccessful() && response.body() != null) {
-                                List<Ad> tmpAdList;
-                                if(ads.getValue() != null && ads.getValue().getBody() != null)
-                                    tmpAdList = (List<Ad>) ads.getValue().getBody();
-                                else
-                                    tmpAdList = new ArrayList<>();
-                                saveAdsLocally(response.body());
-                                tmpAdList.addAll(response.body());
                                 synchronized (isSynced[0]) {
-                                    ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAdList));
+                                    if(pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null){
+                                        List<Ad> tmpAds = (List) ads.getValue().getBody();
+                                        tmpAds.addAll(response.body());
+                                        ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAds));
+                                    } else
+                                        ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
                                     isSynced[0] = true;
                                 }
+                                saveAdsLocally(response.body());
                             }
                         }
 
@@ -239,17 +246,16 @@ public class AdRepository extends BaseRepository {
                 @Override
                 public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
                     if(response.isSuccessful() && response.body() != null) {
-                        List<Ad> tmpAdList;
-                        if(ads.getValue() != null && ads.getValue().getBody() != null)
-                            tmpAdList = (List<Ad>) ads.getValue().getBody();
-                        else
-                            tmpAdList = new ArrayList<>();
-                        saveAdsLocally(response.body());
-                        tmpAdList.addAll(response.body());
                         synchronized (isSynced[0]) {
-                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAdList));
+                            if(pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null){
+                                List<Ad> tmpAds = (List) ads.getValue().getBody();
+                                tmpAds.addAll(response.body());
+                                ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAds));
+                            } else
+                                ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
                             isSynced[0] = true;
                         }
+                        saveAdsLocally(response.body());
                     }
                 }
 
@@ -263,6 +269,7 @@ public class AdRepository extends BaseRepository {
 
     public void getAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, Integer locId, Integer compensationMin, Integer compensationMax, List<Integer> tagIds,
                             Double latitude, Double longitude, int pageSkip){
+        if(getListSize(ads) > 0) return;
         Utility.getExecutorService().execute(() -> {
             String queryString = "";
             List<Object> args = new ArrayList<>();
@@ -598,29 +605,30 @@ public class AdRepository extends BaseRepository {
         });
     }
 
-//    TODO popraviti page skip
     public void getRecommendedAds(MutableLiveData<CustomResponse<?>> ads){
         Utility.getExecutorService().execute(() -> {
             try {
                 List<PreferredTag> preferredTags = DaoFactory.getPreferredTagDao().getPreferredTags();
+                if(preferredTags == null || preferredTags.size() > 0){
+                    ads.postValue(new CustomResponse<>(CustomResponse.Status.TAGS_NOT_CHOSEN, new ArrayList<>()));
+                    return;
+                }
                 List<Integer> tagIds = preferredTagsToListInteger(preferredTags);
                 String token = Utility.getAccessToken(App.getAppContext());
                 Boolean[] isSynced = {false};
                 int pageSkip = getListSize(ads);
-                tagIds = Arrays.asList(1,2);
                 getRecommendedAdsLocal(ads, isSynced, pageSkip, tagIds);
                 Response<List<Ad>> adsResponse = ApiFactory.getAdApi().getRecommendedAds(token, tagIds,
                         Constants.pageSize, pageSkip).execute();
                 if(adsResponse.isSuccessful()){
                     if(adsResponse.body() != null){
-                        List<Ad> tmpAdList;
-                        if(pageSkip > 0)
-                            tmpAdList = (List<Ad>) ads.getValue().getBody();
-                        else
-                            tmpAdList = new ArrayList<>();
-                        tmpAdList.addAll(adsResponse.body());
-                        synchronized (isSynced[0]){
-                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAdList));
+                        synchronized (isSynced[0]) {
+                            if(pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null){
+                                List<Ad> tmpAds = (List) ads.getValue().getBody();
+                                tmpAds.addAll(adsResponse.body());
+                                ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAds));
+                            } else
+                                ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, adsResponse.body()));
                             isSynced[0] = true;
                         }
                         saveAdsLocally(adsResponse.body());
@@ -645,6 +653,7 @@ public class AdRepository extends BaseRepository {
 
     private void getRecommendedAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, int pageSkip,
                                         List<Integer> tagIds) {
+        if(getListSize(ads) > 0) return;
         Utility.getExecutorService().execute(() -> {
             List<Ad> localAds = DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip, tagIds);
             if(localAds != null){

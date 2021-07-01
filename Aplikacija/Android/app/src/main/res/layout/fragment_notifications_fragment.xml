@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.NotificationsFragment">
+    tools:context=".fragments.NotificationsFragment"
+    android:id="@+id/nestedNotif">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -35,6 +36,12 @@
             android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
             android:padding="1dp" />
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBarNotif"/>
+
     </LinearLayout>
     </FrameLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

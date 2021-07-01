@@ -30,7 +30,7 @@ public class Constants {
     public static final String NOTIF_AD_COMMENT = "adComment";//tag za owner-a ad-a
     public static final String NOTIF_APPLIED = "applied";
     public static final String LOGGED_IN_USER = "loggedInUser";
-    public static final int pageSize = 5;
+    public static final int pageSize = 10;
 
     public static final String EMPLOYEE = "employee";
     public static final String EMPLOYER = "employer";

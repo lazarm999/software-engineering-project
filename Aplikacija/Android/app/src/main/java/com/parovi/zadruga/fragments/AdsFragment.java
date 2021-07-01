@@ -44,7 +44,7 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
     FragmentAdsFragmentBinding binding;
     FeedViewModel model;
     int page = 0;
-    int limit = 5;
+    int limit = 10;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +107,10 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         model.getAds().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.NO_MORE_DATA) {
+                    binding.progressBar.setVisibility(View.GONE);
+                    Toast.makeText(requireActivity(), "That's all the data..", Toast.LENGTH_SHORT).show();
+                }
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.setAds((ArrayList<Ad>) customResponse.getBody());
                 }
@@ -241,7 +245,7 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
             return;
         }
 
-        model.loadRecommended();
+        model.loadAdsDefault();
     }
 
     private void setAdminView()

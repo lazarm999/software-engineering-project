@@ -49,6 +49,15 @@ public class NotificationRepository extends BaseRepository {
                 Response<List<Notification>> notifResponse = ApiFactory.getNotificationApi().getNotifications(token, Constants.pageSize, pageSkip).execute();
                 if(notifResponse.isSuccessful()){
                     if(notifResponse.body() != null){
+                        if(notifResponse.body().size() == 0){
+                            if(notifications.getValue() != null)
+                                notifications.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                    notifications.getValue().getBody()));
+                            else
+                                notifications.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                        new ArrayList<>()));
+                            return;
+                        }
                         for (Notification notif : notifResponse.body()) {
                             notif.setType(getNotificationType(notif));
                         }
@@ -58,8 +67,13 @@ public class NotificationRepository extends BaseRepository {
                         else
                             tmpNotificationList = new ArrayList<>();
                         tmpNotificationList.addAll(notifResponse.body());
-                        synchronized (isSynced[0]){
-                            notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpNotificationList));
+                        synchronized (isSynced[0]) {
+                            if(pageSkip > 0 && notifications.getValue() != null && notifications.getValue().getBody() != null){
+                                List<Notification> tmpNotifList = (List) notifications.getValue().getBody();
+                                tmpNotifList.addAll(notifResponse.body());
+                                notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpNotifList));
+                            } else
+                                notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, notifResponse.body()));
                             isSynced[0] = true;
                         }
                         saveNotificationsLocally(notifResponse.body());
@@ -94,6 +108,7 @@ public class NotificationRepository extends BaseRepository {
     }
 
     public void getNotificationsLocal(MutableLiveData<CustomResponse<?>> notifications, Boolean[] isSynced, int pageSkip) {
+        if(getListSize(notifications) > 0) return;
         Utility.getExecutorService().execute(() -> {
             List<Notification> localNotifications = DaoFactory.getNotificationDao().getNotifications(Constants.pageSize, pageSkip);
             if(localNotifications != null){
@@ -118,15 +133,9 @@ public class NotificationRepository extends BaseRepository {
                     }
                     notification.setType(getNotificationType(notification));
                 }
-                List<Notification> tmpNotificationList;
-                if(notifications.getValue() != null && notifications.getValue().getBody() != null)
-                    tmpNotificationList = (List<Notification>) notifications.getValue().getBody();
-                else
-                    tmpNotificationList = new ArrayList<>();
-                tmpNotificationList.addAll(localNotifications);
                 synchronized (isSynced[0]){
                     if(!isSynced[0])
-                        notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpNotificationList));
+                        notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, localNotifications));
                 }
             }
         });
