@@ -22,7 +22,7 @@ public abstract class AdDao extends BaseDao<Ad> {
     @Query("SELECT Ad.*, user_table.*, Location.* " +
             "FROM Ad " +
             "INNER JOIN user_table ON user_table.userId = Ad.fkEmployerId " +
-            "LEFT JOIN Location ON Location.locId = Ad.fkLocationId limit :pageSkip, :pageSize")
+            "LEFT JOIN Location ON Location.locId = Ad.fkLocationId order by Ad.postTime desc limit :pageSkip, :pageSize")
     public abstract ListenableFuture<List<AdWithTags>> getAds(int pageSize, int pageSkip);
 
     @RawQuery(observedEntities = {Ad.class, User.class, Location.class, Tag.class})

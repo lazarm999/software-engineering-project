@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.activities.MainEmployerActivity;
+import com.parovi.zadruga.activities.MainStudentActivity;
 import com.parovi.zadruga.adapters.ReportAdapter;
 import com.parovi.zadruga.databinding.FragmentReportBinding;
 import com.parovi.zadruga.models.entityModels.Report;
@@ -61,6 +63,8 @@ public class ReportFragment extends Fragment implements ReportAdapter.ReportList
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.removeAt((int)customResponse.getBody());
                 }
+                if(model.getIsDeleted().getValue() != null)
+                    model.getIsDeleted().getValue().setStatus(null);
             }
         });
         return binding.getRoot();
@@ -79,7 +83,7 @@ public class ReportFragment extends Fragment implements ReportAdapter.ReportList
     }
 
     @Override
-    public void onUsernameClicked(int userId) {
-        Toast.makeText(requireContext(), String.valueOf(userId), Toast.LENGTH_LONG).show();
+    public void onUsernameClicked(int userId, boolean isEmployer) {
+
     }
 }

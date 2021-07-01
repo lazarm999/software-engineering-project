@@ -114,6 +114,16 @@ public class AdRepository extends BaseRepository {
         }, Utility.getExecutor());
     }
 
+    private void append(MutableLiveData<CustomResponse<?>> oldList, List<?> newList, int pageSkip){
+        /*List<?> tmpList;
+        if(pageSkip > 0 && oldList.getValue() != null && oldList.getValue().getBody() != null)
+            tmpList = (List<?>) oldList.getValue().getBody();
+        else
+            tmpList = new ArrayList<>();
+        tmpList.addAll(newList);
+        ((List<?>)oldList.getValue().getBody()).addAll(tmpList);*/
+    }
+
     //TODO: kad da dodajem ove podatke iz lookup tebela u lokalnu bazu?
     public void getAds(MutableLiveData<CustomResponse<?>> ads) {
         String token = Utility.getAccessToken(App.getAppContext());
@@ -124,17 +134,20 @@ public class AdRepository extends BaseRepository {
             @Override
             public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
                 if(response.isSuccessful() && response.body() != null) {
-                    List<Ad> tmpAdList;
-                    if(ads.getValue() != null && ads.getValue().getBody() != null)
-                        tmpAdList = (List<Ad>) ads.getValue().getBody();
+                    /*List<Ad> tmpAdList;
+                    if(pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null)
+                        tmpAdList = (List) ads.getValue().getBody();
                     else
                         tmpAdList = new ArrayList<>();
-                    saveAdsLocally(response.body());
-                    tmpAdList.addAll(response.body());
+                    tmpAdList.addAll(response.body());*/
                     synchronized (isSynced[0]) {
-                        ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAdList));
+                        if(pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null)
+                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, ((List) ads.getValue().getBody()).addAll(response.body())));
+                        else
+                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
                         isSynced[0] = true;
                     }
+                    saveAdsLocally(response.body());
                 }
             }
 
@@ -172,7 +185,7 @@ public class AdRepository extends BaseRepository {
     //kad neces da se sortira po nekom parametru samo prosledis null na tom mestu
     public void getAds(String token, MutableLiveData<CustomResponse<?>> ads, Integer locId, Integer compensationMin, Integer compensationMax, List<Integer> tagIds,
                        boolean sortByLocation) {
-        if((compensationMin == null && compensationMax != null) || (compensationMin != null && compensationMax == null)) {
+        if(compensationMax != null && compensationMin != null && compensationMax < compensationMin) {
             responseNotSuccessful(400, ads);
             return;
         }
@@ -254,6 +267,7 @@ public class AdRepository extends BaseRepository {
             String queryString = "";
             List<Object> args = new ArrayList<>();
             boolean isSorting = false, filterByLoc = false;
+
             if(latitude != null && longitude != null){
                 queryString += "SELECT Ad.*, user_table.*, Location.*, " +
                         "(Location.latitude - ?)*(Location.latitude - ?) + (Location.longitude - ?)*(Location.longitude - ?) AS distance " +
@@ -278,14 +292,19 @@ public class AdRepository extends BaseRepository {
                 args.add(locId);
                 filterByLoc = true;
             }
-            if(compensationMin != null && compensationMax != null){
-                if (filterByLoc) {
+            if((compensationMin != null || compensationMax != null) && filterByLoc) {
+                queryString += " AND";
+            }
+            if(compensationMin != null){
+                queryString += " Ad.compensationMin <= ?";
+                args.add(compensationMax);
+            }
+            if(compensationMax != null){
+                if (compensationMin != null) {
                     queryString += " AND";
                 }
-
-                queryString += " Ad.compensationMin >= ? AND Ad.compensationMax <= ?";
+                queryString += " Ad.compensationMax >= ?";
                 args.add(compensationMin);
-                args.add(compensationMax);
             }
 
             if(isSorting) queryString += " ORDER BY distance ASC";
