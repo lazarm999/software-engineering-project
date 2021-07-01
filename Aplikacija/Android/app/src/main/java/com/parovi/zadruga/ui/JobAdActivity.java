@@ -1,5 +1,7 @@
 package com.parovi.zadruga.ui;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -7,12 +9,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.os.Bundle;
-
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ActivityJobAdBinding;
-import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.viewModels.AdViewModel;
 
 public class JobAdActivity extends AppCompatActivity {

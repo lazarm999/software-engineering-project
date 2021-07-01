@@ -27,7 +27,7 @@
             android:padding="10dp"
             android:text="@string/recommendationsStudent"
             android:textColor="@color/lila"
-            android:textSize="30sp"  />
+            android:textSize="30sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recViewRecommends"

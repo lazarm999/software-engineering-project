@@ -61,7 +61,7 @@ public class ReportFragment extends Fragment implements ReportAdapter.ReportList
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
-                    adapter.removeAt((int)customResponse.getBody());
+                    adapter.removeAt((Integer) customResponse.getBody());
                 }
                 if(model.getIsDeleted().getValue() != null)
                     model.getIsDeleted().getValue().setStatus(null);

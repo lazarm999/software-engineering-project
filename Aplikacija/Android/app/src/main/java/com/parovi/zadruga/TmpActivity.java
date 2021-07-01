@@ -29,9 +29,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.parovi.zadruga.adapters.NotificationsAdapter;
 import com.parovi.zadruga.models.entityModels.Notification;
 import com.parovi.zadruga.models.nonEntityModels.CommentUser;
-import com.parovi.zadruga.models.requestModels.BanRequest;
 import com.parovi.zadruga.repository.AdRepository;
-import com.parovi.zadruga.repository.BaseRepository;
 import com.parovi.zadruga.repository.ChatRepository;
 import com.parovi.zadruga.repository.LookUpRepository;
 import com.parovi.zadruga.repository.NotificationRepository;
@@ -245,7 +243,7 @@ public class TmpActivity extends AppCompatActivity {
                 //notificationRep.getNotifications(new MutableLiveData<>());
                 //notificationRep.getNotifications(new MutableLiveData<>());
                 //adRep.isApplied(new MutableLiveData<>(), 20);
-                userRep.banUser(new MutableLiveData<>(), new BanRequest("bas je bio los"), 1);
+                //userRep.banUser(new MutableLiveData<>(), new BanRequest("bas je bio los"), 1);
             }
         });
         tmpBtn2.setOnClickListener(new View.OnClickListener() {

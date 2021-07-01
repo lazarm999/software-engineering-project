@@ -20,17 +20,37 @@
                 android:id="@+id/btnLogOut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="173dp"
                 android:layout_toStartOf="@+id/btnEdit"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="Log out"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                app:backgroundTint="@color/teal_200"
+                android:textColor="@color/lila"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                app:backgroundTint="@color/background"
                 app:cornerRadius="20dp"
                 app:iconTint="@color/black"
                 app:rippleColor="@color/lila" />
+
+            <Button
+                android:id="@+id/btnBanUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="173dp"
+                android:layout_toStartOf="@+id/btnEdit"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/ban"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                app:backgroundTint="@color/red"
+                app:cornerRadius="20dp"
+                app:iconTint="@color/black"
+                app:rippleColor="@color/red" />
 
             <ImageView
                 android:id="@+id/imgProfileBackground"
@@ -163,26 +183,25 @@
                     android:id="@+id/linearBagdges"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="26dp"
-                    android:layout_marginTop="640dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="615dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/imgBadge1"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
-                        android:scaleType="center"
-                        android:src="@drawable/locker"
-                        app:srcCompat="@drawable/locker" />
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/l1" />
 
                     <ImageView
                         android:id="@+id/imgBadge2"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
-                        android:scaleType="center"
-                        android:src="@drawable/locker" />
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/l2" />
 
                     <ImageView
                         android:id="@+id/imgBadge3"
@@ -190,8 +209,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:scaleType="center"
-                        android:src="@drawable/locker" />
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/l3" />
 
                     <ImageView
                         android:id="@+id/imgBadge4"
@@ -199,7 +218,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:src="@drawable/locker" />
+                        app:srcCompat="@drawable/l4"
+                        tools:srcCompat="@drawable/l4" />
 
                     <ImageView
                         android:id="@+id/imgBadge5"
@@ -207,7 +227,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:src="@drawable/locker" />
+                        app:srcCompat="@drawable/l5" />
                 </LinearLayout>
 
 
@@ -235,7 +255,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="145dp"
                 android:layout_marginTop="23dp"
-                android:layout_marginEnd="50dp"
+                android:layout_marginEnd="45dp"
                 android:layout_marginRight="15dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="@string/achievements"
@@ -268,7 +288,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginLeft="60dp"
                 android:layout_marginTop="430dp"
-                android:layout_marginEnd="45dp"
+                android:layout_marginEnd="35dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="0653990854"
                 android:textColor="@color/black"
@@ -294,7 +314,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginLeft="22dp"
                 android:layout_marginTop="470dp"
-                android:layout_marginEnd="45dp"
+                android:layout_marginEnd="35dp"
                 android:background="@drawable/border_for_inputs"
                 android:ems="10"
                 android:fontFamily="@font/roboto_condensed_regular"
@@ -314,7 +334,7 @@
                 android:layout_below="@+id/profile"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="36dp"
+                android:layout_marginEnd="45dp"
                 android:layout_marginRight="10dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="@string/ratingStudent"
@@ -333,7 +353,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginLeft="135dp"
                 android:layout_marginTop="390dp"
-                android:layout_marginEnd="45dp"
+                android:layout_marginEnd="35dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="Elektronski fakultet"
                 android:textColor="@color/black"

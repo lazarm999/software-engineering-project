@@ -22,7 +22,7 @@ public class AdViewModel extends AndroidViewModel {
     private int adId = 32; //4
     private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NH0.0SXnyerqRnP7HxklZwQ5k0q0XGYiMeEE2eTNixAxNrU";// "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
     private int userId = 4;//Utility.getLoggedInUserId(App.getAppContext());
-
+    private int commentId = 22;
     MutableLiveData<JobAdInfo> jobAd;
 
     MutableLiveData<CustomResponse<?>> ad;//AdWithTags
@@ -60,8 +60,6 @@ public class AdViewModel extends AndroidViewModel {
         token = Utility.getAccessToken(App.getAppContext());
     }
 
-
-
     public boolean isAdClosed() {
         return ((Ad)ad.getValue().getBody()).isClosed();
     }
@@ -71,6 +69,7 @@ public class AdViewModel extends AndroidViewModel {
 //    public boolean isUserAppliedToAd() {
 //        return (boolean)getAppliedTo().getValue().getBody();
 //    }
+
     public int getNoOfApplicants() {
         return ((Ad)ad.getValue().getBody()).getNumberOfApplied();
     }
@@ -164,9 +163,11 @@ public class AdViewModel extends AndroidViewModel {
         return selectedUsers.remove(user);
     }
 
-    public void reportAd(String elaboration) { //adRepository.reportUser(elaboration, isReported, adId, null);
+    public void reportAd(String elaboration) {
+        userRepository.postReport(isReported,adId, null, elaboration);
     }
 
     public void reportComment(String elaboration) { //adRepository.reportUser(elaboration, isReportedComment, null, commentId);
+        userRepository.postReport(isReported,null, commentId, elaboration);
     }
 }

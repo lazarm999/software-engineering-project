@@ -598,6 +598,7 @@ public class AdRepository extends BaseRepository {
         });
     }
 
+//    TODO popraviti page skip
     public void getRecommendedAds(MutableLiveData<CustomResponse<?>> ads){
         Utility.getExecutorService().execute(() -> {
             try {
@@ -606,13 +607,20 @@ public class AdRepository extends BaseRepository {
                 String token = Utility.getAccessToken(App.getAppContext());
                 Boolean[] isSynced = {false};
                 int pageSkip = getListSize(ads);
+                tagIds = Arrays.asList(1,2);
                 getRecommendedAdsLocal(ads, isSynced, pageSkip, tagIds);
                 Response<List<Ad>> adsResponse = ApiFactory.getAdApi().getRecommendedAds(token, tagIds,
                         Constants.pageSize, pageSkip).execute();
                 if(adsResponse.isSuccessful()){
                     if(adsResponse.body() != null){
+                        List<Ad> tmpAdList;
+                        if(pageSkip > 0)
+                            tmpAdList = (List<Ad>) ads.getValue().getBody();
+                        else
+                            tmpAdList = new ArrayList<>();
+                        tmpAdList.addAll(adsResponse.body());
                         synchronized (isSynced[0]){
-                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, adsResponse.body()));
+                            ads.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAdList));
                             isSynced[0] = true;
                         }
                         saveAdsLocally(adsResponse.body());
@@ -635,7 +643,8 @@ public class AdRepository extends BaseRepository {
         return tagIds;
     }
 
-    private void getRecommendedAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, int pageSkip, List<Integer> tagIds) {
+    private void getRecommendedAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, int pageSkip,
+                                        List<Integer> tagIds) {
         Utility.getExecutorService().execute(() -> {
             List<Ad> localAds = DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip, tagIds);
             if(localAds != null){

@@ -122,64 +122,65 @@ public class UserRepository extends BaseRepository {
     public void loginUser(MutableLiveData<CustomResponse<?>> isEmployer, String email, String pass){
         ApiFactory.getUserApi().loginUser(new LoginRequest(email, pass)).enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> apiResponse) {
-                if(apiResponse.isSuccessful() && apiResponse.body() != null){
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> apiResponse) {
+                if(apiResponse.isSuccessful() && apiResponse.body() != null) {
                     User loggedInUser = apiResponse.body().getUser();
                     QBUser qbUser = new QBUser();
                     qbUser.setEmail(email);
                     qbUser.setPassword(pass);
-
                     QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
                         @Override
-                        public void onSuccess(QBUser user, Bundle args) {
-                            Log.i("logIn", "braoooo");
-                            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-                                if (!task.isSuccessful()) {
-                                    Log.w("FETCH_FCM_TOKEN_FAILED", "Fetching FCM registration token failed", task.getException());
-                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, "Fetching FCM registration token failed"));
-                                    return;
-                                }
-                                Utility.saveLoggedUserInfo(App.getAppContext(), apiResponse.body().getToken(), apiResponse.body().getUser(), pass, task.getResult());
-                                String type;
-                                if(apiResponse.body().getUser().isAdmin())
-                                    type = Constants.ADMIN;
-                                else if(apiResponse.body().getUser().isEmployer())
-                                    type = Constants.EMPLOYER;
-                                else
-                                    type = Constants.EMPLOYEE;
-                                isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, type, ""));
-                                ApiFactory.getUserApi().postFcmToken(apiResponse.body().getToken(), new AddFcmTokenRequest(task.getResult()))
-                                        .enqueue(new Callback<ResponseBody>() {
-                                            @Override
-                                            public void onResponse(@NotNull Call<ResponseBody> call1, @NotNull Response<ResponseBody> response) {
-                                                if(response.isSuccessful())
-                                                    Log.i("postFcmToken", "OK");
-                                                else
-                                                    Log.i("postFcmToken", String.valueOf(response.code()));
-                                            }
-
-                                    @Override
-                                    public void onFailure(@NotNull Call<ResponseBody> call1, @NotNull Throwable t) {
-                                        Log.i("postFcmToken", t.getMessage());
+                        public void onSuccess(QBUser qbUser, Bundle bundle) {
+                            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                                @Override
+                                public void onComplete(@NonNull @NotNull Task<String> task) {
+                                    if (!task.isSuccessful()) {
+                                        Log.w("FETCH_FCM_TOKEN_FAILED", "Fetching FCM registration token failed", task.getException());
+                                        isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, "Fetching FCM registration token failed"));
+                                        return;
                                     }
-                                });
+                                    String type;
+                                    if (apiResponse.body().getUser().isAdmin())
+                                        type = Constants.ADMIN;
+                                    else if (apiResponse.body().getUser().isEmployer())
+                                        type = Constants.EMPLOYER;
+                                    else
+                                        type = Constants.EMPLOYEE;
+                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, type, ""));
+                                    Utility.saveLoggedUserInfo(App.getAppContext(), apiResponse.body().getToken(), apiResponse.body().getUser(),
+                                            pass, task.getResult());
+                                    ApiFactory.getUserApi().postFcmToken(apiResponse.body().getToken(), new AddFcmTokenRequest(task.getResult()))
+                                            .enqueue(new Callback<ResponseBody>() {
+                                                @Override
+                                                public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                                                    if (response.isSuccessful())
+                                                        Log.i("postFcmToken", "OK");
+                                                    else
+                                                        Log.i("postFcmToken", String.valueOf(response.code()));
+                                                }
+
+                                                @Override
+                                                public void onFailure(@NotNull Call<ResponseBody> call1, @NotNull Throwable t) {
+                                                    Log.i("postFcmToken", t.getMessage());
+                                                }
+                                            });
+                                    saveUserLocally(loggedInUser);
+                                }
                             });
-                            saveUserLocally(loggedInUser);
                         }
 
                         @Override
-                        public void onError(QBResponseException error) {
+                        public void onError(QBResponseException e) {
                             Log.i("logIn", "ne braoooo");
-                            responseNotSuccessful(error.getHttpStatusCode(), isEmployer);
+                            responseNotSuccessful(e.getHttpStatusCode(), isEmployer);
                         }
                     });
-                }
-                else
+                } else
                     responseNotSuccessful(apiResponse.code(), isEmployer);
             }
 
             @Override
-            public void onFailure(@NotNull Call<LoginResponse> call, @NotNull Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Log.i("logIn", "ne braoooo");
                 apiCallOnFailure(t.getMessage(), isEmployer);
             }
@@ -400,9 +401,8 @@ public class UserRepository extends BaseRepository {
         });
     }
 
-    public void banUser(MutableLiveData<CustomResponse<?>> isBanned, BanRequest b, int id){
-        String token = Utility.getAccessToken(App.getAppContext());
-        ApiFactory.getUserApi().banUser(token, id, b).enqueue(new Callback<ResponseBody>() {
+    public void banUser(String token, MutableLiveData<CustomResponse<?>> isBanned, int id){
+        ApiFactory.getUserApi().banUser(token, id).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if(response.isSuccessful()){
@@ -532,7 +532,7 @@ public class UserRepository extends BaseRepository {
             try {
                 Response<ResponseBody> res = ApiFactory.getUserApi().postReport(token, reportRequest).execute();
                 if(res.isSuccessful()){
-                    isReported.postValue(new CustomResponse<>(CustomResponse.Status.OK, isReported));
+                    isReported.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
                 } else
                     responseNotSuccessful(res.code(), isReported);
             } catch (IOException e) {

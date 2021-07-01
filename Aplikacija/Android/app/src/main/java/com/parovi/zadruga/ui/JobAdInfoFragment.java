@@ -115,37 +115,39 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
                     return;
                 }
 
-                binding.imgBtnReportAd.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
-                        dialog.setTitle(R.string.dialogAd);
-
-                        final EditText etReportText = new EditText(requireActivity());
-                        etReportText.setInputType(InputType.TYPE_CLASS_TEXT);
-                        etReportText.setTextSize(16);
-                        dialog.setView(etReportText);
-
-                        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String myText = etReportText.getText().toString();
-                                model.reportAd(myText);
-                            }
-                        });
-
-                        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        dialog.show();
-                    }
-
-                });
             }
         });
+
+        binding.imgBtnReportAd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                dialog.setTitle(R.string.dialogAd);
+
+                final EditText etReportText = new EditText(requireActivity());
+                etReportText.setInputType(InputType.TYPE_CLASS_TEXT);
+                etReportText.setTextSize(16);
+                dialog.setView(etReportText);
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String myText = etReportText.getText().toString();
+                        model.reportAd(myText);
+                    }
+                });
+
+                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+
+        });
+
 
         model.getIsReportedComment().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
@@ -241,7 +243,7 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String myText = etReportText.getText().toString();
-                model.reportAd(myText);
+                model.reportComment(myText);
             }
         });
 

@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer;
 
 import com.parovi.zadruga.App;
 import com.parovi.zadruga.ChatNotification;
-import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.activities.MainActivity;
@@ -34,7 +33,6 @@ import com.parovi.zadruga.models.entityModels.manyToManyModels.UserChat;
 import com.parovi.zadruga.models.nonEntityModels.AdWithTags;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.models.responseModels.RatingResponse;
-import com.parovi.zadruga.ui.ChatActivity;
 import com.quickblox.chat.QBRestChatService;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBDialogType;
@@ -123,7 +121,7 @@ public abstract class BaseRepository {
         DaoFactory.getRatingDao().insertOrUpdate(new Rating(r.getRater().getUserId(), r.getRatee(), r.getRating(), r.getComment(), r.getPostTime()));
     }
 
-    protected int getListSize(MutableLiveData<CustomResponse<?>> list){//TODO: vidi sta vuk kaze za ovo, da l smo stojke i ja selci il smo doktori
+    protected int getListSize(MutableLiveData<CustomResponse<?>> list){
         if(list != null && list.getValue() != null && list.getValue().getBody() != null && list.getValue().getBody() instanceof List)
             return ((List<?>)list.getValue().getBody()).size();
         else
@@ -385,6 +383,9 @@ public abstract class BaseRepository {
                         Utility.removeLoggedUserInfo(App.getAppContext());
                     } else
                         responseNotSuccessful(deleteTokenRes.code(), isLoggedOut);
+                } else {
+                    isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                    Utility.removeLoggedUserInfo(App.getAppContext());
                 }
             } catch (QBResponseException e) {
                 e.printStackTrace();

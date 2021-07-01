@@ -10,21 +10,24 @@ import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.models.entityModels.Badge;
+import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.LookUpRepository;
 import com.parovi.zadruga.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StudentProfileViewModel extends AndroidViewModel {
-    private int userId = 3;
-    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
+//    private int userId = 3;
+//    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
 
-    private MutableLiveData<CustomResponse<?>> user;
+    private int USER_ID = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+    private String TOKEN = Utility.getAccessToken(App.getAppContext());
+    
     private MutableLiveData<CustomResponse<?>> badges;
-    private MutableLiveData<CustomResponse<?>> userInfo;
+    private MutableLiveData<CustomResponse<?>> user;
+    private MutableLiveData<CustomResponse<?>> isBanned;
     private MutableLiveData<CustomResponse<?>> profilePicture;
-    private MutableLiveData<CustomResponse<?>> isLogedOut;
+    private MutableLiveData<CustomResponse<?>> isLoggedOut;
     private UserRepository userRepository;
     private LookUpRepository lookUpRepository;
 
@@ -32,11 +35,11 @@ public class StudentProfileViewModel extends AndroidViewModel {
         super(application);
         userRepository = new UserRepository();
         lookUpRepository = new LookUpRepository();
-        userInfo = new MutableLiveData<>();
-        isLogedOut = new MutableLiveData<>();
         user = new MutableLiveData<>();
+        isLoggedOut = new MutableLiveData<>();
         badges = new MutableLiveData<>();
         profilePicture = new MutableLiveData<>();
+        isBanned = new MutableLiveData<>();
         loadUserInfo();
         loadUserProfileImage();
         loadBadges();
@@ -46,70 +49,61 @@ public class StudentProfileViewModel extends AndroidViewModel {
         return badges;
     }
 
+    public MutableLiveData<CustomResponse<?>> getUserInfo() {
+        return user;
+    }
+
     public MutableLiveData<CustomResponse<?>> getProfilePicture() {
         return profilePicture;
     }
 
-    public MutableLiveData<CustomResponse<?>> getThisUser() {
-        return user;
+    public MutableLiveData<CustomResponse<?>> getIsBanned() {
+        return isBanned;
     }
 
-    public MutableLiveData<CustomResponse<?>> getIsLogedOut() {
-        return isLogedOut;
+    public int getId() {
+        return USER_ID;
     }
 
-    public void logOut() { userRepository.logOutUser(isLogedOut); }
+    public String getToken() {
+        return TOKEN;
+    }
+
+    public void banUser(){
+        userRepository.banUser(TOKEN, isBanned, ((User)user.getValue().getBody()).getUserId());
+    }
+
+    public MutableLiveData<CustomResponse<?>> getIsLoggedOut() {
+        return isLoggedOut;
+    }
+
+    public void logOut() { userRepository.logOutUser(isLoggedOut); }
 
     private void loadBadges() {
-        lookUpRepository.getAllBadges(token, badges);
+        lookUpRepository.getAllBadges(TOKEN, badges);
     }
 
     public void loadUserProfileImage() {
-        userRepository.getProfilePicture(profilePicture, userId);
+        userRepository.getProfilePicture(profilePicture, USER_ID);
     }
 
     public void loadUserInfo() {
-        userRepository.getUserById(token, userInfo, userId);
+        userRepository.getUserById(TOKEN, user, USER_ID);
     }
 
-    public MutableLiveData<CustomResponse<?>> getUserInfo() {
-        return userInfo;
-    }
-
-    public List<Integer> getBadgeIds(List<Badge> badge)
+    public String getBadgeDesc(int id)
     {
-        List<Integer> ids = new ArrayList<>();
-        if (badge == null)
-            return ids;
-        for (Badge b : badge)
-            ids.add(b.getBadgeId());
-        return ids;
-    }
-
-    public boolean gotTheBadge(int id)
-    {
-        boolean bool = false;
         List<Badge> badge = (List<Badge>)badges.getValue().getBody();
-
-        if(badge == null)
-            return bool;
-        for(Badge b : badge)
-        {
-            if(b.getBadgeId() == id)
-                bool = true;
-        }
-
-        return bool;
+       return badge.get(id).getDescription();
     }
-
-    public void load(int userId) {
-        this.userId = userId;
-        loadUserInfo();
-    }
-
-    public void loadCredentials() {
-        userId = Utility.getLoggedInUserId(App.getAppContext());
-        token = Utility.getAccessToken(App.getAppContext());
-    }
-
+//
+//    public void load(int userId) {
+//        USER_ID = userId;
+//        loadUserInfo();
+//    }
+//
+//    public void loadCredentials() {
+//        USER_ID = Utility.getLoggedInUserId(App.getAppContext());
+//        TOKEN = Utility.getAccessToken(App.getAppContext());
+//    }
 }
