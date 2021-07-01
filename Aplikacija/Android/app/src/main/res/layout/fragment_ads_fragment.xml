@@ -26,8 +26,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:menu="@menu/ads_overflow_menu"
-                app:title="Ads"
+                app:menu="@menu/feed_overflow_menu"
+                app:title="@string/feed"
                 app:titleTextColor="@color/background" />
 
             <LinearLayout

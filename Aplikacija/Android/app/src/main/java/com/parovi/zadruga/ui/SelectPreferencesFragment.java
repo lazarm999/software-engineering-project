@@ -3,11 +3,10 @@ package com.parovi.zadruga.ui;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavHost;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,19 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.R;
 import com.parovi.zadruga.adapters.PreferencesAdapter;
 import com.parovi.zadruga.databinding.FragmentSelectPreferencesBinding;
 import com.parovi.zadruga.models.entityModels.Tag;
+import com.parovi.zadruga.viewModels.AdViewModel;
 import com.parovi.zadruga.viewModels.EditProfileViewModel;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
 public class SelectPreferencesFragment extends Fragment implements PreferencesAdapter.PreferencesListener {
-    private EditProfileViewModel model;
+    private TagsTracker model;
     private FragmentSelectPreferencesBinding binding;
     private boolean tagsArrived = false;
 
@@ -44,16 +41,24 @@ public class SelectPreferencesFragment extends Fragment implements PreferencesAd
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        if (getArguments() != null) {
+            if (SelectPreferencesFragmentArgs.fromBundle(getArguments()).getForAd())
+                model = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
+            else
+                model = new ViewModelProvider(requireActivity()).get(EditProfileViewModel.class);
+        }
+        else
+            model = new ViewModelProvider(requireActivity()).get(EditProfileViewModel.class);
         binding = FragmentSelectPreferencesBinding.inflate(inflater, container, false);
-        model = new ViewModelProvider(requireActivity()).get(EditProfileViewModel.class);
         PreferencesAdapter adapter = new PreferencesAdapter(this);
-        adapter.setSelectedTagIds(model.getSelectedTags());
+        adapter.setSelectedTagIds(model.getNewSelectedTags());
         binding.rvPrefList.setAdapter(adapter);
         model.getTags().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK && !tagsArrived) {
-                    adapter.setTags((List<Tag>) customResponse.getBody());
+                    List<Tag> tags = (List<Tag>) customResponse.getBody();
+                    adapter.setTags(tags);
                     tagsArrived = true;
                 }
             }
@@ -68,11 +73,16 @@ public class SelectPreferencesFragment extends Fragment implements PreferencesAd
     @Override
     public void onTagToggled(Tag tag, boolean isChecked) {
         int tagId = tag.getTagId();
-        if (isChecked && !model.getSelectedTags().contains(tagId)) {
-            model.getSelectedTags().add(tag.getTagId());
-        }
-        else if (!isChecked && model.getSelectedTags().contains(tag.getTagId())){
-            model.getSelectedTags().remove((Integer)tag.getTagId());
-        }
+        if (isChecked && !model.getNewSelectedTags().contains(tagId))
+            model.getNewSelectedTags().add(tagId);
+        else if (!isChecked && model.getNewSelectedTags().contains(tagId))
+            model.getNewSelectedTags().remove(Integer.valueOf(tagId));
+    }
+
+    public interface TagsTracker {
+        List<Integer> getNewSelectedTags();
+        List<Integer> getCurrentlySelectedTags();
+        void loadTags();
+        MutableLiveData<CustomResponse<?>> getTags();
     }
 }

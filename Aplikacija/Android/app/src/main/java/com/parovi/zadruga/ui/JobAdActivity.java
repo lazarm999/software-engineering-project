@@ -35,10 +35,10 @@ public class JobAdActivity extends AppCompatActivity {
         });*/
         model = new ViewModelProvider(this).get(AdViewModel.class);
 
-        new UserRepository().loginUser(isLoggedIn, "vuk.bibic@gmail.com", "sifra123");
+        //new UserRepository().loginUser(isLoggedIn, "vuk.bibic@gmail.com", "sifra123");
         //new UserRepository().loginUser(isLoggedIn, "tea@gmail.com", "sifra123");
         //new UserRepository().loginUser(isLoggedIn, "stefan72@gmail.com", "sifra123");
-        isLoggedIn.observe(this, new Observer<CustomResponse<?>>() {
+        /*isLoggedIn.observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
@@ -46,7 +46,9 @@ public class JobAdActivity extends AppCompatActivity {
                     model.load(extractAdId());
                 }
             }
-        });
+        });*/
+        model.loadCredentials();
+        model.load(extractAdId());
 
         //ActionBar actionBar = getSupportActionBar();
     }

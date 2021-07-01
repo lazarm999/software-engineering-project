@@ -3,26 +3,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/job_ad_nav_graph"
-    app:startDestination="@id/jobAdFragment">
+    app:startDestination="@id/jobAdInfoFragment">
 
-    <fragment
-        android:id="@+id/jobAdFragment"
-        android:name="com.parovi.zadruga.ui.JobAdInfoFragment"
-        android:label="fragment_job_advertisement"
-        tools:layout="@layout/fragment_job_advertisement" >
-        <action
-            android:id="@+id/action_jobAdFragment_to_selectWorkersFragment"
-            app:destination="@id/selectWorkersFragment" />
-    </fragment>
     <fragment
         android:id="@+id/selectWorkersFragment"
         android:name="com.parovi.zadruga.ui.SelectWorkersFragment"
         android:label="fragment_select_workers"
         tools:layout="@layout/fragment_select_workers" >
         <action
-            android:id="@+id/action_selectWorkersFragment_to_jobAdFragment"
-            app:destination="@id/jobAdFragment"
-            app:popUpTo="@id/jobAdFragment"
+            android:id="@+id/action_selectWorkersFragment_to_jobAdInfoFragment"
+            app:destination="@id/jobAdInfoFragment"
+            app:popUpTo="@id/jobAdInfoFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/newAdFragment"
+        android:name="com.parovi.zadruga.fragments.NewAdFragment"
+        android:label="fragment_new_ad"
+        tools:layout="@layout/fragment_new_ad" >
+        <action
+            android:id="@+id/action_newAdFragment_to_selectPreferencesFragment2"
+            app:destination="@id/selectPreferencesFragment2" />
+        <argument
+            android:name="adId"
+            app:argType="integer"
+            android:defaultValue="1" />
+        <action
+            android:id="@+id/action_newAdFragment_to_jobAdInfoFragment"
+            app:destination="@id/jobAdInfoFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectPreferencesFragment2"
+        android:name="com.parovi.zadruga.ui.SelectPreferencesFragment"
+        android:label="fragment_select_preferences"
+        tools:layout="@layout/fragment_select_preferences" >
+        <argument
+            android:name="forAd"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/jobAdInfoFragment"
+        android:name="com.parovi.zadruga.ui.JobAdInfoFragment"
+        android:label="fragment_job_advertisement"
+        tools:layout="@layout/fragment_job_advertisement" >
+        <action
+            android:id="@+id/action_jobAdInfoFragment_to_selectWorkersFragment"
+            app:destination="@id/selectWorkersFragment" />
+        <action
+            android:id="@+id/action_jobAdInfoFragment_to_newAdFragment"
+            app:destination="@id/newAdFragment" />
     </fragment>
 </navigation>

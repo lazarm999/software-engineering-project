@@ -16,6 +16,7 @@ import com.parovi.zadruga.models.entityModels.Message;
 
 import java.util.ArrayList;
 import java.util.List;
+// TODO: probaj sa diffutil-om
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
     private static final int MY_MESSAGE = 1;

@@ -9,11 +9,14 @@ import androidx.lifecycle.Observer;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.gson.Gson;
 import com.google.type.DateTime;
+import com.parovi.zadruga.models.entityModels.PreferredTag;
 import com.parovi.zadruga.models.entityModels.User;
 import com.quickblox.auth.session.QBSettings;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,6 +39,13 @@ public class Utility {
         if((u = getLoggedInUser(c)) != null)
             return u.getUserQbId();
         return -1;
+    }
+
+    static public List<PreferredTag> getPreferredTags(Context c){
+        User u = getLoggedInUser(c);
+        if(u!= null && u.getPreferredTags() != null)
+            return u.getPreferredTags();
+        return new ArrayList<>();
     }
 
     static public String getLoggedInUserPassword(Context c){
@@ -66,8 +76,16 @@ public class Utility {
         editor.putString(Constants.ACCESS_TOKEN, accessToken);
         editor.putString(Constants.PASSWORD_TOKEN, pass);
         editor.putString(Constants.FCM_TOKEN_TAG, fcmToken);
-        Gson gson = new Gson();
-        String json = gson.toJson(user);
+        String json = new Gson().toJson(user);
+        editor.putString(Constants.LOGGED_IN_USER, json);
+        editor.apply();
+    }
+
+    static public void updateLoggedInUser(Context c, User user){
+        SharedPreferences sp = c.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        String json = new Gson().toJson(user);
+        editor.remove(Constants.LOGGED_IN_USER);
         editor.putString(Constants.LOGGED_IN_USER, json);
         editor.apply();
     }

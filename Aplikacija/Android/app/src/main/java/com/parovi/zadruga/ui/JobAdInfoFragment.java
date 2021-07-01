@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,6 +26,7 @@ import com.parovi.zadruga.adapters.CommentsAdapter;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
 import com.parovi.zadruga.fragments.StudentProfileFragment;
 import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.viewModels.AdViewModel;
 
@@ -32,6 +35,8 @@ import java.util.List;
 
 
 public class JobAdInfoFragment extends Fragment implements CommentsAdapter.CommentListListener{
+    private final static int EDIT_ITEM = 0, REPORT_ITEM = 1, DELETE_ITEM = 2;
+
     private AdViewModel model;
     private FragmentJobAdvertisementBinding binding;
 
@@ -53,7 +58,7 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
         // obtain the viewModel
         model = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
         // create adapter and bind it to recycler view
-        CommentsAdapter adapter = new CommentsAdapter();
+        CommentsAdapter adapter = new CommentsAdapter(this);
         binding.rvComments.setAdapter(adapter);
         binding.rvComments.setLayoutManager(new LinearLayoutManager(requireContext()));
         // implement posting a comment
@@ -62,6 +67,26 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
             public void onClick(View v) {
                 model.postAComment(binding.etComment.getText().toString().trim());
                 binding.etComment.setText("");
+            }
+        });
+        binding.toolbar.setTitle("Ads");
+        binding.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.itReportAd:
+                        onAdReport();
+                        break;
+                    case R.id.itEditAd:
+                        onAdEdit();
+                        break;
+                    case R.id.itDeleteAd:
+                        onAdDelete();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
             }
         });
         // observe LiveData
@@ -84,7 +109,9 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
                 binding.tvAdNotFound.setVisibility(View.GONE);
                 binding.clAdInfo.setVisibility(View.VISIBLE);
                 binding.clPostComment.setVisibility(View.VISIBLE);
-                bindAndUpdateScreen((Ad)customResponse.getBody());
+                Ad ad = (Ad)customResponse.getBody();
+                adapter.setAd(ad);
+                bindAndUpdateScreen(ad);
             }
         });
         model.getAppliedTo().observe(requireActivity(), new Observer<CustomResponse<?>>() {
@@ -95,6 +122,13 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
                 appliedStatusChanged((Boolean)customResponse.getBody());
             }
         });
+        model.getApplicantsSelected().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK && (boolean)customResponse.getBody())
+                    updateViewAdClosed();
+            }
+        });
         model.getComments().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
@@ -103,62 +137,44 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
                 }
                 adapter.setCommentsList((List<CommentResponse>)customResponse.getBody());
                 binding.rvComments.setVisibility(View.VISIBLE);
-
             }
         });
-
-        //TODO valjda ovde treba da ide za report
+        model.getIsDeleted().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
+                    requireActivity().finish();
+                    // ili na neki drugi nacin
+                }
+            }
+        });
+        model.getIsDeletedComment().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if (customResponse.getStatus() == CustomResponse.Status.OK)
+                    adapter.removeItem((int)customResponse.getBody()); // TODO: podseti Lazara da azurira lokalnu bazu
+            }
+        });
         model.getIsReported().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() != CustomResponse.Status.OK) {
                     return;
                 }
-
-                binding.imgBtnReportAd.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
-                        dialog.setTitle(R.string.dialogAd);
-
-                        final EditText etReportText = new EditText(requireActivity());
-                        etReportText.setInputType(InputType.TYPE_CLASS_TEXT);
-                        etReportText.setTextSize(16);
-                        dialog.setView(etReportText);
-
-                        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String myText = etReportText.getText().toString();
-                                model.reportAd(myText);
-                            }
-                        });
-
-                        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        dialog.show();
-                    }
-
-                });
+                // TODO: sta se desava kad oglas bude prijavljen
             }
         });
-
         model.getIsReportedComment().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() != CustomResponse.Status.OK) {
                     return;
                 }
-
-
+                // TODO: sta se desava kad komentar bude prijavljen? Neki dialog da mu javi?
             }
         });
 
-        // return root view
+
         return binding.getRoot();
     }
 
@@ -171,13 +187,32 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
         String feeRange = Float.valueOf(ad.getCompensationMin()).toString() + " - " + Float.valueOf(ad.getCompensationMax()).toString() + " RSD";
         binding.tvFeeRange.setText(feeRange);
         binding.tvNoOfApplications.setText(ad.getNumberOfApplied() + " applied");
-
+        updateToolBar();
         if (model.isAdClosed())
             updateViewAdClosed();
         else if (Utility.getLoggedInUser(requireContext()).isEmployer())
             updateViewAdMine(model.isAdMine());
     }
 
+    private void updateToolBar() {
+        User loggedUser = Utility.getLoggedInUser(requireContext());
+        Ad ad = model.getAd().getValue() == null ? null : (Ad)model.getAd().getValue().getBody();
+        if (loggedUser.isAdmin()) {
+            binding.toolbar.getMenu().getItem(EDIT_ITEM).setVisible(false);
+            binding.toolbar.getMenu().getItem(REPORT_ITEM).setVisible(false);
+            binding.toolbar.getMenu().getItem(DELETE_ITEM).setVisible(true);
+        }
+        else if (ad != null && loggedUser.isEmployer() && loggedUser.getUserId() == ad.getEmployer().getUserId()) {
+            binding.toolbar.getMenu().getItem(EDIT_ITEM).setVisible(true);
+            binding.toolbar.getMenu().getItem(REPORT_ITEM).setVisible(false);
+            binding.toolbar.getMenu().getItem(DELETE_ITEM).setVisible(true);
+        }
+        else {
+            binding.toolbar.getMenu().getItem(EDIT_ITEM).setVisible(false);
+            binding.toolbar.getMenu().getItem(REPORT_ITEM).setVisible(true);
+            binding.toolbar.getMenu().getItem(DELETE_ITEM).setVisible(false);
+        }
+    }
     private void updateViewAdClosed() {
         binding.btnApply.setText("Closed");
         binding.btnApply.setEnabled(false);
@@ -208,28 +243,21 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
         public void onClick(View v) {
             model.applyForAd();
         }
-    }, unapplyClick = new View.OnClickListener() {
+    },
+            unapplyClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             model.withdrawApplication();
         }
-    }, selectWorkersClick = new View.OnClickListener() {
+    },
+            selectWorkersClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Navigation.findNavController(binding.getRoot()).navigate(JobAdInfoFragmentDirections.actionJobAdFragmentToSelectWorkersFragment());
+            Navigation.findNavController(binding.getRoot()).navigate(JobAdInfoFragmentDirections.actionJobAdInfoFragmentToSelectWorkersFragment());
         }
     };
 
-
-    @Override
-    public void onCommentSelected(CommentResponse comment) {
-        Intent intent = new Intent(requireActivity(), EditBasicProfileInfoFragment.class);
-        intent.putExtra(StudentProfileFragment.USER_ID, comment.getUser().getUserId());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onReport(CommentResponse comment) {
+    private void onAdReport() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
         dialog.setTitle(R.string.dialogAd);
 
@@ -241,8 +269,84 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
         dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String myText = etReportText.getText().toString();
-                model.reportAd(myText);
+                model.reportAd(etReportText.getText().toString().trim());
+            }
+        });
+
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+    private void onAdEdit() {
+        JobAdInfoFragmentDirections.ActionJobAdInfoFragmentToNewAdFragment action = JobAdInfoFragmentDirections.actionJobAdInfoFragmentToNewAdFragment();
+        action.setAdId(model.getAdId());
+        Navigation.findNavController(requireActivity(), R.id.job_ad_nav_host_fragment).navigate(action);
+    }
+    private void onAdDelete() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+        dialog.setTitle("Delete the Ad");
+
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                model.deleteAd();
+            }
+        });
+
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
+    public void onCommentAuthorSelected(CommentResponse comment) {
+        Intent intent = new Intent(requireActivity(), EditBasicProfileInfoFragment.class);
+        //TODO: proveri da li ovo radi
+        intent.putExtra(StudentProfileFragment.USER_ID, comment.getUser().getUserId());
+        startActivity(intent);
+    }
+    @Override
+    public void onCommentReported(CommentResponse comment) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+        dialog.setTitle(R.string.dialogComment);
+
+        final EditText etReportText = new EditText(requireActivity());
+        etReportText.setInputType(InputType.TYPE_CLASS_TEXT);
+        etReportText.setTextSize(16);
+        dialog.setView(etReportText);
+
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String elaboration = etReportText.getText().toString();
+                model.reportComment(comment, elaboration);
+            }
+        });
+
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+    @Override
+    public void onCommentDeleted(CommentResponse comment, int pos) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+        dialog.setTitle("Delete comment");
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                model.deleteComment(comment, pos);
             }
         });
 

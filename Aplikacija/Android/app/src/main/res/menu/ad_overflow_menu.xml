@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/itEditAd"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Edit Ad"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/itReportAd"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="Report Ad"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/itDeleteAd"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Delete Ad"
+        app:showAsAction="ifRoom" />
+</menu>

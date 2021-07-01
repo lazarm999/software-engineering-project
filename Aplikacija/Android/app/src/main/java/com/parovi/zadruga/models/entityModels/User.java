@@ -49,6 +49,8 @@ public class User {
     private List<Badge> badges;
     @Ignore
     private Bitmap profileImage;
+    @Ignore
+    private List<PreferredTag> preferredTags;
 
     /*(binding.txtUsername.getText().toString(), binding.txtName.getText().toString(),
                 binding.txtSurname.getText().toString(), binding.txtEmail.getText().toString(), binding.txtPass.getText().toString());*/
@@ -237,5 +239,13 @@ public class User {
 
     public void setProfileImage(Bitmap profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public List<PreferredTag> getPreferredTags() {
+        return preferredTags;
+    }
+
+    public void setPreferredTags(List<PreferredTag> preferredTags) {
+        this.preferredTags = preferredTags;
     }
 }

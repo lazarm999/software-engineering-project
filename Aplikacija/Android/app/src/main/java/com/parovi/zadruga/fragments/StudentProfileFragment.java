@@ -23,6 +23,7 @@ import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.ui.EditBasicProfileInfoFragment;
+import com.parovi.zadruga.ui.EditProfileActivity;
 import com.parovi.zadruga.viewModels.StudentProfileViewModel;
 
 import java.util.ArrayList;
@@ -58,8 +59,7 @@ public class StudentProfileFragment extends Fragment {
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(requireActivity(), EditBasicProfileInfoFragment.class);
-                intent.putExtra(StudentProfileFragment.USER_ID, u.getUserId());
+                Intent intent = new Intent(requireActivity(), EditProfileActivity.class);
                 startActivity(intent);
             }
         });

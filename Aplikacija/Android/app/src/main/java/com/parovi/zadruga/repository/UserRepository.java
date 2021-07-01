@@ -265,15 +265,17 @@ public class UserRepository extends BaseRepository {
             @Override
             public void onResponse(@NotNull Call<User> call, @NotNull Response<User> response) {
                 if(response.isSuccessful() && response.body() != null){
-                    User tmpUser = response.body();
-                    synchronized (isSynced[0]){
-                        user.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
-                        isSynced[0] = true;
-                    }
                     Utility.getExecutorService().execute(new Runnable() {
                         @Override
                         public void run() {
-                            saveUserLocally(tmpUser);
+                            User remoteUser = response.body();
+                            List<PreferredTag> preferredTags = DaoFactory.getPreferredTagDao().getPreferredTags();
+                            remoteUser.setPreferredTags(preferredTags);
+                            synchronized (isSynced[0]){
+                                user.postValue(new CustomResponse<>(CustomResponse.Status.OK, remoteUser));
+                                isSynced[0] = true;
+                            }
+                            saveUserLocally(remoteUser);
                         }
                     });
                 } else
@@ -295,20 +297,28 @@ public class UserRepository extends BaseRepository {
                     @Override
                     public void onSuccess(UserWithFaculty userWithFaculty) {
                         if(userWithFaculty != null){
-                            Log.i("getUserWithFaculty", "onSuccess:");
-                            User tmpUser = userWithFaculty.getUser();
-                            if(userWithFaculty.getFaculty() != null){
-                                userWithFaculty.getFaculty().setUniversity(userWithFaculty.getUniversity());
-                                tmpUser.setFaculty(userWithFaculty.getFaculty());
-                            }
-                            if(badges != null){
-                                tmpUser.setBadges(badges);
-                            }
-                            synchronized (isSynced[0]){
-                                if(!isSynced[0]){
-                                    user.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpUser));
+                            Utility.getExecutorService().execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i("getUserWithFaculty", "onSuccess:");
+                                    User tmpUser = userWithFaculty.getUser();
+                                    List<PreferredTag> preferredTags = DaoFactory.getPreferredTagDao().getPreferredTags();
+                                    tmpUser.setPreferredTags(preferredTags);
+                                    if(userWithFaculty.getFaculty() != null){
+                                        userWithFaculty.getFaculty().setUniversity(userWithFaculty.getUniversity());
+                                        tmpUser.setFaculty(userWithFaculty.getFaculty());
+                                    }
+                                    if(badges != null){
+                                        tmpUser.setBadges(badges);
+                                    }
+                                    synchronized (isSynced[0]){
+                                        if(!isSynced[0]){
+                                            user.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpUser));
+                                        }
+                                    }
                                 }
-                            }
+                            });
+
                         }
                     }
 
@@ -345,6 +355,9 @@ public class UserRepository extends BaseRepository {
                                     DaoFactory.getPreferredTagDao().insertOrUpdate(new PreferredTag(tagId));
                                 }
                             }
+                            List<PreferredTag> preferredTags = DaoFactory.getPreferredTagDao().getPreferredTags();
+                            user.setPreferredTags(preferredTags);
+                            Utility.updateLoggedInUser(App.getAppContext(), user);
                             isUpdated.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
                         }
                     });

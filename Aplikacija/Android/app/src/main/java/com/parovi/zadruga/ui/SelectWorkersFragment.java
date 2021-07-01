@@ -59,7 +59,7 @@ public class SelectWorkersFragment extends Fragment implements ApplicantsAdapter
             @Override
             public void onClick(View v) {
                 model.selectWorkers();
-                Navigation.findNavController(binding.getRoot()).navigate(SelectWorkersFragmentDirections.actionSelectWorkersFragmentToJobAdFragment());
+                Navigation.findNavController(binding.getRoot()).navigate(SelectWorkersFragmentDirections.actionSelectWorkersFragmentToJobAdInfoFragment());
             }
         });
         model.loadApplicants();

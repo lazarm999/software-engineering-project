@@ -42,24 +42,15 @@ public class NewAdViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<CustomResponse<?>> getIsPosted(){
-
-        if(isPosted == null)
-            isPosted = new MutableLiveData<CustomResponse<?>>();
         return isPosted;
     }
 
     public MutableLiveData<CustomResponse<?>> getLocations()
     {
-        if(locations == null)
-            locations = new MutableLiveData<CustomResponse<?>>();
-
         return locations;
     }
 
     public MutableLiveData<CustomResponse<?>> getTags(){
-        if(tags == null)
-            tags = new MutableLiveData<CustomResponse<?>>();
-
         return tags;
     }
 

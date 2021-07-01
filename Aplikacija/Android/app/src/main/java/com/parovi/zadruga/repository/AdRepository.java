@@ -574,13 +574,13 @@ public class AdRepository extends BaseRepository {
         });
     }
 
-    public void deleteComment(String token, MutableLiveData<CustomResponse<?>> isDeleted, int commentId){
+    public void deleteComment(String token, MutableLiveData<CustomResponse<?>> isDeleted, int commentId, int pos){
         ApiFactory.getCommentApi().deleteComment(token, commentId).enqueue(new Callback<AdResponse>() {
             @Override
             public void onResponse(@NotNull Call<AdResponse> call, @NotNull Response<AdResponse> response) {
                 if(response.isSuccessful()){
                     DaoFactory.getCommentDao().deleteComment(commentId);
-                    isDeleted.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                    isDeleted.postValue(new CustomResponse<>(CustomResponse.Status.OK, pos));
                 }
                 else
                     responseNotSuccessful(response.code(), isDeleted);

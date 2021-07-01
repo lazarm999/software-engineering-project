@@ -45,7 +45,7 @@ public class ChatActivity extends AppCompatActivity{
         model = new ViewModelProvider(this).get(ChatViewModel.class);
 
         //userRepository.loginUser(isLoggedIn, "vuk.bibic@gmail.com", "sifra123");
-        userRepository.loginUser(isLoggedIn, "tea@gmail.com", "sifra123");
+        /*userRepository.loginUser(isLoggedIn, "tea@gmail.com", "sifra123");
         isLoggedIn.observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
@@ -53,7 +53,9 @@ public class ChatActivity extends AppCompatActivity{
                     model.connectToChatServer();
                 }
             }
-        });
+        });*/
+
+        model.connectToChatServer();
         model.observeIsConnected().observe(this, new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
@@ -63,8 +65,6 @@ public class ChatActivity extends AppCompatActivity{
                 }
             }
         });
-
-
 
         /*getSupportFragmentManager().beginTransaction()
                 .replace(R.id.chat_nav_host_fragment, ChatMessagesFragment.class, null)

@@ -22,6 +22,7 @@ public class PreferencesAdapter extends RecyclerView.Adapter<PreferencesAdapter.
     public PreferencesAdapter(PreferencesListener listener) {
         fragment = listener;
         tags = new ArrayList<Tag>();
+        selectedTagIds = new ArrayList<>();
     }
     public void setTags(List<Tag> tags) {
         this.tags = tags;
@@ -66,7 +67,6 @@ public class PreferencesAdapter extends RecyclerView.Adapter<PreferencesAdapter.
             binding.switchJobType.setText(tag.getName());
             boolean selected = selectedTagIds.contains(tag.getTagId());
             binding.switchJobType.setChecked(selected);
-
         }
     }
 

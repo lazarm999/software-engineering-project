@@ -11,14 +11,20 @@ import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.data.JobAdInfo;
 import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.entityModels.User;
+import com.parovi.zadruga.models.requestModels.EditAdRequest;
+import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.repository.AdRepository;
+import com.parovi.zadruga.repository.LookUpRepository;
 import com.parovi.zadruga.repository.UserRepository;
+import com.parovi.zadruga.ui.SelectPreferencesFragment;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AdViewModel extends AndroidViewModel {
+public class AdViewModel extends AndroidViewModel implements SelectPreferencesFragment.TagsTracker {
     private int adId = 32; //4
     private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NH0.0SXnyerqRnP7HxklZwQ5k0q0XGYiMeEE2eTNixAxNrU";// "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
     private int userId = 4;//Utility.getLoggedInUserId(App.getAppContext());
@@ -28,39 +34,48 @@ public class AdViewModel extends AndroidViewModel {
     MutableLiveData<CustomResponse<?>> ad;//AdWithTags
     MutableLiveData<CustomResponse<?>> comments;//List<CommentResponse>
     MutableLiveData<CustomResponse<?>> isPosted;//Boolean
+    MutableLiveData<CustomResponse<?>> isUpdated;
     MutableLiveData<CustomResponse<?>> isDeleted;//Boolean
+    MutableLiveData<CustomResponse<?>> isDeletedComment;
     MutableLiveData<CustomResponse<?>> isReported;//Report for ads
     MutableLiveData<CustomResponse<?>> isReportedComment;//Report for comment
     MutableLiveData<CustomResponse<?>> applicants;
     MutableLiveData<CustomResponse<?>> appliedTo;
     MutableLiveData<CustomResponse<?>> applicantsSelected;
+    MutableLiveData<CustomResponse<?>> tags;
 
     private List<User> selectedUsers;
+    private List<Integer> currTags;
+    private List<Integer> newTags;
     AdRepository adRepository;
     UserRepository userRepository;
+    LookUpRepository lookUpRepository;
 
     public AdViewModel(@NonNull Application app) {
         super(app);
         adRepository = new AdRepository();
         userRepository = new UserRepository();
+        lookUpRepository = new LookUpRepository();
         selectedUsers = new LinkedList<User>();
         ad = new MutableLiveData<>();
         comments = new MutableLiveData<>();
         isPosted = new MutableLiveData<>();
+        isUpdated = new MutableLiveData<>();
         isDeleted = new MutableLiveData<>();
         isReported = new MutableLiveData<>();
         isReportedComment = new MutableLiveData<>();
         applicants = new MutableLiveData<>();
         appliedTo = new MutableLiveData<>();
         applicantsSelected = new MutableLiveData<>();
+        isDeleted = new MutableLiveData<>();
+        isDeletedComment = new MutableLiveData<>();
+        tags = new MutableLiveData<>();
     }
 
     public void loadCredentials() {
         userId = Utility.getLoggedInUserId(App.getAppContext());
         token = Utility.getAccessToken(App.getAppContext());
     }
-
-
 
     public boolean isAdClosed() {
         return ((Ad)ad.getValue().getBody()).isClosed();
@@ -83,6 +98,14 @@ public class AdViewModel extends AndroidViewModel {
         return userId;
     }
 
+    public List<Integer> getCurrTags() {
+        return currTags;
+    }
+
+    public List<Integer> getNewTags() {
+        return newTags;
+    }
+
     public void clearSelectedUsersList() {
         selectedUsers.clear();
     }
@@ -99,8 +122,16 @@ public class AdViewModel extends AndroidViewModel {
         return isPosted;
     }
 
+    public MutableLiveData<CustomResponse<?>> getIsUpdated() {
+        return isUpdated;
+    }
+
     public MutableLiveData<CustomResponse<?>> getIsDeleted() {
         return isDeleted;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getIsDeletedComment() {
+        return isDeletedComment;
     }
 
     public MutableLiveData<CustomResponse<?>> getIsReported() { return isReported; }
@@ -113,22 +144,26 @@ public class AdViewModel extends AndroidViewModel {
         return appliedTo;
     }
 
-    public boolean commentResponseOK() {
-        return comments.getValue().getStatus() == CustomResponse.Status.OK;
+    public List<User> getSelectedUsers() {
+        return selectedUsers;
     }
-    public boolean adResponseOK() {
-        return ad.getValue().getStatus() == CustomResponse.Status.OK;
+
+    public MutableLiveData<CustomResponse<?>> getApplicantsSelected() {
+        return applicantsSelected;
     }
 
     public void load(int adId) {
         this.adId = adId;
+        load();
+    }
+    public void load() {
         loadAd();
         loadComments();
         if (!Utility.getLoggedInUser(App.getAppContext()).isEmployer())
             loadIsApplied();
     }
 
-    private void loadAd() {
+    public void loadAd() {
         adRepository.getAd(token, ad, adId);
     }
 
@@ -160,13 +195,57 @@ public class AdViewModel extends AndroidViewModel {
         selectedUsers.add(user);
     }
 
+    public void updateAd(EditAdRequest editAdRequest) {
+        adRepository.editAd(token, isUpdated, adId, editAdRequest);
+    }
+
     public boolean removeUserFromSelected(User user) {
         return selectedUsers.remove(user);
     }
 
-    public void reportAd(String elaboration) { //adRepository.reportUser(elaboration, isReported, adId, null);
+    public void reportAd(String elaboration) {
+        userRepository.postReport(isReported, adId, null, elaboration);
+    }
+    public void reportComment(CommentResponse comment, String elaboration) {
+        userRepository.postReport(isReported, null, comment.getId(), elaboration);
+    }
+    public void deleteAd() {
+        adRepository.deleteAd(token, isDeleted, adId);
+    }
+    public void deleteComment(CommentResponse comment, int pos) {
+        adRepository.deleteComment(token, isDeletedComment, comment.getId(), pos);
     }
 
-    public void reportComment(String elaboration) { //adRepository.reportUser(elaboration, isReportedComment, null, commentId);
+    public void initializeTagLists() {
+        if (getAd().getValue() == null)
+            return;
+        currTags = new ArrayList<Integer>();
+        newTags = new ArrayList<Integer>();
+        Ad ad = (Ad)getAd().getValue().getBody();
+        for(Tag tag: ad.getTags()) {
+            currTags.add(tag.getTagId());
+            newTags.add(tag.getTagId());
+        }
+    }
+
+
+    @Override
+    public List<Integer> getNewSelectedTags() {
+        return newTags;
+    }
+
+    @Override
+    public List<Integer> getCurrentlySelectedTags() {
+        return currTags;
+    }
+
+    @Override
+    public void loadTags() {
+        lookUpRepository.getAllTags(token, tags);
+    }
+
+    @Override
+    public MutableLiveData<CustomResponse<?>> getTags() {
+        return tags;
     }
 }
