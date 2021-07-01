@@ -3,17 +3,20 @@ package com.parovi.zadruga.repository;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.parovi.zadruga.App;
 import com.parovi.zadruga.ChatNotification;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.activities.MainActivity;
 import com.parovi.zadruga.factories.ApiFactory;
 import com.parovi.zadruga.factories.DaoFactory;
 import com.parovi.zadruga.models.entityModels.Ad;
@@ -35,6 +38,7 @@ import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -118,8 +122,8 @@ public abstract class BaseRepository {
     }
 
     protected int getListSize(MutableLiveData<CustomResponse<?>> list){
-        if(list != null && list.getValue() != null && list.getValue().getBody() != null)
-            return ((CustomResponse<List<?>>)list.getValue().getBody()).getBody().size();
+        if(list != null && list.getValue() != null && list.getValue().getBody() != null && list.getValue().getBody() instanceof List)
+            return ((List<?>)list.getValue().getBody()).size();
         else
             return 0;
     }
@@ -366,15 +370,59 @@ public abstract class BaseRepository {
         return directory.getAbsolutePath();
     }
 
+    public void logOutUser(MutableLiveData<CustomResponse<?>> isLoggedOut){
+        Utility.getExecutorService().execute(() -> {
+            try {
+                QBUsers.signOut().perform();
+                String fcmToken;
+                if((fcmToken = Utility.getFcmToken(App.getAppContext())) != null){
+                    Response<ResponseBody> deleteTokenRes = ApiFactory.getUserApi().deleteFcmToken(Utility.getAccessToken(App.getAppContext()),
+                            fcmToken).execute();
+                    if(deleteTokenRes.isSuccessful()){
+                        isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                        Utility.removeLoggedUserInfo(App.getAppContext());
+                    } else
+                        responseNotSuccessful(deleteTokenRes.code(), isLoggedOut);
+                } else {
+                    isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                    Utility.removeLoggedUserInfo(App.getAppContext());
+                }
+            } catch (QBResponseException e) {
+                e.printStackTrace();
+                responseNotSuccessful(e.getHttpStatusCode(), isLoggedOut);
+            } catch (IOException e) {
+                e.printStackTrace();
+                apiCallOnFailure(e.getMessage(), isLoggedOut);
+            }
+        });
+    }
+
     protected void responseNotSuccessful(int code, MutableLiveData<CustomResponse<?>> res){
         if (code / 100 == 4){
-            CustomResponse<?> tmp = res.getValue();
-            if(tmp != null){
-                tmp.setMessage("Pogresno uneti podaci.");
-                res.postValue(tmp);
+            if(code == 408){
+                MutableLiveData<CustomResponse<?>> isLoggedOut = new MutableLiveData<>();
+                Observer<CustomResponse<?>> observer = new Observer<CustomResponse<?>>() {
+                    @Override
+                    public void onChanged(CustomResponse<?> customResponse) {
+                        if(customResponse.getStatus() == CustomResponse.Status.OK){
+                            Intent i = new Intent(App.getAppContext(), MainActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            App.getAppContext().startActivity(i);
+                        }
+                        isLoggedOut.removeObserver(this);
+                    }
+                };
+                isLoggedOut.observeForever(observer);
+                logOutUser(isLoggedOut);
+            } else {
+                CustomResponse<?> tmp = res.getValue();
+                if(tmp != null){
+                    tmp.setMessage("Pogresno uneti podaci.");
+                    res.postValue(tmp);
+                }
+                else
+                    res.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, "Pogresno uneti podaci.", false));
             }
-            else
-                res.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, "Pogresno uneti podaci.", false));
         } else if (code / 100 == 5){
             CustomResponse<?> tmp = res.getValue();
             if(tmp != null){

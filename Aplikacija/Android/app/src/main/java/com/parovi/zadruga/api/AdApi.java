@@ -30,13 +30,14 @@ public interface AdApi {
     Call<Ad> postAd(@Header("Authorization") String token, @Body PostAdRequest ad);
 
     @GET("ad/")
-    Call<List<Ad>> getAds(@Header("Authorization") String token);
+    Call<List<Ad>> getAds(@Header("Authorization") String token, @Query("pageSize") int pageSize, @Query("pageSkip") int pageSkip);
 
     @GET("ad/")
     Call<List<Ad>> getAds(@Header("Authorization") String token,
                           @Query("filterLocationId") Integer locId, @Query("filterCompensationMin") Integer compensationMin,
                           @Query("filterCompensationMax") Integer compensationMax, @Query("filterTagIds") List<Integer> tagIds,
-                          @Query("sortLocationLatitude") Double locLatitude, @Query("sortLocationLongitude") Double locLongitude);
+                          @Query("sortLocationLatitude") Double locLatitude, @Query("sortLocationLongitude") Double locLongitude,
+                          @Query("pageSize") int pageSize, @Query("pageSkip") int pageSkip);
 
     @GET("recommender/")
     Call<List<Ad>> getRecommendedAds(@Header("Authorization") String token,@Query("tagId") List<Integer> tagIds,

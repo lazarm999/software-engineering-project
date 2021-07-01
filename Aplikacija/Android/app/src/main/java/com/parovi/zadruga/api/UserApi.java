@@ -2,10 +2,9 @@ package com.parovi.zadruga.api;
 
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.models.requestModels.BanRequest;
+import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
 import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
 import com.parovi.zadruga.models.requestModels.ChatMembersRequest;
-import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
 import com.parovi.zadruga.models.requestModels.LoginRequest;
 import com.parovi.zadruga.models.requestModels.ReportRequest;
 import com.parovi.zadruga.models.responseModels.LoginResponse;
@@ -57,7 +56,7 @@ public interface UserApi {
     Call<ResponseBody> postProfilePicture(@Header("Authorization") String token, @Path("id") int id, @Body RequestBody image);
 
     @POST("ban/{id}/")
-    Call<ResponseBody> banUser(@Header("Authorization") String token, @Path("id") int id, @Body BanRequest banRequest);
+    Call<ResponseBody> banUser(@Header("Authorization") String token, @Path("id") int id);
 
     @POST("unban/{id}/")
     Call<ResponseBody> unBanUser(@Header("Authorization") String token, @Path("id") int id);

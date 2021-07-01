@@ -98,14 +98,6 @@ public class AdViewModel extends AndroidViewModel implements SelectPreferencesFr
         return userId;
     }
 
-    public List<Integer> getCurrTags() {
-        return currTags;
-    }
-
-    public List<Integer> getNewTags() {
-        return newTags;
-    }
-
     public void clearSelectedUsersList() {
         selectedUsers.clear();
     }
@@ -196,7 +188,7 @@ public class AdViewModel extends AndroidViewModel implements SelectPreferencesFr
     }
 
     public void updateAd(EditAdRequest editAdRequest) {
-        adRepository.editAd(token, isUpdated, adId, editAdRequest);
+        adRepository.editAd(isUpdated, adId, editAdRequest);
     }
 
     public boolean removeUserFromSelected(User user) {
@@ -216,18 +208,8 @@ public class AdViewModel extends AndroidViewModel implements SelectPreferencesFr
         adRepository.deleteComment(token, isDeletedComment, comment.getId(), pos);
     }
 
-    public void initializeTagLists() {
-        if (getAd().getValue() == null)
-            return;
-        currTags = new ArrayList<Integer>();
-        newTags = new ArrayList<Integer>();
-        Ad ad = (Ad)getAd().getValue().getBody();
-        for(Tag tag: ad.getTags()) {
-            currTags.add(tag.getTagId());
-            newTags.add(tag.getTagId());
-        }
+    public void reportComment(String elaboration) { //adRepository.reportUser(elaboration, isReportedComment, null, commentId);
     }
-
 
     @Override
     public List<Integer> getNewSelectedTags() {

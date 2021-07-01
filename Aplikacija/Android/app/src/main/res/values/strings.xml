@@ -171,10 +171,13 @@
     <string name="preferences">Choose preferences</string>
     <string name="AdNotFound">Error! Ad Not Found!</string>
     <string name="adComment">User %1$s has left a comment</string>
-    <string name="notif_rating">User %1$s rated you</string>
-    <string name="notif_chat">User %1$s has sent you a message</string>
+    <string name="notifRating">User %1$s rated you</string>
+    <string name="notifChat">User %1$s has sent you a message</string>
     <string name="reportedHeading">Reported users</string>
     <string name="deleteReport">Delete report</string>
     <string name="reportTitle">User %1$s has reported user %2$s</string>
     <string name="rating">Rating %1$s:</string>
+    <string name="notifApplied">User %1$s applied for ad</string>
+    <string name="badgeDialog">More about this badge</string>
+    <string name="ban">Ban user</string>
 </resources>

@@ -164,6 +164,7 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
                 // TODO: sta se desava kad oglas bude prijavljen
             }
         });
+
         model.getIsReportedComment().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {

@@ -39,6 +39,7 @@ import com.parovi.zadruga.viewModels.LoginViewModel;
 import com.parovi.zadruga.viewModels.TmpViewModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**/
 public class TmpActivity extends AppCompatActivity {
@@ -241,12 +242,14 @@ public class TmpActivity extends AppCompatActivity {
                 //userRep.loginUser(new MutableLiveData<>(), "vuk.bibic@gmail.com", "novaaasifraaaa");
                 //notificationRep.getNotifications(new MutableLiveData<>());
                 //notificationRep.getNotifications(new MutableLiveData<>());
-                adRep.isApplied(new MutableLiveData<>(), 20);
+                //adRep.isApplied(new MutableLiveData<>(), 20);
+                //userRep.banUser(new MutableLiveData<>(), new BanRequest("bas je bio los"), 1);
             }
         });
         tmpBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //userRep.unBanUser(new MutableLiveData<>(), 1);
                 //chatViewModel.getMessages();
                 //userRep.loginUser(new MutableLiveData<>(), "vuk.bibic@gmail.com", "novaaasifraaaa");
                 //userRep.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
@@ -283,12 +286,15 @@ public class TmpActivity extends AppCompatActivity {
                 //rep.connectToChatServer(new MutableLiveData<>(), new User("markocar@gmail.com", "markocar", 128304620));
                 /*List<Chat> tmpChats = (List<Chat>) chats.getValue().getBody();
                 rep.sendMessage(new MutableLiveData<>(), tmpChats.get(0).getQbChat(), new User(), "porukaa novaaaaa");*/
+                adRep.getAds(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), null, 4, 150,
+                        Arrays.asList(1,3), true);
             }
         });
         tmpBtn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatViewModel.connectToChatServer();
+                userRep.loginUser(new MutableLiveData<>(), "admin@gmail.com", "sifra123");
+                //chatViewModel.connectToChatServer();
                 //userRep.logOutUser(new MutableLiveData<>());
                 //chatViewModel.connectToChatServer();
                 /*ArrayList<Integer> list = new ArrayList<>();

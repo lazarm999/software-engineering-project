@@ -105,21 +105,21 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportedVi
             String reportTitle = App.getAppContext().getString(R.string.reportTitle, "@" + report.getReporter().getUsername(),
                     "@" + report.getReported().getUsername());
             SpannableString spannableString = new SpannableString(reportTitle);
-            ClickableSpan clickableSpan1 = new ClickableSpan() {
+            ClickableSpan reporterSpan = new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
-                    reportFragment.onUsernameClicked(report.getFkReporterId());
+                    reportFragment.onUsernameClicked(report.getFkReporterId(), report.getReporter().isEmployer());
                 }
             };
-            ClickableSpan clickableSpan2 = new ClickableSpan() {
+            ClickableSpan reportedSpan = new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
-                        reportFragment.onUsernameClicked(report.getFkReporterId());
+                    reportFragment.onUsernameClicked(report.getFkReporterId(), report.getReported().isEmployer());
                 }
             };
             List<Integer> startList = findUsernamesStart(reportTitle);
-            spannableString.setSpan(clickableSpan1, startList.get(0),startList.get(0) + report.getReporter().getUsername().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(clickableSpan2, startList.get(1),startList.get(1) + report.getReported().getUsername().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(reporterSpan, startList.get(0),startList.get(0) + report.getReporter().getUsername().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(reportedSpan, startList.get(1),startList.get(1) + report.getReported().getUsername().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             binding.tvReportTitle.setText(spannableString);
             binding.tvReportTitle.setMovementMethod(LinkMovementMethod.getInstance());
             binding.tvElaboration.setText(report.getElaboration());
@@ -160,9 +160,10 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportedVi
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, reportList.size());
     }
+
     public interface ReportListener {
         void onReportSelected(Report report);
         void onDelete(Report report, int pos);
-        void onUsernameClicked(int userId);
+        void onUsernameClicked(int userId, boolean isEmployer);
     }
 }

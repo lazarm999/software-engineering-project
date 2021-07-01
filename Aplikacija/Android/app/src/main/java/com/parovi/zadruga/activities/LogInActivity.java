@@ -9,7 +9,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.parovi.zadruga.App;
@@ -34,7 +33,6 @@ public class LogInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
         model = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        tvResetPass = findViewById(R.id.txtChangePassword);
         username = findViewById(R.id.txtName);
         pass = findViewById(R.id.txtPassword);
         btnLogIn = findViewById(R.id.btnLogIn);
@@ -62,16 +60,6 @@ public class LogInActivity extends AppCompatActivity {
                 else {
                     model.loginUser(username.getText().toString(), pass.getText().toString());
                 }
-            }
-        });
-
-
-
-        tvResetPass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LogInActivity.this, PasswordResetActivity.class);
-                startActivity(intent);
             }
         });
     }

@@ -13,8 +13,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-import androidx.navigation.NavDeepLink;
-import androidx.navigation.NavDeepLinkBuilder;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -25,7 +23,6 @@ import com.parovi.zadruga.R;
 import com.parovi.zadruga.activities.MainEmployerActivity;
 import com.parovi.zadruga.activities.MainStudentActivity;
 import com.parovi.zadruga.factories.ApiFactory;
-import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
 import com.parovi.zadruga.ui.ChatActivity;
 import com.parovi.zadruga.ui.JobAdActivity;
@@ -91,12 +88,12 @@ public class NotificationService extends FirebaseMessagingService {
                     intent = new Intent(this, JobAdActivity.class);
                     break;
                 case Constants.NOTIF_AD_COMMENT:
-                    title = getString(R.string.adComment, data.get("username"));
+                    title = getString(R.string.adComment, "@" + data.get("username"));
                     body = data.get("comment");
                     intent = new Intent(this, JobAdActivity.class);
                     break;
                 case Constants.NOTIF_RATING:
-                    title = getString(R.string.notif_rating, data.get("rater"));
+                    title = getString(R.string.notifRating, "@" + data.get("rater"));
                     body = getString(R.string.rating, data.get("rating")) + " " + data.get("comment");
                     if (Utility.getLoggedInUser(App.getAppContext()).isEmployer())
                         intent = new Intent(this, MainEmployerActivity.class);
@@ -104,10 +101,16 @@ public class NotificationService extends FirebaseMessagingService {
                         intent = new Intent(this, MainStudentActivity.class);
                     break;
                 case Constants.NOTIF_CHAT:
-                    title = getString(R.string.notif_chat, data.get("username"));
+                    title = getString(R.string.notifChat, "@" + data.get("username"));
                     body = data.get("message");
                     intent = new Intent(this, ChatActivity.class);
                     intent.putExtra(ChatActivity.CHAT_QB_ID, data.get("chatQbId"));
+                    break;
+                case Constants.NOTIF_APPLIED:
+                    title = getString(R.string.notifApplied, "@" + data.get("username"));
+                    body = data.get("title");
+                    intent = new Intent(this, ChatActivity.class);
+                    intent.putExtra(JobAdActivity.AD_ID, data.get("adId"));
                     break;
             }
         }

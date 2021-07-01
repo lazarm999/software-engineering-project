@@ -36,7 +36,9 @@
         <activity android:name=".ui.JobAdActivity"></activity>
         <activity android:name=".ui.ChatActivity"></activity>
         <activity android:name=".ui.EditProfileActivity"></activity>
-        <activity android:name=".TmpActivity"></activity>
+        <activity android:name=".TmpActivity">
+
+        </activity>
 
         <service android:name=".services.NotificationService">
             <intent-filter>
