@@ -53,33 +53,11 @@ public class StudentProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentStudentProfileFragmentBinding.inflate(inflater, container, false);
 
-        binding.btnRating.setVisibility(View.INVISIBLE);
+        binding.btnRating.setVisibility(View.GONE);
+        binding.btnBanUser.setVisibility(View.GONE);
 
         //userRepository.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
         model = new ViewModelProvider(requireActivity()).get(StudentProfileViewModel.class);
-        binding.btnRating.setEnabled(false);
-
-        model.getIsBanned().observe(requireActivity(), new Observer<CustomResponse<?>>() {
-            @Override
-            public void onChanged(CustomResponse<?> customResponse) {
-                if(customResponse.getStatus() != CustomResponse.Status.OK){
-                    return;
-                }
-            }
-        });
-
-        if(model.isProfileAdmin())
-        {
-            binding.btnLogOut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    model.banUser();
-                }
-            });
-        }
-
-
-
 
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +102,22 @@ public class StudentProfileFragment extends Fragment {
                         }
                     }
                 }
+            }
+        });
+
+        model.getIsBanned().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if(customResponse.getStatus() != CustomResponse.Status.OK){
+                    return;
+                }
+            }
+        });
+
+        binding.btnBanUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                model.banUser();
             }
         });
 
@@ -265,10 +259,10 @@ public class StudentProfileFragment extends Fragment {
         binding.editTextUsername.setText(user.getUsername());
         binding.txtMultilineEditBio.setText(user.getBio());
 
-        if (model.isProfileEmployer())
+        if (user.isEmployer())
             updateViewEmployer();
 
-        if(model.isProfileAdmin())
+        if(user.isAdmin())
             updateViewAdmin();
     }
 
@@ -277,14 +271,15 @@ public class StudentProfileFragment extends Fragment {
         binding.btnRating.setVisibility(View.VISIBLE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
+        binding.btnBanUser.setVisibility(View.GONE);
     }
 
     @SuppressLint("ResourceAsColor")
     private void updateViewAdmin()
     {
-        binding.btnRating.setVisibility(View.VISIBLE);
+        binding.btnRating.setVisibility(View.GONE);
         binding.btnEdit.setVisibility(View.GONE);
-        binding.btnLogOut.setText(R.string.ban);
-        binding.btnLogOut.setBackgroundColor(R.color.red);
+        binding.btnLogOut.setVisibility(View.GONE);
+        binding.btnBanUser.setVisibility(View.VISIBLE);
     }
 }

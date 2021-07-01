@@ -140,7 +140,6 @@ public class UserRepository extends BaseRepository {
                                         isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.SERVER_ERROR, "Fetching FCM registration token failed"));
                                         return;
                                     }
-                                    Utility.saveLoggedUserInfo(App.getAppContext(), apiResponse.body().getToken(), apiResponse.body().getUser(), pass, task.getResult());
                                     String type;
                                     if(apiResponse.body().getUser().isAdmin())
                                         type = Constants.ADMIN;
@@ -148,13 +147,15 @@ public class UserRepository extends BaseRepository {
                                         type = Constants.EMPLOYER;
                                     else
                                         type = Constants.EMPLOYEE;
-                                    isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, type, ""));
                                     ApiFactory.getUserApi().postFcmToken(apiResponse.body().getToken(), new AddFcmTokenRequest(task.getResult()))
                                             .enqueue(new Callback<ResponseBody>() {
                                                 @Override
                                                 public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                                                    if(response.isSuccessful())
+                                                    if(response.isSuccessful()){
+                                                        isEmployer.postValue(new CustomResponse<>(CustomResponse.Status.OK, type, ""));
+                                                        Utility.saveLoggedUserInfo(App.getAppContext(), apiResponse.body().getToken(), apiResponse.body().getUser(), pass, task.getResult());
                                                         Log.i("postFcmToken", "OK");
+                                                    }
                                                     else
                                                         Log.i("postFcmToken", String.valueOf(response.code()));
                                                 }
@@ -196,23 +197,28 @@ public class UserRepository extends BaseRepository {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 Log.i("logOut", "braoooo");
-                ApiFactory.getUserApi().deleteFcmToken(Utility.getAccessToken(App.getAppContext()), Utility.getFcmToken(App.getAppContext()))
-                        .enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                                if(response.isSuccessful()){
-                                    isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
-                                    Utility.removeLoggedUserInfo(App.getAppContext());
-                                } else
-                                    responseNotSuccessful(response.code(), isLoggedOut);
+                if(Utility.getFcmToken(App.getAppContext()) == null){
+                    isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                    Utility.removeLoggedUserInfo(App.getAppContext());
+                } else {
+                    ApiFactory.getUserApi().deleteFcmToken(Utility.getAccessToken(App.getAppContext()), Utility.getFcmToken(App.getAppContext()))
+                            .enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                                    if(response.isSuccessful()){
+                                        isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                                        Utility.removeLoggedUserInfo(App.getAppContext());
+                                    } else{
+                                        responseNotSuccessful(response.code(), isLoggedOut);
+                                    }
+                                }
 
-                            }
-
-                            @Override
-                            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
-                                apiCallOnFailure(t.getMessage(), isLoggedOut);
-                            }
-                        });
+                                @Override
+                                public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                                    apiCallOnFailure(t.getMessage(), isLoggedOut);
+                                }
+                            });
+                }
             }
 
             @Override

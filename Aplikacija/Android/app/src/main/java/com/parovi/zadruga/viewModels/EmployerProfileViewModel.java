@@ -22,6 +22,7 @@ public class EmployerProfileViewModel extends AndroidViewModel {
     private String TOKEN = Utility.getAccessToken(App.getAppContext());
 
     private MutableLiveData<CustomResponse<?>> badges;
+    private MutableLiveData<CustomResponse<?>> isBanned;
     private MutableLiveData<CustomResponse<?>> user;
     private MutableLiveData<CustomResponse<?>> isLogedOut;
     private MutableLiveData<CustomResponse<?>> profilePicture;
@@ -36,6 +37,7 @@ public class EmployerProfileViewModel extends AndroidViewModel {
         isLogedOut = new MutableLiveData<>();
         badges = new MutableLiveData<>();
         profilePicture = new MutableLiveData<>();
+        isBanned = new MutableLiveData<>();
         loadUserInfo();
         loadUserProfileImage();
         loadBadges();
@@ -57,6 +59,10 @@ public class EmployerProfileViewModel extends AndroidViewModel {
         return isLogedOut;
     }
 
+    public MutableLiveData<CustomResponse<?>> getIsBanned() {
+        return isBanned;
+    }
+
     public void logOut() { userRepository.logOutUser(isLogedOut); }
 
     public int getId() {
@@ -67,16 +73,8 @@ public class EmployerProfileViewModel extends AndroidViewModel {
         return TOKEN;
     }
 
-    public boolean isProfileMine() {
-        return ((User)user.getValue().getBody()).getUserId() == USER_ID;
-    }
-
-    public boolean isProfileAdmin() {
-        return ((User)user.getValue().getBody()).isAdmin();
-    }
-
-    public boolean isProfileStudent() {
-        return (!((User)user.getValue().getBody()).isEmployer() && !((User)user.getValue().getBody()).isAdmin());
+    public void banUser(){
+        userRepository.banUser(TOKEN, isBanned, ((User)user.getValue().getBody()).getUserId());
     }
 
     private void loadBadges() {
@@ -122,15 +120,13 @@ public class EmployerProfileViewModel extends AndroidViewModel {
 
         return bool;
     }
-    public void load(int userId) {
-        USER_ID = userId;
-        loadUserInfo();
-    }
-
-    public void loadCredentials() {
-        USER_ID = Utility.getLoggedInUserId(App.getAppContext());
-        TOKEN = Utility.getAccessToken(App.getAppContext());
-    }
-
-
+//    public void load(int userId) {
+//        USER_ID = userId;
+//        loadUserInfo();
+//    }
+//
+//    public void loadCredentials() {
+//        USER_ID = Utility.getLoggedInUserId(App.getAppContext());
+//        TOKEN = Utility.getAccessToken(App.getAppContext());
+//    }
 }

@@ -51,6 +51,7 @@ public class EmployerProfileFragment extends Fragment {
         model = new ViewModelProvider(requireActivity()).get(EmployerProfileViewModel.class);
 
         binding.btnRating.setVisibility(View.GONE);
+        binding.btnBanUser.setVisibility(View.GONE);
 
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +91,22 @@ public class EmployerProfileFragment extends Fragment {
                         }
                     }
                 }
+            }
+        });
+
+        model.getIsBanned().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if(customResponse.getStatus() != CustomResponse.Status.OK){
+                    return;
+                }
+            }
+        });
+
+        binding.btnBanUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                model.banUser();
             }
         });
 
@@ -224,11 +241,12 @@ public class EmployerProfileFragment extends Fragment {
         binding.txtCompany.setText(user.getCompanyName());
         binding.txtMultilineEditBio.setText(user.getBio());
 
-        if (model.isProfileStudent())
+        if(user.isAdmin())
+            updateViewAdmin();
+
+        if (!user.isEmployer())
             updateViewStudent();
 
-        if(model.isProfileAdmin())
-            updateViewAdmin();
     }
 
     private void updateViewStudent()
@@ -236,14 +254,15 @@ public class EmployerProfileFragment extends Fragment {
         binding.btnRating.setVisibility(View.VISIBLE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
+        binding.btnBanUser.setVisibility(View.GONE);
     }
 
     @SuppressLint("ResourceAsColor")
     private void updateViewAdmin()
     {
-        binding.btnRating.setVisibility(View.VISIBLE);
+        binding.btnRating.setVisibility(View.GONE);
         binding.btnEdit.setVisibility(View.GONE);
-        binding.btnLogOut.setText(R.string.ban);
-        binding.btnLogOut.setBackgroundColor(R.color.red);
+        binding.btnLogOut.setVisibility(View.GONE);
+        binding.btnBanUser.setVisibility(View.VISIBLE);
     }
 }

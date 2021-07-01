@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
@@ -24,10 +25,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.activities.MainActivity;
 import com.parovi.zadruga.adapters.AdAdapter;
 import com.parovi.zadruga.databinding.FragmentAdsFragmentBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.ui.ChatActivity;
 import com.parovi.zadruga.ui.JobAdActivity;
 import com.parovi.zadruga.viewModels.FeedViewModel;
@@ -38,7 +43,8 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
 
     FragmentAdsFragmentBinding binding;
     FeedViewModel model;
-    int count = 0;
+    int page = 0;
+    int limit = 5;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +59,8 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         binding = FragmentAdsFragmentBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(FeedViewModel.class);
 
+        binding.topBarAdmin.setVisibility(View.GONE);
+
         Spinner spinnerLocations = binding.spinnerLocationFilter;
         ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<String>());
         adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -65,13 +73,36 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         AdAdapter adapter = new AdAdapter(this);
         recView.setAdapter(adapter);
 
-//        binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                binding.recViewAds.notifyAll();
-//                binding.swipeRefresh.isRefreshing();
-//            }
-//        });
+        model.getUser().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if(customResponse.getStatus() == CustomResponse.Status.OK)
+                {
+                    if(((User)customResponse.getBody()).isAdmin())
+                    {
+                        setAdminView();
+                    }
+                }
+            }
+        });
+
+        model.getIsLoggedOut().observe(requireActivity(), new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if(customResponse.getStatus() == CustomResponse.Status.OK) {
+                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        binding.topBarAdmin.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                model.logOut();
+                return true;
+            }
+        });
 
         model.getAds().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
@@ -82,19 +113,18 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
             }
         });
 
+        getData(page, limit);
+
         binding.nested.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
                 if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    count++;
+                    page++;
                     binding.progressBar.setVisibility(View.VISIBLE);
-                    if (count < 10) {
-                        model.loadRecommended();
-                        count = 0;
+                    getData(page, limit);
                     }
                 }
-            }
         });
 
         model.getLocations().observe(requireActivity(), new Observer<CustomResponse<?>>() {
@@ -203,6 +233,26 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         return binding.getRoot();
     }
 
+    private void getData(int page, int limit)
+    {
+        if (page > limit) {
+            Toast.makeText(requireActivity(), "That's all the data..", Toast.LENGTH_SHORT).show();
+            binding.progressBar.setVisibility(View.GONE);
+            return;
+        }
+
+        model.loadRecommended();
+    }
+
+    private void setAdminView()
+    {
+        if(Utility.getLoggedInUser(App.getAppContext()).isAdmin())
+        {
+            binding.topBar.setVisibility(View.GONE);
+            binding.topBarAdmin.setVisibility(View.VISIBLE);
+            binding.linearFee.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public void onAdSelected(Ad ad) {

@@ -37,7 +37,6 @@ public class StudentProfileViewModel extends AndroidViewModel {
         lookUpRepository = new LookUpRepository();
         user = new MutableLiveData<>();
         isLoggedOut = new MutableLiveData<>();
-        user = new MutableLiveData<>();
         badges = new MutableLiveData<>();
         profilePicture = new MutableLiveData<>();
         isBanned = new MutableLiveData<>();
@@ -58,8 +57,8 @@ public class StudentProfileViewModel extends AndroidViewModel {
         return profilePicture;
     }
 
-    public MutableLiveData<CustomResponse<?>> getThisUser() {
-        return user;
+    public MutableLiveData<CustomResponse<?>> getIsBanned() {
+        return isBanned;
     }
 
     public int getId() {
@@ -88,18 +87,6 @@ public class StudentProfileViewModel extends AndroidViewModel {
         userRepository.getProfilePicture(profilePicture, USER_ID);
     }
 
-    public boolean isProfileMine() {
-        return ((User)user.getValue().getBody()).getUserId() == USER_ID;
-    }
-
-    public boolean isProfileAdmin() {
-        return ((User)user.getValue().getBody()).isAdmin();
-    }
-
-    public boolean isProfileEmployer() {
-        return ((User)user.getValue().getBody()).isEmployer();
-    }
-
     public void loadUserInfo() {
         userRepository.getUserById(TOKEN, user, USER_ID);
     }
@@ -109,18 +96,14 @@ public class StudentProfileViewModel extends AndroidViewModel {
         List<Badge> badge = (List<Badge>)badges.getValue().getBody();
        return badge.get(id).getDescription();
     }
-
-    public void load(int userId) {
-        USER_ID = userId;
-        loadUserInfo();
-    }
-
-    public void loadCredentials() {
-        USER_ID = Utility.getLoggedInUserId(App.getAppContext());
-        TOKEN = Utility.getAccessToken(App.getAppContext());
-    }
-
-    public MutableLiveData<CustomResponse<?>> getIsBanned() {
-        return isBanned;
-    }
+//
+//    public void load(int userId) {
+//        USER_ID = userId;
+//        loadUserInfo();
+//    }
+//
+//    public void loadCredentials() {
+//        USER_ID = Utility.getLoggedInUserId(App.getAppContext());
+//        TOKEN = Utility.getAccessToken(App.getAppContext());
+//    }
 }

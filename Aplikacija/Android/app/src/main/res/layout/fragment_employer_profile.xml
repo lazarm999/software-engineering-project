@@ -33,6 +33,24 @@
             app:iconTint="@color/black"
             app:rippleColor="@color/lila" />
 
+        <Button
+            android:id="@+id/btnBanUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="173dp"
+            android:layout_toStartOf="@+id/btnEdit"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/ban"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            app:backgroundTint="@color/red"
+            app:cornerRadius="20dp"
+            app:iconTint="@color/black"
+            app:rippleColor="@color/red" />
+
         <ImageView
             android:id="@+id/imgProfileBackground"
             android:layout_width="match_parent"

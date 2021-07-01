@@ -13,6 +13,7 @@ import com.parovi.zadruga.models.entityModels.Location;
 import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.repository.AdRepository;
 import com.parovi.zadruga.repository.LookUpRepository;
+import com.parovi.zadruga.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,29 +27,42 @@ public class FeedViewModel extends AndroidViewModel{
     MutableLiveData<CustomResponse<?>> ads;//All ads
     MutableLiveData<CustomResponse<?>> locations;//locations
     MutableLiveData<CustomResponse<?>> tags;//tags
+    MutableLiveData<CustomResponse<?>> user;
+    MutableLiveData<CustomResponse<?>> isLoggedOut;
 
     private ArrayList<Location> locs;
     private ArrayList<Tag> tag;
 
     AdRepository adRepository;
     LookUpRepository lookUpRepository;
+    UserRepository userRepository;
 
     public FeedViewModel(@NonNull Application application) {
         super(application);
         adRepository = new AdRepository();
         lookUpRepository = new LookUpRepository();
+        userRepository = new UserRepository();
         ads = new MutableLiveData<>();
+        user = new MutableLiveData<>();
         locations = new MutableLiveData<>();
         tags = new MutableLiveData<>();
+        isLoggedOut = new MutableLiveData<>();
 
         lookUpRepository.getAllLocations(Utility.getAccessToken(App.getAppContext()), locations);
         lookUpRepository.getAllTags(Utility.getAccessToken(App.getAppContext()), tags);
 
         //loadAdsDefault();
         loadRecommended();
+        loadUserInfo();
     }
 
     public MutableLiveData<CustomResponse<?>> getAds() {  return ads; }
+
+    public MutableLiveData<CustomResponse<?>> getUser() { return user; }
+
+    public MutableLiveData<CustomResponse<?>> getIsLoggedOut() {
+        return isLoggedOut;
+    }
 
     public MutableLiveData<CustomResponse<?>> getLocations()
     {
@@ -69,6 +83,8 @@ public class FeedViewModel extends AndroidViewModel{
 
     public void loadRecommended() { adRepository.getRecommendedAds(ads); }
 
+    public void loadUserInfo() { userRepository.getUserById(Utility.getAccessToken(App.getAppContext()), user, Utility.getLoggedInUser(App.getAppContext()).getUserId()); }
+
     public void sortAds(int locId) { adRepository.getAds(Utility.getAccessToken(App.getAppContext()), ads, locId, null, null, null, true);}
 
     public void sort() { adRepository.getAds(Utility.getAccessToken(App.getAppContext()), ads, null, null, null, null, true);}
@@ -78,6 +94,8 @@ public class FeedViewModel extends AndroidViewModel{
     private void loadLocations() { lookUpRepository.getAllLocations(Utility.getAccessToken(App.getAppContext()),locations); }
 
     private void loadTags()  {lookUpRepository.getAllTags(Utility.getAccessToken(App.getAppContext()), tags); }
+
+    public void logOut() { userRepository.logOutUser(isLoggedOut); }
 
     public List<String> getAllCities()
     {

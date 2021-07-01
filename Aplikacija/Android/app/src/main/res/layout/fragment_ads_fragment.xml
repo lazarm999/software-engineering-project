@@ -32,6 +32,19 @@
                 app:title="Ads"
                 app:titleTextColor="@color/background" />
 
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topBarAdmin"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/lilaChip"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/topBar"
+                app:menu="@menu/admin_overflow_menu"
+                app:title="@string/ban"
+                app:titleTextColor="@color/background" />
+
             <LinearLayout
                 android:id="@+id/relLayoutChips"
                 android:layout_width="match_parent"
@@ -369,14 +382,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/relLayoutChips">
 
-<!--                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:id="@+id/swipeRefresh">-->
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/swipeRefresh">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recViewAds"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:padding="4dp" />
 
                 <ProgressBar
@@ -384,7 +398,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/progressBar"/>
 
-<!--                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
