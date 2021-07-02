@@ -429,7 +429,8 @@ public class ChatRepository extends BaseRepository {
                     if(id != u.getUserQbId())
                         ids.add(id);
                 }
-                sendChatNotification(new ChatNotification(u.getUsername(), message, adId, ids, qbChat.getDialogId()));
+                sendChatNotification(new ChatNotification(u.getUsername(), message, adId,
+                        ids, qbChat.getDialogId()));
                 saveMessageLocally(qbMessage);
             }
 

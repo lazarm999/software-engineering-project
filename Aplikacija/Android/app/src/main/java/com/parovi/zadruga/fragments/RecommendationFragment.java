@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
@@ -65,7 +64,6 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.NO_MORE_DATA) {
                     binding.progressBarRecommend.setVisibility(View.GONE);
-                    Toast.makeText(requireActivity(), "That's all the data..", Toast.LENGTH_SHORT).show();
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.setAds((ArrayList<Ad>) customResponse.getBody());

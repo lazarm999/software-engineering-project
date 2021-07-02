@@ -5,18 +5,17 @@ import java.util.List;
 public class ChatNotification {
     private String username;
     private String message;
-    private int adId;
+    private Integer adId;
     private List<Integer> userQbIds;
     private String chatQbId;
 
-    public ChatNotification(String username, String message, int adId, List<Integer> userQbIds, String chatQbId) {
+    public ChatNotification(String username, String message, Integer adId, List<Integer> userQbIds, String chatQbId) {
         this.username = username;
         this.message = message;
         this.adId = adId;
         this.userQbIds = userQbIds;
         this.chatQbId = chatQbId;
     }
-
 
     public ChatNotification() {
     }
@@ -45,19 +44,19 @@ public class ChatNotification {
         this.userQbIds = userQbIds;
     }
 
-    public int getAdId() {
-        return adId;
-    }
-
-    public void setAdId(int adId) {
-        this.adId = adId;
-    }
-
     public String getChatQbId() {
         return chatQbId;
     }
 
     public void setChatQbId(String chatQbId) {
         this.chatQbId = chatQbId;
+    }
+
+    public Integer getAdId() {
+        return adId;
+    }
+
+    public void setAdId(Integer adId) {
+        this.adId = adId;
     }
 }

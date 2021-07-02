@@ -22,7 +22,6 @@ import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
-import com.parovi.zadruga.activities.GradeUserActivity;
 import com.parovi.zadruga.activities.MainActivity;
 import com.parovi.zadruga.databinding.FragmentEmployerProfileBinding;
 import com.parovi.zadruga.models.entityModels.Badge;
@@ -47,7 +46,6 @@ public class EmployerProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentEmployerProfileBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(EmployerProfileViewModel.class);
 
@@ -66,9 +64,9 @@ public class EmployerProfileFragment extends Fragment {
         binding.btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), GradeUserActivity.class);
-                intent.putExtra(StudentProfileFragment.USER_ID, u.getUserId());
-                startActivity(intent);
+                EmployerProfileFragmentDirections.ActionEmployerProfileFragment2ToRatingFragment action = EmployerProfileFragmentDirections.actionEmployerProfileFragment2ToRatingFragment();
+                action.setUserId(model.getId());
+                Navigation.findNavController(binding.getRoot()).navigate(action);
             }
         });
 
@@ -76,24 +74,11 @@ public class EmployerProfileFragment extends Fragment {
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
-                StudentProfileFragmentDirections.ActionStudentProfileFragmentToRatingFragment action = StudentProfileFragmentDirections.actionStudentProfileFragmentToRatingFragment();
+                EmployerProfileFragmentDirections.ActionEmployerProfileFragment2ToRatingFragment action = EmployerProfileFragmentDirections.actionEmployerProfileFragment2ToRatingFragment();
                 action.setUserId(model.getId());
                 Navigation.findNavController(binding.getRoot()).navigate(action);
-                /*FragmentTransaction fr = requireActivity().getSupportFragmentManager().beginTransaction();
-                fr.replace(R.id.profileFrame, RatingFragment.class, null);
-                fr.addToBackStack(null);
-                fr.commit();*/
-                //Navigation.findNavController(binding.getRoot()).navigate(StudentProfileFragmentDirections.actionStudentProfileFragment2ToRatingFragment());
             }
         });
-
-//        binding.btnAchiev.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getContext(), UsersAchievementsActivity.class);
-//                startActivity(intent);
-//            }
-//        });
 
         model.getUser().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
@@ -102,6 +87,7 @@ public class EmployerProfileFragment extends Fragment {
                     populateViews((User)customResponse.getBody());
                     u = ((User) customResponse.getBody());
                     int[] arrayLock = new int[]{R.drawable.b1, R.drawable.b2, R.drawable.b3, R.drawable.b6, R.drawable.b7};
+
                     if(u.getBadges() != null){
                         List<Badge> badges = u.getBadges();
                         for (int i = 0; i < badges.size(); i++) {

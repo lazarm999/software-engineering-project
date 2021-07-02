@@ -147,6 +147,7 @@ public class TmpActivity extends AppCompatActivity {
                     if(response.getStatus() == CustomResponse.Status.OK){
 
                     } else if (response.getStatus() == CustomResponse.Status.BAD_REQUEST) {
+
                     }
                 }
             }

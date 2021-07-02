@@ -1,31 +1,18 @@
 package com.parovi.zadruga.activities;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ActivityMainEmployerBinding;
-import com.parovi.zadruga.fragments.AdsFragment;
-import com.parovi.zadruga.fragments.AdsFragmentDirections;
-import com.parovi.zadruga.fragments.EmployerProfileFragment;
-import com.parovi.zadruga.fragments.EmployersAdsFragment;
-import com.parovi.zadruga.fragments.JobHistoryFragment;
-import com.parovi.zadruga.fragments.NewAdFragment;
-import com.parovi.zadruga.fragments.NewAdFragmentDirections;
-import com.parovi.zadruga.fragments.NotificationsFragment;
-import com.parovi.zadruga.fragments.NotificationsFragmentDirections;
 import com.parovi.zadruga.viewModels.FeedViewModel;
 import com.parovi.zadruga.viewModels.NewAdViewModel;
 
@@ -39,16 +26,14 @@ public class MainEmployerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_employer);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         //feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
         //newAdViewModel = new ViewModelProvider(this).get(NewAdViewModel.class);
         binding = ActivityMainEmployerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        bottom_nav = (BottomNavigationView) findViewById(R.id.bottom_nav_employer);
-
-        bottom_nav.setOnNavigationItemSelectedListener(item -> {
+        binding.bottomNavAdmin.setOnNavigationItemSelectedListener(item -> {
             NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.employer_main_nav_host_frag);
             NavController navController = navHostFragment.getNavController();
             //Fragment fragment;

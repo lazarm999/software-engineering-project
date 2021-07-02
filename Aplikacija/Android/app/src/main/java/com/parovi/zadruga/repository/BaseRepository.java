@@ -420,7 +420,8 @@ public abstract class BaseRepository {
             @Override
             public void run() {
                 try {
-                    Response<ResponseBody> res = ApiFactory.getNotificationApi().sendChatNotification(token, notification).execute();
+                    Response<ResponseBody> res = ApiFactory.getNotificationApi().sendChatNotification(token,
+                            notification).execute();
                     if(res.isSuccessful())
                         Log.i("sendChatNotification", "success");
                     else

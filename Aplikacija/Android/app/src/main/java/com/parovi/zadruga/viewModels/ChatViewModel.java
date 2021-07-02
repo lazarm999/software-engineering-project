@@ -1,9 +1,5 @@
 package com.parovi.zadruga.viewModels;
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
@@ -16,7 +12,6 @@ import com.parovi.zadruga.models.entityModels.Chat;
 import com.parovi.zadruga.repository.ChatRepository;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBChatDialogMessageListener;
-import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 
 public class ChatViewModel extends ViewModel {
@@ -25,7 +20,7 @@ public class ChatViewModel extends ViewModel {
     private SavedStateHandle state;
     private Chat activeChat;;
     private MutableLiveData<CustomResponse<?>> chats;
-    private MutableLiveData<QBChatMessage> newMessage; // TODO: Lazar da pojasni
+    private MutableLiveData<QBChatMessage> newMessage;
     private MutableLiveData<CustomResponse<?>> isSent;
     private MutableLiveData<CustomResponse<?>> isConnected;
     private MutableLiveData<CustomResponse<?>> messages;
@@ -90,7 +85,8 @@ public class ChatViewModel extends ViewModel {
     }
 
     public void sendMessage(String message){
-        chatRepository.sendMessage(isSent, messages, chats, activeChat.getQbChat(), message, activeChat.getFkAdId()); }
+        chatRepository.sendMessage(isSent, messages, chats, activeChat.getQbChat(), message,
+                activeChat.getFkAdId()); }
 
     public void removeGlobalMessageListener(){
         chatRepository.removeGlobalMessageReceivedListener(newMessageListener);

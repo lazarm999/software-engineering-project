@@ -68,9 +68,9 @@ public class SelectWorkersFragment extends Fragment implements ApplicantsAdapter
 
     @Override
     public void onApplicantSelected(User applicant) {
-        Intent intent = new Intent(requireActivity(), EditProfileActivity.class);
-        intent.putExtra("userId", applicant.getUserId());
-        startActivity(intent);
+        SelectWorkersFragmentDirections.ActionSelectWorkersFragmentToStudentProfileFragment action = SelectWorkersFragmentDirections.actionSelectWorkersFragmentToStudentProfileFragment();
+        action.setUserId(applicant.getUserId());
+        Navigation.findNavController(binding.getRoot()).navigate(action);
     }
 
     @Override

@@ -53,18 +53,17 @@
             <TextView
                 android:id="@+id/editTxtDescriptionAd"
                 android:layout_width="255dp"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/txtDescForAd"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="18dp"
                 android:background="@color/background"
-                android:ems="10"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:gravity="start|top"
-                android:inputType="textMultiLine"
-                android:maxLines="1"
-                android:ellipsize="end"
+                android:inputType="textMultiLine|textNoSuggestions"
                 android:text="Description text lorem ipsum dolor sit amet"
                 android:textColor="@color/lila" />
 

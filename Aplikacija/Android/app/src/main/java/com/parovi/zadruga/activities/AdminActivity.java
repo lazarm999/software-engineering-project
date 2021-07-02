@@ -9,9 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.databinding.ActivityAdminBinding;
 import com.parovi.zadruga.fragments.AdsFragment;
 import com.parovi.zadruga.fragments.ReportFragment;
 
@@ -20,32 +23,33 @@ public class AdminActivity extends AppCompatActivity {
     public static final int FEED = 1, REPORTS = 2;
     BottomNavigationView bottom_nav;
     FrameLayout frame;
+    ActivityAdminBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
-        int fragCode = getIntent().getIntExtra(FRAGMENT_SELECTION, FEED);
-        loadFragment(getFragmentToRun(fragCode));
+        //int fragCode = getIntent().getIntExtra(FRAGMENT_SELECTION, FEED);
+        //loadFragment(getFragmentToRun(fragCode));
 
-        bottom_nav = (BottomNavigationView) findViewById(R.id.bottom_nav_admin);
-        frame = findViewById(R.id.frame_admin_layout);
-
-        bottom_nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        binding = ActivityAdminBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        binding.bottomNavAdmin.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
+                NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.admin_main_nav_host_frag);
+                NavController navController = navHostFragment.getNavController();
                 switch(item.getItemId()) {
                     case R.id.adminFeed:
-                        fragment = new AdsFragment();
+                        navController.navigate(R.id.action_global_adsFragment3);
+                        break;
+                    case R.id.adminReports:
+                        navController.navigate(R.id.action_global_reportFragment);
                         break;
                     default:
-                        fragment = new ReportFragment();
                         break;
                 }
-                loadFragment(fragment);
                 return true;
             }
         });
@@ -53,7 +57,7 @@ public class AdminActivity extends AppCompatActivity {
 
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_admin_layout, fragment);
+        transaction.replace(R.id.admin_main_nav_host_frag, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

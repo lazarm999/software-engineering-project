@@ -35,17 +35,22 @@
             app:layout_constraintStart_toEndOf="@+id/ivReportIcon"
             app:layout_constraintTop_toTopOf="@+id/ivReportIcon" />
 
-        <TextView
-            android:id="@+id/tvDeleteReport"
+        <Button
+            android:id="@+id/btnRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/rect_border"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/roboto_condensed_regular"
-            android:padding="4dp"
             android:text="@string/deleteReport"
+            android:textColor="@color/black"
+            android:textSize="9dp"
+            app:backgroundTint="@color/lilaChip"
+            app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvElaboration"
+            app:rippleColor="@color/lila" />
+
 
         <TextView
             android:id="@+id/tvReportedContent"
@@ -58,17 +63,6 @@
             app:layout_constraintStart_toStartOf="@+id/tvReportTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvReportTitle"
             app:layout_constraintVertical_bias="1.0" />
-
-<!--        <View-->
-<!--            android:layout_width="250dp"-->
-<!--            android:layout_height="0.5dp"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginEnd="8dp"-->
-<!--            android:background="@color/grey"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/tvElaboration"-->
-<!--            app:layout_constraintEnd_toEndOf="@+id/tvReportTitle"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/tvReportTitle"-->
-<!--            app:layout_constraintVertical_bias="0.886" />-->
 
         <TextView
             android:id="@+id/tvElaboration"

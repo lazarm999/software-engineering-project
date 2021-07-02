@@ -15,6 +15,9 @@
             app:destination="@id/jobAdInfoFragment"
             app:popUpTo="@id/jobAdInfoFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_selectWorkersFragment_to_studentProfileFragment"
+            app:destination="@id/studentProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/newAdFragment"
@@ -83,6 +86,9 @@
             android:name="userId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_employerProfileFragment2_to_ratingFragment"
+            app:destination="@id/ratingFragment" />
     </fragment>
     <fragment
         android:id="@+id/ratingFragment"

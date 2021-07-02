@@ -1,17 +1,6 @@
 package com.parovi.zadruga.ui;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,11 +8,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.adapters.MessagesAdapter;
-import com.parovi.zadruga.models.entityModels.Message;
 import com.parovi.zadruga.databinding.FragmentChatMessagesBinding;
+import com.parovi.zadruga.models.entityModels.Message;
 import com.parovi.zadruga.viewModels.ChatViewModel;
 
 import java.util.List;
@@ -76,7 +74,7 @@ public class ChatMessagesFragment extends Fragment {
                 model.loadChatMembers();
                 Navigation.findNavController(binding.getRoot()).navigate(ChatMessagesFragmentDirections.actionChatMessagesFragmentToChatInfoFragment());
                 return true;
-                // ne radi iz nepoznatog razloga
+                //TODO: ne radi iz nepoznatog razloga
                 //NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment));
             }
         });

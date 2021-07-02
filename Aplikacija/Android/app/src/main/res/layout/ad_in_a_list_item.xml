@@ -19,14 +19,14 @@
         <LinearLayout
             android:id="@+id/cardAdInAListItem"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="90dp"
             android:background="@drawable/border_for_ad_in_a_list"
             android:orientation="horizontal"
             android:padding="10dp">
 
             <TextView
                 android:id="@+id/tvAdTitle"
-                android:layout_width="70dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
