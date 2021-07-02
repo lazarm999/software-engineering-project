@@ -42,6 +42,7 @@ public class MainActivity<AlterDialog> extends AppCompatActivity {
             else
                 intent = new Intent(MainActivity.this, MainStudentActivity.class);
             startActivity(intent);
+            finish();
         }
         loadLocale();
 

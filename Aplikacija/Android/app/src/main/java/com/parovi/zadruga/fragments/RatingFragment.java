@@ -20,6 +20,7 @@ import com.parovi.zadruga.ui.JobAdActivity;
 import com.parovi.zadruga.viewModels.AchievementViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RatingFragment extends Fragment implements AchievementAdapter.AchievementListener{
     private AchievementViewModel model;
@@ -56,9 +57,13 @@ public class RatingFragment extends Fragment implements AchievementAdapter.Achie
                 }
             }
         });
+        if (getArguments() != null) {
+            model.loadUser(RatingFragmentArgs.fromBundle(getArguments()).getUserId());
+        }
+        else
+            model.loadUser(-1);
 
-        adapter.setAchievements(ach);
-
+        model.loadRatings();
         return binding.getRoot();
     }
 

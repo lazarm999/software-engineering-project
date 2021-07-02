@@ -21,9 +21,6 @@
         android:name="com.parovi.zadruga.fragments.NewAdFragment"
         android:label="fragment_new_ad"
         tools:layout="@layout/fragment_new_ad" >
-        <action
-            android:id="@+id/action_newAdFragment_to_selectPreferencesFragment2"
-            app:destination="@id/selectPreferencesFragment2" />
         <argument
             android:name="adId"
             app:argType="integer"
@@ -32,6 +29,9 @@
             android:id="@+id/action_newAdFragment_to_jobAdInfoFragment"
             app:destination="@id/jobAdInfoFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_newAdFragment_to_selectPreferencesFragment22"
+            app:destination="@id/selectPreferencesFragment2" />
     </fragment>
     <fragment
         android:id="@+id/selectPreferencesFragment2"
@@ -54,5 +54,44 @@
         <action
             android:id="@+id/action_jobAdInfoFragment_to_newAdFragment"
             app:destination="@id/newAdFragment" />
+        <action
+            android:id="@+id/action_jobAdInfoFragment_to_studentProfileFragment"
+            app:destination="@id/studentProfileFragment" />
+        <action
+            android:id="@+id/action_jobAdInfoFragment_to_employerProfileFragment2"
+            app:destination="@id/employerProfileFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentProfileFragment"
+        android:name="com.parovi.zadruga.fragments.StudentProfileFragment"
+        android:label="fragment_student_profile_fragment"
+        tools:layout="@layout/fragment_student_profile_fragment" >
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_studentProfileFragment_to_ratingFragment"
+            app:destination="@id/ratingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/employerProfileFragment2"
+        android:name="com.parovi.zadruga.fragments.EmployerProfileFragment"
+        android:label="fragment_employer_profile"
+        tools:layout="@layout/fragment_employer_profile" >
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/ratingFragment"
+        android:name="com.parovi.zadruga.fragments.RatingFragment"
+        android:label="fragment_rating"
+        tools:layout="@layout/fragment_rating" >
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
 </navigation>

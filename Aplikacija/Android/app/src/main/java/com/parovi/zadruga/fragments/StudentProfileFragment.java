@@ -17,9 +17,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.activities.GradeUserActivity;
 import com.parovi.zadruga.activities.MainActivity;
 import com.parovi.zadruga.databinding.FragmentStudentProfileFragmentBinding;
@@ -80,9 +83,14 @@ public class StudentProfileFragment extends Fragment {
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.profileFrame, new RatingFragment());
-                fr.commit();
+                StudentProfileFragmentDirections.ActionStudentProfileFragmentToRatingFragment action = StudentProfileFragmentDirections.actionStudentProfileFragmentToRatingFragment();
+                action.setUserId(model.getId());
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+                /*FragmentTransaction fr = requireActivity().getSupportFragmentManager().beginTransaction();
+                fr.replace(R.id.profileFrame, RatingFragment.class, null);
+                fr.addToBackStack(null);
+                fr.commit();*/
+                //Navigation.findNavController(binding.getRoot()).navigate(StudentProfileFragmentDirections.actionStudentProfileFragment2ToRatingFragment());
             }
         });
 
@@ -244,6 +252,15 @@ public class StudentProfileFragment extends Fragment {
             }
         });
 
+        int userId = -1;
+        if (getArguments() != null) {
+            userId = StudentProfileFragmentArgs.fromBundle(getArguments()).getUserId();
+            if (userId != Utility.getLoggedInUserId(requireContext())) {
+                binding.btnEdit.setVisibility(View.GONE);
+                binding.btnLogOut.setVisibility(View.GONE);
+            }
+        }
+        model.loadUser(userId);
         return binding.getRoot();
     }
 
@@ -259,10 +276,10 @@ public class StudentProfileFragment extends Fragment {
         binding.editTextUsername.setText(user.getUsername());
         binding.txtMultilineEditBio.setText(user.getBio());
 
-        if (user.isEmployer())
+        if (Utility.getLoggedInUser(App.getAppContext()).isEmployer())
             updateViewEmployer();
 
-        if(user.isAdmin())
+        else if(Utility.getLoggedInUser(App.getAppContext()).isAdmin())
             updateViewAdmin();
     }
 

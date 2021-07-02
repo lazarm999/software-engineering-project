@@ -20,7 +20,7 @@ public class StudentProfileViewModel extends AndroidViewModel {
 //    private int userId = 3;
 //    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6M30.-DAg63c0vAJaWZBypL9axfrQ2p2eO8ihM84Mdi4pt4g";
 
-    private int USER_ID = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+    private int userId = Utility.getLoggedInUser(App.getAppContext()).getUserId();
     private String TOKEN = Utility.getAccessToken(App.getAppContext());
     
     private MutableLiveData<CustomResponse<?>> badges;
@@ -40,9 +40,6 @@ public class StudentProfileViewModel extends AndroidViewModel {
         badges = new MutableLiveData<>();
         profilePicture = new MutableLiveData<>();
         isBanned = new MutableLiveData<>();
-        loadUserInfo();
-        loadUserProfileImage();
-        loadBadges();
     }
 
     public MutableLiveData<CustomResponse<?>> getBadges() {
@@ -62,7 +59,7 @@ public class StudentProfileViewModel extends AndroidViewModel {
     }
 
     public int getId() {
-        return USER_ID;
+        return userId;
     }
 
     public String getToken() {
@@ -77,6 +74,16 @@ public class StudentProfileViewModel extends AndroidViewModel {
         return isLoggedOut;
     }
 
+    public void loadUser(int userId) {
+        if (userId > -1)
+            this.userId = userId;
+        else
+            this.userId = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+        loadUserInfo();
+        loadBadges();
+        loadUserProfileImage();
+    }
+
     public void logOut() { userRepository.logOutUser(isLoggedOut); }
 
     private void loadBadges() {
@@ -84,11 +91,11 @@ public class StudentProfileViewModel extends AndroidViewModel {
     }
 
     public void loadUserProfileImage() {
-        userRepository.getProfilePicture(profilePicture, USER_ID);
+        userRepository.getProfilePicture(profilePicture, userId);
     }
 
     public void loadUserInfo() {
-        userRepository.getUserById(TOKEN, user, USER_ID);
+        userRepository.getUserById(TOKEN, user, userId);
     }
 
     public String getBadgeDesc(int id)

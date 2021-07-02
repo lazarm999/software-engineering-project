@@ -114,7 +114,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportedVi
             ClickableSpan reportedSpan = new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
-                    reportFragment.onUsernameClicked(report.getFkReporterId(), report.getReported().isEmployer());
+                    reportFragment.onUsernameClicked(report.getFkReportedId(), report.getReported().isEmployer());
                 }
             };
             List<Integer> startList = findUsernamesStart(reportTitle);

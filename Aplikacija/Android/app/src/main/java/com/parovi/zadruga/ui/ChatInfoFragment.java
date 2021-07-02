@@ -6,6 +6,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.activities.MainStudentActivity;
 import com.parovi.zadruga.adapters.UserAdapter;
@@ -80,9 +84,18 @@ public class ChatInfoFragment extends Fragment implements UserAdapter.UserListLi
 
     @Override
     public void onUserSelected(User user) {
-        Intent intent = new Intent(requireActivity(), MainStudentActivity.class);
-        intent.putExtra(MainStudentActivity.FRAGMENT_SELECTION, MainStudentActivity.PROFILE);
-        intent.putExtra("userID", user.getUserId());
-        startActivity(intent);
+        if (user.isAdmin())
+            return;
+        else if (user.isEmployer()) {
+            ChatInfoFragmentDirections.ActionChatInfoFragmentToEmployerProfileFragment action = ChatInfoFragmentDirections.actionChatInfoFragmentToEmployerProfileFragment();
+            action.setUserId(user.getUserId());
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        }
+        else {
+            ChatInfoFragmentDirections.ActionChatInfoFragmentToStudentProfileFragment3 action = ChatInfoFragmentDirections.actionChatInfoFragmentToStudentProfileFragment3();
+            action.setUserId(user.getUserId());
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment);
+            navController.navigate(action);
+        }
     }
 }

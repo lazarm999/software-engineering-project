@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployerProfileViewModel extends AndroidViewModel {
-    private int USER_ID = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+    private int userId;
     private String TOKEN = Utility.getAccessToken(App.getAppContext());
 
     private MutableLiveData<CustomResponse<?>> badges;
@@ -66,7 +66,7 @@ public class EmployerProfileViewModel extends AndroidViewModel {
     public void logOut() { userRepository.logOutUser(isLogedOut); }
 
     public int getId() {
-        return USER_ID;
+        return userId;
     }
 
     public String getToken() {
@@ -77,16 +77,26 @@ public class EmployerProfileViewModel extends AndroidViewModel {
         userRepository.banUser(TOKEN, isBanned, ((User)user.getValue().getBody()).getUserId());
     }
 
+    public void loadUser(int userId) {
+        if (userId > -1)
+            this.userId = userId;
+        else
+            this.userId = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+        loadUserInfo();
+        loadBadges();
+        loadUserProfileImage();
+    }
+
     private void loadBadges() {
         lookUpRepository.getAllBadges(TOKEN, badges);
     }
 
     public void loadUserProfileImage() {
-        userRepository.getProfilePicture(profilePicture, USER_ID);
+        userRepository.getProfilePicture(profilePicture, userId);
     }
 
     public void loadUserInfo() {
-        userRepository.getUserById(TOKEN, user, USER_ID);
+        userRepository.getUserById(TOKEN, user, userId);
     }
 
     public MutableLiveData<CustomResponse<?>> getUser() {

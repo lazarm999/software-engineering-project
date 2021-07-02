@@ -14,7 +14,7 @@ import com.parovi.zadruga.repository.RatingRepository;
 
 public class AchievementViewModel extends AndroidViewModel {
 
-    private final int userId = Utility.getLoggedInUser(App.getAppContext()).getUserId();
+    private int userId = Utility.getLoggedInUser(App.getAppContext()).getUserId();
 
     MutableLiveData<CustomResponse<?>> ratings;
     MutableLiveData<CustomResponse<?>> isRated;
@@ -26,7 +26,6 @@ public class AchievementViewModel extends AndroidViewModel {
         ratingRepository = new RatingRepository();
         ratings = new MutableLiveData<>();
         isRated = new MutableLiveData<>();
-        loadRatings();
     }
 
     public MutableLiveData<CustomResponse<?>> getRatings() {
@@ -37,11 +36,18 @@ public class AchievementViewModel extends AndroidViewModel {
         return isRated;
     }
 
-    private void loadRatings() {
+    public void loadRatings() {
         ratingRepository.getRatingByUserId(Utility.getAccessToken(App.getAppContext()), ratings, userId);
     }
 
     public void rateUser(Rating rating) {
         ratingRepository.postRating(Utility.getAccessToken(App.getAppContext()), isRated, rating);
+    }
+
+    public void loadUser(int userId) {
+        if (userId < 0)
+            this.userId = Utility.getLoggedInUserId(App.getAppContext());
+        else
+            this.userId = userId;
     }
 }

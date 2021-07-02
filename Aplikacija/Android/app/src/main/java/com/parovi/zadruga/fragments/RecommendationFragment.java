@@ -66,7 +66,7 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.NO_MORE_DATA) {
                     binding.progressBarRecommend.setVisibility(View.GONE);
-                    Toast.makeText(requireActivity(), "That's all the data..", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(requireActivity(), "That's all the data..", Toast.LENGTH_SHORT).show();
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.setAds((ArrayList<Ad>) customResponse.getBody());
@@ -94,7 +94,7 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
     private void getData(int page, int limit)
     {
         if (page < limit) { binding.progressBarRecommend.setVisibility(View.GONE);
-            return;
+            return; // TODO: ili ovo ne valja ili su lose vrednosti postavljene za page i limit
         }
         model.getAds();
     }

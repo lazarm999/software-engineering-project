@@ -104,6 +104,7 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() != CustomResponse.Status.OK) {
                     binding.tvAdNotFound.setVisibility(View.VISIBLE);
+                    binding.toolbar.setVisibility(View.INVISIBLE);
                     return;
                 }
                 binding.tvAdNotFound.setVisibility(View.GONE);
@@ -204,7 +205,7 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
             binding.toolbar.getMenu().getItem(DELETE_ITEM).setVisible(true);
         }
         else if (ad != null && loggedUser.isEmployer() && loggedUser.getUserId() == ad.getEmployer().getUserId()) {
-            binding.toolbar.getMenu().getItem(EDIT_ITEM).setVisible(true);
+            binding.toolbar.getMenu().getItem(EDIT_ITEM).setVisible(!ad.isClosed());
             binding.toolbar.getMenu().getItem(REPORT_ITEM).setVisible(false);
             binding.toolbar.getMenu().getItem(DELETE_ITEM).setVisible(true);
         }
@@ -309,10 +310,19 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
 
     @Override
     public void onCommentAuthorSelected(CommentResponse comment) {
-        Intent intent = new Intent(requireActivity(), EditBasicProfileInfoFragment.class);
-        //TODO: proveri da li ovo radi
-        intent.putExtra(StudentProfileFragment.USER_ID, comment.getUser().getUserId());
-        startActivity(intent);
+        User user = comment.getUser();;
+        if (user.isAdmin())
+            return;
+        else if (user.isEmployer()) {
+            JobAdInfoFragmentDirections.ActionJobAdInfoFragmentToEmployerProfileFragment2 action = JobAdInfoFragmentDirections.actionJobAdInfoFragmentToEmployerProfileFragment2();
+            action.setUserId(user.getUserId());
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        }
+        else {
+            JobAdInfoFragmentDirections.ActionJobAdInfoFragmentToStudentProfileFragment action = JobAdInfoFragmentDirections.actionJobAdInfoFragmentToStudentProfileFragment();
+            action.setUserId(comment.getUser().getUserId());
+            Navigation.findNavController(binding.getRoot()).navigate(action);
+        }
     }
     @Override
     public void onCommentReported(CommentResponse comment) {

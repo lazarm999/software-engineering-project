@@ -14,20 +14,21 @@ import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.requestModels.PostAdRequest;
 import com.parovi.zadruga.repository.AdRepository;
 import com.parovi.zadruga.repository.LookUpRepository;
+import com.parovi.zadruga.ui.SelectPreferencesFragment;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewAdViewModel extends AndroidViewModel {
+public class NewAdViewModel extends AndroidViewModel implements SelectPreferencesFragment.TagsTracker {
     private final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
 
     private MutableLiveData<CustomResponse<?>> isPosted, locations, tags;
     private LookUpRepository lookUpRepository;
     private AdRepository adRepository;
     private ArrayList<Location> locs;
-    private ArrayList<Tag> tag;
+    private List<Integer> newTags = new ArrayList<>();
 
     public NewAdViewModel(@NonNull @NotNull Application application) {
         super(application);
@@ -48,10 +49,6 @@ public class NewAdViewModel extends AndroidViewModel {
     public MutableLiveData<CustomResponse<?>> getLocations()
     {
         return locations;
-    }
-
-    public MutableLiveData<CustomResponse<?>> getTags(){
-        return tags;
     }
 
     public void postAd(String token, PostAdRequest ad){
@@ -83,5 +80,25 @@ public class NewAdViewModel extends AndroidViewModel {
         for (Tag tag : tagNames)
             strings.add(tag.getName());
         return strings;
+    }
+
+    @Override
+    public List<Integer> getNewSelectedTags() {
+        return newTags;
+    }
+
+    @Override
+    public List<Integer> getCurrentlySelectedTags() {
+        return null;
+    }
+
+    @Override
+    public void loadTags() {
+        lookUpRepository.getAllTags(token, tags);
+    }
+
+    @Override
+    public MutableLiveData<CustomResponse<?>> getTags() {
+        return tags;
     }
 }

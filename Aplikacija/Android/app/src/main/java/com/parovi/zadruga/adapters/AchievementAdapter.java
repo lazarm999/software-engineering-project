@@ -27,11 +27,11 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
     public AchievementAdapter(AchievementListener fragment)
     {
         super();
-        ratingList = new ArrayList<RatingResponse>();
+        ratingList = new ArrayList<>();
         this.fragment = fragment;
     }
 
-    public void setAchievements(ArrayList<RatingResponse> ratings)
+    public void setAchievements(List<RatingResponse> ratings)
     {
         this.ratingList = ratings;
         notifyDataSetChanged();

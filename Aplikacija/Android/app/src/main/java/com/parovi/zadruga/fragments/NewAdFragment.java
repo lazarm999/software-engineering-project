@@ -73,9 +73,14 @@ public class NewAdFragment extends Fragment {
         binding.btnChooseCateg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewAdFragmentDirections.ActionNewAdFragmentToSelectPreferencesFragment2 action = NewAdFragmentDirections.actionNewAdFragmentToSelectPreferencesFragment2();
-                action.setForAd(true);
-                Navigation.findNavController(binding.getRoot()).navigate(action);
+                if (adModel == null) {
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_newAdFragment2_to_selectPreferencesFragment3);
+                }
+                else {
+                    NewAdFragmentDirections.ActionNewAdFragmentToSelectPreferencesFragment22 action = NewAdFragmentDirections.actionNewAdFragmentToSelectPreferencesFragment22();
+                    action.setForAd(true);
+                    Navigation.findNavController(binding.getRoot()).navigate(action);
+                }
             }
         });
 
@@ -141,7 +146,7 @@ public class NewAdFragment extends Fragment {
                 Integer.parseInt(binding.editTxtNewAdFeeFrom.getText().toString().isEmpty() ? "0" : binding.editTxtNewAdFeeFrom.getText().toString()),
                 Integer.parseInt(binding.editTxtNewAdFeeTo.getText().toString().isEmpty() ? "0" : binding.editTxtNewAdFeeTo.getText().toString()),
                 Integer.parseInt(binding.editTxtNewAdPeopleNeeded.getText().toString()),
-                ((Location)binding.spinnerLocation.getSelectedItem()).getLocId(), new ArrayList<>());
+                ((Location)binding.spinnerLocation.getSelectedItem()).getLocId(), editModel.getNewSelectedTags());
     }
     private EditAdRequest createEditAdRequest() {
         return new EditAdRequest(binding.txtNewAdTitle.getText().toString(),
@@ -252,17 +257,19 @@ public class NewAdFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     editModel.postAd(Utility.getAccessToken(App.getAppContext()), createPostAdRequest());
-                    FragmentTransaction fr = requireActivity().getSupportFragmentManager().beginTransaction();
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_global_adsFragment);
+                    /*FragmentTransaction fr = requireActivity().getSupportFragmentManager().beginTransaction();
                     fr.replace(R.id.bottom_nav_employer, new AdsFragment());
-                    fr.commit();
+                    fr.commit();*/
                 }
             });
             binding.btnNewAdCancle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FragmentTransaction fr = requireActivity().getSupportFragmentManager().beginTransaction();
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_global_adsFragment);
+                    /*FragmentTransaction fr = requireActivity().getSupportFragmentManager().beginTransaction();
                     fr.replace(R.id.bottom_nav_employer, new AdsFragment());
-                    fr.commit();
+                    fr.commit();*/
                 }
             });
         }

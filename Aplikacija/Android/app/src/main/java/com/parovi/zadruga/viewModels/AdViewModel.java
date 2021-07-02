@@ -83,7 +83,7 @@ public class AdViewModel extends AndroidViewModel implements SelectPreferencesFr
     public boolean isAdMine() {
         return ((Ad)ad.getValue().getBody()).getEmployer().getUserId() == userId;
     }
-//    public boolean isUserAppliedToAd() {
+    //    public boolean isUserAppliedToAd() {
 //        return (boolean)getAppliedTo().getValue().getBody();
 //    }
     public int getNoOfApplicants() {
@@ -96,6 +96,14 @@ public class AdViewModel extends AndroidViewModel implements SelectPreferencesFr
 
     public int getUserId() {
         return userId;
+    }
+
+    public List<Integer> getCurrTags() {
+        return currTags;
+    }
+
+    public List<Integer> getNewTags() {
+        return newTags;
     }
 
     public void clearSelectedUsersList() {
@@ -208,8 +216,18 @@ public class AdViewModel extends AndroidViewModel implements SelectPreferencesFr
         adRepository.deleteComment(token, isDeletedComment, comment.getId(), pos);
     }
 
-    public void reportComment(String elaboration) { //adRepository.reportUser(elaboration, isReportedComment, null, commentId);
+    public void initializeTagLists() {
+        if (getAd().getValue() == null)
+            return;
+        currTags = new ArrayList<Integer>();
+        newTags = new ArrayList<Integer>();
+        Ad ad = (Ad)getAd().getValue().getBody();
+        for(Tag tag: ad.getTags()) {
+            currTags.add(tag.getTagId());
+            newTags.add(tag.getTagId());
+        }
     }
+
 
     @Override
     public List<Integer> getNewSelectedTags() {

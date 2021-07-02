@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -109,15 +110,14 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.NO_MORE_DATA) {
                     binding.progressBar.setVisibility(View.GONE);
-                    Toast.makeText(requireActivity(), "That's all the data..", Toast.LENGTH_SHORT).show();
+                    adapter.setAds((ArrayList<Ad>) customResponse.getBody());
+                    //Toast.makeText(requireActivity(), "That's all the data..", Toast.LENGTH_SHORT).show();
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.setAds((ArrayList<Ad>) customResponse.getBody());
                 }
             }
         });
-
-        getData(page, limit);
 
         binding.nested.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -235,6 +235,22 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
         });
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getData(page, limit);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        model.getAds().removeObservers(requireActivity());
+        model.getIsLoggedOut().removeObservers(requireActivity());
+        model.getLocations().removeObservers(requireActivity());
+        model.getTags().removeObservers(requireActivity());
+        model.getUser().removeObservers(requireActivity());
     }
 
     private void getData(int page, int limit)

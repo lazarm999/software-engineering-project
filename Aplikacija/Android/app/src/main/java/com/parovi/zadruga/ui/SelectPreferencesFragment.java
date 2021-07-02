@@ -20,6 +20,7 @@ import com.parovi.zadruga.databinding.FragmentSelectPreferencesBinding;
 import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.viewModels.AdViewModel;
 import com.parovi.zadruga.viewModels.EditProfileViewModel;
+import com.parovi.zadruga.viewModels.NewAdViewModel;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class SelectPreferencesFragment extends Fragment implements PreferencesAd
                 model = new ViewModelProvider(requireActivity()).get(EditProfileViewModel.class);
         }
         else
-            model = new ViewModelProvider(requireActivity()).get(EditProfileViewModel.class);
+            model = new ViewModelProvider(requireActivity()).get(NewAdViewModel.class);
         binding = FragmentSelectPreferencesBinding.inflate(inflater, container, false);
         PreferencesAdapter adapter = new PreferencesAdapter(this);
         adapter.setSelectedTagIds(model.getNewSelectedTags());

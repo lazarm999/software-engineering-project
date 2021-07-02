@@ -10,12 +10,14 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.R;
 import com.parovi.zadruga.activities.MainEmployerActivity;
 import com.parovi.zadruga.activities.MainStudentActivity;
 import com.parovi.zadruga.adapters.ReportAdapter;
@@ -84,6 +86,17 @@ public class ReportFragment extends Fragment implements ReportAdapter.ReportList
 
     @Override
     public void onUsernameClicked(int userId, boolean isEmployer) {
-
+        Bundle bundle = new Bundle();
+        bundle.putInt("userId", userId);
+        Fragment fragment;
+        if (isEmployer)
+            fragment = new EmployerProfileFragment();
+        else
+            fragment = new StudentProfileFragment();
+        fragment.setArguments(bundle);
+        FragmentManager fm = requireActivity().getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.frame_admin_layout, fragment, null).
+                addToBackStack(null).
+                commit();
     }
 }

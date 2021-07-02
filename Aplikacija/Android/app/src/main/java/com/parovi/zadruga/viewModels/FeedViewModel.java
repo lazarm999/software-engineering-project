@@ -52,7 +52,6 @@ public class FeedViewModel extends AndroidViewModel{
         lookUpRepository.getAllLocations(Utility.getAccessToken(App.getAppContext()), locations);
         lookUpRepository.getAllTags(Utility.getAccessToken(App.getAppContext()), tags);
 
-        loadAdsDefault();
         loadUserInfo();
     }
 

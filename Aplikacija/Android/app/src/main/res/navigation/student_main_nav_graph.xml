@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/student_main_nav_graph"
+    app:startDestination="@id/adsFragment2">
+
+    <fragment
+        android:id="@+id/adsFragment2"
+        android:name="com.parovi.zadruga.fragments.AdsFragment"
+        android:label="fragment_ads_fragment"
+        tools:layout="@layout/fragment_ads_fragment" />
+    <fragment
+        android:id="@+id/notificationsFragment2"
+        android:name="com.parovi.zadruga.fragments.NotificationsFragment"
+        android:label="fragment_notifications_fragment"
+        tools:layout="@layout/fragment_notifications_fragment" />
+    <fragment
+        android:id="@+id/jobHistoryFragment2"
+        android:name="com.parovi.zadruga.fragments.JobHistoryFragment"
+        android:label="fragment_job_history"
+        tools:layout="@layout/fragment_job_history" />
+    <fragment
+        android:id="@+id/recommendationFragment"
+        android:name="com.parovi.zadruga.fragments.RecommendationFragment"
+        android:label="fragment_recommendation_fragment"
+        tools:layout="@layout/fragment_recommendation_fragment" />
+    <action
+        android:id="@+id/action_global_adsFragment2"
+        app:destination="@id/adsFragment2"
+        app:popUpTo="@id/student_main_nav_graph" />
+    <action
+        android:id="@+id/action_global_notificationsFragment2"
+        app:destination="@id/notificationsFragment2"
+        app:popUpTo="@id/student_main_nav_graph" />
+    <action
+        android:id="@+id/action_global_jobHistoryFragment2"
+        app:destination="@id/jobHistoryFragment2"
+        app:popUpTo="@id/student_main_nav_graph" />
+    <action
+        android:id="@+id/action_global_recommendationFragment"
+        app:destination="@id/recommendationFragment"
+        app:popUpTo="@id/student_main_nav_graph" />
+    <fragment
+        android:id="@+id/studentProfileFragment5"
+        android:name="com.parovi.zadruga.fragments.StudentProfileFragment"
+        android:label="fragment_student_profile_fragment"
+        tools:layout="@layout/fragment_student_profile_fragment" >
+        <action
+            android:id="@+id/action_studentProfileFragment_to_ratingFragment"
+            app:destination="@id/ratingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ratingFragment"
+        android:name="com.parovi.zadruga.fragments.RatingFragment"
+        android:label="fragment_rating"
+        tools:layout="@layout/fragment_rating" >
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_studentProfileFragment5"
+        app:destination="@id/studentProfileFragment5"
+        app:popUpTo="@id/student_main_nav_graph" />
+</navigation>

@@ -74,12 +74,7 @@ public class ChatMessagesFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 model.loadChatMembers();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.chat_nav_host_fragment, ChatInfoFragment.class, null)
-                        .addToBackStack(null)
-                        .commit();
+                Navigation.findNavController(binding.getRoot()).navigate(ChatMessagesFragmentDirections.actionChatMessagesFragmentToChatInfoFragment());
                 return true;
                 // ne radi iz nepoznatog razloga
                 //NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment));

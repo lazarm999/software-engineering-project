@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.activities.GradeUserActivity;
 import com.parovi.zadruga.activities.MainActivity;
 import com.parovi.zadruga.activities.UsersAchievementsActivity;
@@ -227,6 +228,16 @@ public class EmployerProfileFragment extends Fragment {
                 model.logOut();
             }
         });
+
+        int userId = -1;
+        if (getArguments() != null) {
+            userId = StudentProfileFragmentArgs.fromBundle(getArguments()).getUserId();
+            if (userId != Utility.getLoggedInUserId(requireContext())) {
+                binding.btnEdit.setVisibility(View.GONE);
+                binding.btnLogOut.setVisibility(View.GONE);
+            }
+        }
+        model.loadUser(userId);
         return binding.getRoot();
     }
 

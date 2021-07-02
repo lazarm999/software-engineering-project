@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parovi.zadruga.R;
@@ -33,45 +35,47 @@ public class MainStudentActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         int fragCode = getIntent().getIntExtra(FRAGMENT_SELECTION, FEED);
-        loadFragment(getFragmentToRun(fragCode));
+        //loadFragment(getFragmentToRun(fragCode));
 
         /*if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 *  && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);*/
 
         bottom_nav = (BottomNavigationView) findViewById(R.id.bottom_nav_student);
-        frame = findViewById(R.id.frame_student_layout);
 
-        bottom_nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
-                switch(item.getItemId()) {
-                    case R.id.studentFeed:
-                        fragment = new AdsFragment();
-                        break;
-                    case R.id.studentNotifications:
-                        fragment = new NotificationsFragment();
-                        break;
-                    case R.id.jobHistory:
-                        fragment = new JobHistoryFragment();
-                        break;
-                    case R.id.studentRecommendations:
-                        fragment = new RecommendationFragment();
-                        break;
-                    default:
-                        fragment = new StudentProfileFragment();
-                        break;
-                }
-                loadFragment(fragment);
-                return true;
+        bottom_nav.setOnNavigationItemSelectedListener(item -> {
+            NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.student_main_nav_host_frag);
+            NavController navController = navHostFragment.getNavController();
+            switch(item.getItemId()) {
+                case R.id.studentFeed:
+                    navController.navigate(R.id.action_global_adsFragment2);
+                    //fragment = new AdsFragment();
+                    break;
+                case R.id.studentNotifications:
+                    navController.navigate(R.id.action_global_notificationsFragment2);
+                    //fragment = new NotificationsFragment();
+                    break;
+                case R.id.jobHistory:
+                    navController.navigate(R.id.action_global_jobHistoryFragment2);
+                    //fragment = new JobHistoryFragment();
+                    break;
+                case R.id.studentRecommendations:
+                    navController.navigate(R.id.action_global_recommendationFragment);
+                    //fragment = new RecommendationFragment();
+                    break;
+                default:
+                    navController.navigate(R.id.action_global_studentProfileFragment5);
+                    //fragment = new StudentProfileFragment();
+                    break;
             }
+            //loadFragment(fragment);
+            return true;
         });
     }
 
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_student_layout, fragment);
+        transaction.replace(R.id.student_main_nav_host_frag, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
