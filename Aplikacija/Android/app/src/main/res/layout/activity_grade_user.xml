@@ -21,11 +21,11 @@
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="250dp"
             android:layout_height="30dp"
-            android:max="5"
-            android:progress="1"
             android:layout_marginLeft="75dp"
             android:layout_marginTop="360dp"
             android:indeterminate="false"
+            android:max="4"
+            android:progress="0"
             android:progressTint="@color/lila"
             android:thumbTint="@color/lilaChip"
             app:tickMarkTint="@color/light_grey" />
@@ -78,7 +78,7 @@
         <EditText
             android:id="@+id/txtComment"
             android:layout_width="200dp"
-            android:layout_height="25dp"
+            android:layout_height="45dp"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:background="@drawable/border_for_inputs"
@@ -88,6 +88,7 @@
             android:hint="@string/commentsGradesPlaceholder"
             android:inputType="textMultiLine"
             android:scrollbars="vertical"
+            android:textCursorDrawable="@color/lila"
             android:verticalScrollbarPosition="right" />
 
     </LinearLayout>
@@ -104,7 +105,7 @@
             android:id="@+id/btnRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="250dp"
+            android:layout_marginLeft="240dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:padding="10dp"
             android:text="@string/ratingStudent"

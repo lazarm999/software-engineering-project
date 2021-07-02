@@ -39,10 +39,12 @@ public class NotificationRepository extends BaseRepository {
         return "";
     }
 
-    public void getNotifications(MutableLiveData<CustomResponse<?>> notifications){
+    public void getNotifications(MutableLiveData<CustomResponse<?>> notifications, boolean refresh){
         String token = Utility.getAccessToken(App.getAppContext());
         Boolean[] isSynced = {false};
-        int pageSkip = getListSize(notifications);
+        int pageSkip;
+        if(refresh) pageSkip = 0;
+        else pageSkip = getListSize(notifications);
         getNotificationsLocal(notifications, isSynced, pageSkip);
         Utility.getExecutorService().execute(() -> {
             try {
@@ -61,14 +63,8 @@ public class NotificationRepository extends BaseRepository {
                         for (Notification notif : notifResponse.body()) {
                             notif.setType(getNotificationType(notif));
                         }
-                        List<Notification> tmpNotificationList;
-                        if(notifications.getValue() != null && notifications.getValue().getBody() != null)
-                            tmpNotificationList = (List<Notification>) notifications.getValue().getBody();
-                        else
-                            tmpNotificationList = new ArrayList<>();
-                        tmpNotificationList.addAll(notifResponse.body());
                         synchronized (isSynced[0]) {
-                            if(pageSkip > 0 && notifications.getValue() != null && notifications.getValue().getBody() != null){
+                            if (pageSkip > 0  && notifications.getValue() != null && notifications.getValue().getBody() != null){
                                 List<Notification> tmpNotifList = (List) notifications.getValue().getBody();
                                 tmpNotifList.addAll(notifResponse.body());
                                 notifications.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpNotifList));
@@ -90,18 +86,17 @@ public class NotificationRepository extends BaseRepository {
 
     private void saveNotificationsLocally(List<Notification> notifications) {
         for (Notification notification: notifications) {
-            saveRatingLocally(notification.getRating());
             if(notification.getAd() != null){
-                saveAdLocally(notification.getAd());
                 notification.setFkAdId(notification.getAd().getAdId());
+                saveAdLocally(notification.getAd());
             }
             if(notification.getComment() != null){
-                saveCommentLocally(notification.getComment());
                 notification.setFkCommentId(notification.getComment().getId());
+                saveCommentLocally(notification.getComment());
             }
             if(notification.getRating() != null){
-                saveRatingLocally(notification.getRating());
                 notification.setFkRatingId(notification.getRating().getRating());
+                saveRatingLocally(notification.getRating());
             }
             DaoFactory.getNotificationDao().insertOrUpdate(notification);
         }

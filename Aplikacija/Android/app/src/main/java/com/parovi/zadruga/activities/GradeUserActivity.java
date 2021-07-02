@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -14,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ActivityGradeUserBinding;
+import com.parovi.zadruga.fragments.StudentProfileFragment;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
 import com.parovi.zadruga.viewModels.AchievementViewModel;
 
@@ -24,11 +24,14 @@ public class GradeUserActivity extends AppCompatActivity {
 
     Animation imageAnim, txtAnim;
     int rating = 0;
+    Integer rateeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grade_user);
+
+        rateeId = getIntent().getIntExtra(StudentProfileFragment.USER_ID, 0);
 
         binding = ActivityGradeUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -41,7 +44,7 @@ public class GradeUserActivity extends AppCompatActivity {
         binding.seekBarGrades.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(progress == 1)
+                if(progress == 0)
                 {
                     binding.txtGrade.setText(R.string.gradeF);
                     binding.imgGrade.setImageResource(R.drawable.ic_f_grade);
@@ -49,7 +52,7 @@ public class GradeUserActivity extends AppCompatActivity {
                     binding.imgGrade.startAnimation(imageAnim);
                     rating = 1;
                 }
-                else if(progress == 2)
+                else if(progress == 1)
                 {
                     binding.txtGrade.setText(R.string.gradeD);
                     binding.imgGrade.setImageResource(R.drawable.ic_d_grade);
@@ -57,7 +60,7 @@ public class GradeUserActivity extends AppCompatActivity {
                     binding.imgGrade.startAnimation(imageAnim);
                     rating = 2;
                 }
-                else if(progress == 3)
+                else if(progress == 2)
                 {
                     binding.txtGrade.setText(R.string.gradeC);
                     binding.imgGrade.setImageResource(R.drawable.ic_c_grade);
@@ -65,7 +68,7 @@ public class GradeUserActivity extends AppCompatActivity {
                     binding.imgGrade.startAnimation(imageAnim);
                     rating = 3;
                 }
-                else if(progress == 4)
+                else if(progress == 3)
                 {
                     binding.txtGrade.setText(R.string.gradeB);
                     binding.imgGrade.setImageResource(R.drawable.ic_b_grade);
@@ -73,7 +76,7 @@ public class GradeUserActivity extends AppCompatActivity {
                     binding.imgGrade.startAnimation(imageAnim);
                     rating = 4;
                 }
-                else if(progress == 5)
+                else if(progress == 4)
                 {
                     binding.txtGrade.setText(R.string.gradeA);
                     binding.imgGrade.setImageResource(R.drawable.ic_a_grade);
@@ -108,11 +111,10 @@ public class GradeUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Rating currRate = new Rating(rating, binding.txtComment.getText().toString());
+                currRate.setFkRateeId(rateeId);
                 model.rateUser(currRate);
-                Toast.makeText(getApplicationContext(), "Successfull grading", Toast.LENGTH_SHORT);
+                binding.btnRating.setVisibility(View.INVISIBLE);
             }
         });
-
-
     }
 }

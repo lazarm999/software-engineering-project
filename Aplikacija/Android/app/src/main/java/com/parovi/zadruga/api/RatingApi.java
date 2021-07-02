@@ -18,7 +18,7 @@ import retrofit2.http.Path;
 public interface RatingApi {
 
     @POST("rate/{id}/")
-    Call<RatingResponse> postRating(@Header("Authorization") String token, @Path("id") int id, @Body Rating rating);
+    Call<RatingResponse> postRating(@Header("Authorization") String token, @Path("id") int rateeId, @Body Rating rating);
 
     @PUT("rate/{id}/")
     Call<RatingResponse> editRating(@Header("Authorization") String token, @Path("id") int id, @Body Rating rating);

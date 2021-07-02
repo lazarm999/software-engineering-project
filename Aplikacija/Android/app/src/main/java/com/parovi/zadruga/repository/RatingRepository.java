@@ -26,13 +26,14 @@ import retrofit2.Response;
 
 public class RatingRepository extends BaseRepository {
     public RatingRepository(){ super(); }
-    // TODO: ne znam sta ce tacno da nam bude response
-    public void postRating(String token, MutableLiveData<CustomResponse<?>> res, Rating rating){
+
+    public void postRating(String token, MutableLiveData<CustomResponse<?>> isRated, Rating rating){
         ApiFactory.getRatingApi().postRating(token, rating.getFkRateeId(), rating).enqueue(new Callback<RatingResponse>() {
             @Override
             public void onResponse(@NotNull Call<RatingResponse> call, @NotNull Response<RatingResponse> response) {
                 if(response.isSuccessful()){
-                    Log.i("postRating", "onResponse: radiiii");
+                    Log.i("postRating", "onResponse:");
+                    isRated.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
                     Utility.getExecutorService().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -44,7 +45,7 @@ public class RatingRepository extends BaseRepository {
 
             @Override
             public void onFailure(@NotNull Call<RatingResponse> call, @NotNull Throwable t) {
-                apiCallOnFailure(t.getMessage(), res);
+                apiCallOnFailure(t.getMessage(), isRated);
             }
         });
     }
@@ -82,12 +83,9 @@ public class RatingRepository extends BaseRepository {
                             ratings.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
                             isSynced[0] = true;
                         }
-                        Utility.getExecutorService().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (RatingResponse r: response.body()) {
-                                    saveRatingLocally(r);
-                                }
+                        Utility.getExecutorService().execute(() -> {
+                            for (RatingResponse r: response.body()) {
+                                saveRatingLocally(r);
                             }
                         });
                     } else {

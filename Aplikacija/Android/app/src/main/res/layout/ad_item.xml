@@ -63,8 +63,8 @@
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                android:scrollbarSize="4dp"
-                android:scrollbars="vertical"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="Description text lorem ipsum dolor sit amet"
                 android:textColor="@color/lila" />
 

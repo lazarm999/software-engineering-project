@@ -4,6 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -13,12 +17,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
-
 import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
@@ -27,9 +25,6 @@ import com.parovi.zadruga.models.entityModels.Faculty;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.viewModels.EditProfileViewModel;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 public class EditBasicProfileInfoFragment extends Fragment {
@@ -99,13 +94,15 @@ public class EditBasicProfileInfoFragment extends Fragment {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
-                    ArrayAdapter<Faculty> adapter = new ArrayAdapter<Faculty>(requireActivity(), android.R.layout.simple_list_item_1, (List<Faculty>)customResponse.getBody());
+                    ArrayAdapter<Faculty> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, (List<Faculty>)customResponse.getBody());
                     binding.spinner.setAdapter(adapter);
                     User user = (User)model.getUserInfo().getValue().getBody();
-                    for (int pos = 0; pos < adapter.getCount(); pos++) {
-                        if (adapter.getItem(pos).getFacultyId() == user.getFaculty().getFacultyId()) {
-                            binding.spinner.setSelection(pos);
-                            break;
+                    if(user.getFaculty() != null){
+                        for (int pos = 0; pos < adapter.getCount(); pos++) {
+                            if (adapter.getItem(pos).getFacultyId() == user.getFaculty().getFacultyId()) {
+                                binding.spinner.setSelection(pos);
+                                break;
+                            }
                         }
                     }
                 }

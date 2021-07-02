@@ -21,10 +21,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="173dp"
+            android:layout_marginEnd="160dp"
             android:layout_toStartOf="@+id/btnEdit"
             android:fontFamily="@font/roboto_condensed_regular"
-            android:text="Log out"
+            android:text="@string/logout"
             android:textColor="@color/lila"
             android:textStyle="bold"
             android:textSize="12sp"
@@ -66,22 +66,20 @@
         <Button
             android:id="@+id/btnEdit"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
+            android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/border_for_inputs"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/editProfile"
             android:textColor="@color/lila"
             android:textSize="12sp"
             app:backgroundTint="@color/background"
-            app:cornerRadius="30dp"
+            app:cornerRadius="20dp"
             app:icon="@drawable/ic_edit_profile"
-            app:iconTint="@color/lila"  />
+            app:iconTint="@color/lila" />
 
         <ImageView
             android:id="@+id/imgProfileBlank"
@@ -144,7 +142,7 @@
         <LinearLayout
             android:id="@+id/profile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="0dp"
@@ -196,7 +194,7 @@
                     android:layout_weight="1"
                     android:padding="10dp"
                     android:scaleType="center"
-                    app:srcCompat="@drawable/l3"/>
+                    app:srcCompat="@drawable/l3" />
 
                 <ImageView
                     android:id="@+id/imgBadge4"
@@ -215,24 +213,6 @@
                     app:srcCompat="@drawable/l5" />
 
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btnAchievements"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="175dp"
-                android:layout_marginTop="320dp"
-                android:layout_marginRight="15dp"
-                android:fontFamily="@font/roboto_condensed_regular"
-                android:text="@string/achievements"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                app:backgroundTint="@color/teal_200"
-                app:cornerRadius="20dp"
-                app:icon="@drawable/ic_achievements"
-                app:iconTint="@color/black"
-                app:rippleColor="@color/lila"
-                tools:ignore="NotSibling" />
 
         </LinearLayout>
 
@@ -270,7 +250,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginLeft="60dp"
             android:layout_marginTop="430dp"
-            android:layout_marginEnd="66dp"
+            android:layout_marginEnd="46dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="0653990854"
             android:textColor="@color/black"
@@ -296,13 +276,13 @@
             android:layout_alignParentEnd="true"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="470dp"
-            android:layout_marginEnd="66dp"
+            android:layout_marginEnd="46dp"
             android:background="@drawable/border_for_inputs"
             android:ems="10"
             android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="start|top"
             android:inputType="textMultiLine|textNoSuggestions"
-            android:padding="1dp"
+            android:padding="4dp"
             android:scrollbars="vertical"
             android:singleLine="false"
             android:text="I am looking for ambitious young people who are ready to work in constructions"
@@ -335,14 +315,14 @@
             android:layout_alignParentEnd="true"
             android:layout_marginLeft="135dp"
             android:layout_marginTop="390dp"
-            android:layout_marginEnd="66dp"
+            android:layout_marginEnd="46dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="Mladost"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/btnAchiev"
+            android:id="@+id/btnAchievements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgProfileBlank"

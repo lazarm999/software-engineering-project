@@ -30,7 +30,7 @@
             app:destination="@id/jobAdInfoFragment"
             app:popUpToInclusive="false" />
         <action
-            android:id="@+id/action_newAdFragment_to_selectPreferencesFragment22"
+            android:id="@+id/action_newAdFragment_to_selectPreferencesFragment2"
             app:destination="@id/selectPreferencesFragment2" />
     </fragment>
     <fragment

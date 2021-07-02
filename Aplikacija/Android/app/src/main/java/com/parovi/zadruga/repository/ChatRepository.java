@@ -36,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChatRepository extends BaseRepository {
+
     public void connectToChatServer(MutableLiveData<CustomResponse<?>> isConnected){
         User u = Utility.getLoggedInUser(App.getAppContext());
         String pass = Utility.getLoggedInUserPassword(App.getAppContext());
@@ -283,14 +283,9 @@ public class ChatRepository extends BaseRepository {
     }
 
     private void saveUserChatLocally(List<User> chatMembers, String dialogId) {
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (User u: chatMembers) {
-                    DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(dialogId, u.getUserQbId()));
-                }
-            }
-        });
+        for (User u: chatMembers) {
+            DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(dialogId, u.getUserQbId()));
+        }
     }
 
     public void getChatMembers(MutableLiveData<CustomResponse<?>> chatMembers, QBChatDialog chat) {
@@ -335,8 +330,13 @@ public class ChatRepository extends BaseRepository {
                         profileImg.observeForever(imageObserver);
                         getProfilePicture(profileImg, userId);
                     }
-                    saveUserLocally(response.body());
-                    saveUserChatLocally(response.body(), chat.getDialogId());
+                    Utility.getExecutorService().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveUserLocally(response.body());
+                            saveUserChatLocally(response.body(), chat.getDialogId());
+                        }
+                    });
                 } else
                     responseNotSuccessful(response.code(), chatMembers);
             }
@@ -376,7 +376,12 @@ public class ChatRepository extends BaseRepository {
                         ad.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
                         isSynced[0] = true;
                     }
-                    saveAdLocally(response.body());
+                    Utility.getExecutorService().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveAdLocally(response.body());
+                        }
+                    });
                 } else
                     responseNotSuccessful(response.code(), ad);
             }
@@ -445,25 +450,6 @@ public class ChatRepository extends BaseRepository {
         });
     }
 
-    //TODO: ovo je samo za testiranje
-    public void updateChat(QBChatDialog chat){
-        /*chat.setName("Držanje časova matematike");
-
-        QBRequestUpdateBuilder requestBuilder = new QBRequestUpdateBuilder();
-
-        QBRestChatService.updateChatDialog(chat, requestBuilder).performAsync(new QBEntityCallback<QBChatDialog>() {
-            @Override
-            public void onSuccess(QBChatDialog updatedDialog, Bundle bundle) {
-                Log.i("sTAG", "onSuccess: ");
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                Log.i("sTAG", "onSuccess: ");
-            }
-        });*/
-    }
-
     public void getMessages(MutableLiveData<CustomResponse<?>> messages, QBChatDialog chat, int messagesSkipped, boolean shouldAppend){
         Boolean[] isSynced = {false};
         getMessagesLocal(messages, chat.getDialogId(), isSynced);
@@ -527,9 +513,5 @@ public class ChatRepository extends BaseRepository {
                 responseNotSuccessful(e.getHttpStatusCode(), chat);
             }
         });
-    }
-    //TODO: je l cemo da brisemo chatove kad bude gotov posa?
-    public void deleteChat(){
-
     }
 }

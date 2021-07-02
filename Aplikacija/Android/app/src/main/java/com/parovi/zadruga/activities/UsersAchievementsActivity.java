@@ -35,7 +35,6 @@ public class UsersAchievementsActivity extends AppCompatActivity implements Achi
 
         ArrayList<RatingResponse> achievements = new ArrayList<>();
 
-
         RecyclerView recView = findViewById(R.id.recyclerViewAchievements);
         recView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 

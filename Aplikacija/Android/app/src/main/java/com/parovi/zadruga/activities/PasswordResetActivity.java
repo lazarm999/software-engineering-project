@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
+import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ActivityPasswordResetBinding;
 import com.parovi.zadruga.viewModels.ChangePasswordViewModel;
 
@@ -41,7 +42,7 @@ public class PasswordResetActivity extends AppCompatActivity {
                 if(binding.txtPassword.getText().toString().equals(binding.txtConfirmPassword.getText().toString()))
                     model.changePass(binding.txtPassword.getText().toString());
                 else
-                    Toast.makeText(App.getAppContext(), "Pogresna lozinka", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(App.getAppContext(), R.string.wrongPass, Toast.LENGTH_SHORT).show();
             }
         });
     }

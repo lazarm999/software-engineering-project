@@ -14,6 +14,6 @@ public abstract class NotificationDao extends BaseDao<Notification> {
             "LEFT JOIN Ad ON Notification.fkAdId = Ad.adId " +
             "LEFT JOIN Comment ON Notification.fkCommentId = Comment.commentId " +
             "LEFT JOIN Rating ON Notification.fkRatingId = Rating.ratingId " +
-            "LIMIT :pageSize OFFSET :pageSkip")
+            "order by Notification.postTime desc LIMIT :pageSize OFFSET :pageSkip")
     public abstract List<Notification> getNotifications(int pageSize, int pageSkip);
 }

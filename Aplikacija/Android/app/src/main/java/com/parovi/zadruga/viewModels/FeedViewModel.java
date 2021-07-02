@@ -19,20 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FeedViewModel extends AndroidViewModel{
-    private final int adId = 32; //4
-    //private final String
-    // token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.Gg7A5swYP1yf3_lPg4OyvMUYv6VNKYtl0L2r8WAhfqA";
-    //private String token =Utility.getAccessToken(App.getAppContext());
-    //private final int userId = 1;
-
     MutableLiveData<CustomResponse<?>> ads;//All ads
     MutableLiveData<CustomResponse<?>> locations;//locations
     MutableLiveData<CustomResponse<?>> tags;//tags
     MutableLiveData<CustomResponse<?>> user;
     MutableLiveData<CustomResponse<?>> isLoggedOut;
-
-    private ArrayList<Location> locs;
-    private ArrayList<Tag> tag;
 
     AdRepository adRepository;
     LookUpRepository lookUpRepository;
@@ -78,23 +69,25 @@ public class FeedViewModel extends AndroidViewModel{
         return tags;
     }
 
-    public void loadAdsDefault() { adRepository.getAds(ads);}
+    public void loadAdsDefault(boolean isRefresh) { adRepository.getAds(ads, isRefresh); }
 
-    public void loadRecommended() { adRepository.getRecommendedAds(ads); }
+    public void loadRecommended() { adRepository.getRecommendedAds(ads, false); }
 
     public void loadUserInfo() { userRepository.getUserById(Utility.getAccessToken(App.getAppContext()), user, Utility.getLoggedInUser(App.getAppContext()).getUserId()); }
 
-    public void sortAds(int locId) { adRepository.getAds(Utility.getAccessToken(App.getAppContext()), ads, locId, null, null, null, true);}
+    public void sortAds() { adRepository.getAds(Utility.getAccessToken(App.getAppContext()), ads,
+            null, null, null, null, true, true);}
 
-    public void sort() { adRepository.getAds(Utility.getAccessToken(App.getAppContext()), ads, null, null, null, null, true);}
-
-    public void filterAds(int locId, int min, int max, List<Integer> tagIds) { adRepository.getAds(Utility.getAccessToken(App.getAppContext()), ads, locId, min, max, tagIds, false); }
+    public void filterAds(Integer locId, Integer min, Integer max, List<Integer> tagIds, boolean sortByLoc, boolean isRefresh) {
+        adRepository.getAds(Utility.getAccessToken(App.getAppContext()), ads, locId, min,
+                max, tagIds, sortByLoc, isRefresh);
+    }
 
     private void loadLocations() { lookUpRepository.getAllLocations(Utility.getAccessToken(App.getAppContext()),locations); }
 
     private void loadTags()  {lookUpRepository.getAllTags(Utility.getAccessToken(App.getAppContext()), tags); }
 
-    public void logOut() { userRepository.logOutUser(isLoggedOut); }
+    public void logOut() { userRepository.logOutUser(isLoggedOut, false); }
 
     public List<String> getAllCities()
     {
@@ -129,7 +122,7 @@ public class FeedViewModel extends AndroidViewModel{
         return id;
     }
 
-    private int getIdByTagName(String locName)
+    public Integer getIdByTagName(String locName)
     {
         int id = -1;
 
@@ -152,7 +145,7 @@ public class FeedViewModel extends AndroidViewModel{
     }
 
     public List<Integer> selectedTags(ArrayList<String> chosen)
-    {
+     {
         List<Integer> tagNames = new ArrayList<>();
         Tag tag;
         for(String str : chosen)

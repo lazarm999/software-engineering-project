@@ -39,6 +39,7 @@ public class User {
     @SerializedName("facultyId")
     private Integer fkFacultyId;
     private int userQbId;
+    private Integer banAdmin;
 
     @Ignore
     private String password;
@@ -247,5 +248,13 @@ public class User {
 
     public void setPreferredTags(List<PreferredTag> preferredTags) {
         this.preferredTags = preferredTags;
+    }
+
+    public Integer getBanAdmin() {
+        return banAdmin;
+    }
+
+    public void setBanAdmin(Integer banAdmin) {
+        this.banAdmin = banAdmin;
     }
 }

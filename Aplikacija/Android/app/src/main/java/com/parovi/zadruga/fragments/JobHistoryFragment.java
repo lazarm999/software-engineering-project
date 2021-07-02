@@ -12,20 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.CustomResponse;
-import com.parovi.zadruga.R;
 import com.parovi.zadruga.adapters.JobHistoryAdapter;
-import com.parovi.zadruga.databinding.FragmentChatMessagesBinding;
 import com.parovi.zadruga.databinding.FragmentJobHistoryBinding;
-import com.parovi.zadruga.items.AdWithStudentRatingItem;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.ui.JobAdActivity;
 import com.parovi.zadruga.viewModels.JobHistoryViewModel;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JobHistoryFragment extends Fragment implements JobHistoryAdapter.JobHistoryListListener {
@@ -59,13 +53,6 @@ public class JobHistoryFragment extends Fragment implements JobHistoryAdapter.Jo
             }
         });
 
-        /*CardView cardAd = (CardView) layout.findViewById(R.id.cardAdItem);
-        cardAd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //pozovi Urosev activity za oglas
-            }
-        });*/
         model.loadJobs();
         return binding.getRoot();
     }

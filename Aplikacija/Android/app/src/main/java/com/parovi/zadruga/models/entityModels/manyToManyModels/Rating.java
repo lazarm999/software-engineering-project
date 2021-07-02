@@ -2,15 +2,10 @@ package com.parovi.zadruga.models.entityModels.manyToManyModels;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.parovi.zadruga.models.entityModels.User;
-
 import java.util.Date;
-
-import static androidx.room.ForeignKey.CASCADE;
 /*(foreignKeys = {@ForeignKey(entity = User.class,
                         parentColumns = "userId",
                         childColumns = "fkRaterId",

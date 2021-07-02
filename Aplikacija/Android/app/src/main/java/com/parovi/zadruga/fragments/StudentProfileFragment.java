@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -29,7 +28,6 @@ import com.parovi.zadruga.databinding.FragmentStudentProfileFragmentBinding;
 import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.repository.UserRepository;
-import com.parovi.zadruga.ui.EditBasicProfileInfoFragment;
 import com.parovi.zadruga.ui.EditProfileActivity;
 import com.parovi.zadruga.viewModels.StudentProfileViewModel;
 
@@ -57,10 +55,11 @@ public class StudentProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentStudentProfileFragmentBinding.inflate(inflater, container, false);
 
-        binding.btnRating.setVisibility(View.GONE);
-        binding.btnBanUser.setVisibility(View.GONE);
+        binding.btnRating.setVisibility(View.INVISIBLE);
+        binding.btnBanUser.setVisibility(View.INVISIBLE);
+        binding.btnLogOut.setVisibility(View.VISIBLE);
+        binding.btnEdit.setVisibility(View.VISIBLE);
 
-        //userRepository.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
         model = new ViewModelProvider(requireActivity()).get(StudentProfileViewModel.class);
 
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -75,10 +74,12 @@ public class StudentProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), GradeUserActivity.class);
+                intent.putExtra(USER_ID, id);
                 startActivity(intent);
             }
         });
 
+        //TODO navigacija za ocene
         binding.btnAchievements.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceType")
             @Override
@@ -136,7 +137,7 @@ public class StudentProfileFragment extends Fragment {
                 final TextView etText = new TextView(requireActivity());
                 etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 etText.setTextSize(16);
-                etText.setText(model.getBadgeDesc(1));
+                etText.setText(model.getBadgeDesc(0));
                 dialog.setTitle(etText.getText().toString());
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -148,7 +149,6 @@ public class StudentProfileFragment extends Fragment {
                 dialog.show();
             }
         });
-
         binding.imgBadge2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,7 +239,7 @@ public class StudentProfileFragment extends Fragment {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
-                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    Intent intent = new Intent(requireActivity(), MainActivity.class);
                     startActivity(intent);
                 }
             }
@@ -276,11 +276,21 @@ public class StudentProfileFragment extends Fragment {
         binding.editTextUsername.setText(user.getUsername());
         binding.txtMultilineEditBio.setText(user.getBio());
 
-        if (Utility.getLoggedInUser(App.getAppContext()).isEmployer())
-            updateViewEmployer();
+        if(user.getUserId() != Utility.getLoggedInUserId(App.getAppContext())){
+            if(Utility.getLoggedInUser(App.getAppContext()).isAdmin())
+                updateViewAdmin(user.getBanAdmin() != null);
+            else if (Utility.getLoggedInUser(App.getAppContext()).isEmployer())
+                updateViewEmployer();
+            else if (!Utility.getLoggedInUser(App.getAppContext()).isEmployer())
+                updateViewStudent();
+        }
+    }
 
-        else if(Utility.getLoggedInUser(App.getAppContext()).isAdmin())
-            updateViewAdmin();
+    private void updateViewStudent() {
+        binding.btnRating.setVisibility(View.INVISIBLE);
+        binding.btnEdit.setVisibility(View.GONE);
+        binding.btnLogOut.setVisibility(View.GONE);
+        binding.btnBanUser.setVisibility(View.INVISIBLE);
     }
 
     private void updateViewEmployer()
@@ -288,15 +298,19 @@ public class StudentProfileFragment extends Fragment {
         binding.btnRating.setVisibility(View.VISIBLE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
-        binding.btnBanUser.setVisibility(View.GONE);
+        binding.btnBanUser.setVisibility(View.INVISIBLE);
     }
 
-    @SuppressLint("ResourceAsColor")
-    private void updateViewAdmin()
+    private void updateViewAdmin(boolean isUserBanned)
     {
         binding.btnRating.setVisibility(View.GONE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
         binding.btnBanUser.setVisibility(View.VISIBLE);
+        if(isUserBanned) {
+            binding.btnBanUser.setText(R.string.alreadyBanned);
+            binding.btnBanUser.setEnabled(false);
+        }
+
     }
 }

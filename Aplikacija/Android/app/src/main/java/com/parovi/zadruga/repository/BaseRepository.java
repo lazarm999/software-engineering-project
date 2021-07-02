@@ -69,50 +69,40 @@ public abstract class BaseRepository {
 
     protected void saveAdsLocally(List<Ad> ads){
         if(ads == null) return;
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (Ad a: ads) {
-                    if(a.getLocation() != null)
-                        a.setFkLocationId(a.getLocation().getLocId());
-                    a.setFkEmployerId(a.getEmployer().getUserId());
-                    
-                    DaoFactory.getLocationDao().insertOrUpdate(a.getLocation());
-                    DaoFactory.getTagDao().insertOrUpdate(a.getTags());
+        for (Ad a: ads) {
+            if(a.getLocation() != null)
+                a.setFkLocationId(a.getLocation().getLocId());
+            a.setFkEmployerId(a.getEmployer().getUserId());
 
-                    DaoFactory.getUserDao().insertOrUpdate(a.getEmployer());
-                    DaoFactory.getAdDao().insertOrUpdate(a);
-                    if(a.getTags() != null) {
-                        for (Tag tag : a.getTags()) {
-                            DaoFactory.getAdTagDao().insertOrUpdate(new AdTag(a.getAdId(), tag.getTagId()));
-                        }
-                    }
+            DaoFactory.getLocationDao().insertOrUpdate(a.getLocation());
+            DaoFactory.getTagDao().insertOrUpdate(a.getTags());
+
+            DaoFactory.getUserDao().insertOrUpdate(a.getEmployer());
+            DaoFactory.getAdDao().insertOrUpdate(a);
+            if(a.getTags() != null) {
+                for (Tag tag : a.getTags()) {
+                    DaoFactory.getAdTagDao().insertOrUpdate(new AdTag(a.getAdId(), tag.getTagId()));
                 }
             }
-        });
+        }
     }
 
     protected void saveAdLocally(Ad ad){
         if(ad == null) return;
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                if(ad.getLocation() != null)
-                    ad.setFkLocationId(ad.getLocation().getLocId());
-                ad.setFkEmployerId(ad.getEmployer().getUserId());
+        if(ad.getLocation() != null)
+            ad.setFkLocationId(ad.getLocation().getLocId());
+        ad.setFkEmployerId(ad.getEmployer().getUserId());
 
-                DaoFactory.getLocationDao().insertOrUpdate(ad.getLocation());
-                DaoFactory.getTagDao().insertOrUpdate(ad.getTags());
+        DaoFactory.getLocationDao().insertOrUpdate(ad.getLocation());
+        DaoFactory.getTagDao().insertOrUpdate(ad.getTags());
 
-                DaoFactory.getUserDao().insertOrUpdate(ad.getEmployer());
-                DaoFactory.getAdDao().insertOrUpdate(ad);
-                if(ad.getTags() != null){
-                    for (Tag tag: ad.getTags()) {
-                        DaoFactory.getAdTagDao().insertOrUpdate(new AdTag(ad.getAdId(), tag.getTagId()));
-                    }
-                }
+        DaoFactory.getUserDao().insertOrUpdate(ad.getEmployer());
+        DaoFactory.getAdDao().insertOrUpdate(ad);
+        if(ad.getTags() != null){
+            for (Tag tag: ad.getTags()) {
+                DaoFactory.getAdTagDao().insertOrUpdate(new AdTag(ad.getAdId(), tag.getTagId()));
             }
-        });
+        }
     }
 
     protected void saveRatingLocally(RatingResponse r){
@@ -137,17 +127,11 @@ public abstract class BaseRepository {
     protected void saveCommentLocally(CommentResponse commentResponse) {
         if(commentResponse == null) return;
         Comment tmpLocalComment = commentResponseToComment(commentResponse);
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                DaoFactory.getUserDao().insertOrUpdate(commentResponse.getUser());
-                DaoFactory.getCommentDao().insert(tmpLocalComment);
-                for (Integer index : commentResponse.getTaggedIndices()) {
-                    DaoFactory.getTaggedDao().insertOrUpdate(new Tagged(commentResponse.getId(), index));
-
-                }
-            }
-        });
+        DaoFactory.getUserDao().insertOrUpdate(commentResponse.getUser());
+        DaoFactory.getCommentDao().insert(tmpLocalComment);
+        for (Integer index : commentResponse.getTaggedIndices()) {
+            DaoFactory.getTaggedDao().insertOrUpdate(new Tagged(commentResponse.getId(), index));
+        }
     }
 
     protected Ad adWithTagsToAd(AdWithTags adWithTags){
@@ -161,54 +145,44 @@ public abstract class BaseRepository {
 
     protected void saveUserLocally(User remoteUser){
         if(remoteUser == null) return;
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                if(remoteUser.getFaculty() != null){
-                    remoteUser.setFkFacultyId(remoteUser.getFaculty().getFacultyId());
-                    remoteUser.getFaculty().setFkUniversityId(remoteUser.getFaculty().getUniversity().getUniversityId());
-                    if (remoteUser.getFaculty().getUniversity() != null)
-                        DaoFactory.getUniversityDao().insertOrUpdate(remoteUser.getFaculty().getUniversity());
-                    DaoFactory.getFacultyDao().insertOrUpdate(remoteUser.getFaculty());
-                }
-                DaoFactory.getUserDao().insertOrUpdate(remoteUser);
-                if(remoteUser.getBadges() != null) {
-                    DaoFactory.getBadgeDao().insertOrUpdate(remoteUser.getBadges());
-                    List<UserBadge> tmpUserBadge = new ArrayList<>();
-                    for (Badge b : remoteUser.getBadges()) {
-                        tmpUserBadge.add(new UserBadge(remoteUser.getUserId(), b.getBadgeId()));
-                    }
-                    DaoFactory.getUserBadgeDao().insertOrUpdate(tmpUserBadge);
-                }
+        if(remoteUser.getFaculty() != null){
+            remoteUser.setFkFacultyId(remoteUser.getFaculty().getFacultyId());
+            remoteUser.getFaculty().setFkUniversityId(remoteUser.getFaculty().getUniversity().getUniversityId());
+            if (remoteUser.getFaculty().getUniversity() != null)
+                DaoFactory.getUniversityDao().insertOrUpdate(remoteUser.getFaculty().getUniversity());
+            DaoFactory.getFacultyDao().insertOrUpdate(remoteUser.getFaculty());
+        }
+        DaoFactory.getUserDao().insertOrUpdate(remoteUser);
+        if(remoteUser.getBadges() != null) {
+            DaoFactory.getBadgeDao().insertOrUpdate(remoteUser.getBadges());
+            List<UserBadge> tmpUserBadge = new ArrayList<>();
+            for (Badge b : remoteUser.getBadges()) {
+                tmpUserBadge.add(new UserBadge(remoteUser.getUserId(), b.getBadgeId()));
             }
-        });
+            DaoFactory.getUserBadgeDao().insertOrUpdate(tmpUserBadge);
+        }
     }
 
     protected void saveUserLocally(List<User> remoteUsers){
         if(remoteUsers == null) return;
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (User remoteUser: remoteUsers) {
-                    if(remoteUser.getFaculty() != null){
-                        remoteUser.setFkFacultyId(remoteUser.getFaculty().getFacultyId());
-                        remoteUser.getFaculty().setFkUniversityId(remoteUser.getFaculty().getUniversity().getUniversityId());
-                        if (remoteUser.getFaculty().getUniversity() != null)
-                            DaoFactory.getUniversityDao().insertOrUpdate(remoteUser.getFaculty().getUniversity());
-                        DaoFactory.getFacultyDao().insertOrUpdate(remoteUser.getFaculty());
-                    }
-                    DaoFactory.getUserDao().insertOrUpdate(remoteUser);
-                    if(remoteUser.getBadges() != null) {
-                        DaoFactory.getBadgeDao().insertOrUpdate(remoteUser.getBadges());
-                        List<UserBadge> tmpUserBadge = new ArrayList<>();
-                        for (Badge b : remoteUser.getBadges()) {
-                            tmpUserBadge.add(new UserBadge(remoteUser.getUserId(), b.getBadgeId()));
-                        }
-                        DaoFactory.getUserBadgeDao().insertOrUpdate(tmpUserBadge);
-                    }
-                }
+        for (User remoteUser: remoteUsers) {
+            if(remoteUser.getFaculty() != null){
+                remoteUser.setFkFacultyId(remoteUser.getFaculty().getFacultyId());
+                remoteUser.getFaculty().setFkUniversityId(remoteUser.getFaculty().getUniversity().getUniversityId());
+                if (remoteUser.getFaculty().getUniversity() != null)
+                    DaoFactory.getUniversityDao().insertOrUpdate(remoteUser.getFaculty().getUniversity());
+                DaoFactory.getFacultyDao().insertOrUpdate(remoteUser.getFaculty());
             }
-        });
+            DaoFactory.getUserDao().insertOrUpdate(remoteUser);
+            if(remoteUser.getBadges() != null) {
+                DaoFactory.getBadgeDao().insertOrUpdate(remoteUser.getBadges());
+                List<UserBadge> tmpUserBadge = new ArrayList<>();
+                for (Badge b : remoteUser.getBadges()) {
+                    tmpUserBadge.add(new UserBadge(remoteUser.getUserId(), b.getBadgeId()));
+                }
+                DaoFactory.getUserBadgeDao().insertOrUpdate(tmpUserBadge);
+            }
+        }
     }
 
     protected void getProfilePicture(MutableLiveData<CustomResponse<?>> profilePicture, int userId){
@@ -264,17 +238,11 @@ public abstract class BaseRepository {
 
     protected void saveChatLocally(Chat chat){
         if(chat == null) return;
-        Utility.getExecutorService().execute(new Runnable() {
-            @Override
-            public void run() {
-
-                DaoFactory.getChatDao().insertOrUpdate(chat);
-                DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(chat.getChatId(), Utility.getLoggedInUserQbId(App.getAppContext())));
-                /*for (Integer id: qbChat.getOccupants()) {
-                    DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(qbChat.getDialogId(), id));
-                }*/
-            }
-        });
+        DaoFactory.getChatDao().insertOrUpdate(chat);
+        DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(chat.getChatId(), Utility.getLoggedInUserQbId(App.getAppContext())));
+        /*for (Integer id: qbChat.getOccupants()) {
+            DaoFactory.getUserChatDao().insertOrUpdate(new UserChat(qbChat.getDialogId(), id));
+        }*/
     }
 
     protected Chat qbChatToChat(QBChatDialog qbChat){
@@ -290,7 +258,7 @@ public abstract class BaseRepository {
         return chat;
     }
     
-    public void createChat(MutableLiveData<CustomResponse<?>> newChatId, List<Integer> memberIds, int adId){
+    public void createChat(MutableLiveData<CustomResponse<?>> newChatId, List<Integer> memberIds){
         if(memberIds.size() < 2){
             newChatId.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, null, "Chat morati imati najmanje 2 clana"));
             return;
@@ -310,7 +278,7 @@ public abstract class BaseRepository {
         QBRestChatService.createChatDialog(dialog).performAsync(new QBEntityCallback<QBChatDialog>() {
             @Override
             public void onSuccess(QBChatDialog result, Bundle params) {
-                saveChatLocally(qbChatToChat(result));
+                Utility.getExecutorService().execute(() -> saveChatLocally(qbChatToChat(result)));
                 newChatId.postValue(new CustomResponse<>(CustomResponse.Status.OK, result.getDialogId()));
             }
 
@@ -370,23 +338,17 @@ public abstract class BaseRepository {
         return directory.getAbsolutePath();
     }
 
-    public void logOutUser(MutableLiveData<CustomResponse<?>> isLoggedOut){
+    public void logOutUser(MutableLiveData<CustomResponse<?>> isLoggedOut, boolean isBanned){
         Utility.getExecutorService().execute(() -> {
             try {
                 QBUsers.signOut().perform();
                 String fcmToken;
-                if((fcmToken = Utility.getFcmToken(App.getAppContext())) != null){
+                if(!isBanned && (fcmToken = Utility.getFcmToken(App.getAppContext())) != null) {
                     Response<ResponseBody> deleteTokenRes = ApiFactory.getUserApi().deleteFcmToken(Utility.getAccessToken(App.getAppContext()),
                             fcmToken).execute();
-                    if(deleteTokenRes.isSuccessful()){
-                        isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
-                        Utility.removeLoggedUserInfo(App.getAppContext());
-                    } else
-                        responseNotSuccessful(deleteTokenRes.code(), isLoggedOut);
-                } else {
-                    isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
-                    Utility.removeLoggedUserInfo(App.getAppContext());
                 }
+                isLoggedOut.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                Utility.removeLoggedUserInfo(App.getAppContext());
             } catch (QBResponseException e) {
                 e.printStackTrace();
                 responseNotSuccessful(e.getHttpStatusCode(), isLoggedOut);
@@ -398,6 +360,7 @@ public abstract class BaseRepository {
     }
 
     protected void responseNotSuccessful(int code, MutableLiveData<CustomResponse<?>> res){
+        CustomResponse<?> tmp = res.getValue();
         if (code / 100 == 4){
             if(code == 408){
                 MutableLiveData<CustomResponse<?>> isLoggedOut = new MutableLiveData<>();
@@ -413,9 +376,16 @@ public abstract class BaseRepository {
                     }
                 };
                 isLoggedOut.observeForever(observer);
-                logOutUser(isLoggedOut);
-            } else {
-                CustomResponse<?> tmp = res.getValue();
+                logOutUser(isLoggedOut, true);
+            } else if (code == 404){
+                if(tmp != null){
+                    tmp.setMessage("Ne postoji trazeni resurs.");
+                    res.postValue(tmp);
+                }
+                else
+                    res.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, "Ne postoji trazeni resurs.", false));
+            }
+            else {
                 if(tmp != null){
                     tmp.setMessage("Pogresno uneti podaci.");
                     res.postValue(tmp);
@@ -424,7 +394,6 @@ public abstract class BaseRepository {
                     res.postValue(new CustomResponse<>(CustomResponse.Status.BAD_REQUEST, "Pogresno uneti podaci.", false));
             }
         } else if (code / 100 == 5){
-            CustomResponse<?> tmp = res.getValue();
             if(tmp != null){
                 tmp.setMessage("Greska kod servera.");
                 res.postValue(tmp);

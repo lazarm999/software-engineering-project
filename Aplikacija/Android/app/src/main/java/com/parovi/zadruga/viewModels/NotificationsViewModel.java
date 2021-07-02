@@ -20,17 +20,19 @@ public class NotificationsViewModel extends AndroidViewModel {
         notificationRepository = new NotificationRepository();
         notifications = new MutableLiveData<>();
         isNotified = new MutableLiveData<>();
-        loadNotifications();
+        //loadNotifications();
     }
 
     public MutableLiveData<CustomResponse<?>> getIsNotified(){
-        if(isNotified == null)
-            isNotified = new MutableLiveData<CustomResponse<?>>();
         return isNotified;
     }
 
-    private void loadNotifications() {
-       notificationRepository.getNotifications(notifications);
+    public void loadNotifications() {
+       notificationRepository.getNotifications(notifications, false);
+    }
+
+    public void loadNotificationsRefresh() {
+        notificationRepository.getNotifications(notifications, true);
     }
 
     public  MutableLiveData<CustomResponse<?>> getNotifications() {

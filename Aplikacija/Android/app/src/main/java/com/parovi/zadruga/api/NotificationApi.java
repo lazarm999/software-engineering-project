@@ -14,7 +14,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface NotificationApi {
-    @GET("chatNotification/")
+    @POST("chatNotification/")
     Call<ResponseBody> sendChatNotification(@Header("Authorization") String token, @Body ChatNotification notification);
 
     @GET("notifications/")

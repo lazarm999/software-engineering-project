@@ -50,9 +50,11 @@
         android:label="fragment_employer_profile"
         tools:layout="@layout/fragment_employer_profile" />
     <action android:id="@+id/action_global_employerProfileFragment3" app:destination="@id/employerProfileFragment3" />
+
     <fragment
         android:id="@+id/selectPreferencesFragment3"
         android:name="com.parovi.zadruga.ui.SelectPreferencesFragment"
         android:label="fragment_select_preferences"
         tools:layout="@layout/fragment_select_preferences" />
+
 </navigation>

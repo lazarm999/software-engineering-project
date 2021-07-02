@@ -1,23 +1,19 @@
 package com.parovi.zadruga.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.fragments.AdsFragment;
-import com.parovi.zadruga.fragments.JobHistoryFragment;
-import com.parovi.zadruga.fragments.NotificationsFragment;
-import com.parovi.zadruga.fragments.RecommendationFragment;
 import com.parovi.zadruga.fragments.ReportFragment;
-import com.parovi.zadruga.fragments.StudentProfileFragment;
 
 public class AdminActivity extends AppCompatActivity {
     public static final String FRAGMENT_SELECTION = "FragSel";
@@ -45,11 +41,8 @@ public class AdminActivity extends AppCompatActivity {
                     case R.id.adminFeed:
                         fragment = new AdsFragment();
                         break;
-                    case R.id.adminReports:
-                        fragment = new ReportFragment();
-                        break;
                     default:
-                        fragment = new AdsFragment();
+                        fragment = new ReportFragment();
                         break;
                 }
                 loadFragment(fragment);

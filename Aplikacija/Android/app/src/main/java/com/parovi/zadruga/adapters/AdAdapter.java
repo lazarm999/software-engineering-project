@@ -21,18 +21,20 @@ import java.util.List;
 public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
 
     private List<Ad> adList;
-
     private AdListListener fragment;
+    private boolean isFilteredSorted;
 
     public AdAdapter(AdListListener fragment) {
         super();
         adList = new ArrayList<Ad>();
         this.fragment = fragment;
+        this.isFilteredSorted = false;
     }
 
     public void setAds(List<Ad> ads)
     {
-        this.adList = ads;
+        adList.clear();
+        adList.addAll(ads);
         notifyDataSetChanged();
     }
 
@@ -59,6 +61,14 @@ public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
     @Override
     public int getItemCount() {
         return adList.size();
+    }
+
+    public boolean isFilteredSorted() {
+        return isFilteredSorted;
+    }
+
+    public void setFilteredSorted(boolean filteredSorted) {
+        isFilteredSorted = filteredSorted;
     }
 
     public class AdViewHolder extends RecyclerView.ViewHolder {

@@ -16,13 +16,14 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.activities.GradeUserActivity;
 import com.parovi.zadruga.activities.MainActivity;
-import com.parovi.zadruga.activities.UsersAchievementsActivity;
 import com.parovi.zadruga.databinding.FragmentEmployerProfileBinding;
 import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.User;
@@ -48,11 +49,12 @@ public class EmployerProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentEmployerProfileBinding.inflate(inflater, container, false);
-        //userRepository.loginUser(new MutableLiveData<>(), "vuk@gmail.com", "novasifra");
         model = new ViewModelProvider(requireActivity()).get(EmployerProfileViewModel.class);
 
-        binding.btnRating.setVisibility(View.GONE);
-        binding.btnBanUser.setVisibility(View.GONE);
+        binding.btnRating.setVisibility(View.INVISIBLE);
+        binding.btnBanUser.setVisibility(View.INVISIBLE);
+        binding.btnLogOut.setVisibility(View.VISIBLE);
+        binding.btnEdit.setVisibility(View.VISIBLE);
 
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,17 +67,33 @@ public class EmployerProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), GradeUserActivity.class);
+                intent.putExtra(StudentProfileFragment.USER_ID, u.getUserId());
                 startActivity(intent);
             }
         });
 
-        binding.btnAchiev.setOnClickListener(new View.OnClickListener() {
+        binding.btnAchievements.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), UsersAchievementsActivity.class);
-                startActivity(intent);
+                StudentProfileFragmentDirections.ActionStudentProfileFragmentToRatingFragment action = StudentProfileFragmentDirections.actionStudentProfileFragmentToRatingFragment();
+                action.setUserId(model.getId());
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+                /*FragmentTransaction fr = requireActivity().getSupportFragmentManager().beginTransaction();
+                fr.replace(R.id.profileFrame, RatingFragment.class, null);
+                fr.addToBackStack(null);
+                fr.commit();*/
+                //Navigation.findNavController(binding.getRoot()).navigate(StudentProfileFragmentDirections.actionStudentProfileFragment2ToRatingFragment());
             }
         });
+
+//        binding.btnAchiev.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getContext(), UsersAchievementsActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         model.getUser().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
@@ -84,7 +102,6 @@ public class EmployerProfileFragment extends Fragment {
                     populateViews((User)customResponse.getBody());
                     u = ((User) customResponse.getBody());
                     int[] arrayLock = new int[]{R.drawable.b1, R.drawable.b2, R.drawable.b3, R.drawable.b6, R.drawable.b7};
-
                     if(u.getBadges() != null){
                         List<Badge> badges = u.getBadges();
                         for (int i = 0; i < badges.size(); i++) {
@@ -252,12 +269,21 @@ public class EmployerProfileFragment extends Fragment {
         binding.txtCompany.setText(user.getCompanyName());
         binding.txtMultilineEditBio.setText(user.getBio());
 
-        if(user.isAdmin())
-            updateViewAdmin();
+        if(user.getUserId() != Utility.getLoggedInUserId(App.getAppContext())) {
+            if (Utility.getLoggedInUser(App.getAppContext()).isAdmin())
+                updateViewAdmin(user.getBanAdmin() != null);
+            else if (!Utility.getLoggedInUser(App.getAppContext()).isEmployer())
+                updateViewStudent();
+            else if (!Utility.getLoggedInUser(App.getAppContext()).isEmployer())
+                updateViewEmployer();
+        }
+    }
 
-        if (!user.isEmployer())
-            updateViewStudent();
-
+    private void updateViewEmployer() {
+        binding.btnRating.setVisibility(View.INVISIBLE);
+        binding.btnEdit.setVisibility(View.GONE);
+        binding.btnLogOut.setVisibility(View.GONE);
+        binding.btnBanUser.setVisibility(View.INVISIBLE);
     }
 
     private void updateViewStudent()
@@ -265,15 +291,20 @@ public class EmployerProfileFragment extends Fragment {
         binding.btnRating.setVisibility(View.VISIBLE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
-        binding.btnBanUser.setVisibility(View.GONE);
+        binding.btnBanUser.setVisibility(View.INVISIBLE);
     }
 
     @SuppressLint("ResourceAsColor")
-    private void updateViewAdmin()
+    private void updateViewAdmin(boolean isUserBanned)
     {
         binding.btnRating.setVisibility(View.GONE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
         binding.btnBanUser.setVisibility(View.VISIBLE);
+        if(isUserBanned) {
+            binding.btnBanUser.setClickable(false);
+            binding.btnBanUser.setBackgroundColor(R.color.grey);
+            binding.btnBanUser.setText(R.string.alreadyBanned);
+        }
     }
 }

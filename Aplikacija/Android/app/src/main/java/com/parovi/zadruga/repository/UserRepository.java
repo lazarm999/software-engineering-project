@@ -29,7 +29,6 @@ import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.entityModels.manyToManyModels.Applied;
 import com.parovi.zadruga.models.nonEntityModels.UserWithFaculty;
 import com.parovi.zadruga.models.requestModels.AddFcmTokenRequest;
-import com.parovi.zadruga.models.requestModels.BanRequest;
 import com.parovi.zadruga.models.requestModels.ChangePasswordRequest;
 import com.parovi.zadruga.models.requestModels.LoginRequest;
 import com.parovi.zadruga.models.requestModels.ReportRequest;
@@ -164,7 +163,7 @@ public class UserRepository extends BaseRepository {
                                                     Log.i("postFcmToken", t.getMessage());
                                                 }
                                             });
-                                    saveUserLocally(loggedInUser);
+                                    Utility.getExecutorService().execute(()->saveUserLocally(loggedInUser));
                                 }
                             });
                         }
@@ -228,11 +227,6 @@ public class UserRepository extends BaseRepository {
             @Override
             public void onResponse(@NotNull Call<User> call, @NotNull Response<User> response) {
                 if(response.isSuccessful() && response.body() != null){
-                    User tmpUser = response.body();
-                    synchronized (isSynced[0]){
-                        user.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
-                        isSynced[0] = true;
-                    }
                     Utility.getExecutorService().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -363,11 +357,6 @@ public class UserRepository extends BaseRepository {
             }
         });
     }
-
-    public void logOutUser(MutableLiveData<CustomResponse<?>> isLoggedOut){
-        super.logOutUser(isLoggedOut);
-    }
-
     public void getProfilePictureLocal(MutableLiveData<CustomResponse<?>> profilePicture, int userId, Boolean[] isSynced){
         if(App.getAppContext() == null){
             return;
@@ -458,16 +447,13 @@ public class UserRepository extends BaseRepository {
     }
 
     private void updateApplied(List<Ad> finishedJobs){
-        Utility.getExecutorService().execute(() -> {
-            int id = Utility.getLoggedInUserId(App.getAppContext());
-            for (Ad ad : finishedJobs){
-                DaoFactory.getAppliedDao().insertOrUpdate(new Applied(id, ad.getAdId(), true));
-            }
-        });
+        int id = Utility.getLoggedInUserId(App.getAppContext());
+        for (Ad ad : finishedJobs){
+            DaoFactory.getAppliedDao().insertOrUpdate(new Applied(id, ad.getAdId(), true));
+        }
     }
 
     public void getFinishedJobsByUserId(MutableLiveData<CustomResponse<?>> finishedJobs){
-        /* adId, adTitle, postTime, ocena*/
         Boolean[] isSynced = new Boolean[]{ false };
         getFinishedJobsByUserIdLocal(finishedJobs, isSynced);
         ApiFactory.getUserApi().getUserAds(Utility.getAccessToken(App.getAppContext()), Utility.getLoggedInUserId(App.getAppContext()))
@@ -478,8 +464,10 @@ public class UserRepository extends BaseRepository {
                     synchronized (isSynced[0]){
                         finishedJobs.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
                         isSynced[0] = true;
-                        saveAdsLocally(response.body());
-                        updateApplied(response.body());
+                        Utility.getExecutorService().execute(() -> {
+                            saveAdsLocally(response.body());
+                            updateApplied(response.body());
+                        });
                     }
                 } else
                     responseNotSuccessful(response.code(), finishedJobs);
@@ -515,7 +503,7 @@ public class UserRepository extends BaseRepository {
                     synchronized (isSynced[0]){
                         postedAds.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
                         isSynced[0] = true;
-                        saveAdsLocally(response.body());
+                        Utility.getExecutorService().execute(() -> saveAdsLocally(response.body()));
                     }
                 } else
                     responseNotSuccessful(response.code(), postedAds);

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -13,6 +12,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.activities.UsersAchievementsActivity;
@@ -33,10 +33,6 @@ public class NotificationsFragment extends Fragment implements  NotificationsAda
     NotificationsViewModel model;
     FragmentNotificationsFragmentBinding binding;
     private ArrayList<Notification> notificationList;
-
-    int page = 0;
-    int limit = 10;
-
     public NotificationsFragment() {
         // Required empty public constructor
     }
@@ -67,29 +63,30 @@ public class NotificationsFragment extends Fragment implements  NotificationsAda
         model.getNotifications().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                if (customResponse.getStatus() == CustomResponse.Status.TAGS_NOT_CHOSEN) {
-                    binding.progressBarNotif.setVisibility(View.GONE);
-                }
-                if (customResponse.getStatus() == CustomResponse.Status.NO_MORE_DATA) {
-                    binding.progressBarNotif.setVisibility(View.GONE);
-                    Toast.makeText(requireActivity(), "That's all the data..", Toast.LENGTH_SHORT).show();
-                }
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.setNotificationList((ArrayList<Notification>) customResponse.getBody());
+
                 }
+                binding.progressBarNotif.setVisibility(View.GONE);
             }
         });
 
-        getData(page, limit);
+        binding.refreshNotif.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                model.loadNotificationsRefresh();
+                binding.refreshNotif.setRefreshing(false);
+            }
+        });
+
+        model.loadNotifications();
 
         binding.nestedNotif.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
                 if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    page++;
+                    model.loadNotifications();
                     binding.progressBarNotif.setVisibility(View.VISIBLE);
-                    getData(page, limit);
                 }
             }
         });
@@ -117,13 +114,5 @@ public class NotificationsFragment extends Fragment implements  NotificationsAda
             intent.putExtra(JobAdActivity.AD_ID, notification.getComment().getAd());
             startActivity(intent);
         }
-    }
-
-    private void getData(int page, int limit)
-    {
-        if (page < limit) { binding.progressBarNotif.setVisibility(View.GONE);
-            return;
-        }
-        model.getNotifications();
     }
 }

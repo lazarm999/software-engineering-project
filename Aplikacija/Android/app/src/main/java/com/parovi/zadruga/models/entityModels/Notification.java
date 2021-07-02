@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.models.responseModels.RatingResponse;
 
+import java.util.Date;
+
 @Entity
 public class Notification
 {
@@ -21,7 +23,7 @@ public class Notification
     private Integer fkRatingId;
     private Boolean accepted;
     private Boolean tagged; //da li je tagovan ili je on objavio oglas pa je zbog toga dobio notif
-
+    private Date postTime;
     @Ignore
     private String type;
     @Ignore
@@ -112,5 +114,13 @@ public class Notification
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Date getPostTime() {
+        return postTime;
+    }
+
+    public void setPostTime(Date postTime) {
+        this.postTime = postTime;
     }
 }

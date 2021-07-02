@@ -1,19 +1,13 @@
 package com.parovi.zadruga.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -27,14 +21,12 @@ import com.parovi.zadruga.databinding.FragmentNewAdBinding;
 import com.parovi.zadruga.models.entityModels.Ad;
 import com.parovi.zadruga.models.entityModels.Location;
 import com.parovi.zadruga.models.entityModels.PreferredTag;
-import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.requestModels.EditAdRequest;
 import com.parovi.zadruga.models.requestModels.PostAdRequest;
 import com.parovi.zadruga.viewModels.AdViewModel;
 import com.parovi.zadruga.viewModels.NewAdViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class NewAdFragment extends Fragment {
     private FragmentNewAdBinding binding;
@@ -77,7 +69,7 @@ public class NewAdFragment extends Fragment {
                     Navigation.findNavController(binding.getRoot()).navigate(R.id.action_newAdFragment2_to_selectPreferencesFragment3);
                 }
                 else {
-                    NewAdFragmentDirections.ActionNewAdFragmentToSelectPreferencesFragment22 action = NewAdFragmentDirections.actionNewAdFragmentToSelectPreferencesFragment22();
+                    NewAdFragmentDirections.ActionNewAdFragmentToSelectPreferencesFragment2 action = NewAdFragmentDirections.actionNewAdFragmentToSelectPreferencesFragment2();
                     action.setForAd(true);
                     Navigation.findNavController(binding.getRoot()).navigate(action);
                 }
@@ -89,20 +81,11 @@ public class NewAdFragment extends Fragment {
         editModel.getLocations().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                if(customResponse.getStatus() == CustomResponse.Status.OK)
-                {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapterLoc.clear();
                     adapterLoc.addAll(editModel.getAllCities());
                    // makeToast(R.string.successfulLocation);
                 }
-//                else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
-//                {
-//                    Toast.makeText(requireContext(), "You got the locations", Toast.LENGTH_SHORT).show();
-//                }
-//                else if(customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR)
-//                {
-//                    Toast.makeText(requireContext(), "Error with server", Toast.LENGTH_SHORT).show();
-//                }
             }
         });
 
@@ -126,18 +109,6 @@ public class NewAdFragment extends Fragment {
 
         loadViews();
         return binding.getRoot();
-    }
-
-    private void makeToast(int string) {
-        LayoutInflater inflaterToast = getLayoutInflater();
-        View layoutToast = inflaterToast.inflate(R.layout.toast_layout, (ViewGroup) getView().findViewById(R.id.toast));
-        Toast toast = new Toast(getContext());
-        TextView txtToast = (TextView) layoutToast.findViewById(R.id.txtToast);
-        txtToast.setText(string);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(layoutToast);
-        toast.show();
     }
 
     private PostAdRequest createPostAdRequest() {
@@ -233,6 +204,7 @@ public class NewAdFragment extends Fragment {
             binding.btnNewAdCancle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //TODO
                     Navigation.findNavController(binding.getRoot()).navigate(NewAdFragmentDirections.actionNewAdFragmentToJobAdInfoFragment());
                 }
             });
