@@ -800,3 +800,11 @@ class ReportedDetail(APIView):
         except:
             return r500('Failed deleting report')
         return r204()
+
+
+class HasRated(APIView):
+    permission_classes = [IsLoggedIn]
+
+    def get(self, request, pk, *args, **kwargs):
+        ratings = Rating.objects.filter(rater__userId=request._auth, ratee__userId=pk)
+        return Response(len(ratings) > 0)
