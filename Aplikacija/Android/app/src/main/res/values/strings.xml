@@ -39,8 +39,9 @@
     <string name="goLog">Already have an account? Login</string>
     <string name="newPassword">New password</string>
     <string name="newPasswordConfirmation">Confirm new password</string>
-    <string name="resetPassword">Reset password</string>
+    <string name="resetPassword">Change password</string>
     <string name="feed">Feed</string>
+    <string name="logout">Log out</string>
     <string name="jobListStudent">Job History</string>
     <string name="recommendationsStudent">Recommended</string>
     <string name="profile">Profile</string>
@@ -48,6 +49,7 @@
     <string name="forYouStudent">For You</string>
     <string name="newAd">New Ad</string>
     <string name="myAds">My ads</string>
+    <string name="Ads">Ads</string>
     <string name="editProfile">Edit Profile</string>
     <string name="infoStudent">Information: </string>
     <string name="facultyStudent">University: </string>
@@ -173,11 +175,15 @@
     <string name="adComment">User %1$s has left a comment</string>
     <string name="notifRating">User %1$s rated you</string>
     <string name="notifChat">User %1$s has sent you a message</string>
-    <string name="reportedHeading">Reported users</string>
+    <string name="reportedHeading">Reports</string>
     <string name="deleteReport">Delete report</string>
     <string name="reportTitle">User %1$s has reported user %2$s</string>
     <string name="rating">Rating %1$s:</string>
     <string name="notifApplied">User %1$s applied for ad</string>
     <string name="badgeDialog">More about this badge</string>
     <string name="ban">Ban user</string>
+    <string name="chat">Chat</string>
+    <string name="confirmSelection">Confirm selection</string>
+    <string name="info">About</string>
+    <string name="wrongPass">Wrong password</string>
 </resources>

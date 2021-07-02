@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
@@ -15,6 +14,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.adapters.AdAdapter;
@@ -32,8 +32,6 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
 
     RecommendViewModel model;
     FragmentRecommendationFragmentBinding binding;
-    int page = 0;
-    int limit = 5;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +64,6 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.NO_MORE_DATA) {
                     binding.progressBarRecommend.setVisibility(View.GONE);
-                    Toast.makeText(requireActivity(), "That's all the data..", Toast.LENGTH_SHORT).show();
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.setAds((ArrayList<Ad>) customResponse.getBody());
@@ -74,36 +71,29 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
             }
         });
 
-        getData(page, limit);
+        binding.refreshRecommend.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                model.getRecommendRefresh();
+                binding.refreshRecommend.setRefreshing(false);
+            }
+        });
+
+
+        model.loadRecommended();
 
         binding.nestedRecommend.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
                 if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    page++;
+                    model.loadRecommended();
                     binding.progressBarRecommend.setVisibility(View.VISIBLE);
-                    getData(page, limit);
                 }
             }
         });
 
         return binding.getRoot();
-    }
-
-    private void getData(int page, int limit)
-    {
-        if (page < limit) { binding.progressBarRecommend.setVisibility(View.GONE);
-            return;
-        }
-        model.getAds();
-    }
-
-    private void stopPaging()
-    {
-        binding.progressBarRecommend.setVisibility(View.GONE);
-        binding.nestedRecommend.setNestedScrollingEnabled(false);
-        binding.recViewRecommends.setVisibility(View.GONE);
     }
 
     @Override

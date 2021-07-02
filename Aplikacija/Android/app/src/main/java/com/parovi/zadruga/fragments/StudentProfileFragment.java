@@ -128,7 +128,7 @@ public class StudentProfileFragment extends Fragment {
                 final TextView etText = new TextView(requireActivity());
                 etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 etText.setTextSize(16);
-                etText.setText(model.getBadgeDesc(1));
+                etText.setText(model.getBadgeDesc(0));
                 dialog.setTitle(etText.getText().toString());
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {

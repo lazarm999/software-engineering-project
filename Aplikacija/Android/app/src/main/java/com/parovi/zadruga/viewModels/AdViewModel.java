@@ -145,7 +145,7 @@ public class AdViewModel extends AndroidViewModel {
             adRepository.postComment(token, comments, adId, comment);
     }
     public void applyForAd() {
-        adRepository.applyForAd(token, appliedTo, userId, adId);
+        adRepository.applyForAd(token, appliedTo, adId);
     }
 
     public void withdrawApplication() {

@@ -1,9 +1,6 @@
 package com.parovi.zadruga.daos;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -17,7 +14,7 @@ public abstract class RatingDao extends BaseDao<Rating> {
     /*TODO: ovde treba da ide neki dobudzeniji/prostiji user*/
     @Query("SELECT user_table.*, Rating.*, Rating.fkRateeId as ratee, Rating.ratingId as id FROM Rating " +
             "INNER JOIN user_table ON Rating.fkRaterId = user_table.userId " +
-            "WHERE Rating.fkRateeId == :rateeId")
+            "WHERE Rating.fkRateeId == :rateeId order by Rating.postTime desc")
     public abstract ListenableFuture<List<RatingResponse>> getRatingByRatedId(int rateeId);
 
     @Query("DELETE FROM Rating WHERE Rating.fkRaterId = :raterId AND Rating.fkRateeId = :rateeId")

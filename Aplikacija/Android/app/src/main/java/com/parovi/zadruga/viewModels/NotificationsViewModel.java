@@ -24,13 +24,15 @@ public class NotificationsViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<CustomResponse<?>> getIsNotified(){
-        if(isNotified == null)
-            isNotified = new MutableLiveData<CustomResponse<?>>();
         return isNotified;
     }
 
-    private void loadNotifications() {
-       notificationRepository.getNotifications(notifications);
+    public void loadNotifications() {
+       notificationRepository.getNotifications(notifications, false);
+    }
+
+    public void loadNotificationsRefresh() {
+        notificationRepository.getNotifications(notifications, true);
     }
 
     public  MutableLiveData<CustomResponse<?>> getNotifications() {

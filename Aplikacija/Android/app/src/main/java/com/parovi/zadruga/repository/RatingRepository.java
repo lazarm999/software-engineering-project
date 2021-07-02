@@ -82,12 +82,9 @@ public class RatingRepository extends BaseRepository {
                             ratings.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
                             isSynced[0] = true;
                         }
-                        Utility.getExecutorService().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (RatingResponse r: response.body()) {
-                                    saveRatingLocally(r);
-                                }
+                        Utility.getExecutorService().execute(() -> {
+                            for (RatingResponse r: response.body()) {
+                                saveRatingLocally(r);
                             }
                         });
                     } else {

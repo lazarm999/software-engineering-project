@@ -48,15 +48,15 @@
             android:id="@+id/txtNewAdTitle"
             android:layout_width="400dp"
             android:layout_height="40dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="190dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/border_for_inputs"
             android:ems="10"
             android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="top"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:hint="@string/adTitlePlaceholder"
-            android:inputType="textPersonName"
+            android:inputType="text"
             android:textSize="18sp" />
 
         <EditText
@@ -135,6 +135,7 @@
             android:gravity="start"
             android:hint="@string/adFeePlaceholder"
             android:inputType="numberSigned"
+            android:padding="3dp"
             android:textSize="18sp" />
 
         <EditText
@@ -149,14 +150,17 @@
             android:gravity="start"
             android:hint="@string/adFeePlaceholder"
             android:inputType="numberSigned"
+            android:padding="3dp"
             android:textSize="18sp" />
 
         <Button
             android:id="@+id/btnNewAdAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="37dp"
             android:layout_marginLeft="290dp"
             android:layout_marginTop="630dp"
+            android:layout_toEndOf="@+id/btnNewAdCancle"
             android:text="@string/newAdAdd"
             android:textColor="@color/black"
             android:textSize="12sp"
@@ -170,8 +174,8 @@
             android:id="@+id/btnNewAdCancle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
-            android:layout_marginLeft="160dp"
+            android:layout_marginStart="130dp"
+            android:layout_marginLeft="120dp"
             android:layout_marginTop="630dp"
             android:text="@string/newAdCancel"
             android:textColor="@color/black"

@@ -3,7 +3,6 @@ package com.parovi.zadruga.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -69,20 +67,11 @@ public class NewAdFragment extends Fragment {
         model.getLocations().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                if(customResponse.getStatus() == CustomResponse.Status.OK)
-                {
+                if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapterLoc.clear();
                     adapterLoc.addAll(model.getAllCities());
-                   // makeToast(R.string.successfulLocation);
+                    // makeToast(R.string.successfulLocation);
                 }
-//                else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
-//                {
-//                    Toast.makeText(requireContext(), "You got the locations", Toast.LENGTH_SHORT).show();
-//                }
-//                else if(customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR)
-//                {
-//                    Toast.makeText(requireContext(), "Error with server", Toast.LENGTH_SHORT).show();
-//                }
             }
         });
 
@@ -93,12 +82,6 @@ public class NewAdFragment extends Fragment {
                     //newArrayCategory = null;
                     categoryArray = new String[((List<Tag>)customResponse.getBody()).size()];
                     categoryArray = model.getAllTagNames().toArray(categoryArray);
-                   // makeToast(R.string.successfulLocation);
-                }
-                else if (customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST) {
-                    makeToast(R.string.badRequestLocation);
-                } else if (customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR) {
-                    makeToast(R.string.serverErrorNewAd);
                 }
             }
         });
@@ -183,17 +166,8 @@ public class NewAdFragment extends Fragment {
         model.getIsPosted().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                if(customResponse.getStatus() == CustomResponse.Status.OK)
-                {
-                    //makeToast(R.string.successfulNewAd);
-                }
-                else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
-                {
-                    //makeToast(R.string.badRequestNewAd);
-                }
-                else if(customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR)
-                {
-                    //makeToast(R.string.serverErrorNewAd);
+                if (customResponse.getStatus() != CustomResponse.Status.OK) {
+                    return;
                 }
             }
         });
@@ -215,18 +189,5 @@ public class NewAdFragment extends Fragment {
         });
 
         return layout;
-    }
-
-    public void makeToast(int string)
-    {
-        LayoutInflater inflaterToast = getLayoutInflater();
-        View layoutToast = inflaterToast.inflate(R.layout.toast_layout, (ViewGroup) getView().findViewById(R.id.toast));
-        Toast toast = new Toast(getContext());
-        TextView txtToast = (TextView) layoutToast.findViewById(R.id.txtToast);
-        txtToast.setText(string);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(layoutToast);
-        toast.show();
     }
 }

@@ -23,5 +23,7 @@ public class RecommendViewModel extends AndroidViewModel {
 
     public MutableLiveData<CustomResponse<?>> getAds() {  return ads; }
 
-    public void loadRecommended() { adRepository.getRecommendedAds(ads); }
+    public void loadRecommended() { adRepository.getRecommendedAds(ads, false); }
+
+    public void getRecommendRefresh() { adRepository.getRecommendedAds(ads, true); }
 }

@@ -77,7 +77,7 @@ public class StudentProfileViewModel extends AndroidViewModel {
         return isLoggedOut;
     }
 
-    public void logOut() { userRepository.logOutUser(isLoggedOut); }
+    public void logOut() { userRepository.logOutUser(isLoggedOut, false); }
 
     private void loadBadges() {
         lookUpRepository.getAllBadges(TOKEN, badges);

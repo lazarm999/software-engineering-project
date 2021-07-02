@@ -287,7 +287,7 @@ public class TmpActivity extends AppCompatActivity {
                 /*List<Chat> tmpChats = (List<Chat>) chats.getValue().getBody();
                 rep.sendMessage(new MutableLiveData<>(), tmpChats.get(0).getQbChat(), new User(), "porukaa novaaaaa");*/
                 adRep.getAds(Utility.getAccessToken(TmpActivity.this), new MutableLiveData<>(), null, 4, 150,
-                        Arrays.asList(1,3), true);
+                        Arrays.asList(1,3), true, false);
             }
         });
         tmpBtn3.setOnClickListener(new View.OnClickListener() {
@@ -327,7 +327,7 @@ public class TmpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //rep.getFinishedJobsByUserId(new MutableLiveData<>());
                 //rep.getPostedAdsByUserIdLocal(new MutableLiveData<>());
-                chatRepository.getChatById(new MutableLiveData<>(), "60c1e2cf094ee200482e09f2");
+                //chatRepository.getChatById(new MutableLiveData<>(), "60c1e2cf094ee200482e09f2");
             }
         });
 

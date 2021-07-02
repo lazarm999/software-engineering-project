@@ -63,7 +63,7 @@ public class EmployerProfileViewModel extends AndroidViewModel {
         return isBanned;
     }
 
-    public void logOut() { userRepository.logOutUser(isLogedOut); }
+    public void logOut() { userRepository.logOutUser(isLogedOut, false); }
 
     public int getId() {
         return USER_ID;

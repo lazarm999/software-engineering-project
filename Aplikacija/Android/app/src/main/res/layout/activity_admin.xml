@@ -11,6 +11,7 @@ tools:context=".activities.AdminActivity">
     android:id="@+id/frame_admin_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:layout_above="@id/bottom_nav_admin">
 
 </FrameLayout>
@@ -20,11 +21,6 @@ tools:context=".activities.AdminActivity">
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:layout_marginBottom="0dp"
     android:background="@color/background"
-    android:foreground="@null"
-    app:backgroundTint="@color/background"
-    app:itemIconTint="@color/material_on_background_emphasis_high_type"
-    app:itemTextColor="@color/lila"
     app:menu="@menu/bottom_navigation_admin" />
 </RelativeLayout>

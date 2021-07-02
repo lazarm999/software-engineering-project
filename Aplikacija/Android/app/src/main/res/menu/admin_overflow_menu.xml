@@ -5,6 +5,6 @@
     <item
         android:id="@+id/adminLogOutItem"
         android:icon="@drawable/ic_logout"
-        android:title="Item"
+        android:title="@string/logout"
         app:showAsAction="ifRoom" />
 </menu>

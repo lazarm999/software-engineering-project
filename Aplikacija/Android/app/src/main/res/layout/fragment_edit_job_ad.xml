@@ -65,7 +65,7 @@
             android:ems="10"
             android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="start|top"
-            android:hint="Describe your job offer in a few sentences.."
+            android:hint="@string/descriptionOfAd"
             android:inputType="textMultiLine"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"

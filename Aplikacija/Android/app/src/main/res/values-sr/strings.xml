@@ -33,10 +33,11 @@
     <string name="dateHint">Datum rođenja</string>
     <string name="changePass">Promenite lozinku</string>
     <string name="done">Gotovo</string>
+    <string name="logout">Izlogujte se</string>
     <string name="jobAdvertisement">Tekst</string>
     <string name="hello_blank_fragment">Zdravo prazni fragmente</string>
     <string name="writeMessageHint">Napiši novu poruku</string>
-    <string name="bio_hint">Biografija</string>
+    <string name="bio_hint">Napišite kratku biografija...</string>
     <string name="rating_intro_format1">Primetili smo da ste sarađivali sa %1$s.</string>
     <string name="rating_intro_format2">Kako biste ocenili Vaše iskustvo sa %1$s?</string>
     <string name="submitRating">Prosledi</string>
@@ -148,7 +149,7 @@
     <string name="editSurname">*Prezime</string>
     <string name="editBio">Izmenite biografiju...</string>
     <string name="people">Osobe</string>
-    <string name="descriptionOfAd">Opišite oglas u par rečenica</string>
+    <string name="descriptionOfAd">Opišite oglas u par rečenica..</string>
     <string name="adApplyChanges">Izmenite oglas</string>
     <string name="questionAd">Postavite pitanje...</string>
     <string name="applicants">Prijavljeni za posao</string>
@@ -177,4 +178,9 @@
     <string name="badgeDialog">Detalji o bedžu</string>
     <string name="ban">Banujte korisnika</string>
     <string name="notifApplied">Korisnik %1$s se prijavio za oglas</string>
+    <string name="chat">Ćaskanje</string>
+    <string name="confirmSelection">Potvrdite odabir</string>
+    <string name="info">Dodatne informacije</string>
+    <string name="Ads">Oglasi</string>
+    <string name="wrongPass">Pogrešna lozinka</string>
 </resources>

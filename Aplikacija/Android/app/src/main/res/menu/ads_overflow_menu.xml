@@ -5,6 +5,6 @@
     <item
         android:id="@+id/chatItem"
         android:icon="@drawable/ic_chat"
-        android:title="Item"
+        android:title="@string/chat"
         app:showAsAction="ifRoom" />
 </menu>
