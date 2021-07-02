@@ -38,9 +38,6 @@ public class EmployerProfileViewModel extends AndroidViewModel {
         badges = new MutableLiveData<>();
         profilePicture = new MutableLiveData<>();
         isBanned = new MutableLiveData<>();
-        loadUserInfo();
-        loadUserProfileImage();
-        loadBadges();
     }
 
     public MutableLiveData<CustomResponse<?>> getBadges() {

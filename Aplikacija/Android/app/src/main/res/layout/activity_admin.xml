@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="@color/background"
-tools:context=".activities.AdminActivity">
-
-<FrameLayout
-    android:id="@+id/frame_admin_layout"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@id/bottom_nav_admin">
+    tools:context=".activities.MainEmployerActivity">
 
-</FrameLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/admin_main_nav_host_frag"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_admin"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/admin_main_nav_graph" />
 
-<com.google.android.material.bottomnavigation.BottomNavigationView
-    android:id="@+id/bottom_nav_admin"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_marginBottom="0dp"
-    android:background="@color/background"
-    android:foreground="@null"
-    app:backgroundTint="@color/background"
-    app:itemIconTint="@color/material_on_background_emphasis_high_type"
-    app:itemTextColor="@color/lila"
-    app:menu="@menu/bottom_navigation_admin" />
-</RelativeLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_navigation_admin" />
+</androidx.constraintlayout.widget.ConstraintLayout>

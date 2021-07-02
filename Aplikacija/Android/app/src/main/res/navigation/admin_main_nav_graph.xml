@@ -2,41 +2,35 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/chat_nav_graph"
-    app:startDestination="@id/chatListFragment">
+    android:id="@+id/admin_main_nav_graph"
+    app:startDestination="@id/adsFragment3">
 
     <fragment
-        android:id="@+id/chatListFragment"
-        android:name="com.parovi.zadruga.ui.ChatListFragment"
-        android:label="fragment_chat_list"
-        tools:layout="@layout/fragment_chat_list" >
-        <action
-            android:id="@+id/action_chatListFragment_to_chatMessagesFragment"
-            app:destination="@id/chatMessagesFragment" />
-    </fragment>
+        android:id="@+id/adsFragment3"
+        android:name="com.parovi.zadruga.fragments.AdsFragment"
+        android:label="fragment_ads_fragment"
+        tools:layout="@layout/fragment_ads_fragment" />
     <fragment
-        android:id="@+id/chatMessagesFragment"
-        android:name="com.parovi.zadruga.ui.ChatMessagesFragment"
-        android:label="fragment_chat_messages"
-        tools:layout="@layout/fragment_chat_messages" >
+        android:id="@+id/reportFragment"
+        android:name="com.parovi.zadruga.fragments.ReportFragment"
+        android:label="ReportFragment" >
         <action
-            android:id="@+id/action_chatMessagesFragment_to_chatInfoFragment"
-            app:destination="@id/chatInfoFragment" />
+            android:id="@+id/action_reportFragment_to_studentProfileFragment2"
+            app:destination="@id/studentProfileFragment2" />
+        <action
+            android:id="@+id/action_reportFragment_to_employerProfileFragment4"
+            app:destination="@id/employerProfileFragment4" />
     </fragment>
+    <action
+        android:id="@+id/action_global_adsFragment3"
+        app:destination="@id/adsFragment3"
+        app:popUpTo="@id/admin_main_nav_graph" />
+    <action
+        android:id="@+id/action_global_reportFragment"
+        app:destination="@id/reportFragment"
+        app:popUpTo="@id/admin_main_nav_graph" />
     <fragment
-        android:id="@+id/chatInfoFragment"
-        android:name="com.parovi.zadruga.ui.ChatInfoFragment"
-        android:label="fragment_chat_info"
-        tools:layout="@layout/fragment_chat_info" >
-        <action
-            android:id="@+id/action_chatInfoFragment_to_studentProfileFragment3"
-            app:destination="@id/studentProfileFragment3" />
-        <action
-            android:id="@+id/action_chatInfoFragment_to_employerProfileFragment"
-            app:destination="@id/employerProfileFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/studentProfileFragment3"
+        android:id="@+id/studentProfileFragment2"
         android:name="com.parovi.zadruga.fragments.StudentProfileFragment"
         android:label="fragment_student_profile_fragment"
         tools:layout="@layout/fragment_student_profile_fragment" >
@@ -49,7 +43,7 @@
             app:destination="@id/ratingFragment" />
     </fragment>
     <fragment
-        android:id="@+id/employerProfileFragment"
+        android:id="@+id/employerProfileFragment4"
         android:name="com.parovi.zadruga.fragments.EmployerProfileFragment"
         android:label="fragment_employer_profile"
         tools:layout="@layout/fragment_employer_profile" >

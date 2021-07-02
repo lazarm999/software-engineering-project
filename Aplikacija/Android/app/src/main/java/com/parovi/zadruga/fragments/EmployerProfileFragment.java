@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
@@ -64,16 +65,18 @@ public class EmployerProfileFragment extends Fragment {
         binding.btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), GradeUserActivity.class);
-                startActivity(intent);
+                EmployerProfileFragmentDirections.ActionEmployerProfileFragment2ToRatingFragment action = EmployerProfileFragmentDirections.actionEmployerProfileFragment2ToRatingFragment();
+                action.setUserId(model.getId());
+                Navigation.findNavController(binding.getRoot()).navigate(action);
             }
         });
 
         binding.btnAchiev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), UsersAchievementsActivity.class);
-                startActivity(intent);
+                EmployerProfileFragmentDirections.ActionEmployerProfileFragment2ToRatingFragment action = EmployerProfileFragmentDirections.actionEmployerProfileFragment2ToRatingFragment();
+                action.setUserId(model.getId());
+                Navigation.findNavController(binding.getRoot()).navigate(action);
             }
         });
 
