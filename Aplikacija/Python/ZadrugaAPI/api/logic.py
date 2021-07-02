@@ -89,8 +89,8 @@ class NotificationLogic:
         acceptedUsers = User.objects.filter(userId__in=userIds)
         declinedUsers = list(set(appliedUsers) - set(acceptedUsers))
 
-        declinedUsersFcm = [u.fcmToken for u in UserFCM.objects.filter(user__in=declinedUsers)]
-        acceptedUsersFcm = [u.fcmToken for u in UserFCM.objects.filter(user__in=acceptedUsers)]
+        declinedUsersFcm = [u.fcmToken for u in UserFCM.objects.filter(user__in=declinedUsers, user__banAdmin=None)]
+        acceptedUsersFcm = [u.fcmToken for u in UserFCM.objects.filter(user__in=acceptedUsers, user__banAdmin=None)]
 
         userNotifs = []
         for user in appliedUsers:
@@ -118,8 +118,8 @@ class NotificationLogic:
         usernames = CommentLogic.extractTaggedUsers(comment.comment)
 
         taggedUsers = User.objects.filter(username__in=usernames)
-        taggedUserFcm = [u.fcmToken for u in UserFCM.objects.filter(user__username__in=usernames)]
-        adOwnerFcm = [u.fcmToken for u in UserFCM.objects.filter(user__userId=comment.ad.employer.userId)]
+        taggedUserFcm = [u.fcmToken for u in UserFCM.objects.filter(user__username__in=usernames, user__banAdmin=None)]
+        adOwnerFcm = [u.fcmToken for u in UserFCM.objects.filter(user__userId=comment.ad.employer.userId, user__banAdmin=None)]
 
         taggedNotification = None
         if len(taggedUsers) > 0:
@@ -162,7 +162,7 @@ class NotificationLogic:
         notif.notification = ratingNotification
         notif.user = rating.ratee
 
-        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user__username=rating.ratee.username)]
+        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user__username=rating.ratee.username, user__banAdmin=None)]
 
         ratingNotification.save()
         notif.save()
@@ -177,7 +177,7 @@ class NotificationLogic:
 
 
     def sendAppliedNotification(applied):
-        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user=applied.ad.employer)]
+        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user=applied.ad.employer, user__banAdmin=None)]
 
         data = {
             'type': 'applied',
@@ -190,7 +190,7 @@ class NotificationLogic:
 
 
     def sendChatNotification(username, adId, message, userQbIds, chatQbId):
-        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user__userQbId__in=userQbIds)]
+        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user__userQbId__in=userQbIds, user__banAdmin=None)]
         
         try:
             adTitle = Ad.objects.get(pk=adId).title
@@ -209,7 +209,7 @@ class NotificationLogic:
 
     
     def sendNewBadgeNotification(user, badgeId):
-        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user=user)]
+        userFcms = [u.fcmToken for u in UserFCM.objects.filter(user=user, user__banAdmin=None)]
         data = {
             'type': 'badge',
             'badgeId': badgeId
