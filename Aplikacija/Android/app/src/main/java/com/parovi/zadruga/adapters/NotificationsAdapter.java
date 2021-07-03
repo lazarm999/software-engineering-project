@@ -139,7 +139,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         @Override
         void bindTo(Notification notification) {
             binding.ivNotificationIcon.setImageResource(R.drawable.rating);
-            binding.tvTitle.setText("User @" + notification.getComment().getUser() + "has mentioned you in a comment");
+            if(notification.getComment().getUser() != null)
+                binding.tvTitle.setText("User @" + notification.getComment().getUser() + "has mentioned you in a comment");
             binding.tvDesc.setText(notification.getComment().getComment());
         }
 
@@ -171,7 +172,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         @Override
         void bindTo(Notification notification) {
             binding.ivNotificationIcon.setImageResource(R.drawable.comment);
-            binding.tvTitle.setText("User @" + notification.getComment().getUser().getUsername() + "has mentioned you in a comment");
+            if(notification.getComment().getUser() != null)
+                binding.tvTitle.setText("User @" + notification.getComment().getUser().getUsername() + "has mentioned you in a comment");
             binding.tvDesc.setText(notification.getComment().getComment());
         }
     }

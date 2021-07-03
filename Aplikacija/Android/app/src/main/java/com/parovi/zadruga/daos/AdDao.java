@@ -34,7 +34,7 @@ public abstract class AdDao extends BaseDao<Ad> {
             "INNER JOIN user_table ON user_table.userId = Ad.fkEmployerId " +
             "LEFT JOIN Location ON Location.locId = Ad.fkLocationId " +
             "WHERE Ad.adId = :adId")
-    public abstract ListenableFuture<AdWithTags> getAdWithTagsById(int adId);
+    public abstract AdWithTags getAdWithTagsById(int adId);
 
     @Query("SELECT * FROM Ad WHERE Ad.adId == :id")
     public abstract Ad getAdById(int id);

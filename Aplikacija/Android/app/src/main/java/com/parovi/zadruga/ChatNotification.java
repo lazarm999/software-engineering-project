@@ -17,9 +17,6 @@ public class ChatNotification {
         this.chatQbId = chatQbId;
     }
 
-    public ChatNotification() {
-    }
-
     public String getUsername() {
         return username;
     }

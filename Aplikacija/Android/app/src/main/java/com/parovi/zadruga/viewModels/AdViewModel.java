@@ -228,7 +228,6 @@ public class AdViewModel extends AndroidViewModel implements SelectPreferencesFr
         }
     }
 
-
     @Override
     public List<Integer> getNewSelectedTags() {
         return newTags;

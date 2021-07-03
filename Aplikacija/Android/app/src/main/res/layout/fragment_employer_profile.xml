@@ -34,7 +34,7 @@
             app:iconTint="@color/lila"
             app:rippleColor="@color/lila" />
 
-        <Button
+        f<Button
             android:id="@+id/btnBanUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -291,7 +291,7 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/btnRating"
+            android:id="@+id/btnRate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/profile"

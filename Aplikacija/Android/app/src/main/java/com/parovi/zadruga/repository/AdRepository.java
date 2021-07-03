@@ -79,15 +79,28 @@ public class AdRepository extends BaseRepository {
         getAdLocal(ad, id, isSynced);
         ApiFactory.getAdApi().getAd(token, id).enqueue(new Callback<Ad>() {
             @Override
-            public void onResponse(@NotNull Call<Ad> call, @NotNull Response<Ad> response) {
-                if(response.isSuccessful() && response.body() != null){
-                    synchronized (isSynced[0]) {
-                        ad.postValue(new CustomResponse<>(CustomResponse.Status.OK, response.body()));
-                        isSynced[0] = true;
-                    }
-                    Utility.getExecutorService().execute(() -> saveAdLocally(response.body()));
+            public void onResponse(@NotNull Call<Ad> call, @NotNull Response<Ad> adResponse) {
+                if(adResponse.isSuccessful() && adResponse.body() != null){
+                    Utility.getExecutorService().execute(() -> {
+                        try {
+                            Response<ResponseBody> profileImgRes = ApiFactory.getUserApi().getProfileImage(token, adResponse.body().getEmployer()
+                                    .getUserId()).execute();
+                            if(profileImgRes.isSuccessful() && profileImgRes.body() != null){
+                                Bitmap bmImage = BitmapFactory.decodeStream(profileImgRes.body().byteStream());
+                                adResponse.body().setEmployerProfileImage(bmImage);
+                                saveImageLocally(bmImage, adResponse.body().getEmployer().getUserId());
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        synchronized (isSynced[0]) {
+                            ad.postValue(new CustomResponse<>(CustomResponse.Status.OK, adResponse.body()));
+                            isSynced[0] = true;
+                        }
+                        saveAdLocally(adResponse.body());
+                    });
                 } else
-                    responseNotSuccessful(response.code(), ad);
+                    responseNotSuccessful(adResponse.code(), ad);
             }
 
             @Override
@@ -98,24 +111,21 @@ public class AdRepository extends BaseRepository {
     }
 
     public void getAdLocal(MutableLiveData<CustomResponse<?>> ad, int id,  Boolean[] isSynced){
-        Futures.addCallback(DaoFactory.getAdDao().getAdWithTagsById(id), new FutureCallback<AdWithTags>() {
+        Utility.getExecutorService().execute(new Runnable() {
             @Override
-            public void onSuccess(@org.jetbrains.annotations.Nullable AdWithTags result) {
-                if(result != null){
-                    Log.i("getAd", "onSuccess: radiii");
-                    Ad tmpAd = adWithTagsToAd(result);
+            public void run() {
+                AdWithTags adWithTags = DaoFactory.getAdDao().getAdWithTagsById(id);
+                if(adWithTags != null){
+                    Ad tmpAd = adWithTagsToAd(adWithTags);
+                    Bitmap bmImage = getProfilePictureLocal(tmpAd.getFkEmployerId());
+                    tmpAd.setEmployerProfileImage(bmImage);
                     synchronized (isSynced[0]) {
                         if (!isSynced[0])
                             ad.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpAd));
                     }
                 }
             }
-
-            @Override
-            public void onFailure(@NotNull Throwable t) {
-
-            }
-        }, Utility.getExecutor());
+        });
     }
 
     public void getAds(MutableLiveData<CustomResponse<?>> ads, boolean refresh){
@@ -510,7 +520,6 @@ public class AdRepository extends BaseRepository {
     }
 
     public void postComment(String token, MutableLiveData<CustomResponse<?>> comments, int adId, String comment){
-        int userId = Utility.getLoggedInUserId(App.getAppContext());
         CommentRequest c = new CommentRequest(comment);
         Utility.getExecutorService().execute(() -> {
             try {
@@ -519,17 +528,12 @@ public class AdRepository extends BaseRepository {
                     ArrayList<CommentResponse> tmpCommentList = new ArrayList<>();
                     if(comments.getValue() != null && comments.getValue().getBody() != null)
                         tmpCommentList = (ArrayList<CommentResponse>) comments.getValue().getBody();
-                    int userId1 = commentResponse.body().getUser().getUserId();
-                    Bitmap localImage = getProfilePictureLocal(userId1);
-//                        if(localImage != null){
-//                            commentResponse.body().setUserImage(localImage);
-//                            comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, commentResponse.body()));
-//                        }
-                    Response<ResponseBody> responseImage = ApiFactory.getUserApi().getProfileImage(token, userId1).execute();
+                    int userId = commentResponse.body().getUser().getUserId();
+                    Response<ResponseBody> responseImage = ApiFactory.getUserApi().getProfileImage(token, userId).execute();
                     if(responseImage.isSuccessful() && responseImage.body() != null) {
                         Bitmap bmImage = BitmapFactory.decodeStream(responseImage.body().byteStream());
                         commentResponse.body().setUserImage(bmImage);
-                        saveImageLocally(bmImage, userId1);
+                        saveImageLocally(bmImage, userId);
                     }
                     tmpCommentList.add(commentResponse.body());
                     comments.postValue(new CustomResponse<>(CustomResponse.Status.OK, tmpCommentList));

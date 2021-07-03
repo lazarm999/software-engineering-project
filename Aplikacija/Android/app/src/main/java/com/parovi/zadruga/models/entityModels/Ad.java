@@ -1,40 +1,21 @@
 package com.parovi.zadruga.models.entityModels;
 
+import android.graphics.Bitmap;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import com.google.gson.annotations.SerializedName;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
-import static androidx.room.ForeignKey.CASCADE;
-import static androidx.room.ForeignKey.SET_NULL;
-
-/*(primaryKeys = {"firstName", "lastName"})
- @Ignore
- mogu da se nasledjuju entitiji
- @Fts4 - za Support full-text search
-*/
-
-/*(foreignKeys = {@ForeignKey(entity = Location.class,
-                        parentColumns = "locId",
-                        childColumns = "fkLocationId",
-                        onDelete = SET_NULL,
-                        onUpdate = CASCADE),
-                        @ForeignKey(entity = User.class,
-                        parentColumns = "userId",
-                        childColumns = "fkEmployerId",
-                        onDelete = SET_NULL,
-                        onUpdate = CASCADE)})*/
 @Entity
 public class Ad {
     @PrimaryKey
@@ -60,6 +41,8 @@ public class Ad {
     private User employer;
     @Ignore
     private Location location;
+    @Ignore
+    private Bitmap employerProfileImage;
 
     public Ad(){
 
@@ -75,7 +58,7 @@ public class Ad {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Ad(int adId, String title, String description, int compensationMin, int compensationMax, int numberOfEmployees, LocalDate postTime) {
+    public Ad(int adId, String title, String description, int compensationMin, int compensationMax, int numberOfEmployees, LocalDate postTime, int fkEmployerId) {
         this.adId = adId;
         this.title = title;
         this.description = description;
@@ -85,6 +68,7 @@ public class Ad {
         this.postTime = java.util.Date.from(postTime.atStartOfDay()
                 .atZone(ZoneId.systemDefault())
                 .toInstant());
+        this.fkEmployerId = fkEmployerId;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -222,5 +206,13 @@ public class Ad {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Bitmap getEmployerProfileImage() {
+        return employerProfileImage;
+    }
+
+    public void setEmployerProfileImage(Bitmap employerProfileImage) {
+        this.employerProfileImage = employerProfileImage;
     }
 }

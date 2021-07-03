@@ -87,7 +87,7 @@
             app:argType="integer"
             android:defaultValue="-1" />
         <action
-            android:id="@+id/action_employerProfileFragment2_to_ratingFragment"
+            android:id="@+id/action_employerProfileFragment2_to_ratingFragment3"
             app:destination="@id/ratingFragment" />
     </fragment>
     <fragment

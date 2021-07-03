@@ -55,7 +55,7 @@ public class StudentProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentStudentProfileFragmentBinding.inflate(inflater, container, false);
 
-        binding.btnRating.setVisibility(View.INVISIBLE);
+        binding.btnRate.setVisibility(View.INVISIBLE);
         binding.btnBanUser.setVisibility(View.INVISIBLE);
         binding.btnLogOut.setVisibility(View.VISIBLE);
         binding.btnEdit.setVisibility(View.VISIBLE);
@@ -70,7 +70,7 @@ public class StudentProfileFragment extends Fragment {
             }
         });
 
-        binding.btnRating.setOnClickListener(new View.OnClickListener() {
+        binding.btnRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), GradeUserActivity.class);
@@ -287,7 +287,7 @@ public class StudentProfileFragment extends Fragment {
     }
 
     private void updateViewStudent() {
-        binding.btnRating.setVisibility(View.INVISIBLE);
+        binding.btnRate.setVisibility(View.INVISIBLE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
         binding.btnBanUser.setVisibility(View.INVISIBLE);
@@ -295,7 +295,7 @@ public class StudentProfileFragment extends Fragment {
 
     private void updateViewEmployer()
     {
-        binding.btnRating.setVisibility(View.VISIBLE);
+        binding.btnRate.setVisibility(View.VISIBLE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
         binding.btnBanUser.setVisibility(View.INVISIBLE);
@@ -303,7 +303,7 @@ public class StudentProfileFragment extends Fragment {
 
     private void updateViewAdmin(boolean isUserBanned)
     {
-        binding.btnRating.setVisibility(View.GONE);
+        binding.btnRate.setVisibility(View.GONE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
         binding.btnBanUser.setVisibility(View.VISIBLE);

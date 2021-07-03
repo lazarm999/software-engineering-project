@@ -14,7 +14,7 @@
         android:id="@+id/notificationsFragment2"
         android:name="com.parovi.zadruga.fragments.NotificationsFragment"
         android:label="fragment_notifications_fragment"
-        tools:layout="@layout/fragment_notifications_fragment" />
+        tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/jobHistoryFragment2"
         android:name="com.parovi.zadruga.fragments.JobHistoryFragment"

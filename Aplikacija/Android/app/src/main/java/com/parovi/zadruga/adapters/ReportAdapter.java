@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parovi.zadruga.App;
@@ -17,7 +16,6 @@ import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ItemReportBinding;
 import com.parovi.zadruga.fragments.ReportFragment;
-import com.parovi.zadruga.models.entityModels.Notification;
 import com.parovi.zadruga.models.entityModels.Report;
 
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +61,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportedVi
                 reportFragment.onReportSelected(reportList.get(position));
             }
         });
-        holder.binding.tvDeleteReport.setOnClickListener(new View.OnClickListener() {
+        holder.binding.btnDeleteReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 reportFragment.onDelete(reportList.get(position), position);

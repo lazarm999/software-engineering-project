@@ -49,7 +49,7 @@ public class EmployerProfileFragment extends Fragment {
         binding = FragmentEmployerProfileBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(EmployerProfileViewModel.class);
 
-        binding.btnRating.setVisibility(View.INVISIBLE);
+        binding.btnRate.setVisibility(View.INVISIBLE);
         binding.btnBanUser.setVisibility(View.INVISIBLE);
         binding.btnLogOut.setVisibility(View.VISIBLE);
         binding.btnEdit.setVisibility(View.VISIBLE);
@@ -61,10 +61,10 @@ public class EmployerProfileFragment extends Fragment {
             }
         });
 
-        binding.btnRating.setOnClickListener(new View.OnClickListener() {
+        binding.btnRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EmployerProfileFragmentDirections.ActionEmployerProfileFragment2ToRatingFragment action = EmployerProfileFragmentDirections.actionEmployerProfileFragment2ToRatingFragment();
+                EmployerProfileFragmentDirections.ActionEmployerProfileFragment2ToRatingFragment3 action = EmployerProfileFragmentDirections.actionEmployerProfileFragment2ToRatingFragment3();
                 action.setUserId(model.getId());
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             }
@@ -74,7 +74,7 @@ public class EmployerProfileFragment extends Fragment {
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
-                EmployerProfileFragmentDirections.ActionEmployerProfileFragment2ToRatingFragment action = EmployerProfileFragmentDirections.actionEmployerProfileFragment2ToRatingFragment();
+                EmployerProfileFragmentDirections.ActionEmployerProfileFragment2ToRatingFragment3 action = EmployerProfileFragmentDirections.actionEmployerProfileFragment2ToRatingFragment3();
                 action.setUserId(model.getId());
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             }
@@ -266,7 +266,7 @@ public class EmployerProfileFragment extends Fragment {
     }
 
     private void updateViewEmployer() {
-        binding.btnRating.setVisibility(View.INVISIBLE);
+        binding.btnRate.setVisibility(View.INVISIBLE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
         binding.btnBanUser.setVisibility(View.INVISIBLE);
@@ -274,7 +274,7 @@ public class EmployerProfileFragment extends Fragment {
 
     private void updateViewStudent()
     {
-        binding.btnRating.setVisibility(View.VISIBLE);
+        binding.btnRate.setVisibility(View.VISIBLE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
         binding.btnBanUser.setVisibility(View.INVISIBLE);
@@ -283,7 +283,7 @@ public class EmployerProfileFragment extends Fragment {
     @SuppressLint("ResourceAsColor")
     private void updateViewAdmin(boolean isUserBanned)
     {
-        binding.btnRating.setVisibility(View.GONE);
+        binding.btnRate.setVisibility(View.GONE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
         binding.btnBanUser.setVisibility(View.VISIBLE);

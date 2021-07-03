@@ -36,14 +36,15 @@
             app:layout_constraintTop_toTopOf="@+id/ivReportIcon" />
 
         <Button
-            android:id="@+id/btnRating"
+            android:id="@+id/btnDeleteReport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/deleteReport"
             android:textColor="@color/black"
-            android:textSize="9dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
             app:backgroundTint="@color/lilaChip"
             app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"

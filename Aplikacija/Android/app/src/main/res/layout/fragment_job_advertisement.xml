@@ -43,37 +43,35 @@
                 android:layout_width="52dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="10dp"
+                android:scaleType="fitCenter"
                 app:layout_constraintDimensionRatio="h,1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_optimizationLevel="dimensions"
-                app:srcCompat="@drawable/job"
-                tools:src="@drawable/login1" />
+                android:src="@drawable/job" />
 
             <TextView
                 android:id="@+id/tvJobTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="Job Ad Title"
                 android:textColor="@color/lila"
                 android:textSize="30sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imgAdOwner"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvEmployerName" />
 
             <TextView
                 android:id="@+id/tvJobDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="@string/jobAdvertisement"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvJobTitle" />
 
@@ -81,7 +79,7 @@
                 android:id="@+id/iconLoc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/ic_baseline_location_on_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvJobDesc" />
@@ -101,7 +99,7 @@
                 android:id="@+id/iconPersons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/ic_baseline_people_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iconLoc" />
@@ -122,7 +120,7 @@
                 android:id="@+id/iconMoney"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/ic_baseline_attach_money_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iconPersons" />
@@ -143,7 +141,8 @@
                 android:id="@+id/btnApply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="@string/adApply"
                 android:textColor="@color/light_grey"
@@ -161,42 +160,56 @@
                 android:id="@+id/tvNoOfApplications"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="6dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="6 applied"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dtPosted" />
 
-            <ImageView
-                android:id="@+id/imageView7"
+            <TextView
+                android:id="@+id/tvEmployerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/ic_baseline_calendar_today_24"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iconMoney" />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="Ime poslodavca"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                android:textSize="22sp"
+                app:layout_constraintStart_toEndOf="@+id/imgAdOwner"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imgTagList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_tag"
+                app:layout_constraintTop_toBottomOf="@+id/iconMoney"
+                tools:layout_editor_absoluteX="0dp"
+                tools:ignore="ContentDescription,MissingConstraints"
+                app:tint="@color/cardview_dark_background" />
 
             <TextView
                 android:id="@+id/dtPosted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="Monday, 17. May 2021"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView7"
-                app:layout_constraintStart_toEndOf="@+id/imageView7"
-                app:layout_constraintTop_toTopOf="@+id/imageView7" />
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints" />
 
             <ImageView
                 android:id="@+id/imageView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/ic_baseline_access_time_24"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+                app:layout_constraintTop_toBottomOf="@+id/imgTagList" />
 
             <TextView
                 android:id="@+id/tvDuration"
@@ -208,6 +221,17 @@
                 app:layout_constraintBottom_toBottomOf="@+id/imageView8"
                 app:layout_constraintStart_toEndOf="@+id/imageView8"
                 app:layout_constraintTop_toTopOf="@+id/imageView8" />
+
+            <TextView
+                android:id="@+id/tvTagList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="TextView"
+                app:layout_constraintBottom_toTopOf="@+id/imageView8"
+                app:layout_constraintStart_toEndOf="@+id/imgTagList"
+                app:layout_constraintTop_toTopOf="@+id/imgTagList"
+                app:layout_constraintVertical_bias="0.23" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

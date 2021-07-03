@@ -17,7 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.activities.UsersAchievementsActivity;
 import com.parovi.zadruga.adapters.NotificationsAdapter;
-import com.parovi.zadruga.databinding.FragmentNotificationsFragmentBinding;
+import com.parovi.zadruga.databinding.FragmentNotificationsBinding;
 import com.parovi.zadruga.models.entityModels.Notification;
 import com.parovi.zadruga.ui.JobAdActivity;
 import com.parovi.zadruga.viewModels.NotificationsViewModel;
@@ -31,7 +31,7 @@ import static com.parovi.zadruga.Constants.NOTIF_TAGGED;
 
 public class NotificationsFragment extends Fragment implements  NotificationsAdapter.NotificationListener{
     NotificationsViewModel model;
-    FragmentNotificationsFragmentBinding binding;
+    FragmentNotificationsBinding binding;
     private ArrayList<Notification> notificationList;
     public NotificationsFragment() {
         // Required empty public constructor
@@ -46,7 +46,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsAda
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentNotificationsFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(NotificationsViewModel.class);
 
         RecyclerView rvNotifications = binding.rvNotifications;
@@ -65,7 +65,6 @@ public class NotificationsFragment extends Fragment implements  NotificationsAda
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.setNotificationList((ArrayList<Notification>) customResponse.getBody());
-
                 }
                 binding.progressBarNotif.setVisibility(View.GONE);
             }

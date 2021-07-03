@@ -37,28 +37,12 @@ import retrofit2.Response;
 public class NotificationService extends FirebaseMessagingService {
 
     private final String channelId = "zadrugaChannel";
-    /*private static NotificationRepository notificationRep;
-    public NotificationService(){
-
-    }*/
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
 
         Log.i("izServisa", "uso sam");
-        //TODO: eventualno neka slicica, i generalno saveti kako da lepse izgleda
-        /*{'type': 'accepted', 'adId': ad.adId, 'adTitle': ad.title}
-        {'type': 'declined', 'adId': ad.adId, 'adTitle': ad.title}
-        {
-            'adId': comment.ad.adId,
-                'adTitle': comment.ad.title,
-                'comment': comment.comment,
-                'username': comment.user.username,
-                'type': 'adComment'
-        }
-        ^ za ovo prethodno je samo 'type': 'tagged' za kad tagujes nekog
-        ovo 'adComment' je za ownera*/
         Intent intent = new Intent();
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -109,7 +93,7 @@ public class NotificationService extends FirebaseMessagingService {
                 case Constants.NOTIF_APPLIED:
                     title = getString(R.string.notifApplied, "@" + data.get("username"));
                     body = data.get("title");
-                    intent = new Intent(this, ChatActivity.class);
+                    intent = new Intent(this, JobAdActivity.class);
                     intent.putExtra(JobAdActivity.AD_ID, data.get("adId"));
                     break;
             }
@@ -119,11 +103,6 @@ public class NotificationService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        /* p = new NavDeepLinkBuilder(App.getAppContext())
-                .setGraph(R.navigation.chat_nav_graph)
-                .setDestination(R.id.chatMessagesFragment)
-                .setComponentName(ChatActivity.class)
-                .createPendingIntent();*/
         Notification notification = new NotificationCompat.Builder(this, channelId)
                 .setContentTitle(title)
                 .setContentText(body)

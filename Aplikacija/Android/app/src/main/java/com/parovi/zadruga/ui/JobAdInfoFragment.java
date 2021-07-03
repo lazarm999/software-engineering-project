@@ -2,7 +2,6 @@ package com.parovi.zadruga.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -24,8 +23,8 @@ import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.adapters.CommentsAdapter;
 import com.parovi.zadruga.databinding.FragmentJobAdvertisementBinding;
-import com.parovi.zadruga.fragments.StudentProfileFragment;
 import com.parovi.zadruga.models.entityModels.Ad;
+import com.parovi.zadruga.models.entityModels.Tag;
 import com.parovi.zadruga.models.entityModels.User;
 import com.parovi.zadruga.models.responseModels.CommentResponse;
 import com.parovi.zadruga.viewModels.AdViewModel;
@@ -189,13 +188,25 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
         String feeRange = Float.valueOf(ad.getCompensationMin()).toString() + " - " + Float.valueOf(ad.getCompensationMax()).toString() + " RSD";
         binding.tvFeeRange.setText(feeRange);
         binding.tvNoOfApplications.setText(ad.getNumberOfApplied() + " applied");
+        binding.tvEmployerName.setText(ad.getEmployer().getFirstName() + " " + ad.getEmployer().getLastName());
+        binding.imgAdOwner.setImageBitmap(ad.getEmployerProfileImage());
+
+        List<Tag> tags = ad.getTags();
+        String finalTags = "";
+        for (int i = 0; i < tags.size(); i++) {
+            if(i != tags.size() - 1)
+                    finalTags += tags.get(i).getName() + ", ";
+            else
+                finalTags += tags.get(i).getName();
+        }
+        binding.tvTagList.setText(finalTags);
+
         updateToolBar();
         if (model.isAdClosed())
             updateViewAdClosed();
         else if (Utility.getLoggedInUser(requireContext()).isEmployer())
             updateViewAdMine(model.isAdMine());
     }
-
     private void updateToolBar() {
         User loggedUser = Utility.getLoggedInUser(requireContext());
         Ad ad = model.getAd().getValue() == null ? null : (Ad)model.getAd().getValue().getBody();
@@ -258,7 +269,6 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
             Navigation.findNavController(binding.getRoot()).navigate(JobAdInfoFragmentDirections.actionJobAdInfoFragmentToSelectWorkersFragment());
         }
     };
-
     private void onAdReport() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
         dialog.setTitle(R.string.dialogAd);

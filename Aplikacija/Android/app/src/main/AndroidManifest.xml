@@ -23,8 +23,8 @@
 
         </activity>
         <activity android:name=".activities.UsersAchievementsActivity" />
-        <activity android:name=".activities.GradeUserActivity"></activity>
-        <activity android:name=".activities.MainEmployerActivity"></activity>
+        <activity android:name=".activities.GradeUserActivity" />
+        <activity android:name=".activities.MainEmployerActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,9 +33,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.RateUserActivity" />
-        <activity android:name=".ui.JobAdActivity"></activity>
-        <activity android:name=".ui.ChatActivity"></activity>
-        <activity android:name=".ui.EditProfileActivity"></activity>
+        <activity android:name=".ui.JobAdActivity" />
+        <activity android:name=".ui.ChatActivity" />
+        <activity android:name=".ui.EditProfileActivity" />
         <activity android:name=".TmpActivity">
 
         </activity>
@@ -46,10 +46,10 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.MainStudentActivity"></activity>
+        <activity android:name=".activities.MainStudentActivity"/>
         <activity android:name=".activities.PasswordResetActivity" />
-        <activity android:name=".activities.SignUpActivity"></activity>
-        <activity android:name=".activities.LogInActivity"></activity>
+        <activity android:name=".activities.SignUpActivity"/>
+        <activity android:name=".activities.LogInActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"
