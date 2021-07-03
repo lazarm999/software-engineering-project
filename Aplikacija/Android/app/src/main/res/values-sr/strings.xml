@@ -184,4 +184,5 @@
     <string name="Ads">Oglasi</string>
     <string name="wrongPass">Pogrešna lozinka</string>
     <string name="alreadyBanned">"Banovan "</string>
+    <string name="noMessages">Jos uvek nema nijedne poruke</string>
 </resources>

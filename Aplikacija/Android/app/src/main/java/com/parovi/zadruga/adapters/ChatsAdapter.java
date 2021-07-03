@@ -83,19 +83,29 @@ public class ChatsAdapter extends ListAdapter<Chat, ChatsAdapter.ChatViewHolder>
         public void bind(Chat chatResume) {
             binding.tvChatTitle.setText(chatResume.getChatTitle());
             String subtitle;
-            if (chatResume.getLastSenderUsername() == null)
-                subtitle = chatResume.getLastMessage();
-            else {
-                subtitle = chatResume.getLastSenderUsername().equals(Utility.getLoggedInUser(App.getAppContext()).getUsername()) ? "You" : chatResume.getLastSenderUsername();
-                subtitle += ": " + chatResume.getLastMessage();
+            if (chatResume.getLastMessage() != null) {
+                if (chatResume.getLastSenderUsername() == null)
+                    subtitle = chatResume.getLastMessage();
+                else {
+                    subtitle = chatResume.getLastSenderUsername().equals(Utility.getLoggedInUser(App.getAppContext()).getUsername()) ? "You" : chatResume.getLastSenderUsername();
+                    subtitle += ": " + chatResume.getLastMessage();
+                }
+                if (subtitle.length() > SUBTITLE_MAX_LENGTH) {
+                    subtitle = subtitle.substring(0, SUBTITLE_MAX_LENGTH);
+                    subtitle += "...";
+                }
+                binding.tvLastMessage.setText(subtitle);
             }
-            if (subtitle.length() > SUBTITLE_MAX_LENGTH) {
-                subtitle = subtitle.substring(0, SUBTITLE_MAX_LENGTH);
-                subtitle += "...";
+            else
+                binding.tvLastMessage.setText(R.string.noMessages);
+
+            if (chatResume.getLastMessageDateSent() != 0) {
+                LocalDateTime time = LocalDateTime.ofEpochSecond(chatResume.getLastMessageDateSent(), 0, ZoneOffset.UTC);
+                binding.tvTimeOfLastMsg.setText(time.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
             }
-            binding.tvLastMessage.setText(subtitle);
-            LocalDateTime time = LocalDateTime.ofEpochSecond(chatResume.getLastMessageDateSent(), 0, ZoneOffset.UTC);
-            binding.tvTimeOfLastMsg.setText(time.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
+            else
+                binding.tvTimeOfLastMsg.setVisibility(View.INVISIBLE);
+
             if (chatResume.getType() == Utility.ChatType.PRIVATE)
                 binding.imgChatImage.setImageBitmap(chatResume.getProfileImage());
             else
