@@ -83,7 +83,12 @@ public class  AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void bindTo(Ad ad) {
             binding.txtDescForAd.setText(ad.getTitle());
-            binding.editTxtDescriptionAd.setText(ad.getDescription());
+//            if(ad.getDescription().length() > 150)
+//            {
+//                binding.editTxtDescriptionAd.setText(ad.getDescription().subSequence(0, 149) + "...");
+//            }
+//            else
+                binding.editTxtDescriptionAd.setText(ad.getDescription());
             binding.imgAdIcon.setImageResource(R.drawable.ad_item);
             LocalDate localDate = ad.getPostTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             //binding.editTxtAdItemDate.setText(localDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));

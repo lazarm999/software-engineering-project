@@ -108,7 +108,7 @@ public class ChatRepository extends BaseRepository {
     public void getAllChats(MutableLiveData<CustomResponse<?>> chats){
         int userId = Utility.getLoggedInUserQbId(App.getAppContext());
         Boolean[] isSynced = {false};
-        //getAllChatsLocal(chats, userId, isSynced);
+        getAllChatsLocal(chats, userId, isSynced);
 
         QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
         requestBuilder.setLimit(50);
@@ -223,7 +223,10 @@ public class ChatRepository extends BaseRepository {
                                 chat.setProfileImage(chatImage);
                         }
                     }
-                    chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, localChats));
+                    synchronized (isSynced[0]){
+                        if(!isSynced[0])
+                            chats.postValue(new CustomResponse<>(CustomResponse.Status.OK, localChats));
+                    }
                 }
             }
         });
@@ -530,11 +533,13 @@ public class ChatRepository extends BaseRepository {
     }
 
     public void addOnMessageReceivedGlobal(QBChatDialogMessageListener newMessageListener){
-        QBChatService.getInstance().getIncomingMessagesManager().addDialogMessageListener(newMessageListener);
+        if(QBChatService.getInstance().getIncomingMessagesManager() != null)
+            QBChatService.getInstance().getIncomingMessagesManager().addDialogMessageListener(newMessageListener);
     }
 
     public void removeGlobalMessageReceivedListener(QBChatDialogMessageListener newMessageListener){
-        QBChatService.getInstance().getIncomingMessagesManager().removeDialogMessageListrener(newMessageListener);
+        if(QBChatService.getInstance().getIncomingMessagesManager() != null)
+            QBChatService.getInstance().getIncomingMessagesManager().removeDialogMessageListrener(newMessageListener);
     }
 
     public void getChatById(MutableLiveData<CustomResponse<?>> chat, String chatQbId){

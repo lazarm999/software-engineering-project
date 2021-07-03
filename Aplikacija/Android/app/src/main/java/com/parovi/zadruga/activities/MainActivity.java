@@ -56,19 +56,6 @@ public class MainActivity<AlterDialog> extends AppCompatActivity {
         scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
 
-       /* logIn.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_DOWN)
-                    logIn.startAnimation(scaleUp);
-                else if(event.getAction()==MotionEvent.ACTION_UP)
-                    logIn.startAnimation(scaleDown);
-
-                return true;
-
-            }
-        });*/
-
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

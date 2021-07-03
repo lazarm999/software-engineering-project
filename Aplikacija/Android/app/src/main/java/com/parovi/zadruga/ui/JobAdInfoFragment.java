@@ -292,6 +292,7 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
         final EditText etReportText = new EditText(requireActivity());
         etReportText.setInputType(InputType.TYPE_CLASS_TEXT);
         etReportText.setTextSize(16);
+        etReportText.setHint(R.string.dialogHint);
         dialog.setView(etReportText);
 
         dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -358,6 +359,7 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
         final EditText etReportText = new EditText(requireActivity());
         etReportText.setInputType(InputType.TYPE_CLASS_TEXT);
         etReportText.setTextSize(16);
+        etReportText.setHint(R.string.dialogHint);
         dialog.setView(etReportText);
 
         dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {

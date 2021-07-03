@@ -34,6 +34,7 @@
             android:fontFamily="@font/roboto_condensed_regular"
             android:hint="@string/adTitle"
             android:inputType="textPersonName"
+            android:padding="5dp"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="@+id/tvHDesc"
             app:layout_constraintTop_toBottomOf="@+id/tvHDesc" />
@@ -67,6 +68,7 @@
             android:gravity="start|top"
             android:hint="@string/descriptionOfAd"
             android:inputType="textMultiLine"
+            android:padding="5dp"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView4" />

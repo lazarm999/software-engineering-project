@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="3dp"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/userAchievements">
@@ -30,9 +31,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/roboto_condensed_regular"
-            android:inputType="text"
+            android:inputType="textNoSuggestions|text"
             android:text="TextView"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="18sp"
             tools:layout_editor_absoluteX="-2dp"
             tools:layout_editor_absoluteY="8dp" />
@@ -56,9 +57,9 @@
             android:layout_marginEnd="20dp"
             android:layout_weight="1"
             android:fontFamily="@font/roboto_condensed_regular"
-            android:inputType="numberSigned"
+            android:inputType="numberSigned|textNoSuggestions"
             android:text="TextView"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/tvCommentJob"
             tools:layout_editor_absoluteY="6dp" />
@@ -71,8 +72,9 @@
             android:layout_weight="1"
             android:fontFamily="@font/roboto_condensed_regular"
             android:foregroundGravity="center"
+            android:inputType="date|textNoSuggestions"
             android:text="TextView"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             tools:layout_editor_absoluteY="4dp" />

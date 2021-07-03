@@ -35,4 +35,12 @@ public class Constants {
     public static final String EMPLOYEE = "employee";
     public static final String EMPLOYER = "employer";
     public static final String ADMIN = "admin";
+
+    public static final String BADGE_1 = "You've done 10 jobs";
+    public static final String BADGE_2 = "You've done 20 jobs";
+    public static final String BADGE_3 = "You've done 50 jobs";
+    public static final String BADGE_4 = "In a period of seven days since the registration, you found the first job";
+    public static final String BADGE_5 = "You've done 4 different types of job";
+    public static final String BADGE_6 = "In a period of ten days since the registration, you found 5 employees";
+    public static final String BADGE_7 = "Number of applied people is 5 times bigger than number that is needed for job";
 }

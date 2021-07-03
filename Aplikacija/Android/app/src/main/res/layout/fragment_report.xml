@@ -12,15 +12,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/background"
-            android:padding="10dp"
+            android:layout_height="wrap_content"            android:padding="10dp"
             android:layout_below="@+id/linearRecommend"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvReportsHeading"
                 android:layout_width="match_parent"
+                android:background="@color/background"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_condensed_bold_italic"
                 android:gravity="center"
@@ -32,9 +31,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvReports"
                 android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
+                android:background="@color/background"
+                android:layout_marginTop="15dp"
                 android:layout_height="wrap_content"
-                android:padding="1dp" />
+                android:padding="10dp" />
         </LinearLayout>
     </FrameLayout>
 </ScrollView>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import com.parovi.zadruga.App;
 import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.viewModels.LoginViewModel;
 
 public class LogInActivity extends AppCompatActivity {
@@ -26,6 +28,7 @@ public class LogInActivity extends AppCompatActivity {
     Button btnLogIn;
     EditText username;
     EditText pass;
+    ProgressBar pBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,9 @@ public class LogInActivity extends AppCompatActivity {
         username = findViewById(R.id.txtName);
         pass = findViewById(R.id.txtPassword);
         btnLogIn = findViewById(R.id.btnLogIn);
+        pBar = findViewById(R.id.pbarLog);
 
+        pBar.setVisibility(View.GONE);
 
         model.getUserType().observe(this, customResponse -> {
             if(customResponse.getStatus() == CustomResponse.Status.OK){
@@ -50,6 +55,20 @@ public class LogInActivity extends AppCompatActivity {
                     intent = new Intent(LogInActivity.this, MainStudentActivity.class);
                 startActivity(intent);
             }
+            else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
+            {
+                pBar.setVisibility(View.GONE);
+                username.setVisibility(View.VISIBLE);
+                pass.setVisibility(View.VISIBLE);
+                Toast.makeText(App.getAppContext(), R.string.logInfo, Toast.LENGTH_LONG).show();
+            }
+            else if(customResponse.getStatus() == CustomResponse.Status.SERVER_ERROR)
+            {
+                pBar.setVisibility(View.GONE);
+                username.setVisibility(View.VISIBLE);
+                pass.setVisibility(View.VISIBLE);
+                Toast.makeText(App.getAppContext(), R.string.serverError, Toast.LENGTH_LONG).show();
+            }
         });
 
         btnLogIn.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +76,11 @@ public class LogInActivity extends AppCompatActivity {
             public void onClick(View v) {//tea@gmail.com//
                 if(username.getText().toString().equals("") || pass.getText().toString().equals(""))
                     Toast.makeText(App.getAppContext(), R.string.notAllFull, Toast.LENGTH_SHORT).show();
-                else {
+                else
+                {
+                    pBar.setVisibility(View.VISIBLE);
+                    username.setVisibility(View.GONE);
+                    pass.setVisibility(View.GONE);
                     model.loginUser(username.getText().toString(), pass.getText().toString());
                 }
             }

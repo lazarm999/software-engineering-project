@@ -44,7 +44,7 @@
                 android:layout_toEndOf="@+id/ivNotificationIcon"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:paddingBottom="5dp"
-                android:text="Taj i taj ti je dao ocenu"
+                android:text="@string/adTitle"
                 android:textColor="@color/lila"
                 android:textSize="20sp" />
 
@@ -58,7 +58,7 @@
                 android:layout_marginTop="17dp"
                 android:layout_toEndOf="@+id/ivNotificationIcon"
                 android:fontFamily="@font/roboto_condensed_regular"
-                android:text="Bas si bio dobar radnik"
+                android:text="@string/adDescriptionPlaceholder"
                 android:textColor="@color/lila"
                 app:layout_constraintStart_toStartOf="@+id/ivNotificationIcon"
                 app:layout_constraintTop_toBottomOf="@+id/ivNotificationIcon" />

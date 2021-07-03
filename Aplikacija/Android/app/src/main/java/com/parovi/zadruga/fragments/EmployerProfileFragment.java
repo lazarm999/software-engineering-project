@@ -2,8 +2,10 @@ package com.parovi.zadruga.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.InputType;
@@ -19,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.parovi.zadruga.App;
+import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
@@ -112,7 +115,10 @@ public class EmployerProfileFragment extends Fragment {
                 final TextView etText = new TextView(requireActivity());
                 etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 etText.setTextSize(16);
-                etText.setText(model.getBadgeDesc(5));
+                if(isEnSet())
+                    etText.setText(Constants.BADGE_1);
+                else
+                    etText.setText(model.getBadgeDesc(5));
                 dialog.setTitle(etText.getText().toString());
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -132,7 +138,10 @@ public class EmployerProfileFragment extends Fragment {
                 final TextView etText = new TextView(requireActivity());
                 etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 etText.setTextSize(16);
-                etText.setText(model.getBadgeDesc(6));
+                if(isEnSet())
+                    etText.setText(Constants.BADGE_2);
+                else
+                    etText.setText(model.getBadgeDesc(6));
                 dialog.setTitle(etText.getText().toString());
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -152,7 +161,10 @@ public class EmployerProfileFragment extends Fragment {
                 final TextView etText = new TextView(requireActivity());
                 etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 etText.setTextSize(16);
-                etText.setText(model.getBadgeDesc(7));
+                if(isEnSet())
+                    etText.setText(Constants.BADGE_3);
+                else
+                    etText.setText(model.getBadgeDesc(7));
                 dialog.setTitle(etText.getText().toString());
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -169,7 +181,10 @@ public class EmployerProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
-                dialog.setTitle(model.getBadgeDesc(8));
+                if(isEnSet())
+                    dialog.setTitle(Constants.BADGE_6);
+                else
+                    dialog.setTitle(model.getBadgeDesc(8));
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -185,7 +200,10 @@ public class EmployerProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
-                dialog.setTitle(model.getBadgeDesc(9));
+                if(isEnSet())
+                    dialog.setTitle(Constants.BADGE_7);
+                else
+                    dialog.setTitle(model.getBadgeDesc(9));
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -210,7 +228,7 @@ public class EmployerProfileFragment extends Fragment {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
-                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    Intent intent = new Intent(App.getAppContext(), MainActivity.class);
                     startActivity(intent);
                 }
             }
@@ -264,11 +282,18 @@ public class EmployerProfileFragment extends Fragment {
     }
 
     private void updateViewStudent()
+
     {
         binding.btnRate.setVisibility(View.VISIBLE);
         binding.btnEdit.setVisibility(View.GONE);
         binding.btnLogOut.setVisibility(View.GONE);
         binding.btnBanUser.setVisibility(View.INVISIBLE);
+    }
+
+    private Boolean isEnSet()
+    {
+        SharedPreferences sp = App.getAppContext().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        return sp.getString("My_Lang", "").equals("en");
     }
 
     @SuppressLint("ResourceAsColor")

@@ -198,7 +198,7 @@ public class AdRepository extends BaseRepository {
     }
 
     public void getAds(String token, MutableLiveData<CustomResponse<?>> ads, Integer locId, Integer compensationMin, Integer compensationMax, List<Integer> tagIds,
-                       Boolean sortByLocation, Boolean refresh) {
+                       boolean sortByLocation, boolean refresh) {
         if(compensationMax != null && compensationMin != null && compensationMax < compensationMin) {
             responseNotSuccessful(400, ads);
             return;

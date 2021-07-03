@@ -196,13 +196,34 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
             }
         });
 
+        binding.btnClearAllFilters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                min = null;
+                binding.editTxtFeeFromFilter.setText("");
+                max = null;
+                binding.editTxtFeeToFilter.setText("");
+                tagIds.clear();
+                spinnerLocations.setSelection(0);
+                binding.chipHostess.setChecked(false);
+                binding.chipInterviewer.setChecked(false);
+                binding.chipCollectionOperations.setChecked(false);
+                binding.chipWaiter.setChecked(false);
+                binding.chipHeavierPhysicalJobs.setChecked(false);
+                binding.chipLighterPhysicalJobs.setChecked(false);
+                binding.chipPromoter.setChecked(false);
+
+                model.loadAdsDefault(true);
+            }
+        });
+
         binding.refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if(!isFiltered)
                     model.loadAdsDefault(true);
                 else
-                    model.filterAds(locId,  min,max, tagIds, isSorted, true);
+                    model.filterAds(locId,  min, max, tagIds, isSorted, true);
                 binding.refresh.setRefreshing(false);
             }
         });
@@ -282,6 +303,7 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
             binding.topBar.setVisibility(View.GONE);
             binding.topBarAdmin.setVisibility(View.VISIBLE);
             binding.linearFee.setVisibility(View.GONE);
+            binding.linearLocation.setVisibility(View.GONE);
         }
     }
 
