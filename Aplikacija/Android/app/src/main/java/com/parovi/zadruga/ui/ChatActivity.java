@@ -6,14 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavActionBuilder;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDeepLinkBuilder;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-
-import android.app.PendingIntent;
-import android.os.Bundle;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
@@ -43,17 +37,6 @@ public class ChatActivity extends AppCompatActivity{
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         model = new ViewModelProvider(this).get(ChatViewModel.class);
-
-        //userRepository.loginUser(isLoggedIn, "vuk.bibic@gmail.com", "sifra123");
-        /*userRepository.loginUser(isLoggedIn, "tea@gmail.com", "sifra123");
-        isLoggedIn.observe(this, new Observer<CustomResponse<?>>() {
-            @Override
-            public void onChanged(CustomResponse<?> customResponse) {
-                if (customResponse.getStatus() == CustomResponse.Status.OK) {
-                    model.connectToChatServer();
-                }
-            }
-        });*/
 
         model.connectToChatServer();
         model.observeIsConnected().observe(this, new Observer<CustomResponse<?>>() {

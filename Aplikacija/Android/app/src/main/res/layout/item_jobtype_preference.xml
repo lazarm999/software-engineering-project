@@ -11,10 +11,11 @@
         android:id="@+id/imageView4"
         android:layout_width="@dimen/medium_image_size"
         android:layout_height="@dimen/medium_image_size"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/preferences"
+        app:srcCompat="@drawable/waiter"
         tools:srcCompat="@drawable/preferences" />
 
     <Switch

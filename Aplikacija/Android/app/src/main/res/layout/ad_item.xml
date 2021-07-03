@@ -52,7 +52,7 @@
 
             <TextView
                 android:id="@+id/editTxtDescriptionAd"
-                android:layout_width="255dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtDescForAd"
                 android:layout_marginStart="16dp"
@@ -60,7 +60,7 @@
                 android:layout_marginTop="18dp"
                 android:background="@color/background"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:gravity="start|top"
                 android:inputType="textMultiLine|textNoSuggestions"

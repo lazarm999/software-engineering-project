@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
@@ -17,8 +16,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nullable;
-
-import static androidx.room.ForeignKey.CASCADE;
 /*(foreignKeys = {@ForeignKey(entity = Ad.class,
                         parentColumns = "adId",
                         childColumns = "fkAdId",
@@ -60,7 +57,7 @@ public class Chat {
     public Chat() {
     }
 
-    public Chat(@NonNull String chatId, Utility.ChatType type, String lastSenderUsername, int numOfMembers, String lastMessage, int fkLastSenderId,
+    public Chat(@NonNull String chatId, Utility.ChatType type, String lastSenderUsername, int numOfMembers, String lastMessage,
                 long lastMessageDateSent, Date createdAt, QBChatDialog qbChat) {
         this.chatId = chatId;
         this.type = type;
@@ -77,8 +74,6 @@ public class Chat {
         this.type = type;
         this.lastSenderUsername = lastSenderUsername;
         this.numOfMembers = numOfMembers;
-        this.lastMessage = lastMessage;
-        this.lastMessageDateSent = lastMessageDateSent;
         this.createdAt = createdAt;
     }
 

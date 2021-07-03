@@ -24,6 +24,7 @@ public class Notification
     private Boolean accepted;
     private Boolean tagged; //da li je tagovan ili je on objavio oglas pa je zbog toga dobio notif
     private Date postTime;
+
     @Ignore
     private String type;
     @Ignore

@@ -187,4 +187,5 @@
     <string name="info">About</string>
     <string name="wrongPass">Wrong password</string>
     <string name="alreadyBanned">Already banned</string>
+    <string name="alreadyRated">Already rated</string>
 </resources>

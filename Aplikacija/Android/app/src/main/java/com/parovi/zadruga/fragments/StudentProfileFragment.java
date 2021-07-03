@@ -46,6 +46,7 @@ public class StudentProfileFragment extends Fragment {
     private int id;
 
     public StudentProfileFragment() {
+
     }
 
     @Override
@@ -69,7 +70,6 @@ public class StudentProfileFragment extends Fragment {
             }
         });
 
-        //TODO navigacija za ocene
         binding.btnAchievements.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceType")
             @Override
@@ -230,7 +230,7 @@ public class StudentProfileFragment extends Fragment {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
-                    Intent intent = new Intent(requireActivity(), MainActivity.class);
+                    Intent intent = new Intent(App.getAppContext(), MainActivity.class);
                     startActivity(intent);
                 }
             }

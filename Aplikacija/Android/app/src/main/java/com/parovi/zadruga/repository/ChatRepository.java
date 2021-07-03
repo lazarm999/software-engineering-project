@@ -33,6 +33,9 @@ import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.model.QBUser;
 
 import org.jetbrains.annotations.NotNull;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.muc.DiscussionHistory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,7 +85,6 @@ public class ChatRepository extends BaseRepository {
             type = Utility.ChatType.GROUP;
         chat = new Chat(qbChat.getDialogId(), type, "", qbChat.getOccupants().size(),
                 qbChat.getLastMessage(),
-                qbChat.getLastMessageUserId(),
                 qbChat.getLastMessageDateSent(),qbChat.getCreatedAt(), qbChat);
         return chat;
     }
@@ -104,11 +106,9 @@ public class ChatRepository extends BaseRepository {
     }
 
     public void getAllChats(MutableLiveData<CustomResponse<?>> chats){
-        final String token = Utility.getAccessToken(App.getAppContext());
         int userId = Utility.getLoggedInUserQbId(App.getAppContext());
-        int userQbId = Utility.getLoggedInUserQbId(App.getAppContext());
         Boolean[] isSynced = {false};
-        getAllChatsLocal(chats, userId, isSynced);
+        //getAllChatsLocal(chats, userId, isSynced);
 
         QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
         requestBuilder.setLimit(50);
@@ -140,10 +140,24 @@ public class ChatRepository extends BaseRepository {
         int userId = Utility.getLoggedInUserQbId(App.getAppContext());
         int userQbId = Utility.getLoggedInUserQbId(App.getAppContext());
         String qbChatId = qbChat.getDialogId();
-        Utility.ChatType type = qbChat.getType() == QBDialogType.PRIVATE ? Utility.ChatType.PRIVATE : Utility.ChatType.GROUP;
+        //Utility.ChatType type = qbChat.getType() == QBDialogType.PRIVATE ? Utility.ChatType.PRIVATE : Utility.ChatType.GROUP;
         Chat chat = basicQbChatDialogToChat(qbChat);
         saveChatLocally(qbChatToChat(qbChat));
-        if (type == Utility.ChatType.PRIVATE) {
+        try {
+            Response<Ad> ad = ApiFactory.getAdApi().getAdByQbChatId(Utility.getAccessToken(App.getAppContext()), qbChatId).execute();
+            if (ad.isSuccessful()) {
+                if(ad.body() != null){
+                    String chatTitle = ad.body().getTitle();
+                    chat.setChatTitle(chatTitle);
+                    chat.setFkAdId(ad.body().getAdId());
+                }
+            } else
+                responseNotSuccessful(ad.code(), res);
+        } catch (IOException e) {
+            e.printStackTrace();
+            apiCallOnFailure(e.getMessage(), res);
+        }
+        if (chat.getFkAdId() == null) {
             int chatterQbId = qbChat.getOccupants().get(0) == userQbId ? qbChat.getOccupants().get(1) : qbChat.getOccupants().get(0);
             try {
                 Response<User> user = ApiFactory.getUserApi().getUserByQbUserId(token, chatterQbId).execute();
@@ -236,7 +250,7 @@ public class ChatRepository extends BaseRepository {
                                 updatedChat.setLastSenderUsername(response.body().getUsername());
                             }
                             tmpChatList.remove(i);
-                            tmpChatList.add(tmpChatList.size() - 1, updatedChat);
+                            tmpChatList.add(tmpChatList.size(), updatedChat);
                             isUpdated = true;
                             Utility.getExecutorService().execute(new Runnable() {
                                 @Override
@@ -410,36 +424,53 @@ public class ChatRepository extends BaseRepository {
 
     public void sendMessage(MutableLiveData<CustomResponse<?>> isSent, MutableLiveData<CustomResponse<?>> messages, MutableLiveData<CustomResponse<?>> chats,
                             QBChatDialog qbChat, String message, Integer adId){
-        User u = Utility.getLoggedInUser(App.getAppContext());
-        QBChatMessage qbMessage = new QBChatMessage();
-        qbMessage.setBody(message);
-        qbMessage.setSaveToHistory(true);
-        qbMessage.setProperty("username", u.getUsername());
-        qbMessage.setSenderId(u.getUserQbId());
-        qbMessage.setDateSent((new Date()).getTime());
-        qbMessage.setDialogId(qbChat.getDialogId());
-        qbChat.sendMessage(qbMessage, new QBEntityCallback<Void>() {
+        if(qbChat == null) return;
+        Utility.getExecutorService().execute(new Runnable() {
             @Override
-            public void onSuccess(Void aVoid, Bundle bundle) {
-                isSent.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
-                updateMessages(messages, qbMessage);
-                updateChat(chats, qbChat.getDialogId());
-                List<Integer> ids = new ArrayList<>();
-                for (Integer id : qbChat.getOccupants()) {
-                    if(id != u.getUserQbId())
-                        ids.add(id);
+            public void run() {
+                if(!qbChat.isJoined()){
+                    try {
+                        qbChat.join(new DiscussionHistory());
+                    } catch (XMPPException e) {
+                        e.printStackTrace();
+                    } catch (SmackException e) {
+                        e.printStackTrace();
+                    }
                 }
-                sendChatNotification(new ChatNotification(u.getUsername(), message, adId,
-                        ids, qbChat.getDialogId()));
-                saveMessageLocally(qbMessage);
-            }
+                User u = Utility.getLoggedInUser(App.getAppContext());
+                QBChatMessage qbMessage = new QBChatMessage();
+                qbMessage.setBody(message);
+                qbMessage.setSaveToHistory(true);
+                qbMessage.setProperty("username", u.getUsername());
+                qbMessage.setSenderId(u.getUserQbId());
+                qbMessage.setDateSent((new Date()).getTime());
+                qbMessage.setDialogId(qbChat.getDialogId());
 
-            @Override
-            public void onError(QBResponseException e) {
-                Log.i("sendMessage", "NE braoooo");
-                responseNotSuccessful(e.getHttpStatusCode(), isSent);
+                qbChat.sendMessage(qbMessage, new QBEntityCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid, Bundle bundle) {
+                        isSent.postValue(new CustomResponse<>(CustomResponse.Status.OK, true));
+                        updateMessages(messages, qbMessage);
+                        updateChat(chats, qbChat.getDialogId());
+                        List<Integer> ids = new ArrayList<>();
+                        for (Integer id : qbChat.getOccupants()) {
+                            if(id != u.getUserQbId())
+                                ids.add(id);
+                        }
+                        sendChatNotification(new ChatNotification(u.getUsername(), message, adId,
+                                ids, qbChat.getDialogId()));
+                        //saveMessageLocally(qbMessage);
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+                        Log.i("sendMessage", "NE braoooo");
+                        responseNotSuccessful(e.getHttpStatusCode(), isSent);
+                    }
+                });
             }
         });
+
     }
 
     private void saveMessageLocally(QBChatMessage qbMessage) {
@@ -451,9 +482,11 @@ public class ChatRepository extends BaseRepository {
         });
     }
 
-    public void getMessages(MutableLiveData<CustomResponse<?>> messages, QBChatDialog chat, int messagesSkipped, boolean shouldAppend){
+    public void getMessages(MutableLiveData<CustomResponse<?>> messages, QBChatDialog chat, int messagesSkipped,
+                            boolean shouldAppend){
+        if(chat == null) return;
         Boolean[] isSynced = {false};
-        getMessagesLocal(messages, chat.getDialogId(), isSynced);
+        //getMessagesLocal(messages, chat.getDialogId(), isSynced);
         QBMessageGetBuilder messageGetBuilder = new QBMessageGetBuilder();
         messageGetBuilder.setLimit(100);
         messageGetBuilder.setSkip(messagesSkipped);

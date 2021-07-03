@@ -357,6 +357,7 @@ public class UserRepository extends BaseRepository {
             }
         });
     }
+
     public void getProfilePictureLocal(MutableLiveData<CustomResponse<?>> profilePicture, int userId, Boolean[] isSynced){
         if(App.getAppContext() == null){
             return;
