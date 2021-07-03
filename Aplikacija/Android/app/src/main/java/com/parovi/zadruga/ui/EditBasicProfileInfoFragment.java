@@ -1,5 +1,6 @@
 package com.parovi.zadruga.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import androidx.navigation.Navigation;
 import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.activities.PasswordResetActivity;
 import com.parovi.zadruga.databinding.FragmentEditBasicProfileInfoBinding;
 import com.parovi.zadruga.models.entityModels.Faculty;
 import com.parovi.zadruga.models.entityModels.User;
@@ -120,6 +122,11 @@ public class EditBasicProfileInfoFragment extends Fragment {
                     ((BitmapDrawable)binding.ivProfilePhoto.getDrawable()).getBitmap();
                 }
             }
+        });
+
+        binding.tvChangePass.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), PasswordResetActivity.class);
+            startActivity(intent);
         });
 
         binding.tvEditPrefs.setOnClickListener(new View.OnClickListener() {

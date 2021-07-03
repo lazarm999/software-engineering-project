@@ -186,4 +186,5 @@
     <string name="alreadyBanned">"Banovan "</string>
     <string name="noMessages">Jos uvek nema nijedne poruke</string>
     <string name="alreadyRated">Već ocenjen</string>
+    <string name="chats">Ćaskanja</string>
 </resources>

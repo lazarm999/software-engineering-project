@@ -130,6 +130,7 @@ public class ChatRepository extends BaseRepository {
             @Override
             public void onError(QBResponseException e) {
                 Log.i("insertChat", "NE braoooo");
+                chats.postValue(new CustomResponse<>(CustomResponse.Status.EXCEPTION_ERROR, null));
                 responseNotSuccessful(e.getHttpStatusCode(), chats);
             }
         });

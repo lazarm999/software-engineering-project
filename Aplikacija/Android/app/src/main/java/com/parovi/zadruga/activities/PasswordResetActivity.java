@@ -29,9 +29,10 @@ public class PasswordResetActivity extends AppCompatActivity {
 
         model.getIsPassChanged().observe(this, customResponse -> {
             if(customResponse.getStatus() == CustomResponse.Status.OK){
-                Intent intent;
+                /*Intent intent;
                 intent = new Intent(PasswordResetActivity.this, LogInActivity.class);
-                startActivity(intent);
+                startActivity(intent);*/
+                finish();
             }
         });
 

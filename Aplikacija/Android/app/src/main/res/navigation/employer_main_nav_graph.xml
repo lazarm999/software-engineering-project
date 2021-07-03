@@ -48,7 +48,11 @@
         android:id="@+id/employerProfileFragment3"
         android:name="com.parovi.zadruga.fragments.EmployerProfileFragment"
         android:label="fragment_employer_profile"
-        tools:layout="@layout/fragment_employer_profile" />
+        tools:layout="@layout/fragment_employer_profile" >
+        <action
+            android:id="@+id/action_studentProfileFragment2_to_ratingFragment3"
+            app:destination="@id/ratingFragment" />
+    </fragment>
     <action android:id="@+id/action_global_employerProfileFragment3" app:destination="@id/employerProfileFragment3" />
 
     <fragment
@@ -56,5 +60,15 @@
         android:name="com.parovi.zadruga.ui.SelectPreferencesFragment"
         android:label="fragment_select_preferences"
         tools:layout="@layout/fragment_select_preferences" />
+    <fragment
+        android:id="@+id/ratingFragment"
+        android:name="com.parovi.zadruga.fragments.RatingFragment"
+        android:label="fragment_rating"
+        tools:layout="@layout/fragment_rating" >
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 
 </navigation>

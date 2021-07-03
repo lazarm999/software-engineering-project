@@ -55,7 +55,7 @@ public class ChatMessagesFragment extends Fragment {
                     List<Message> messages = (List<Message>) customResponse.getBody();
                     //adapter.setMessages(messages);
                     adapter.submitList(messages);
-                    binding.rvMessages.scrollToPosition(0);
+                    binding.rvMessages.scrollToPosition(adapter.getItemCount()-1);
                 }
             }
         });
