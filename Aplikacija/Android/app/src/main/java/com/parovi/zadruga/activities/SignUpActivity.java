@@ -101,11 +101,6 @@ public class SignUpActivity extends AppCompatActivity {
                             binding.txtSurname.getText().toString(), binding.txtEmail.getText().toString(), binding.txtPass.getText().toString(), binding.checkBoxE.isChecked(), binding.txtMobile.getText().toString() == null ? null : binding.txtMobile.getText().toString());
                     model.signUp(user, binding.txtPass.getText().toString());
                     Toast.makeText(App.getAppContext(), "Success sign up", Toast.LENGTH_SHORT).show();
-//                    Intent intent;
-//
-//                    intent = new Intent(SignUpActivity.this, LogInActivity.class);
-//
-//                    startActivity(intent);
                 }
             }
         });

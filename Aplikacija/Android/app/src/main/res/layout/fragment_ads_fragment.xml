@@ -119,8 +119,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="top"
-                        android:layout_marginStart="105dp"
-                        android:layout_marginLeft="105dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="45dp"
                         android:fontFamily="@font/roboto_condensed_regular"
                         android:text="@string/filter"
                         android:textColor="@color/black"
@@ -129,6 +129,21 @@
                         app:cornerRadius="20dp"
                         app:icon="@drawable/ic_filteric"
                         app:iconTint="@color/black"
+                        app:rippleColor="@color/lila" />
+
+                    <Button
+                        android:id="@+id/btnClearAllFilters"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|fill_vertical"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:text="@string/clearFilters"
+                        android:textColor="@color/black"
+                        android:textSize="10sp"
+                        app:backgroundTint="@color/teal_200"
+                        app:cornerRadius="20dp"
                         app:rippleColor="@color/lila" />
 
                 </LinearLayout>

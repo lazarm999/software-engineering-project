@@ -129,6 +129,8 @@ public class StudentProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 model.banUser();
+                binding.btnBanUser.setText(R.string.alreadyBanned);
+                binding.btnBanUser.setEnabled(false);
             }
         });
 

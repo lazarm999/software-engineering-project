@@ -21,11 +21,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="140dp"
+            android:layout_marginEnd="173dp"
             android:layout_toStartOf="@+id/btnEdit"
             android:fontFamily="@font/roboto_condensed_regular"
-            android:textColor="@color/lila"
-            android:textSize="12sp"
             android:textStyle="bold"
             app:backgroundTint="@color/background"
             app:cornerRadius="20dp"
@@ -109,7 +107,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="243dp"
                 android:fontFamily="@font/roboto_condensed_regular"
-                android:text="Lazar"
+                android:text="@string/signNamePlaceholder"
                 android:textColor="@color/lila"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -121,7 +119,7 @@
                 android:layout_marginStart="7dp"
                 android:layout_marginTop="243dp"
                 android:fontFamily="@font/roboto_condensed_regular"
-                android:text="Minic"
+                android:text="@string/signSurnamePlaceholder"
                 android:textColor="@color/lila"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -136,7 +134,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="140dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/vuk_profilna" />
+            android:src="@drawable/avatar" />
 
 
         <LinearLayout
@@ -167,8 +165,8 @@
                 android:id="@+id/linearBagdges"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="26dp"
-                android:layout_marginTop="640dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="635dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -252,7 +250,6 @@
             android:layout_marginTop="430dp"
             android:layout_marginEnd="46dp"
             android:fontFamily="@font/roboto_condensed_regular"
-            android:text="0653990854"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -277,7 +274,7 @@
             android:layout_marginLeft="22dp"
             android:layout_marginTop="470dp"
             android:layout_marginEnd="46dp"
-            android:background="@drawable/border_for_inputs"
+            android:background="@drawable/border_for_info"
             android:ems="10"
             android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="start|top"
@@ -285,7 +282,6 @@
             android:padding="4dp"
             android:scrollbars="vertical"
             android:singleLine="false"
-            android:text="I am looking for ambitious young people who are ready to work in constructions"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -317,7 +313,6 @@
             android:layout_marginTop="390dp"
             android:layout_marginEnd="46dp"
             android:fontFamily="@font/roboto_condensed_regular"
-            android:text="Mladost"
             android:textColor="@color/black"
             android:textSize="18sp" />
 

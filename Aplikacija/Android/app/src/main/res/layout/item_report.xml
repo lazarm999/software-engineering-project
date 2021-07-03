@@ -39,6 +39,7 @@
             android:id="@+id/btnDeleteReport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="260dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/deleteReport"
@@ -48,7 +49,7 @@
             app:backgroundTint="@color/lilaChip"
             app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvElaboration"
             app:rippleColor="@color/lila" />
 
