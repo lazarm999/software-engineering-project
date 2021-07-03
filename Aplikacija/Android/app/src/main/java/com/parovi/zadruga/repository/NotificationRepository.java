@@ -103,9 +103,9 @@ public class NotificationRepository extends BaseRepository {
     }
 
     public void getNotificationsLocal(MutableLiveData<CustomResponse<?>> notifications, Boolean[] isSynced, int pageSkip) {
-        if(getListSize(notifications) > 0) return;
+        if(pageSkip > 0) return;
         Utility.getExecutorService().execute(() -> {
-            List<Notification> localNotifications = DaoFactory.getNotificationDao().getNotifications(Constants.pageSize, pageSkip);
+            List<Notification> localNotifications = DaoFactory.getNotificationDao().getNotifications();
             if(localNotifications != null){
                 for (Notification notification : localNotifications) {
                     if(notification.getFkAdId() != null){

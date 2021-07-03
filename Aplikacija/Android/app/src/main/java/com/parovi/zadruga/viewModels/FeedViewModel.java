@@ -111,10 +111,9 @@ public class FeedViewModel extends AndroidViewModel{
         return strings;
     }
 
-    public int getIdByLocationName(String locName)
+    public Integer getIdByLocationName(String locName)
     {
-        int id = -1;
-
+        Integer id = null;
         List<Location> locs = (List<Location>)locations.getValue().getBody();
         for (Location loc : locs)
             if(loc.getCityName().equals(locName))

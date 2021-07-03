@@ -50,7 +50,7 @@ import com.parovi.zadruga.models.entityModels.manyToManyModels.UserChat;
 @Database(entities = {Ad.class, Location.class, User.class, UserBadge.class, Faculty.class, University.class, Notification.class,
         Tag.class, Badge.class, AdTag.class, Rating.class, Applied.class, Comment.class,
         Chat.class, Message.class, UserChat.class, Tagged.class, PreferredTag.class, Report.class},
-        version = 69, exportSchema = false)
+        version = 70, exportSchema = false)
 @TypeConverters({Converters.class})
 abstract public class ZadrugaDatabase extends RoomDatabase {
     private static ZadrugaDatabase db;

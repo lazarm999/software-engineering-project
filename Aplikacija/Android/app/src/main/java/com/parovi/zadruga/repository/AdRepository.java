@@ -172,8 +172,8 @@ public class AdRepository extends BaseRepository {
     }
 
     public void getAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, int pageSkip){
-        if(getListSize(ads) > 0) return;
-        Futures.addCallback(DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip),
+        if(pageSkip > 0) return;
+        Futures.addCallback(DaoFactory.getAdDao().getAds(),
                 new FutureCallback<List<AdWithTags>>() {
             @Override
             public void onSuccess(@Nullable List<AdWithTags> result) {

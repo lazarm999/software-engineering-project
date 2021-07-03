@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
@@ -114,14 +113,12 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.NO_MORE_DATA) {
-                    binding.progressBar.setVisibility(View.GONE);
-                    //TODO:
-                    adapter.setAds((ArrayList<Ad>) customResponse.getBody());
-                    Toast.makeText(requireActivity(), "That's all the data..", Toast.LENGTH_SHORT).show();
+                    //adapter.setAds((ArrayList<Ad>) customResponse.getBody());
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.setAds((ArrayList<Ad>) customResponse.getBody());
                 }
+                binding.progressBar.setVisibility(View.GONE);
             }
         });
 
@@ -190,7 +187,9 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
                 min = sMin.equals("") ? null : Integer.parseInt(sMin);
                 max = sMax.equals("") ? null : Integer.parseInt(sMax);
                 tagIds = currTagIds;
-                String loc = spinnerLocations.getSelectedItem().toString();
+                String loc = "";
+                if(spinnerLocations.getSelectedItem() != null)
+                    loc = spinnerLocations.getSelectedItem().toString();
                 locId = model.getIdByLocationName(loc);
                 isFiltered = true;
                 model.filterAds(locId,  min,max, tagIds, false, true);
@@ -263,7 +262,7 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
     @Override
     public void onStart() {
         super.onStart();
-        model.loadAdsDefault(false);
+        model.loadAdsDefault(true);
     }
 
     @Override
