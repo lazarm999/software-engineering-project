@@ -188,4 +188,5 @@
     <string name="wrongPass">Wrong password</string>
     <string name="alreadyBanned">Already banned</string>
     <string name="noMessages">No messages yet!</string>
+    <string name="alreadyRated">Already rated</string>
 </resources>

@@ -185,4 +185,5 @@
     <string name="wrongPass">Pogrešna lozinka</string>
     <string name="alreadyBanned">"Banovan "</string>
     <string name="noMessages">Jos uvek nema nijedne poruke</string>
+    <string name="alreadyRated">Već ocenjen</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
+import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.Utility;
 import com.parovi.zadruga.factories.ApiFactory;
@@ -16,6 +17,7 @@ import com.parovi.zadruga.models.responseModels.RatingResponse;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,8 @@ public class RatingRepository extends BaseRepository {
                             DaoFactory.getRatingDao().insertOrUpdate(rating);
                         }
                     });
-                }
+                } else
+                    responseNotSuccessful(response.code(), isRated);
             }
 
             @Override
@@ -134,6 +137,25 @@ public class RatingRepository extends BaseRepository {
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 apiCallOnFailure(t.getMessage(), isDeleted);
+            }
+        });
+    }
+
+    public void hasRated(MutableLiveData<CustomResponse<?>> hasRated, Integer rateeId){
+        String token = Utility.getAccessToken(App.getAppContext());
+        Utility.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<Boolean> hasRatedRes = ApiFactory.getRatingApi().hasRated(token, rateeId).execute();
+                    if(hasRatedRes.isSuccessful()){
+                        hasRated.postValue(new CustomResponse<>(CustomResponse.Status.OK, hasRatedRes.body()));
+                    } else
+                        responseNotSuccessful(hasRatedRes.code(), hasRated);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    apiCallOnFailure(e.getMessage(), hasRated);
+                }
             }
         });
     }

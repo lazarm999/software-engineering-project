@@ -231,7 +231,8 @@ public class User {
 
     public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
-        fkFacultyId = faculty.getFacultyId();
+        if(faculty != null)
+            fkFacultyId = faculty.getFacultyId();
     }
 
     public Bitmap getProfileImage() {

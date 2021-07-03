@@ -62,7 +62,9 @@ public class EditBasicProfileInfoFragment extends Fragment {
         model.getUserInfo().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
-                populateViews((User)customResponse.getBody());
+                if(customResponse.getStatus() == CustomResponse.Status.OK){
+                    populateViews((User)customResponse.getBody());
+                }
             }
         });
 
@@ -112,9 +114,11 @@ public class EditBasicProfileInfoFragment extends Fragment {
         binding.btnSubmitChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                readViews((User)model.getUserInfo().getValue().getBody());
-                model.updateUser();
-                ((BitmapDrawable)binding.ivProfilePhoto.getDrawable()).getBitmap();
+                if((User)model.getUserInfo().getValue().getBody() != null){
+                    readViews((User)model.getUserInfo().getValue().getBody());
+                    model.updateUser();
+                    ((BitmapDrawable)binding.ivProfilePhoto.getDrawable()).getBitmap();
+                }
             }
         });
 

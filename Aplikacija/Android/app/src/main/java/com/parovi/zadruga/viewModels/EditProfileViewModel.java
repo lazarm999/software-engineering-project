@@ -91,7 +91,6 @@ public class EditProfileViewModel extends AndroidViewModel implements SelectPref
     }
 
     public void updateUser() {
-
         userRepository.updateUser(Utility.getAccessToken(App.getAppContext()),
                 isUserUpdated,
                 (User)userInfo.getValue().getBody(),

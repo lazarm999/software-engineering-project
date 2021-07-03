@@ -28,4 +28,7 @@ public interface RatingApi {
 
     @DELETE("rate/{id}/")
     Call<ResponseBody> deleteRating(@Header("Authorization") String token, @Path("id") int id);
+
+    @GET("hasRated/{id}/")
+    Call<Boolean> hasRated(@Header("Authorization") String token, @Path("id") int rateeId);
 }

@@ -141,7 +141,7 @@ public class AdRepository extends BaseRepository {
                 if(response.isSuccessful()) {
                     if(response.body() != null){
                         if(response.body().size() == 0){
-                            if(ads.getValue() != null)
+                            if(ads.getValue() != null && !refresh)
                                 ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
                                         ads.getValue().getBody()));
                             else
@@ -172,8 +172,8 @@ public class AdRepository extends BaseRepository {
     }
 
     public void getAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, int pageSkip){
-        if(getListSize(ads) > 0) return;
-        Futures.addCallback(DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip),
+        if(pageSkip > 0) return;
+        Futures.addCallback(DaoFactory.getAdDao().getAds(),
                 new FutureCallback<List<AdWithTags>>() {
             @Override
             public void onSuccess(@Nullable List<AdWithTags> result) {
@@ -198,7 +198,7 @@ public class AdRepository extends BaseRepository {
     }
 
     public void getAds(String token, MutableLiveData<CustomResponse<?>> ads, Integer locId, Integer compensationMin, Integer compensationMax, List<Integer> tagIds,
-                       boolean sortByLocation, boolean refresh) {
+                       Boolean sortByLocation, Boolean refresh) {
         if(compensationMax != null && compensationMin != null && compensationMax < compensationMin) {
             responseNotSuccessful(400, ads);
             return;
@@ -225,17 +225,17 @@ public class AdRepository extends BaseRepository {
                         @Override
                         public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
                             if(response.isSuccessful()) {
+                                synchronized (isSynced[0]) {
                                 if(response.body() != null){
-                                    if(response.body().size() == 0){
-                                        if(ads.getValue() != null)
-                                            ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
-                                                    ads.getValue().getBody()));
-                                        else
-                                            ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
-                                                    new ArrayList<>()));
-                                        return;
-                                    }
-                                    synchronized (isSynced[0]) {
+                                        if(response.body().size() == 0){
+                                            if(ads.getValue() != null && !refresh)
+                                                ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                                        ads.getValue().getBody()));
+                                            else
+                                                ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                                        new ArrayList<>()));
+                                            return;
+                                        }
                                         if (pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null){
                                             List<Ad> tmpAds = (List) ads.getValue().getBody();
                                             tmpAds.addAll(response.body());
@@ -267,16 +267,16 @@ public class AdRepository extends BaseRepository {
                 public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
                     if(response.isSuccessful()) {
                         if(response.body() != null){
-                            if(response.body().size() == 0){
-                                if(ads.getValue() != null)
-                                    ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
-                                            ads.getValue().getBody()));
-                                else
-                                    ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
-                                            new ArrayList<>()));
-                                return;
-                            }
                             synchronized (isSynced[0]) {
+                                if(response.body().size() == 0){
+                                    if(ads.getValue() != null && !refresh)
+                                        ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                                ads.getValue().getBody()));
+                                    else
+                                        ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                                new ArrayList<>()));
+                                    return;
+                                }
                                 if(pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null){
                                     List<Ad> tmpAds = (List) ads.getValue().getBody();
                                     tmpAds.addAll(response.body());
@@ -651,16 +651,16 @@ public class AdRepository extends BaseRepository {
                         Constants.pageSize, pageSkip).execute();
                 if(adsResponse.isSuccessful()){
                     if(adsResponse.body() != null) {
-                        if(adsResponse.body().size() == 0){
-                            if(ads.getValue() != null)
-                                ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
-                                        ads.getValue().getBody()));
-                            else
-                                ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
-                                        new ArrayList<>()));
-                            return;
-                        }
                         synchronized (isSynced[0]) {
+                            if(adsResponse.body().size() == 0){
+                                if(ads.getValue() != null && !refresh)
+                                    ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                            ads.getValue().getBody()));
+                                else
+                                    ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                            new ArrayList<>()));
+                                return;
+                            }
                             if (pageSkip > 0 && ads.getValue() != null && ads.getValue().getBody() != null) {
                                 List<Ad> tmpAds = (List) ads.getValue().getBody();
                                 tmpAds.addAll(adsResponse.body());
@@ -691,7 +691,7 @@ public class AdRepository extends BaseRepository {
 
     private void getRecommendedAdsLocal(MutableLiveData<CustomResponse<?>> ads, Boolean[] isSynced, int pageSkip,
                                         List<Integer> tagIds) {
-        if(getListSize(ads) > 0) return;
+        if(pageSkip > 0) return;
         Utility.getExecutorService().execute(() -> {
             List<Ad> localAds = DaoFactory.getAdDao().getAds(Constants.pageSize, pageSkip, tagIds);
             if(localAds != null){

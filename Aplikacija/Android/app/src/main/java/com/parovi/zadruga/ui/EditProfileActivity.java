@@ -1,14 +1,12 @@
 package com.parovi.zadruga.ui;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.os.Bundle;
-
-import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.repository.UserRepository;
 import com.parovi.zadruga.viewModels.EditProfileViewModel;
@@ -16,11 +14,9 @@ import com.parovi.zadruga.viewModels.EditProfileViewModel;
 public class EditProfileActivity extends AppCompatActivity {
     private EditProfileViewModel model;
     private UserRepository userRepository = new UserRepository();
-    private MutableLiveData<CustomResponse<?>> isLoggedIn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userRepository.loginUser(new MutableLiveData<>(), "tea@gmail.com", "sifra123");
         setContentView(R.layout.activity_edit_profile);
         model = new ViewModelProvider(this).get(EditProfileViewModel.class);
     }
