@@ -69,7 +69,7 @@ public class ChatInfoFragment extends Fragment implements UserAdapter.UserListLi
         //NavController navController = Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment);
 
         binding.tvRelatedJobTitle.setText(model.getActiveChat().getChatTitle());
-        if (model.getActiveChat().getType() == Utility.ChatType.GROUP) {
+        if (model.getAdId() != null) {
             binding.tvRelatedJobTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

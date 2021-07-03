@@ -141,7 +141,7 @@
                         android:fontFamily="@font/roboto_condensed_regular"
                         android:text="@string/clearFilters"
                         android:textColor="@color/black"
-                        android:textSize="10sp"
+                        android:textSize="9sp"
                         app:backgroundTint="@color/teal_200"
                         app:cornerRadius="20dp"
                         app:rippleColor="@color/lila" />

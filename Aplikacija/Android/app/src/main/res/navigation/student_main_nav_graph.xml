@@ -47,7 +47,7 @@
         android:label="fragment_student_profile_fragment"
         tools:layout="@layout/fragment_student_profile_fragment" >
         <action
-            android:id="@+id/action_studentProfileFragment_to_ratingFragment"
+            android:id="@+id/action_studentProfileFragment2_to_ratingFragment3"
             app:destination="@id/ratingFragment" />
     </fragment>
     <fragment

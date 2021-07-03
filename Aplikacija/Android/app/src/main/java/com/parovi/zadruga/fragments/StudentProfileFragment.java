@@ -77,7 +77,7 @@ public class StudentProfileFragment extends Fragment {
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
-                StudentProfileFragmentDirections.ActionStudentProfileFragmentToRatingFragment action = StudentProfileFragmentDirections.actionStudentProfileFragmentToRatingFragment();
+                StudentProfileFragmentDirections.ActionStudentProfileFragment2ToRatingFragment3 action = StudentProfileFragmentDirections.actionStudentProfileFragment2ToRatingFragment3();
                 action.setUserId(model.getId());
                 Navigation.findNavController(binding.getRoot()).navigate(action);
                 /*FragmentTransaction fr = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -257,11 +257,9 @@ public class StudentProfileFragment extends Fragment {
             }
         });
 
-        binding.btnLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model.logOut();
-            }
+        binding.btnLogOut.setOnClickListener(v -> {
+            model.logOut();
+            requireActivity().finish();
         });
 
         int userId = -1;

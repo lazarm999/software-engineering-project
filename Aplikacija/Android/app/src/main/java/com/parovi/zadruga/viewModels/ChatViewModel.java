@@ -117,7 +117,7 @@ public class ChatViewModel extends ViewModel {
         chatRepository.getAdByChatId(ad, activeChat.getQbChat().getDialogId());
     }
 
-    public int getAdId() {
+    public Integer getAdId() {
         return activeChat.getFkAdId();
     }
 

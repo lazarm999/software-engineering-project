@@ -34,7 +34,8 @@
         </activity>
         <activity android:name=".ui.RateUserActivity" />
         <activity android:name=".ui.JobAdActivity" />
-        <activity android:name=".ui.ChatActivity" />
+        <activity android:name=".ui.ChatActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ui.EditProfileActivity" />
 
         <service android:name=".services.NotificationService">

@@ -67,7 +67,7 @@ public class EmployerProfileFragment extends Fragment {
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
-                EmployerProfileFragmentDirections.ActionEmployerProfileFragment2ToRatingFragment3 action = EmployerProfileFragmentDirections.actionEmployerProfileFragment2ToRatingFragment3();
+                EmployerProfileFragmentDirections.ActionStudentProfileFragment2ToRatingFragment3 action = EmployerProfileFragmentDirections.actionStudentProfileFragment2ToRatingFragment3();
                 action.setUserId(model.getId());
                 Navigation.findNavController(binding.getRoot()).navigate(action);
             }
@@ -230,15 +230,13 @@ public class EmployerProfileFragment extends Fragment {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
                     Intent intent = new Intent(App.getAppContext(), MainActivity.class);
                     startActivity(intent);
+                    requireActivity().finish();
                 }
             }
         });
 
-        binding.btnLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model.logOut();
-            }
+        binding.btnLogOut.setOnClickListener(v -> {
+            model.logOut();
         });
 
         int userId = -1;

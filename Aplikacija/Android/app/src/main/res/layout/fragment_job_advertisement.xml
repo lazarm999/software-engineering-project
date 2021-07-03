@@ -55,6 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:ellipsize="none"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="Job Ad Title"
                 android:textColor="@color/lila"

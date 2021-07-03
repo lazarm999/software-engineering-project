@@ -353,20 +353,6 @@
                 android:textSize="18sp" />
 
 
-            <Button
-                android:id="@+id/btnPrivateChat"
-                android:layout_width="48dp"
-                android:layout_height="46dp"
-                android:layout_marginStart="70dp"
-                android:layout_marginTop="135dp"
-                android:layout_marginEnd="100dp"
-                app:backgroundTint="@color/lila"
-                app:cornerRadius="30dp"
-                app:icon="@drawable/private_chat"
-                app:iconPadding="1dp"
-                app:iconTint="@color/background"
-                app:rippleColor="@color/lila" />
-
         </RelativeLayout>
     </FrameLayout>
 </ScrollView>

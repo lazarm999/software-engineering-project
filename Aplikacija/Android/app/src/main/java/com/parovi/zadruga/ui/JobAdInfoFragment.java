@@ -180,6 +180,12 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
     }
 
     private void bindAndUpdateScreen(Ad ad) {
+        if(ad == null) return;
+        /*String title;
+        if (ad.getTitle().length() > 30) {
+            title = ad.getTitle().substring(0, 30);
+            title += "...";
+        }*/
         binding.tvJobTitle.setText(ad.getTitle());
         binding.tvJobDesc.setText(ad.getDescription());
         binding.tvLocation.setText(ad.getLocation().getCityName());

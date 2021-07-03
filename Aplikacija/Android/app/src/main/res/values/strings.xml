@@ -192,5 +192,7 @@
     <string name="peopleJob">People</string>
     <string name="dialogHint">Why do you want to report this..</string>
     <string name="clearFilters">Clear all filters</string>
+    <string name="noMessages">No messages yet!</string>
     <string name="alreadyRated">Already rated</string>
+    <string name="chats">Chats</string>
 </resources>

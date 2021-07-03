@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
+import com.parovi.zadruga.adapters.MessageBubbleAdapter;
 import com.parovi.zadruga.adapters.MessagesAdapter;
 import com.parovi.zadruga.databinding.FragmentChatMessagesBinding;
 import com.parovi.zadruga.models.entityModels.Message;
@@ -45,13 +46,16 @@ public class ChatMessagesFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentChatMessagesBinding.inflate(inflater, container, false);
         model = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
-        MessagesAdapter adapter = new MessagesAdapter();
+        //MessagesAdapter adapter = new MessagesAdapter();
+        MessageBubbleAdapter adapter = new MessageBubbleAdapter();
         model.observeMessages().observe(requireActivity(), new Observer<CustomResponse<?>>() {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.OK && customResponse.getBody() != null) {
                     List<Message> messages = (List<Message>) customResponse.getBody();
-                    adapter.setMessages(messages);
+                    //adapter.setMessages(messages);
+                    adapter.submitList(messages);
+                    binding.rvMessages.scrollToPosition(adapter.getItemCount()-1);
                 }
             }
         });

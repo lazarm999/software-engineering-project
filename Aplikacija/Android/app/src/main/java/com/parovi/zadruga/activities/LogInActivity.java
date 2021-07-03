@@ -54,6 +54,7 @@ public class LogInActivity extends AppCompatActivity {
                 else
                     intent = new Intent(LogInActivity.this, MainStudentActivity.class);
                 startActivity(intent);
+                finish();
             }
             else if(customResponse.getStatus() == CustomResponse.Status.BAD_REQUEST)
             {

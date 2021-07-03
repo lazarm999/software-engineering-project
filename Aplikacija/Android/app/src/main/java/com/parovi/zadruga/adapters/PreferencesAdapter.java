@@ -7,17 +7,32 @@ import android.widget.CompoundButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parovi.zadruga.R;
 import com.parovi.zadruga.databinding.ItemJobtypePreferenceBinding;
 import com.parovi.zadruga.models.entityModels.Tag;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
 public class PreferencesAdapter extends RecyclerView.Adapter<PreferencesAdapter.JobTagViewHolder> {
+    public static Dictionary<Integer, Integer> tagToImgRes;
     private PreferencesListener fragment;
     private List<Tag> tags;
     private List<Integer> selectedTagIds;
+
+    static {
+        tagToImgRes = new Hashtable<>();
+        tagToImgRes.put(1, R.drawable.hostess_prefer);
+        tagToImgRes.put(2, R.drawable.promoter_prefer);
+        tagToImgRes.put(3, R.drawable.chef_prefer);
+        tagToImgRes.put(4, R.drawable.interviewer_pref);
+        tagToImgRes.put(5, R.drawable.delivery_prefer);
+        tagToImgRes.put(6, R.drawable.waiter);
+        tagToImgRes.put(7, R.drawable.lighter_phys_pref);
+        tagToImgRes.put(8, R.drawable.heavy_phys_pref);
+    }
 
     public PreferencesAdapter(PreferencesListener listener) {
         fragment = listener;
@@ -65,6 +80,10 @@ public class PreferencesAdapter extends RecyclerView.Adapter<PreferencesAdapter.
 
         public void bindTo(Tag tag) {
             binding.switchJobType.setText(tag.getName());
+            Integer imgRes = PreferencesAdapter.tagToImgRes.get(tag.getTagId());
+            if (imgRes != null) {
+                binding.imageView4.setImageResource(imgRes);
+            }
             boolean selected = selectedTagIds.contains(tag.getTagId());
             binding.switchJobType.setChecked(selected);
         }

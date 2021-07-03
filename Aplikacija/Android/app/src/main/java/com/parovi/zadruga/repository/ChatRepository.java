@@ -130,6 +130,7 @@ public class ChatRepository extends BaseRepository {
             @Override
             public void onError(QBResponseException e) {
                 Log.i("insertChat", "NE braoooo");
+                chats.postValue(new CustomResponse<>(CustomResponse.Status.EXCEPTION_ERROR, null));
                 responseNotSuccessful(e.getHttpStatusCode(), chats);
             }
         });
@@ -306,6 +307,7 @@ public class ChatRepository extends BaseRepository {
     }
 
     public void getChatMembers(MutableLiveData<CustomResponse<?>> chatMembers, QBChatDialog chat) {
+        if(chat == null) return;
         final String token = Utility.getAccessToken(App.getAppContext());
         ChatMembersRequest req = new ChatMembersRequest(chat.getOccupants());
         Boolean[] isSynced = new Boolean[]{false};
