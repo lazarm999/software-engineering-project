@@ -198,7 +198,7 @@ public class AdRepository extends BaseRepository {
     }
 
     public void getAds(String token, MutableLiveData<CustomResponse<?>> ads, Integer locId, Integer compensationMin, Integer compensationMax, List<Integer> tagIds,
-                       boolean sortByLocation, boolean refresh) {
+                       Boolean sortByLocation, boolean refresh) {
         if(compensationMax != null && compensationMin != null && compensationMax < compensationMin) {
             responseNotSuccessful(400, ads);
             return;
@@ -226,7 +226,7 @@ public class AdRepository extends BaseRepository {
                         public void onResponse(@NotNull Call<List<Ad>> call, @NotNull Response<List<Ad>> response) {
                             if(response.isSuccessful()) {
                                 if(response.body() != null){
-                                    if(response.body().size() == 0){
+                                    if(response.body().size() == 0 && pageSkip > 0){
                                         if(ads.getValue() != null)
                                             ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
                                                     ads.getValue().getBody()));
@@ -268,7 +268,7 @@ public class AdRepository extends BaseRepository {
                     if(response.isSuccessful()) {
                         if(response.body() != null){
                             if(response.body().size() == 0){
-                                if(ads.getValue() != null)
+                                if(ads.getValue() != null && pageSkip > 0)
                                     ads.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
                                             ads.getValue().getBody()));
                                 else

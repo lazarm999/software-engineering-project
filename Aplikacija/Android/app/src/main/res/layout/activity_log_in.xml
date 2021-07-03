@@ -63,6 +63,21 @@
         android:textColor="@color/black"
         android:textSize="20dp" />
 
+    <ProgressBar
+        android:id="@+id/pbarLog"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="175dp"
+        android:layout_marginTop="320dp"
+        android:backgroundTint="@color/lilaChip"
+        android:foregroundTint="@color/lilaChip"
+        android:indeterminateTint="@color/lila"
+        android:max="100"
+        android:progress="20"
+        android:progressBackgroundTint="@color/lilaChip"
+        android:progressTint="@color/lila" />
+
     <EditText
         android:id="@+id/txtPassword"
         android:layout_width="283dp"

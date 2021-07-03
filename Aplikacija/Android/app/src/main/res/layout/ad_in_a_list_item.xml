@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/adInALIstItem"
-    android:layout_width="wrap_content"
+    android:padding="3dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
@@ -19,17 +20,17 @@
         <LinearLayout
             android:id="@+id/cardAdInAListItem"
             android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_height="75dp"
             android:background="@drawable/border_for_ad_in_a_list"
             android:orientation="horizontal"
             android:padding="10dp">
 
             <TextView
                 android:id="@+id/tvAdTitle"
-                android:layout_width="90dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="Title"
@@ -43,7 +44,7 @@
                 android:id="@+id/txtAdDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="150dp"
+                android:layout_marginStart="120dp"
                 android:layout_marginLeft="150dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/roboto_condensed_regular"
@@ -58,8 +59,8 @@
                 android:id="@+id/imgUserGradeVector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="-140dp"
-                android:layout_marginLeft="40dp"
+                android:layout_marginStart="-180dp"
+                android:layout_marginLeft="50dp"
                 android:layout_marginTop="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/txtAdDate"
@@ -73,5 +74,5 @@
 
     </androidx.cardview.widget.CardView>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -20,15 +20,12 @@
                 android:id="@+id/btnLogOut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="140dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="173dp"
                 android:layout_toStartOf="@+id/btnEdit"
                 android:fontFamily="@font/roboto_condensed_regular"
-                android:text="@string/logout"
-                android:textColor="@color/lila"
                 android:textStyle="bold"
-                android:textSize="12sp"
                 app:backgroundTint="@color/background"
                 app:cornerRadius="20dp"
                 app:icon="@drawable/ic_logout"
@@ -113,7 +110,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="243dp"
                     android:fontFamily="@font/roboto_condensed_regular"
-                    android:text="Lazar"
+                    android:text="@string/signNamePlaceholder"
                     android:textColor="@color/lila"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -125,7 +122,7 @@
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="243dp"
                     android:fontFamily="@font/roboto_condensed_regular"
-                    android:text="Minic"
+                    android:text="@string/signSurnamePlaceholder"
                     android:textColor="@color/lila"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -140,20 +137,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="140dp"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/vuk_profilna" />
-
-            <TextView
-                android:id="@+id/editTextUsername"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/imgProfileBlank"
-                android:layout_marginStart="144dp"
-                android:layout_marginTop="260dp"
-                android:fontFamily="@font/roboto_condensed_bold_italic"
-                android:text="laza"
-                android:textColor="@color/lila"
-                android:textSize="12dp"
-                android:textStyle="bold" />
+                app:srcCompat="@drawable/avatar" />
 
             <LinearLayout
                 android:id="@+id/profile"
@@ -161,8 +145,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="0dp"
+                android:layout_marginTop="-4dp"
+                android:layout_marginEnd="4dp"
                 android:orientation="horizontal"
                 android:paddingBottom="20dp">
 
@@ -183,8 +167,8 @@
                     android:id="@+id/linearBagdges"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="615dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="635dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -229,6 +213,18 @@
                         android:padding="10dp"
                         app:srcCompat="@drawable/l5" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/editTextUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="220dp"
+                    android:fontFamily="@font/roboto_condensed_bold_italic"
+                    android:text="@string/usernamePlaceholder"
+                    android:textColor="@color/lila"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
 
             </LinearLayout>
@@ -290,7 +286,6 @@
                 android:layout_marginTop="430dp"
                 android:layout_marginEnd="35dp"
                 android:fontFamily="@font/roboto_condensed_regular"
-                android:text="0653990854"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -309,21 +304,20 @@
 
             <TextView
                 android:id="@+id/txtMultilineEditBio"
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginLeft="22dp"
                 android:layout_marginTop="470dp"
                 android:layout_marginEnd="35dp"
-                android:background="@drawable/border_for_inputs"
+                android:background="@drawable/border_for_info"
                 android:ems="10"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:gravity="start|top"
                 android:inputType="textMultiLine|textNoSuggestions"
-                android:padding="1dp"
+                android:padding="4dp"
                 android:scrollbars="vertical"
                 android:singleLine="false"
-                android:text="I am looking for ambitious young people who are ready to work in constructions"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -355,9 +349,23 @@
                 android:layout_marginTop="390dp"
                 android:layout_marginEnd="35dp"
                 android:fontFamily="@font/roboto_condensed_regular"
-                android:text="Elektronski fakultet"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
+
+
+            <Button
+                android:id="@+id/btnPrivateChat"
+                android:layout_width="48dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="135dp"
+                android:layout_marginEnd="100dp"
+                app:backgroundTint="@color/lila"
+                app:cornerRadius="30dp"
+                app:icon="@drawable/private_chat"
+                app:iconPadding="1dp"
+                app:iconTint="@color/background"
+                app:rippleColor="@color/lila" />
 
         </RelativeLayout>
     </FrameLayout>

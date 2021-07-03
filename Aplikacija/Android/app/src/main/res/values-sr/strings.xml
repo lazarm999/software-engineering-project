@@ -131,7 +131,7 @@
     <string name="btnApply">Primenite</string>
     <string name="btnNeutral">"Uklonite sve "</string>
     <string name="missingData">Niste popunili sva polja</string>
-    <string name="headerJobs">Poslovi koje ste radili do sada</string>
+    <string name="headerJobs">Radna istorija</string>
     <string name="headerMyAds">Vaši oglasi</string>
     <string name="recommend">Preporučeno za Vas</string>
     <string name="profileStudent">Profil</string>
@@ -184,4 +184,9 @@
     <string name="Ads">Oglasi</string>
     <string name="wrongPass">Pogrešna lozinka</string>
     <string name="alreadyBanned">"Banovan "</string>
+    <string name="logInfo">Pogrešno uneti podaci</string>
+    <string name="serverError">Greška sa serverom</string>
+    <string name="dialogHint">Napišite razlog prijave..</string>
+    <string name="peopleJob">Osobe</string>
+    <string name="clearFilters">Poništite sve filtere</string>
 </resources>

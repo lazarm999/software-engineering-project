@@ -126,7 +126,7 @@
     <string name="btnApply">Apply</string>
     <string name="btnNeutral">Clean all</string>
     <string name="missingData">Please fill all fields</string>
-    <string name="headerJobs">Previous jobs</string>
+    <string name="headerJobs">Work history</string>
     <string name="headerMyAds">Ads you have published</string>
     <string name="recommend">Recommended for You</string>
     <string name="profileStudent">Profile</string>
@@ -187,4 +187,9 @@
     <string name="info">About</string>
     <string name="wrongPass">Wrong password</string>
     <string name="alreadyBanned">Already banned</string>
+    <string name="logInfo">Invalid data</string>
+    <string name="serverError">Server error</string>
+    <string name="peopleJob">People</string>
+    <string name="dialogHint">Why do you want to report this..</string>
+    <string name="clearFilters">Clear all filters</string>
 </resources>

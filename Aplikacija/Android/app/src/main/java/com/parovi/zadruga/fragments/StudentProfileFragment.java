@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.InputType;
@@ -127,6 +128,8 @@ public class StudentProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 model.banUser();
+                binding.btnBanUser.setText(R.string.alreadyBanned);
+                binding.btnBanUser.setEnabled(false);
             }
         });
 

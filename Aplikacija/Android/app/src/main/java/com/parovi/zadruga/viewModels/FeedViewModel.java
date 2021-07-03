@@ -75,10 +75,11 @@ public class FeedViewModel extends AndroidViewModel{
 
     public void loadUserInfo() { userRepository.getUserById(Utility.getAccessToken(App.getAppContext()), user, Utility.getLoggedInUser(App.getAppContext()).getUserId()); }
 
-    public void sortAds() { adRepository.getAds(Utility.getAccessToken(App.getAppContext()), ads,
+    public void sortAds() {
+        adRepository.getAds(Utility.getAccessToken(App.getAppContext()), ads,
             null, null, null, null, true, true);}
 
-    public void filterAds(Integer locId, Integer min, Integer max, List<Integer> tagIds, boolean sortByLoc, boolean isRefresh) {
+    public void filterAds(Integer locId, Integer min, Integer max, List<Integer> tagIds, Boolean sortByLoc, boolean isRefresh) {
         adRepository.getAds(Utility.getAccessToken(App.getAppContext()), ads, locId, min,
                 max, tagIds, sortByLoc, isRefresh);
     }

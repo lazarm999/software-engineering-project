@@ -219,7 +219,7 @@ public class EmployerProfileFragment extends Fragment {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if(customResponse.getStatus() == CustomResponse.Status.OK){
-                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    Intent intent = new Intent(App.getAppContext(), MainActivity.class);
                     startActivity(intent);
                 }
             }
