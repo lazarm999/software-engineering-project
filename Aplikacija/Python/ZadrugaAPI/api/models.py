@@ -134,3 +134,25 @@ class Notification(models.Model):
 class UserNotification(models.Model):
     notification = models.ForeignKey('Notification', related_name='notifications' ,on_delete=models.CASCADE)
     user = models.ForeignKey('User', related_name='notifications', on_delete=models.CASCADE)
+
+
+class Reported(models.Model):
+    reportId = models.BigAutoField(primary_key=True)
+    reporter = models.ForeignKey('User', on_delete=models.CASCADE)
+    elaboration = models.TextField()
+    comment = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True)
+    ad = models.ForeignKey('Ad', on_delete=models.CASCADE, null=True)
+
+    def adTitle(self):
+        return self.ad.title if self.ad else None
+
+    def commentText(self):
+        return self.comment.comment if self.comment else None
+
+    def adId(self):
+        return self.ad.adId if self.ad else self.comment.ad.adId
+
+    def reported(self):
+        return self.ad.employer if self.ad else self.comment.user
+
+    

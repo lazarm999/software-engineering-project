@@ -32,5 +32,8 @@ urlpatterns = [
     path('chatNotification/', views.ChatNotification.as_view()),
     path('notifications/', views.NotificationList.as_view()),
     path('recommender/', views.Recommender.as_view()),
-    path('isApplied/<int:pk>/', views.IsApplied.as_view())
+    path('isApplied/<int:pk>/', views.IsApplied.as_view()),
+    path('report/', views.ReportedList.as_view()),
+    path('report/<int:pk>/', views.ReportedDetail.as_view()),
+    path('hasRated/<int:pk>/', views.HasRated.as_view())
 ]
