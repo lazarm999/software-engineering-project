@@ -2,8 +2,10 @@ package com.parovi.zadruga.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.InputType;
@@ -19,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.parovi.zadruga.App;
+import com.parovi.zadruga.Constants;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
@@ -136,7 +139,10 @@ public class StudentProfileFragment extends Fragment {
                 final TextView etText = new TextView(requireActivity());
                 etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 etText.setTextSize(16);
-                etText.setText(model.getBadgeDesc(0));
+                if(isEnSet())
+                    etText.setText(Constants.BADGE_1);
+                else
+                    etText.setText(model.getBadgeDesc(0));
                 dialog.setTitle(etText.getText().toString());
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -155,7 +161,10 @@ public class StudentProfileFragment extends Fragment {
                 final TextView etText = new TextView(requireActivity());
                 etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 etText.setTextSize(16);
-                etText.setText(model.getBadgeDesc(1));
+                if(isEnSet())
+                    etText.setText(Constants.BADGE_2);
+                else
+                    etText.setText(model.getBadgeDesc(1));
                 dialog.setTitle(etText.getText().toString());
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -174,7 +183,10 @@ public class StudentProfileFragment extends Fragment {
                 final TextView etText = new TextView(requireActivity());
                 etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 etText.setTextSize(16);
-                etText.setText(model.getBadgeDesc(2));
+                if(isEnSet())
+                    etText.setText(Constants.BADGE_3);
+                else
+                    etText.setText(model.getBadgeDesc(2));
                 dialog.setTitle(etText.getText().toString());
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -193,7 +205,10 @@ public class StudentProfileFragment extends Fragment {
                 final TextView etText = new TextView(requireActivity());
                 etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 etText.setTextSize(16);
-                etText.setText(model.getBadgeDesc(3));
+                if(isEnSet())
+                    etText.setText(Constants.BADGE_4);
+                else
+                    etText.setText(model.getBadgeDesc(3));
                 dialog.setTitle(etText.getText().toString());
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -212,7 +227,11 @@ public class StudentProfileFragment extends Fragment {
                 final TextView etText = new TextView(requireActivity());
                 etText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 etText.setTextSize(16);
-                etText.setText(model.getBadgeDesc(4));
+                if(isEnSet())
+                    etText.setText(Constants.BADGE_5);
+                else
+                    etText.setText(model.getBadgeDesc(4));
+
                 dialog.setTitle(etText.getText().toString());
 
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -310,6 +329,11 @@ public class StudentProfileFragment extends Fragment {
             binding.btnBanUser.setText(R.string.alreadyBanned);
             binding.btnBanUser.setEnabled(false);
         }
+    }
 
+    private Boolean isEnSet()
+    {
+        SharedPreferences sp = App.getAppContext().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        return sp.getString("My_Lang", "").equals("en");
     }
 }

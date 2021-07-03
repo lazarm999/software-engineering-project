@@ -48,7 +48,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/topBar"
                 app:menu="@menu/admin_overflow_menu"
-                app:title="@string/logout"
+                app:title="@string/Ads"
                 app:titleTextColor="@color/background" />
 
             <LinearLayout
