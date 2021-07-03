@@ -189,7 +189,23 @@ public class JobAdInfoFragment extends Fragment implements CommentsAdapter.Comme
         binding.tvFeeRange.setText(feeRange);
         binding.tvNoOfApplications.setText(ad.getNumberOfApplied() + " applied");
         binding.tvEmployerName.setText(ad.getEmployer().getFirstName() + " " + ad.getEmployer().getLastName());
+        binding.tvEmployerName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JobAdInfoFragmentDirections.ActionJobAdInfoFragmentToEmployerProfileFragment2 action = JobAdInfoFragmentDirections.actionJobAdInfoFragmentToEmployerProfileFragment2();
+                action.setUserId(ad.getEmployer().getUserId());
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+            }
+        });
         binding.imgAdOwner.setImageBitmap(ad.getEmployerProfileImage());
+        binding.imgAdOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JobAdInfoFragmentDirections.ActionJobAdInfoFragmentToEmployerProfileFragment2 action = JobAdInfoFragmentDirections.actionJobAdInfoFragmentToEmployerProfileFragment2();
+                action.setUserId(ad.getEmployer().getUserId());
+                Navigation.findNavController(binding.getRoot()).navigate(action);
+            }
+        });
 
         List<Tag> tags = ad.getTags();
         String finalTags = "";

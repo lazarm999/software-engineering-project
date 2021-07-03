@@ -46,7 +46,6 @@ public class StudentProfileFragment extends Fragment {
     private int id;
 
     public StudentProfileFragment() {
-
     }
 
     @Override
@@ -66,15 +65,6 @@ public class StudentProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(requireActivity(), EditProfileActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        binding.btnRate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), GradeUserActivity.class);
-                intent.putExtra(USER_ID, id);
                 startActivity(intent);
             }
         });
@@ -110,6 +100,7 @@ public class StudentProfileFragment extends Fragment {
                             ((ImageView)binding.linearBagdges.getChildAt((badges.get(i).getBadgeId()-1)%5)).setImageResource(arrayLock[(badges.get(i).getBadgeId()-1)%5]);
                         }
                     }
+                    binding.btnRate.setOnClickListener(rateUserListener);
                 }
             }
         });
@@ -313,4 +304,13 @@ public class StudentProfileFragment extends Fragment {
         }
 
     }
+
+    View.OnClickListener rateUserListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getContext(), GradeUserActivity.class);
+            intent.putExtra(GradeUserActivity.USER_ID, id);
+            startActivity(intent);
+        }
+    };
 }

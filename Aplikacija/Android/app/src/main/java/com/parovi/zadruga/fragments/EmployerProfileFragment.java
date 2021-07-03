@@ -22,6 +22,7 @@ import com.parovi.zadruga.App;
 import com.parovi.zadruga.CustomResponse;
 import com.parovi.zadruga.R;
 import com.parovi.zadruga.Utility;
+import com.parovi.zadruga.activities.GradeUserActivity;
 import com.parovi.zadruga.activities.MainActivity;
 import com.parovi.zadruga.databinding.FragmentEmployerProfileBinding;
 import com.parovi.zadruga.models.entityModels.Badge;
@@ -61,15 +62,6 @@ public class EmployerProfileFragment extends Fragment {
             }
         });
 
-        binding.btnRate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EmployerProfileFragmentDirections.ActionEmployerProfileFragment2ToRatingFragment3 action = EmployerProfileFragmentDirections.actionEmployerProfileFragment2ToRatingFragment3();
-                action.setUserId(model.getId());
-                Navigation.findNavController(binding.getRoot()).navigate(action);
-            }
-        });
-
         binding.btnAchievements.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceType")
             @Override
@@ -94,6 +86,7 @@ public class EmployerProfileFragment extends Fragment {
                             ((ImageView)binding.linearBagdges.getChildAt((badges.get(i).getBadgeId()-1)%5)).setImageResource(arrayLock[(badges.get(i).getBadgeId()-1)%5]);
                         }
                     }
+                    binding.btnRate.setOnClickListener(rateUserListener);
                 }
             }
         });
@@ -293,4 +286,13 @@ public class EmployerProfileFragment extends Fragment {
             binding.btnBanUser.setText(R.string.alreadyBanned);
         }
     }
+
+    View.OnClickListener rateUserListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getContext(), GradeUserActivity.class);
+            intent.putExtra(GradeUserActivity.USER_ID, model.getId());
+            startActivity(intent);
+        }
+    };
 }

@@ -99,7 +99,7 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
     @Override
     public void onAdSelected(Ad ad) {
         Intent intent = new Intent(requireActivity(), JobAdActivity.class);
-        intent.putExtra("AdID", ad.getAdId());
+        intent.putExtra(JobAdActivity.AD_ID, ad.getAdId());
         startActivity(intent);
     }
 }

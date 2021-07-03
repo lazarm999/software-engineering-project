@@ -74,7 +74,7 @@ public class ChatMessagesFragment extends Fragment {
                 model.loadChatMembers();
                 Navigation.findNavController(binding.getRoot()).navigate(ChatMessagesFragmentDirections.actionChatMessagesFragmentToChatInfoFragment());
                 return true;
-                //TODO: ne radi iz nepoznatog razloga
+                // ne radi iz nepoznatog razloga
                 //NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(requireActivity(), R.id.chat_nav_host_fragment));
             }
         });

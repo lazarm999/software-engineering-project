@@ -18,7 +18,7 @@ import com.parovi.zadruga.models.entityModels.manyToManyModels.Rating;
 import com.parovi.zadruga.viewModels.AchievementViewModel;
 
 public class GradeUserActivity extends AppCompatActivity {
-
+    public final static String USER_ID = "userId";
     AchievementViewModel model;
     ActivityGradeUserBinding binding;
 
@@ -102,7 +102,7 @@ public class GradeUserActivity extends AppCompatActivity {
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() != CustomResponse.Status.OK)
                 {
-                    return;
+                    finish();
                 }
             }
         });
@@ -116,5 +116,10 @@ public class GradeUserActivity extends AppCompatActivity {
                 binding.btnRating.setVisibility(View.INVISIBLE);
             }
         });
+
+        int userId = -1;
+        if (getIntent() != null)
+            userId = getIntent().getIntExtra(USER_ID, -1);
+        model.loadUser(userId);
     }
 }
