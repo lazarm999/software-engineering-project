@@ -26,17 +26,14 @@ import com.parovi.zadruga.activities.MainActivity;
 import com.parovi.zadruga.databinding.FragmentEmployerProfileBinding;
 import com.parovi.zadruga.models.entityModels.Badge;
 import com.parovi.zadruga.models.entityModels.User;
-import com.parovi.zadruga.repository.UserRepository;
+import com.parovi.zadruga.ui.EditProfileActivity;
 import com.parovi.zadruga.viewModels.EmployerProfileViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EmployerProfileFragment extends Fragment {
     private EmployerProfileViewModel model;
     private FragmentEmployerProfileBinding binding;
-    private List<String> descriptions = new ArrayList<>();
-    private UserRepository userRepository = new UserRepository();
     private User u;
 
     public EmployerProfileFragment() {
@@ -57,7 +54,8 @@ public class EmployerProfileFragment extends Fragment {
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ;
+                Intent intent = new Intent(requireActivity(), EditProfileActivity.class);
+                startActivity(intent);
             }
         });
 

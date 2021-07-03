@@ -51,19 +51,19 @@ public class NotificationRepository extends BaseRepository {
                 Response<List<Notification>> notifResponse = ApiFactory.getNotificationApi().getNotifications(token, Constants.pageSize, pageSkip).execute();
                 if(notifResponse.isSuccessful()){
                     if(notifResponse.body() != null){
-                        if(notifResponse.body().size() == 0){
-                            if(notifications.getValue() != null)
-                                notifications.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
-                                    notifications.getValue().getBody()));
-                            else
-                                notifications.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
-                                        new ArrayList<>()));
-                            return;
-                        }
-                        for (Notification notif : notifResponse.body()) {
-                            notif.setType(getNotificationType(notif));
-                        }
                         synchronized (isSynced[0]) {
+                            if(notifResponse.body().size() == 0){
+                                if(notifications.getValue() != null && !refresh)
+                                    notifications.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                        notifications.getValue().getBody()));
+                                else
+                                    notifications.postValue(new CustomResponse<>(CustomResponse.Status.NO_MORE_DATA,
+                                            new ArrayList<>()));
+                                return;
+                            }
+                            for (Notification notif : notifResponse.body()) {
+                                notif.setType(getNotificationType(notif));
+                            }
                             if (pageSkip > 0  && notifications.getValue() != null && notifications.getValue().getBody() != null){
                                 List<Notification> tmpNotifList = (List) notifications.getValue().getBody();
                                 tmpNotifList.addAll(notifResponse.body());

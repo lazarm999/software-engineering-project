@@ -18,6 +18,7 @@ public class AchievementViewModel extends AndroidViewModel {
 
     MutableLiveData<CustomResponse<?>> ratings;
     MutableLiveData<CustomResponse<?>> isRated;
+    MutableLiveData<CustomResponse<?>> hasRated;
 
     RatingRepository ratingRepository;
 
@@ -26,6 +27,7 @@ public class AchievementViewModel extends AndroidViewModel {
         ratingRepository = new RatingRepository();
         ratings = new MutableLiveData<>();
         isRated = new MutableLiveData<>();
+        hasRated = new MutableLiveData<>();
     }
 
     public MutableLiveData<CustomResponse<?>> getRatings() {
@@ -34,6 +36,10 @@ public class AchievementViewModel extends AndroidViewModel {
 
     public MutableLiveData<CustomResponse<?>> getIsRated() {
         return isRated;
+    }
+
+    public MutableLiveData<CustomResponse<?>> getHasRated() {
+        return hasRated;
     }
 
     public void loadRatings() {
@@ -49,5 +55,9 @@ public class AchievementViewModel extends AndroidViewModel {
             this.userId = Utility.getLoggedInUserId(App.getAppContext());
         else
             this.userId = userId;
+    }
+
+    public void hasRated(Integer rateeId){
+        ratingRepository.hasRated(hasRated, rateeId);
     }
 }

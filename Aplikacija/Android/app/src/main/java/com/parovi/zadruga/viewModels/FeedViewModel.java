@@ -115,9 +115,11 @@ public class FeedViewModel extends AndroidViewModel{
     {
         Integer id = null;
         List<Location> locs = (List<Location>)locations.getValue().getBody();
-        for (Location loc : locs)
-            if(loc.getCityName().equals(locName))
-                id = loc.getLocId();
+        if(locs != null){
+            for (Location loc : locs)
+                if(loc.getCityName().equals(locName))
+                    id = loc.getLocId();
+        }
         return id;
     }
 
@@ -126,19 +128,22 @@ public class FeedViewModel extends AndroidViewModel{
         int id = -1;
 
         List<Tag> tagNames = (List<Tag>)tags.getValue().getBody();
-        for (Tag tag : tagNames)
-            if(tag.getName().equals(locName))
-                id = tag.getTagId();
+        if(tagNames != null) {
+            for (Tag tag : tagNames)
+                if(tag.getName().equals(locName))
+                    id = tag.getTagId();
+        }
         return id;
     }
 
     private Tag getTagByName(String str)
     {
         List<Tag> tagNames = (List<Tag>)tags.getValue().getBody();
-        for(Tag tag : tagNames)
-        {
-            if(tag.getName().equals(str))
-                return tag;
+        if(tagNames != null) {
+            for (Tag tag : tagNames) {
+                if (tag.getName().equals(str))
+                    return tag;
+            }
         }
         return null;
     }

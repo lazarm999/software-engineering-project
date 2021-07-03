@@ -279,7 +279,7 @@ public abstract class BaseRepository {
             @Override
             public void onSuccess(QBChatDialog result, Bundle params) {
                 Utility.getExecutorService().execute(() -> saveChatLocally(qbChatToChat(result)));
-                newChatId.postValue(new CustomResponse<>(CustomResponse.Status.OK, result.getDialogId()));
+                newChatId.postValue(new CustomResponse<>(CustomResponse.Status.OK, result.getDialogId(), ""));
             }
 
             @Override

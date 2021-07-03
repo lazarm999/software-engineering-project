@@ -41,6 +41,8 @@ public class GradeUserActivity extends AppCompatActivity {
         imageAnim = AnimationUtils.loadAnimation(this, R.anim.image_grade);
         txtAnim = AnimationUtils.loadAnimation(this, R.anim.text_grade);
 
+        model.hasRated(rateeId);
+
         binding.seekBarGrades.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -101,9 +103,7 @@ public class GradeUserActivity extends AppCompatActivity {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() != CustomResponse.Status.OK)
-                {
-                    return;
-                }
+                    disableBtnRating();
             }
         });
 
@@ -116,5 +116,20 @@ public class GradeUserActivity extends AppCompatActivity {
                 binding.btnRating.setVisibility(View.INVISIBLE);
             }
         });
+
+        model.getHasRated().observe(this, new Observer<CustomResponse<?>>() {
+            @Override
+            public void onChanged(CustomResponse<?> customResponse) {
+                if(customResponse.getStatus() == CustomResponse.Status.OK){
+                    if((Boolean) customResponse.getBody())
+                        disableBtnRating();
+                }
+            }
+        });
+    }
+
+    private void disableBtnRating(){
+        binding.btnRating.setClickable(false);
+        binding.btnRating.setText(R.string.alreadyRated);
     }
 }

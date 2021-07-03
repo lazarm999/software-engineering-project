@@ -60,14 +60,13 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.TAGS_NOT_CHOSEN) {
-                    binding.progressBarRecommend.setVisibility(View.GONE);
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.NO_MORE_DATA) {
-                    binding.progressBarRecommend.setVisibility(View.GONE);
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.setAds((ArrayList<Ad>) customResponse.getBody());
                 }
+                binding.progressBarRecommend.setVisibility(View.GONE);
             }
         });
 
@@ -79,13 +78,11 @@ public class RecommendationFragment extends Fragment implements AdAdapter.AdList
             }
         });
 
-
         model.loadRecommended();
 
         binding.nestedRecommend.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
                 if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                     model.loadRecommended();
                     binding.progressBarRecommend.setVisibility(View.VISIBLE);

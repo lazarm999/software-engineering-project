@@ -108,7 +108,7 @@ public class NotificationService extends FirebaseMessagingService {
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.app_logo)
                 .build();
         message.getNotification();
         manager.notify((new Random()).nextInt(), notification);

@@ -113,7 +113,7 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
             @Override
             public void onChanged(CustomResponse<?> customResponse) {
                 if (customResponse.getStatus() == CustomResponse.Status.NO_MORE_DATA) {
-                    //adapter.setAds((ArrayList<Ad>) customResponse.getBody());
+                    adapter.setAds((ArrayList<Ad>) customResponse.getBody());
                 }
                 if (customResponse.getStatus() == CustomResponse.Status.OK) {
                     adapter.setAds((ArrayList<Ad>) customResponse.getBody());
@@ -255,14 +255,14 @@ public class AdsFragment extends Fragment implements AdAdapter.AdListListener {
                 return true;
             }
         });
-
+        model.loadAdsDefault(true);
         return binding.getRoot();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        model.loadAdsDefault(true);
+        //model.loadAdsDefault(true);
     }
 
     @Override

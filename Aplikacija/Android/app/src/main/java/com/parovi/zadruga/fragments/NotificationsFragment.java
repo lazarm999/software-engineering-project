@@ -73,24 +73,28 @@ public class NotificationsFragment extends Fragment implements  NotificationsAda
         binding.refreshNotif.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                model.loadNotificationsRefresh();
+                model.loadNotifications(true);
                 binding.refreshNotif.setRefreshing(false);
             }
         });
-
-        model.loadNotifications();
 
         binding.nestedNotif.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    model.loadNotifications();
+                    model.loadNotifications(false);
                     binding.progressBarNotif.setVisibility(View.VISIBLE);
                 }
             }
         });
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        model.loadNotifications(true);
     }
 
     @Override

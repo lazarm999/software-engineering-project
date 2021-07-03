@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 /*(foreignKeys = {@ForeignKey(entity = User.class,
                         parentColumns = "userId",
@@ -21,8 +23,9 @@ public class Rating {
     @ColumnInfo(index = true)
     private int fkRaterId;
     @ColumnInfo(index = true)
+    @SerializedName("rateeId")
     private int fkRateeId;
-    private int rating;
+    private Integer rating;
     private Date postTime;
     private String comment;
     private boolean isSynced;
@@ -86,14 +89,6 @@ public class Rating {
         isSynced = synced;
     }
 
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -116,5 +111,13 @@ public class Rating {
 
     public void setRatingId(int ratingId) {
         this.ratingId = ratingId;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 }
